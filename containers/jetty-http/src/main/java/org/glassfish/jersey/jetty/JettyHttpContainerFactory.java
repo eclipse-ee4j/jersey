@@ -23,6 +23,7 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.innate.VirtualThreadUtil;
+import org.glassfish.jersey.innate.virtual.LoomishExecutors;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
@@ -297,10 +298,15 @@ public final class JettyHttpContainerFactory {
         private final ThreadFactory threadFactory;
 
         private JettyConnectorThreadPool(Configuration configuration) {
+            final LoomishExecutors executors = VirtualThreadUtil.withConfig(configuration, false);
+            if (executors.isVirtual()) {
+                super.setMaxThreads(Integer.MAX_VALUE - 1);
+            }
+
             this.threadFactory = new ThreadFactoryBuilder()
                     .setNameFormat("jetty-http-server-%d")
                     .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
-                    .setThreadFactory(VirtualThreadUtil.withConfig(configuration).getThreadFactory())
+                    .setThreadFactory(executors.getThreadFactory())
                     .build();
         }
 

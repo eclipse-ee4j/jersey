@@ -84,5 +84,10 @@ public final class VirtualThreadSupport {
         public ThreadFactory getThreadFactory() {
             return threadFactory;
         }
+
+        @Override
+        public boolean isVirtual() {
+            return false;
+        }
     }
 }

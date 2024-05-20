@@ -85,6 +85,11 @@ public final class VirtualThreadSupport {
         public ThreadFactory getThreadFactory() {
             return threadFactory;
         }
+
+        @Override
+        public boolean isVirtual() {
+            return false;
+        }
     }
 
     private static class Java21LoomishExecutors implements LoomishExecutors {
@@ -108,6 +113,11 @@ public final class VirtualThreadSupport {
         @Override
         public ThreadFactory getThreadFactory() {
             return threadFactory;
+        }
+
+        @Override
+        public boolean isVirtual() {
+            return true;
         }
     }
 }

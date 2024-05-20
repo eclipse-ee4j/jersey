@@ -26,6 +26,9 @@ import java.util.concurrent.ThreadFactory;
  * Factory class to provide JDK specific implementation of bits related to the virtual thread support.
  */
 public final class VirtualThreadUtil {
+
+    private static final boolean USE_VIRTUAL_THREADS_BY_DEFAULT = false;
+
     /**
      * Do not instantiate.
      */
@@ -39,9 +42,48 @@ public final class VirtualThreadUtil {
      * @return the {@link LoomishExecutors} instance.
      */
     public static LoomishExecutors withConfig(Configuration config) {
-        boolean bUseVirtualThreads = false;
-        ThreadFactory tfThreadFactory = null;
+        return withConfig(config, USE_VIRTUAL_THREADS_BY_DEFAULT);
+    }
 
+    /**
+     * Return an instance of {@link LoomishExecutors} based on a configuration property.
+     * @param config the {@link Configuration}
+     * @param useVirtualByDefault the default use if not said otherwise by property
+     * @return the {@link LoomishExecutors} instance.
+     */
+    public static LoomishExecutors withConfig(Configuration config, boolean useVirtualByDefault) {
+        ThreadFactory tfThreadFactory = null;
+        boolean useVirtualThreads = useVirtualThreads(config, useVirtualByDefault);
+
+        if (config != null) {
+            Object threadFactory = config.getProperty(CommonProperties.THREAD_FACTORY);
+            if (threadFactory != null && ThreadFactory.class.isInstance(threadFactory)) {
+                tfThreadFactory = (ThreadFactory) threadFactory;
+            }
+        }
+
+        return tfThreadFactory == null
+                ? VirtualThreadSupport.allowVirtual(useVirtualThreads)
+                : VirtualThreadSupport.allowVirtual(useVirtualThreads, tfThreadFactory);
+    }
+
+    /**
+     * Check configuration if the use of the virtual threads is expected or return the default value if not.
+     * @param config the {@link Configuration}
+     * @return the expected
+     */
+    private static boolean useVirtualThreads(Configuration config) {
+        return useVirtualThreads(config, USE_VIRTUAL_THREADS_BY_DEFAULT);
+    }
+
+    /**
+     * Check configuration if the use of the virtual threads is expected or return the default value if not.
+     * @param config the {@link Configuration}
+     * @param useByDefault the default expectation
+     * @return the expected
+     */
+    private static boolean useVirtualThreads(Configuration config, boolean useByDefault) {
+        boolean bUseVirtualThreads = useByDefault;
         if (config != null) {
             Object useVirtualThread = config.getProperty(CommonProperties.USE_VIRTUAL_THREADS);
             if (useVirtualThread != null && Boolean.class.isInstance(useVirtualThread)) {
@@ -50,15 +92,7 @@ public final class VirtualThreadUtil {
             if (useVirtualThread != null && String.class.isInstance(useVirtualThread)) {
                 bUseVirtualThreads = Boolean.parseBoolean(useVirtualThread.toString());
             }
-
-            Object threadFactory = config.getProperty(CommonProperties.THREAD_FACTORY);
-            if (threadFactory != null && ThreadFactory.class.isInstance(threadFactory)) {
-                tfThreadFactory = (ThreadFactory) threadFactory;
-            }
-
         }
-        return tfThreadFactory == null
-                ? VirtualThreadSupport.allowVirtual(bUseVirtualThreads)
-                : VirtualThreadSupport.allowVirtual(bUseVirtualThreads, tfThreadFactory);
+        return bUseVirtualThreads;
     }
 }

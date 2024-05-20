@@ -18,12 +18,15 @@ package org.glassfish.jersey.grizzly2.httpserver;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.concurrent.ThreadFactory;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.grizzly2.httpserver.internal.LocalizationMessages;
+import org.glassfish.jersey.innate.VirtualThreadSupport;
 import org.glassfish.jersey.innate.VirtualThreadUtil;
+import org.glassfish.jersey.innate.virtual.LoomishExecutors;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ApplicationHandler;
@@ -285,11 +288,18 @@ public final class GrizzlyHttpServerFactory {
         final NetworkListener listener = new NetworkListener("grizzly", host, port);
         final Configuration configuration = handler != null ? handler.getConfiguration().getConfiguration() : null;
 
-        listener.getTransport().getWorkerThreadPoolConfig().setThreadFactory(new ThreadFactoryBuilder()
+        final LoomishExecutors executors = VirtualThreadUtil.withConfig(configuration, false);
+        final ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("grizzly-http-server-%d")
                 .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
-                .setThreadFactory(VirtualThreadUtil.withConfig(configuration).getThreadFactory())
-                .build());
+                .setThreadFactory(VirtualThreadUtil.withConfig(configuration, false).getThreadFactory())
+                .build();
+
+        if (executors.isVirtual()) {
+            listener.getTransport().setWorkerThreadPool(executors.newCachedThreadPool());
+        } else {
+            listener.getTransport().getWorkerThreadPoolConfig().setThreadFactory(threadFactory);
+        }
 
         listener.setSecure(secure);
         if (sslEngineConfigurator != null) {

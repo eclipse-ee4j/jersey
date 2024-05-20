@@ -45,4 +45,9 @@ public interface LoomishExecutors {
      */
     ThreadFactory getThreadFactory();
 
+    /**
+     * Return true if the virtual thread use is requested.
+     * @return whether the virtual thread use is requested.
+     */
+    boolean isVirtual();
 }
