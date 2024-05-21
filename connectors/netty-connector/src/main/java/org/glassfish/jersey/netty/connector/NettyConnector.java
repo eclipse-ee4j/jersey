@@ -302,7 +302,17 @@ class NettyConnector implements Connector {
                          p.addLast(sslHandler);
                      }
 
-                     p.addLast(new HttpClientCodec());
+                     final Integer maxHeaderSize = ClientProperties.getValue(config.getProperties(),
+                                NettyClientProperties.MAX_HEADER_SIZE,
+                                NettyClientProperties.DEFAULT_HEADER_SIZE);
+                     final Integer maxChunkSize = ClientProperties.getValue(config.getProperties(),
+                                NettyClientProperties.MAX_CHUNK_SIZE,
+                                NettyClientProperties.DEFAULT_CHUNK_SIZE);
+                     final Integer maxInitialLineLength = ClientProperties.getValue(config.getProperties(),
+                                NettyClientProperties.MAX_INITIAL_LINE_LENGTH,
+                                NettyClientProperties.DEFAULT_INITIAL_LINE_LENGTH);
+
+                     p.addLast(new HttpClientCodec(maxInitialLineLength, maxHeaderSize, maxChunkSize));
                      p.addLast(new ChunkedWriteHandler());
                      p.addLast(new HttpContentDecompressor());
                     }
