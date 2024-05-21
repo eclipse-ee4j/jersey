@@ -70,15 +70,6 @@ public final class VirtualThreadUtil {
     /**
      * Check configuration if the use of the virtual threads is expected or return the default value if not.
      * @param config the {@link Configuration}
-     * @return the expected
-     */
-    private static boolean useVirtualThreads(Configuration config) {
-        return useVirtualThreads(config, USE_VIRTUAL_THREADS_BY_DEFAULT);
-    }
-
-    /**
-     * Check configuration if the use of the virtual threads is expected or return the default value if not.
-     * @param config the {@link Configuration}
      * @param useByDefault the default expectation
      * @return the expected
      */

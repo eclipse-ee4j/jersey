@@ -292,7 +292,7 @@ public final class GrizzlyHttpServerFactory {
         final ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat("grizzly-http-server-%d")
                 .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
-                .setThreadFactory(VirtualThreadUtil.withConfig(configuration, false).getThreadFactory())
+                .setThreadFactory(executors.getThreadFactory())
                 .build();
 
         if (executors.isVirtual()) {
