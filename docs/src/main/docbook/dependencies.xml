@@ -62,6 +62,21 @@
                 </listitem>
             </itemizedlist>
         </para>
+        <section>
+            <title>Virtual Threads and Thread Factories</title>
+            <para>
+                With JDK 21 and above, Jersey (since 2.44) has the ability to use virtual threads instead of
+                the <literal>CachedThreadPool</literal> in the internal <literal>ExecutorServices</literal>.
+                Jersey also has the ability to specify the backing <literal>ThreadFactory</literal> for the
+                default <literal>ExecutorServices</literal> (the default <literal>ExecutorServices</literal>
+                can be overridden by the &jersey.common.spi.ExecutorServiceProvider; SPI).
+            </para>
+            <para>
+                To enable virtual threads and/or specify the <literal>ThreadFactory</literal>, use
+                &jersey.common.CommonProperties.USE_VIRTUAL_THREADS; and/or &jersey.common.CommonProperties.THREAD_FACTORY;
+                properties, respectively. See also the <xref linkend="appendix-properties-common"/> in appendix for property details.
+            </para>
+        </section>
     </section>
     <section>
         <title>Introduction to Jersey dependencies</title>

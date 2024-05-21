@@ -203,6 +203,39 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.common.CommonProperties.THREAD_FACTORY;(Jersey 2.44 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.threads.factory</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Defines the <literal>java.util.concurrent.ThreadFactory</literal> to be used by internal default
+                                <literal>ExecutorServices</literal>.
+                            </para>
+                            <para>
+                                The default is <literal>java.util.concurrent.Executors#defaultThreadFactory()</literal> on
+                                platform threads and<literal>Thread.ofVirtual().factory()</literal> on virtual threads.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.USE_VIRTUAL_THREADS;(Jersey 2.44 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.threads.use.virtual</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Defines whether the virtual threads should be used by Jersey on JDK 21+ when not using an exact number
+                                of threads by <literal>FixedThreadPool</literal>.
+                            </para>
+                            <para>
+                                The default is &lit.false; for this version of Jersey, and &lit.true; for Jersey 3.1+.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME;
                         </entry>
                         <entry>
