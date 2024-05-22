@@ -494,7 +494,7 @@ public final class ClientProperties {
      * </p>
      * @since 2.43
      */
-    public static final String SNI_HOST_NAME = "jersey.config.client.snihostname";
+    public static final String SNI_HOST_NAME = "jersey.config.client.sniHostName";
 
     /**
      * <p>The {@link javax.net.ssl.SSLContext} {@link java.util.function.Supplier} to be used to set ssl context in the current
