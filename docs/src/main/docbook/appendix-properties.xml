@@ -2204,6 +2204,42 @@
                             </para>
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_HEADER_SIZE;</entry>
+                        <entry><literal>jersey.config.client.netty.maxHeaderSize</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the header size for the Netty connector
+
+                                Default header size is 8192b.
+                                <literal>Since 2.44</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_CHUNK_SIZE;</entry>
+                        <entry><literal>jersey.config.client.netty.maxChunkSize</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the chunk size for the Netty connector
+
+                                Default chunk size is 8192b.
+                                <literal>Since 2.44</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_INITIAL_LINE_LENGTH;</entry>
+                        <entry><literal>jersey.config.client.netty.maxInitialLineLength</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the initial line length for the Netty connector
+
+                                Default initial line length is 4096b.
+                                <literal>Since 2.44</literal>
+                            </para>
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>

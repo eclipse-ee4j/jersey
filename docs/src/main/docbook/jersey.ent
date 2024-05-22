@@ -573,6 +573,9 @@
 <!ENTITY jersey.netty.NettyClientProperties.MAX_REDIRECTS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_REDIRECTS'>NettyClientProperties.MAX_REDIRECTS</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#PRESERVE_METHOD_ON_REDIRECT'>NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#EXPECT_100_CONTINUE_TIMEOUT'>NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_HEADER_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_HEADER_SIZE'>NettyClientProperties.MAX_HEADER_SIZE</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_INITIAL_LINE_LENGTH "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_INITIAL_LINE_LENGTH'>NettyClientProperties.MAX_INITIAL_LINE_LENGTH</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.MAX_CHUNK_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CHUNK_SIZE'>NettyClientProperties.MAX_CHUNK_SIZE</link>" >
 <!ENTITY jersey.netty.NettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyConnectorProvider.html'>NettyConnectorProvider</link>">
 <!ENTITY jersey.server.ApplicationHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ApplicationHandler.html'>ApplicationHandler</link>">
 <!ENTITY jersey.server.BackgroundScheduler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundScheduler.html'>@BackgroundScheduler</link>">
