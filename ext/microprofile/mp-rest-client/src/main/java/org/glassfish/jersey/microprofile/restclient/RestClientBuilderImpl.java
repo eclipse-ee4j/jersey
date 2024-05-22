@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -66,6 +65,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
+import org.glassfish.jersey.innate.VirtualThreadUtil;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
@@ -111,7 +111,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         asyncInterceptorFactories = new ArrayList<>();
         config = ConfigProvider.getConfig();
         configWrapper = new ConfigWrapper(clientBuilder.getConfiguration());
-        executorService = Executors::newCachedThreadPool;
+        executorService = () -> VirtualThreadUtil.withConfig(configWrapper).newCachedThreadPool();
     }
 
     @Override

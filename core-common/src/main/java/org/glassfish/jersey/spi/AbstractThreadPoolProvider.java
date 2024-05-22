@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.VirtualThreadUtil;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
@@ -36,6 +37,8 @@ import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
+
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Abstract thread pool executor provider.
@@ -69,9 +72,7 @@ public abstract class AbstractThreadPoolProvider<E extends ThreadPoolExecutor> i
 
     private final String name;
     private final AtomicBoolean closed = new AtomicBoolean(false);
-    private final LazyValue<E> lazyExecutorServiceProvider =
-            Values.lazy((Value<E>) () -> createExecutor(getCorePoolSize(), createThreadFactory(), getRejectedExecutionHandler()));
-
+    private final LazyValue<E> lazyExecutorServiceProvider;
     /**
      * Inheritance constructor.
      *
@@ -79,7 +80,20 @@ public abstract class AbstractThreadPoolProvider<E extends ThreadPoolExecutor> i
      *             provided thread pool executor.
      */
     protected AbstractThreadPoolProvider(final String name) {
+        this(name, null);
+    }
+
+    /**
+     * Inheritance constructor.
+     *
+     * @param name name of the provided thread pool executor. Will be used in the names of threads created & used by the
+     *             provided thread pool executor.
+     * @param configuration {@link Configuration} properties.
+     */
+    protected AbstractThreadPoolProvider(final String name, Configuration configuration) {
         this.name = name;
+        lazyExecutorServiceProvider = Values.lazy((Value<E>) () ->
+                createExecutor(getCorePoolSize(), createThreadFactory(configuration), getRejectedExecutionHandler()));
     }
 
     /**
@@ -208,9 +222,10 @@ public abstract class AbstractThreadPoolProvider<E extends ThreadPoolExecutor> i
         return null;
     }
 
-    private ThreadFactory createThreadFactory() {
+    private ThreadFactory createThreadFactory(Configuration configuration) {
         final ThreadFactoryBuilder factoryBuilder = new ThreadFactoryBuilder()
                 .setNameFormat(name + "-%d")
+                .setThreadFactory(VirtualThreadUtil.withConfig(configuration).getThreadFactory())
                 .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler());
 
         final ThreadFactory backingThreadFactory = getBackingThreadFactory();
