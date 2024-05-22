@@ -41,10 +41,10 @@
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
-                    <skipTests>${skip.e2e}</skipTests>
                     <excludes>
                         <!--TODO remove after jakartification-->
                         <exclude>org/glassfish/jersey/tests/e2e/server/wadl/NoJAXBNoWadlTest.java</exclude>
+                        <exclude>org/glassfish/jersey/tests/e2e/inject/SingleRequestScopeInjectionTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -211,6 +211,7 @@
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/tests/e2e/container/Jersey2462Test.java</testExclude>
                                 <testExclude>org/glassfish/jersey/tests/e2e/container/JettyEmptyHeaderParamTest.java</testExclude>
+                                <testExclude>org/glassfish/jersey/tests/e2e/inject/SingleRequestScopeInjectionTest.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>

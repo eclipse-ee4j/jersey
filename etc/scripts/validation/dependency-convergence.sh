@@ -40,5 +40,11 @@ sed -e "/${VALIDATION_DEPENDENCIES_MATCH}/ {" -e "r ${CURRENT_LOCATION}/${TEMP_F
 #run validation
 mvn ${MVN_ARGS} ${MVN_CLI} -f ${CURRENT_LOCATION}/${VALIDATION_POM} -Djersey.version=${JERSEY_VERSION}
 
+#save exit status
+export MAVEN_BUILD_RESULT=$?
+
 #clean the mess
 rm ${CURRENT_LOCATION}/${TEMP_FILE}
+
+#exit with saved exit stateus
+exit $MAVEN_BUILD_RESULT

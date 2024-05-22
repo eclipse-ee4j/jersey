@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -883,7 +883,8 @@ class ApacheConnector implements Connector {
                 Object objectRequest = context.getAttribute(JERSEY_REQUEST_ATTR_NAME);
                 if (objectRequest != null) {
                     ClientRequest clientRequest = (ClientRequest) objectRequest;
-                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest).build();
+                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest)
+                            .setSNIHostName(clientRequest.getConfiguration()).build();
                     sniConfig.setSNIServerName(socket);
                 }
             }
@@ -937,12 +938,12 @@ class ApacheConnector implements Connector {
         }
 
         @Override
-        public synchronized void mark(int readlimit) {
+        public void mark(int readlimit) {
             in.mark(readlimit);
         }
 
         @Override
-        public synchronized void reset() throws IOException {
+        public void reset() throws IOException {
             checkAborted();
             in.reset();
         }
