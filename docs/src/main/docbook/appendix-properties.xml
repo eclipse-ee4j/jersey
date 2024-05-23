@@ -1132,7 +1132,7 @@
                     </row>
                     <row>
                         <entry>&jersey.client.ClientProperties.SNI_HOST_NAME; (Jersey 2.43 or later)</entry>
-                        <entry><literal>jersey.config.client.snihostname</literal></entry>
+                        <entry><literal>jersey.config.client.sniHostName</literal></entry>
                         <entry>
                             <para>
                                 Sets the host name to be used for calculating the <literal>javax.net.ssl.SNIHostName</literal>
