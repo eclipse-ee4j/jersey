@@ -70,13 +70,29 @@
                         <row><entry>3.1.1</entry><entry>11</entry><entry>19</entry></row>
                         <row><entry>3.1.2</entry><entry>11</entry><entry>21</entry></row>
                         <row><entry>3.1.3</entry><entry>11</entry><entry>21</entry></row>
-                        <row><entry>3.1.4</entry><entry>11</entry><entry>21</entry></row>
-                        <row><entry>3.1.5</entry><entry>11</entry><entry>21</entry></row>
-                        <row><entry>3.1.6</entry><entry>11</entry><entry>21</entry></row>
+                        <row><entry>3.1.4</entry><entry>11</entry><entry>22</entry></row>
+                        <row><entry>3.1.5</entry><entry>11</entry><entry>22</entry></row>
+                        <row><entry>3.1.6</entry><entry>11</entry><entry>23</entry></row>
+                        <row><entry>3.1.7</entry><entry>11</entry><entry>23</entry></row>
                     </tbody>
                 </tgroup>
             </table>
         </para>
+        <section>
+            <title>Virtual Threads and Thread Factories</title>
+            <para>
+                With JDK 21 and above, Jersey (since 2.44) has the ability to use virtual threads instead of
+                the <literal>CachedThreadPool</literal> in the internal <literal>ExecutorServices</literal>.
+                Jersey also has the ability to specify the backing <literal>ThreadFactory</literal> for the
+                default <literal>ExecutorServices</literal> (the default <literal>ExecutorServices</literal>
+                can be overridden by the &jersey.common.spi.ExecutorServiceProvider; SPI).
+            </para>
+            <para>
+                To enable virtual threads and/or specify the <literal>ThreadFactory</literal>, use
+                &jersey.common.CommonProperties.USE_VIRTUAL_THREADS; and/or &jersey.common.CommonProperties.THREAD_FACTORY;
+                properties, respectively. See also the <xref linkend="appendix-properties-common"/> in appendix for property details.
+            </para>
+        </section>
     </section>
     <section>
         <title>Introduction to Jersey dependencies</title>

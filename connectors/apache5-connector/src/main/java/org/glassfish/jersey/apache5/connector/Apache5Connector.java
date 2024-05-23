@@ -883,7 +883,7 @@ class Apache5Connector implements Connector {
                 if (objectRequest != null) {
                     ClientRequest clientRequest = (ClientRequest) objectRequest;
                     SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest)
-                            .setSNIHostName(clientRequest.getConfiguration()).build();
+                            .setSNIHostName(clientRequest).build();
                     sniConfig.setSNIServerName(socket);
 
                     final int socketTimeout = ((ClientRequest) objectRequest).resolveProperty(ClientProperties.READ_TIMEOUT, -1);

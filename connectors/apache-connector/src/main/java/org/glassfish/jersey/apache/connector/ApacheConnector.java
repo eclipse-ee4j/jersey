@@ -884,7 +884,7 @@ class ApacheConnector implements Connector {
                 if (objectRequest != null) {
                     ClientRequest clientRequest = (ClientRequest) objectRequest;
                     SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest)
-                            .setSNIHostName(clientRequest.getConfiguration()).build();
+                            .setSNIHostName(clientRequest).build();
                     sniConfig.setSNIServerName(socket);
                 }
             }

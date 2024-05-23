@@ -358,7 +358,7 @@ public class HttpUrlConnector implements Connector {
         final HttpURLConnection uc;
         final Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
         final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(request)
-                .setSNIHostName(request.getConfiguration()).build();
+                .setSNIHostName(request).build();
         final URI sniUri;
         if (sniConfig.isSNIRequired()) {
             sniUri = sniConfig.toIPRequestUri();

@@ -428,12 +428,10 @@
                                 junit.jupiter.execution.parallel.mode.default=same_thread
                             </configurationParameters>
                         </properties>
-                        <systemProperties>
-                            <property>
-                                <name>jersey.config.test.container.port</name>
-                                <value>${jersey.config.test.container.port}</value>
-                            </property>
-                        </systemProperties>
+                        <systemPropertyVariables>
+                            <jersey.config.test.container.port>${jersey.config.test.container.port}
+                            </jersey.config.test.container.port>
+                        </systemPropertyVariables>
                         <threadCount>124</threadCount>
                     </configuration>
                     <dependencies>
@@ -635,12 +633,10 @@
                         <skipTests>${skip.tests}</skipTests>
                         <skipITs>${skip.tests}</skipITs>
                         <argLine>${failsafe.coverage.argline}</argLine>
-                        <systemProperties>
-                            <property>
-                                <name>jersey.config.test.container.port</name>
-                                <value>${jersey.config.test.container.port}</value>
-                            </property>
-                        </systemProperties>
+                        <systemPropertyVariables>
+                            <jersey.config.test.container.port>${jersey.config.test.container.port}
+                            </jersey.config.test.container.port>
+                        </systemPropertyVariables>
                     </configuration>
                     <executions>
                         <execution>
@@ -1102,6 +1098,37 @@
                     <url>http://localhost</url>
                 </site>
             </distributionManagement>
+        </profile>
+        <profile>
+            <id>sbom</id>
+            <activation>
+                <property>
+                    <name>!skipSBOM</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.cyclonedx</groupId>
+                        <artifactId>cyclonedx-maven-plugin</artifactId>
+                        <version>${cyclonedx.mvn.plugin.version}</version>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>makeAggregateBom</goal>
+                                </goals>
+                                <configuration>
+                                    <!--                            <schemaVersion>1.4</schemaVersion>-->
+                                    <projectType>framework</projectType>
+                                    <excludeTestProject>true</excludeTestProject>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>sonar</id>
@@ -2061,6 +2088,7 @@
         but the jersey-common module which has to have the separate version for OSGi reasons.
          -->
         <compiler.common.mvn.plugin.version>3.9.0</compiler.common.mvn.plugin.version>
+        <cyclonedx.mvn.plugin.version>2.8.0</cyclonedx.mvn.plugin.version>
         <dependency.mvn.plugin.version>3.6.1</dependency.mvn.plugin.version>
         <deploy.mvn.plugin.version>3.1.2</deploy.mvn.plugin.version>
         <ear.mvn.plugin.version>3.3.0</ear.mvn.plugin.version>
