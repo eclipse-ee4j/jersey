@@ -22,7 +22,7 @@
     <parent>
         <artifactId>microprofile-config-project</artifactId>
         <groupId>org.glassfish.jersey.tests.integration.microprofile</groupId>
-        <version>3.0.99-SNAPSHOT</version>
+        <version>3.0.14</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
