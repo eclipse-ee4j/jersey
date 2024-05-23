@@ -340,7 +340,7 @@
                                 <configuration>
                                     <target>
                                         <mkdir dir="${java21.build.outputDirectory}" />
-                                        <javac srcdir="${java21.sourceDirectory}" destdir="${java21.build.outputDirectory}"
+                                        <javac srcdir="${java21.sourceDirectory}${path.separator}${project.basedir}/src/main/java/org/glassfish/jersey/innate/virtual" destdir="${java21.build.outputDirectory}"
                                                classpath="${project.build.outputDirectory}" includeantruntime="false" release="21"/>
                                     </target>
                                 </configuration>
