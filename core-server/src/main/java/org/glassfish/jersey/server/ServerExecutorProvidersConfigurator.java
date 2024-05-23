@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,12 +21,13 @@ import org.glassfish.jersey.internal.inject.Bindings;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InstanceBinding;
 import org.glassfish.jersey.model.internal.ComponentBag;
-import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.AbstractExecutorProvidersConfigurator;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledThreadPoolExecutorProvider;
 import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
+
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Configurator which initializes and register {@link org.glassfish.jersey.spi.ExecutorServiceProvider} and
@@ -43,7 +44,7 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
         ComponentBag componentBag = runtimeConfig.getComponentBag();
 
         // TODO: Do we need to register DEFAULT Executor and ScheduledExecutor to InjectionManager?
-        ScheduledExecutorServiceProvider defaultScheduledExecutorProvider = new DefaultBackgroundSchedulerProvider();
+        ScheduledExecutorServiceProvider defaultScheduledExecutorProvider = new DefaultBackgroundSchedulerProvider(runtimeConfig);
         InstanceBinding<ScheduledExecutorServiceProvider> schedulerBinding = Bindings
                 .service(defaultScheduledExecutorProvider)
                 .to(ScheduledExecutorServiceProvider.class)
@@ -67,8 +68,8 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
     @BackgroundScheduler
     private static class DefaultBackgroundSchedulerProvider extends ScheduledThreadPoolExecutorProvider {
 
-        public DefaultBackgroundSchedulerProvider() {
-            super("jersey-background-task-scheduler");
+        public DefaultBackgroundSchedulerProvider(Configuration configuration) {
+            super("jersey-background-task-scheduler", configuration);
         }
 
         @Override
