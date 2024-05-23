@@ -85,7 +85,7 @@
         <profile>
             <id>JettyExclude</id>
             <activation>
-                <jdk>1.8</jdk>
+                <jdk>(1.8,17)</jdk>
             </activation>
             <build>
                 <plugins>

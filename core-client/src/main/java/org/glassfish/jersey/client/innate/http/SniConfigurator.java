@@ -67,9 +67,11 @@ final class SniConfigurator {
             return Optional.empty();
         }
 
-        final String hostUriString = hostUri.getHost();
-        if (!whenDiffer && hostUriString.equals(trimmedHeader)) {
-            return Optional.empty();
+        if (hostUri != null) {
+            final String hostUriString = hostUri.getHost();
+            if (!whenDiffer && hostUriString.equals(trimmedHeader)) {
+                return Optional.empty();
+            }
         }
 
         return Optional.of(new SniConfigurator(trimmedHeader));
