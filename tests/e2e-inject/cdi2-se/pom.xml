@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests</groupId>
         <artifactId>e2e-inject</artifactId>
-        <version>3.0.14</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>e2e-inject-cdi2-se</artifactId>

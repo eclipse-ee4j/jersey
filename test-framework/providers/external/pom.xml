@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.test-framework.providers</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.14</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-test-framework-provider-external</artifactId>
