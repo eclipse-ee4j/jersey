@@ -27,11 +27,11 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+
 import java.net.URI;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
