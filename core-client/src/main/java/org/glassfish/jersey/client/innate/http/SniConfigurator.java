@@ -51,24 +51,6 @@ final class SniConfigurator {
     }
 
     /**
-     * Create {@link SniConfigurator} when {@link HttpHeaders#HOST} is set different from the request URI host
-     * (or {@code whenDiffer}.is false).
-     * @param hostUri the Uri of the HTTP request
-     * @param headers the HttpHeaders
-     * @param whenDiffer create {@SniConfigurator only when different from the request URI host}
-     * @return Optional {@link SniConfigurator} or empty when {@link HttpHeaders#HOST} is equal to the requestHost
-     */
-    static Optional<SniConfigurator> createWhenHostHeader(URI hostUri, Map<String, List<Object>> headers, boolean whenDiffer) {
-        List<Object> hostHeaders = headers.get(HttpHeaders.HOST);
-        if (hostHeaders == null || hostHeaders.get(0) == null) {
-            return Optional.empty();
-        }
-
-        final String hostHeader = hostHeaders.get(0).toString();
-        return createWhenHostHeader(hostUri, hostHeader, whenDiffer);
-    }
-
-    /**
      * Create {@link SniConfigurator} when {@code sniHost} is set different from the request URI host
      * (or {@code whenDiffer}.is false).
      * @param hostUri the Uri of the HTTP request
