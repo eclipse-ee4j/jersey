@@ -203,7 +203,7 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.common.CommonProperties.THREAD_FACTORY;(Jersey 2.44 or later)
+                        <entry>&jersey.common.CommonProperties.THREAD_FACTORY;(Jersey 3.1.7 or later)
                         </entry>
                         <entry>
                             <literal>jersey.config.threads.factory</literal>
@@ -220,7 +220,7 @@
                         </entry>
                     </row>
                     <row>
-                        <entry>&jersey.common.CommonProperties.USE_VIRTUAL_THREADS;(Jersey 2.44 or later)
+                        <entry>&jersey.common.CommonProperties.USE_VIRTUAL_THREADS;(Jersey 3.1.7 or later)
                         </entry>
                         <entry>
                             <literal>jersey.config.threads.use.virtual</literal>
@@ -231,7 +231,7 @@
                                 of threads by <literal>FixedThreadPool</literal>.
                             </para>
                             <para>
-                                The default is &lit.false; for this version of Jersey, and &lit.true; for Jersey 3.1+.
+                                The default is &lit.false; for this version of Jersey.
                             </para>
                         </entry>
                     </row>

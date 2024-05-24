@@ -328,7 +328,7 @@ public final class CommonProperties {
      *     The default is {@link  java.util.concurrent.Executors#defaultThreadFactory()} on platform threads and
      *     {@code Thread.ofVirtual().factory()} on virtual threads.
      * </p>
-     * @since 2.44
+     * @since 3.1.7
      */
     public static String THREAD_FACTORY = "jersey.config.threads.factory";
 
@@ -338,9 +338,9 @@ public final class CommonProperties {
      *     of threads by {@code FixedThreadPool}.
      * </p>
      * <p>
-     *     The default is {@code false} for this version of Jersey, and {@code true} for Jersey 3.1+.
+     *     The default is {@code false} for this version of Jersey.
      * </p>
-     * @since 2.44
+     * @since 3.1.7
      */
     public static String USE_VIRTUAL_THREADS = "jersey.config.threads.use.virtual";
 
