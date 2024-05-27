@@ -365,6 +365,17 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <inherited>true</inherited>
@@ -445,11 +456,6 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/surefire.policy</surefire.security.argline>
-        <jsr166.sourceDirectory>${project.basedir}/src/main/jsr166</jsr166.sourceDirectory>
-        <java8.build.outputDirectory>${project.build.directory}/classes-java8</java8.build.outputDirectory>
-        <java8.sourceDirectory>${project.basedir}/src/main/java8</java8.sourceDirectory>
-        <java11.build.outputDirectory>${project.build.directory}/classes-java11</java11.build.outputDirectory>
-        <java11.sourceDirectory>${project.basedir}/src/main/java11</java11.sourceDirectory>
         <java21.build.outputDirectory>${project.build.directory}/classes-java21</java21.build.outputDirectory>
         <java21.sourceDirectory>${project.basedir}/src/main/java21</java21.sourceDirectory>
     </properties>
