@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>\${junit-jupiter.version}</version>
+            <version>\${junit5.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -83,8 +83,7 @@
 
     <properties>
         <jersey.version>${project.version}</jersey.version>
-        <junit-jupiter.version>5.10.2</junit-jupiter.version>
+        <junit5.version>${junit5.version}</junit5.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefire.mvn.plugin.version>3.2.5</surefire.mvn.plugin.version>
     </properties>
 </project>
