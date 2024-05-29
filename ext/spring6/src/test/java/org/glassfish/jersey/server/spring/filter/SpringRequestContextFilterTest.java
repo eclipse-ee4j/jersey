@@ -16,7 +16,7 @@
 
 package org.glassfish.jersey.server.spring.filter;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
