@@ -131,6 +131,14 @@ public class ServerRuntime {
     private final boolean rfc7231LocationHeaderRelativeUriResolution;
 
     /**
+     * Cached value of configuration property
+     * {@link org.glassfish.jersey.server.ServerProperties#RESPONSE_SET_STATUS_OVER_SEND_ERROR}.
+     * If {@code true} method {@link ServerRuntime.CompletionCallbackRunner#onComplete(Throwable)}
+     * is used over {@link DefaultExceptionMapper#toResponse(Throwable)}.
+     */
+    private final boolean configSetStatusOverSendError;
+
+    /**
      * Default exception mapper (@since 3.1.0 according to JAX-RS 3.1 spec)
      */
     private static final ExceptionMapper<Throwable> DEFAULT_EXCEPTION_MAPPER = new DefaultExceptionMapper();
@@ -197,6 +205,9 @@ public class ServerRuntime {
         this.rfc7231LocationHeaderRelativeUriResolution = ServerProperties.getValue(configuration.getProperties(),
                 ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231,
                 Boolean.FALSE, Boolean.class);
+
+        this.configSetStatusOverSendError = ServerProperties.getValue(configuration.getProperties(),
+                ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, false, Boolean.class);
     }
 
     /**
@@ -452,15 +463,17 @@ public class ServerRuntime {
 
                 if (!processResponseError(responseError)) {
                     // Pass the exception to the container.
-                    LOGGER.log(Level.WARNING, LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER(), responseError);
-
                     try {
                         request.getResponseWriter().failure(responseError);
                     } finally {
-                        defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
-
-                        // completionCallbackRunner.onComplete(responseError); is called from
-                        // processResponseWithDefaultExceptionMapper
+                        if (runtime.configSetStatusOverSendError) {
+                            completionCallbackRunner.onComplete(responseError);
+                        } else {
+                            LOGGER.log(Level.WARNING,
+                                    LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER(),
+                                    responseError);
+                            defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
+                        }
                     }
 
                 }

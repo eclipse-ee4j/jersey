@@ -78,10 +78,8 @@ public final class InputStreamProvider extends AbstractMessageReaderWriterProvid
             MediaType mediaType,
             MultivaluedMap<String, Object> httpHeaders,
             OutputStream entityStream) throws IOException {
-        try {
+        try (t) {
             ReaderWriter.writeTo(t, entityStream);
-        } finally {
-            t.close();
         }
     }
 }

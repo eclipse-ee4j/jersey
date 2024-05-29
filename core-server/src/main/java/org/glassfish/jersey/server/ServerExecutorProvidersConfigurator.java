@@ -27,6 +27,7 @@ import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledThreadPoolExecutorProvider;
 import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
 
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.RuntimeType;
 
 /**
@@ -44,7 +45,7 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
         ComponentBag componentBag = runtimeConfig.getComponentBag();
 
         // TODO: Do we need to register DEFAULT Executor and ScheduledExecutor to InjectionManager?
-        ScheduledExecutorServiceProvider defaultScheduledExecutorProvider = new DefaultBackgroundSchedulerProvider();
+        ScheduledExecutorServiceProvider defaultScheduledExecutorProvider = new DefaultBackgroundSchedulerProvider(runtimeConfig);
         Binding<ScheduledExecutorServiceProvider, ?> schedulerBinding = Bindings
                 .service(defaultScheduledExecutorProvider)
                 .to(ScheduledExecutorServiceProvider.class)
@@ -68,8 +69,8 @@ class ServerExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
     @BackgroundScheduler
     private static class DefaultBackgroundSchedulerProvider extends ScheduledThreadPoolExecutorProvider {
 
-        public DefaultBackgroundSchedulerProvider() {
-            super("jersey-background-task-scheduler");
+        public DefaultBackgroundSchedulerProvider(Configuration configuration) {
+            super("jersey-background-task-scheduler", configuration);
         }
 
         @Override

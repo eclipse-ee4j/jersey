@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,25 +16,23 @@
 
 package org.glassfish.jersey.client.innate.http;
 
-import jakarta.ws.rs.core.Configuration;
-import jakarta.ws.rs.core.HttpHeaders;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
+import org.glassfish.jersey.http.HttpHeaders;
+import org.glassfish.jersey.internal.PropertiesResolver;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
+import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.UriBuilder;
-import org.glassfish.jersey.internal.PropertiesResolver;
-import org.glassfish.jersey.internal.util.PropertiesHelper;
-
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 
 /**
  * A unified routines to configure {@link SSLParameters}.
@@ -48,10 +46,11 @@ public final class SSLParamConfigurator {
      * Builder of the {@link SSLParamConfigurator} instance.
      */
     public static final class Builder {
-        private URI uri = null;
+        private URI uri;
         private String sniHostNameHeader = null;
-        private String sniHostNameProperty = null;
+        private String sniHostPrecedence = null;
         private boolean setAlways = false;
+
 
         /**
          * Sets the SNIHostName and {@link URI} from the {@link ClientRequest} instance.
@@ -60,7 +59,7 @@ public final class SSLParamConfigurator {
          */
         public Builder request(ClientRequest clientRequest) {
             this.sniHostNameHeader = getSniHostNameHeader(clientRequest.getHeaders());
-            this.sniHostNameProperty = clientRequest.resolveProperty(ClientProperties.SNI_HOST_NAME, String.class);
+            this.sniHostPrecedence = resolveSniHostNameProperty(clientRequest);
             this.uri = clientRequest.getUri();
             return this;
         }
@@ -71,7 +70,7 @@ public final class SSLParamConfigurator {
          * @return the builder instance
          */
         public Builder configuration(Configuration configuration) {
-            this.sniHostNameProperty = (String) configuration.getProperty(ClientProperties.SNI_HOST_NAME);
+            this.sniHostPrecedence = getSniHostNameProperty(configuration);
             return this;
         }
 
@@ -107,6 +106,62 @@ public final class SSLParamConfigurator {
         }
 
         /**
+         * <p>
+         *     Sets the {@code hostName} to be used for calculating the  {@link javax.net.ssl.SNIHostName}.
+         *     Takes precedence over the HTTP HOST header, if set.
+         * </p>
+         * <p>
+         *     By default, the {@code SNIHostName} is set when the HOST HTTP header differs from the HTTP request host.
+         *     When the {@code hostName} matches the HTTP request host, the {@code SNIHostName} is not set,
+         *     and the HTTP HOST header is not used for setting the {@code SNIHostName}. This allows Domain Fronting.
+         * </p>
+         * @param hostName the host the {@code SNIHostName} should be set for.
+         * @return the builder instance.
+         */
+        public Builder setSNIHostName(String hostName) {
+            sniHostPrecedence = hostName;
+            return this;
+        }
+
+        /**
+         * <p>
+         *     Sets the {@code hostName} to be used for calculating the  {@link javax.net.ssl.SNIHostName}.
+         *     The {@code hostName} value is taken from the {@link Configuration} if the property
+         *     {@link ClientProperties#SNI_HOST_NAME} is set.
+         *     Takes precedence over the HTTP HOST header, if set.
+         * </p>
+         * <p>
+         *     By default, the {@code SNIHostName} is set when the HOST HTTP header differs from the HTTP request host.
+         *     When the {@code hostName} matches the HTTP request host, the {@code SNIHostName} is not set,
+         *     and the HTTP HOST header is not used for setting the {@code SNIHostName}. This allows for Domain Fronting.
+         * </p>
+         * @param configuration the host the {@code SNIHostName} should be set for.
+         * @return the builder instance.
+         */
+        public Builder setSNIHostName(Configuration configuration) {
+            return setSNIHostName(getSniHostNameProperty(configuration));
+        }
+
+        /**
+         * <p>
+         *     Sets the {@code hostName} to be used for calculating the  {@link javax.net.ssl.SNIHostName}.
+         *     The {@code hostName} value is taken from the {@link PropertiesResolver} if the property
+         *     {@link ClientProperties#SNI_HOST_NAME} is set.
+         *     Takes precedence over the HTTP HOST header, if set.
+         * </p>
+         * <p>
+         *     By default, the {@code SNIHostName} is set when the HOST HTTP header differs from the HTTP request host.
+         *     When the {@code hostName} matches the HTTPS request host, the {@code SNIHostName} is not set,
+         *     and the HTTP HOST header is not used for setting the {@code SNIHostName}. This allows for Domain Fronting.
+         * </p>
+         * @param resolver the host the {@code SNIHostName} should be set for.
+         * @return the builder instance.
+         */
+        public Builder setSNIHostName(PropertiesResolver resolver) {
+            return setSNIHostName(resolveSniHostNameProperty(resolver));
+        }
+
+        /**
          * Builds the {@link SSLParamConfigurator} instance.
          * @return the configured {@link SSLParamConfigurator} instance.
          */
@@ -121,23 +176,34 @@ public final class SSLParamConfigurator {
             }
 
             final String hostHeader = hostHeaders.get(0).toString();
-            final String trimmedHeader;
-            if (hostHeader != null) {
-                int index = hostHeader.indexOf(':'); // RFC 7230  Host = uri-host [ ":" port ] ;
-                final String trimmedHeader0 = index != -1 ? hostHeader.substring(0, index).trim() : hostHeader.trim();
-                trimmedHeader = trimmedHeader0.isEmpty() ? hostHeader : trimmedHeader0;
-            } else {
-                trimmedHeader = null;
-            }
+            return hostHeader;
+        }
 
-            return trimmedHeader;
+        private static String resolveSniHostNameProperty(PropertiesResolver resolver) {
+            String property = resolver.resolveProperty(ClientProperties.SNI_HOST_NAME, String.class);
+            if (property == null) {
+                property = resolver.resolveProperty(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT), String.class);
+            }
+            return property;
+        }
+
+        private static String getSniHostNameProperty(Configuration configuration) {
+            Object property = configuration.getProperty(ClientProperties.SNI_HOST_NAME);
+            if (property == null) {
+                property = configuration.getProperty(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT));
+            }
+            return (String) property;
         }
     }
 
     private SSLParamConfigurator(SSLParamConfigurator.Builder builder) {
-        String sniHostName = builder.sniHostNameHeader == null ? builder.sniHostNameProperty : builder.sniHostNameHeader;
         uri = builder.uri;
-        sniConfigurator = SniConfigurator.createWhenHostHeader(uri, sniHostName, builder.setAlways);
+        if (builder.sniHostPrecedence == null) {
+            sniConfigurator = SniConfigurator.createWhenHostHeader(uri, builder.sniHostNameHeader, builder.setAlways);
+        } else {
+            // Do not set SNI always, the property can be used to turn the SNI off
+            sniConfigurator = SniConfigurator.createWhenHostHeader(uri, builder.sniHostPrecedence, false);
+        }
     }
 
     /**

@@ -2,4 +2,4 @@
 
 export DEBUG=true
 
-mvn -V -U -B -e -Pstaging clean install glassfish-copyright:check -Dcopyright.quiet=false
+mvn -V -U -B -e -Pstaging clean install glassfish-copyright:check -Dcopyright.quiet=false  -DskipSBOM

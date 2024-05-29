@@ -68,7 +68,6 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.MessageBodyFactory;
 import org.glassfish.jersey.message.internal.MessagingBinders;
-import org.glassfish.jersey.message.internal.NullOutputStream;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.model.internal.RankedComparator;
@@ -593,7 +592,7 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
      * @return response future.
      */
     public Future<ContainerResponse> apply(final ContainerRequest requestContext) {
-        return apply(requestContext, new NullOutputStream());
+        return apply(requestContext, OutputStream.nullOutputStream());
     }
 
     /**

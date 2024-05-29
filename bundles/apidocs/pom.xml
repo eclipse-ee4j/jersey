@@ -122,10 +122,6 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jdk-http</artifactId>
             <version>${project.version}</version>
@@ -298,7 +294,7 @@
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>
-                            <excludePackageNames>*.internal:*.internal.*:*.innate:*.innate.*</excludePackageNames>
+                            <excludePackageNames>*.innate:*.innate.*</excludePackageNames>
                         </configuration>
                     </execution>
                 </executions>

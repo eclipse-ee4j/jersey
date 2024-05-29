@@ -20,8 +20,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.glassfish.hk2.api.Factory;
 import org.glassfish.jersey.innate.inject.ClassBinding;
 import org.glassfish.jersey.innate.inject.InjectionResolverBinding;
 import org.glassfish.jersey.innate.inject.InstanceBinding;
@@ -120,14 +122,25 @@ class Hk2Helper {
      * @param dc      HK2 Dynamic configuration to bind the object.
      * @param binding Jersey descriptor as a holder of information about an injection point.
      */
-    private static void bindBinding(ServiceLocator locator, DynamicConfiguration dc, Binding<?, ?> binding) {
+    private static <T> void bindBinding(ServiceLocator locator, DynamicConfiguration dc, Binding<T, ?> binding) {
         if (ClassBinding.class.isAssignableFrom(binding.getClass())) {
-            ActiveDescriptor<?> activeDescriptor = translateToActiveDescriptor((ClassBinding<?>) binding);
-            bindBinding(locator, dc, activeDescriptor, binding.getAliases());
+            final Class<?> implClass = binding.getImplementationType();
+            if (Factory.class.isAssignableFrom(implClass)) {
+                final Class<? extends Factory<T>> factoryClass = (Class<? extends Factory<T>>) implClass;
+                bindFactory(locator, binding, (binder) -> binder.bindFactory(factoryClass));
+            } else {
+                ActiveDescriptor<?> activeDescriptor = translateToActiveDescriptor((ClassBinding<?>) binding);
+                bindBinding(locator, dc, activeDescriptor, binding.getAliases());
+            }
 
         } else if (InstanceBinding.class.isAssignableFrom(binding.getClass())) {
-            ActiveDescriptor<?> activeDescriptor = translateToActiveDescriptor((InstanceBinding<?>) binding);
-            bindBinding(locator, dc, activeDescriptor, binding.getAliases());
+            if (Factory.class.isAssignableFrom(binding.getImplementationType())) {
+                final Factory<?> factory = (Factory) ((InstanceBinding<T>) binding).getService();
+                bindFactory(locator, binding, (binder) -> binder.bindFactory(factory));
+            } else {
+                ActiveDescriptor<?> activeDescriptor = translateToActiveDescriptor((InstanceBinding<?>) binding);
+                bindBinding(locator, dc, activeDescriptor, binding.getAliases());
+            }
 
         } else if (InjectionResolverBinding.class.isAssignableFrom(binding.getClass())) {
             InjectionResolverBinding resolverDescriptor = (InjectionResolverBinding) binding;
@@ -231,6 +244,13 @@ class Hk2Helper {
         };
 
         ServiceLocatorUtilities.bind(locator, createBinder(bindConsumer));
+    }
+
+    private static <T> void bindFactory(ServiceLocator locator,
+                                        Binding<T, ?> binding,
+                                        Function<AbstractBinder, ServiceBindingBuilder> builder) {
+        ServiceLocatorUtilities
+                .bind(locator, createBinder((binder) -> setupSupplierFactoryBridge(binding, builder.apply(binder))));
     }
 
     private static void setupSupplierFactoryBridge(Binding<?, ?> binding, ServiceBindingBuilder<?> builder) {

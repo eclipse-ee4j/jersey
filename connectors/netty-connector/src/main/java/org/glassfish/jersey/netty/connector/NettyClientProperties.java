@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -128,5 +128,57 @@ public class NettyClientProperties {
      */
     public static final Integer
             DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE = 500;
+
+
+    /**
+     * Parameter which allows extending of the header size for the Netty connector
+     *
+     * @since 2.44
+     */
+    public static final String
+            MAX_HEADER_SIZE = "jersey.config.client.netty.maxHeaderSize";
+
+    /**
+     * Default header size for Netty Connector.
+     * Taken from {@link io.netty.handler.codec.http.HttpClientCodec#HttpClientCodec(int, int, int)}
+     *
+     * @since 2.44
+     */
+    public static final Integer
+        DEFAULT_HEADER_SIZE = 8192;
+
+    /**
+     * Parameter which allows extending of the initial line length for the Netty connector
+     *
+     * @since 2.44
+     */
+    public static final String
+            MAX_INITIAL_LINE_LENGTH = "jersey.config.client.netty.maxInitialLineLength";
+
+    /**
+     * Default initial line length for Netty Connector.
+     * Taken from {@link io.netty.handler.codec.http.HttpClientCodec#HttpClientCodec(int, int, int)}
+     *
+     * @since 2.44
+     */
+    public static final Integer
+        DEFAULT_INITIAL_LINE_LENGTH = 4096;
+
+    /**
+     * Parameter which allows extending of the chunk size for the Netty connector
+     *
+     * @since 2.44
+     */
+    public static final String
+            MAX_CHUNK_SIZE = "jersey.config.client.netty.maxChunkSize";
+
+    /**
+     * Default chunk size for Netty Connector.
+     * Taken from {@link io.netty.handler.codec.http.HttpClientCodec#HttpClientCodec(int, int, int)}
+     *
+     * @since 2.44
+     */
+    public static final Integer
+        DEFAULT_CHUNK_SIZE = 8192;
 
 }
