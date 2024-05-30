@@ -38,6 +38,7 @@ import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 
 import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Configurator which initializes and register {@link ExecutorServiceProvider} and
@@ -66,7 +67,8 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
-        Map<String, Object> runtimeProperties = bootstrapBag.getConfiguration().getProperties();
+        final Configuration configuration = bootstrapBag.getConfiguration();
+        Map<String, Object> runtimeProperties = configuration.getProperties();
 
         ExecutorServiceProvider defaultAsyncExecutorProvider;
         ScheduledExecutorServiceProvider defaultScheduledExecutorProvider;
@@ -96,12 +98,12 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                         .named("ClientAsyncThreadPoolSize");
                 injectionManager.register(asyncThreadPoolSizeBinding);
 
-                defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(asyncThreadPoolSize);
+                defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(asyncThreadPoolSize, configuration);
             } else {
                 if (MANAGED_EXECUTOR_SERVICE != null) {
                     defaultAsyncExecutorProvider = new ClientExecutorServiceProvider(MANAGED_EXECUTOR_SERVICE);
                 } else {
-                    defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(0);
+                    defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(0, configuration);
                 }
             }
         }

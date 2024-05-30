@@ -46,6 +46,7 @@ import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.security.AuthenticationState;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.util.Callback;
+import org.eclipse.jetty.util.thread.Scheduler;
 import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
@@ -90,8 +91,6 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
      * If {@code true} method {@link Response#setStatus(int)} is used over {@link Response#writeError(Request, Response, Callback, int)}
      */
     private boolean configSetStatusOverSendError;
-
-    private final ScheduledThreadPoolExecutor timeoutScheduler;
 
     /**
      * Referencing factory for Jetty request.
@@ -141,8 +140,7 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
     @Override
     public boolean handle(Request request, Response response, Callback callback) throws Exception {
 
-        final ResponseWriter responseWriter = new ResponseWriter(timeoutScheduler, request, response,
-                callback, configSetStatusOverSendError);
+        final ResponseWriter responseWriter = new ResponseWriter(request, response, callback, configSetStatusOverSendError);
         try {
             LOGGER.debugLog(LocalizationMessages.CONTAINER_STARTED());
             final URI baseUri = getBaseUri(request);
@@ -254,37 +252,38 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
         }
     }
 
-    private static final class ResponseWriter implements ContainerResponseWriter {
+    private static class ResponseWriter implements ContainerResponseWriter {
 
         private final Request request;
         private final Response response;
         private final Callback callback;
         private final boolean configSetStatusOverSendError;
         private final long asyncStartTimeNanos;
-        private final ScheduledExecutorService timeoutScheduler;
+        private final Scheduler scheduler;
         private final ConcurrentLinkedQueue<TimeoutHandler> timeoutHandlerQueue = new ConcurrentLinkedQueue<>();
-        private ScheduledFuture<?> currentTimerTask;
+        private Scheduler.Task currentTimerTask;
 
-        ResponseWriter(final ScheduledExecutorService timeoutScheduler, final Request request, final Response response,
+        ResponseWriter(final Request request, final Response response,
                        final Callback callback, final boolean configSetStatusOverSendError) {
-            this.timeoutScheduler = timeoutScheduler;
             this.request = request;
             this.response = response;
             this.callback = callback;
             this.asyncStartTimeNanos = System.nanoTime();
             this.configSetStatusOverSendError = configSetStatusOverSendError;
+
+            this.scheduler = request.getComponents().getScheduler();
         }
 
         private synchronized void setNewTimeout(long timeOut, TimeUnit timeUnit) {
             long timeOutNanos = timeUnit.toNanos(timeOut);
             if (currentTimerTask != null) {
                 // Do not interrupt, see callTimeoutHandlers()
-                currentTimerTask.cancel(false);
+                currentTimerTask.cancel();
             }
             // Use System.nanoTime() as the clock source here, because the returned value is not prone to wall-clock
             // drift - unlike System.currentTimeMillis().
             long delayNanos = Math.max(asyncStartTimeNanos - System.nanoTime() + timeOutNanos, 0L);
-            currentTimerTask = timeoutScheduler.schedule(this::callTimeoutHandlers, delayNanos, TimeUnit.NANOSECONDS);
+            currentTimerTask = scheduler.schedule(this::callTimeoutHandlers, delayNanos, TimeUnit.NANOSECONDS);
         }
 
         private void callTimeoutHandlers() {
@@ -438,41 +437,13 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
         appHandler.onShutdown(this);
         appHandler = null;
 
-        timeoutScheduler.shutdown();
         boolean needInterrupt = false;
-        while (true) {
-            try {
-                if (timeoutScheduler.awaitTermination(1L, TimeUnit.MINUTES)) {
-                    break;
-                }
-            } catch (InterruptedException e) {
-                if (!needInterrupt) {
-                    needInterrupt = true;
-                    timeoutScheduler.shutdownNow();
-                }
-            }
-        }
         if (needInterrupt) {
             Thread.currentThread().interrupt();
         }
     }
 
     private static final AtomicInteger TIMEOUT_HANDLER_ID_GEN = new AtomicInteger();
-
-    private static ScheduledThreadPoolExecutor createTimeoutScheduler() {
-        // Note: creating the thread-pool does not start the core-pool threads.
-        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
-            Thread t = new Thread(r, "JettyHttpContainer-Timeout-Handler #" + TIMEOUT_HANDLER_ID_GEN.incrementAndGet());
-            t.setDaemon(true);
-            return t;
-        });
-        // Limit the number of timeout handling threads to a quarter of the number of CPUs, at least 2.
-        executor.setMaximumPoolSize(Math.max(2, Runtime.getRuntime().availableProcessors() / 4));
-        executor.allowCoreThreadTimeOut(true);
-        // Don't Keep timeout handling threads around "forever".
-        executor.setKeepAliveTime(100, TimeUnit.MILLISECONDS);
-        return executor;
-    }
 
     /**
      * Create a new Jetty HTTP container.
@@ -481,7 +452,6 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
      * @param parentContext DI provider specific context with application's registered bindings.
      */
     JettyHttpContainer(final Application application, final Object parentContext) {
-        this.timeoutScheduler = createTimeoutScheduler();
         this.appHandler = new ApplicationHandler(application, new JettyBinder(), parentContext);
     }
 
@@ -491,7 +461,6 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
      * @param application JAX-RS / Jersey application to be deployed on Jetty HTTP container.
      */
     JettyHttpContainer(final Application application) {
-        this.timeoutScheduler = createTimeoutScheduler();
         this.appHandler = new ApplicationHandler(application, new JettyBinder());
 
         cacheConfigSetStatusOverSendError();
@@ -503,7 +472,6 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
      * @param applicationClass JAX-RS / Jersey class of application to be deployed on Jetty HTTP container.
      */
     JettyHttpContainer(final Class<? extends Application> applicationClass) {
-        this.timeoutScheduler = createTimeoutScheduler();
         this.appHandler = new ApplicationHandler(applicationClass, new JettyBinder());
 
         cacheConfigSetStatusOverSendError();

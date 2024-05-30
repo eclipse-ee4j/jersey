@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -234,7 +236,13 @@ final class FormDataParamValueParamProvider extends AbstractValueParamProvider {
         @Override
         public Object apply(ContainerRequest request) {
             // Return the field value for the field specified by the sourceName property.
-            final List<FormDataBodyPart> parts = getEntity(request).getFields(parameter.getSourceName());
+            final String sourceName = parameter.getAnnotations().length == 1
+                    ? parameter.getSourceName()
+                    : Arrays.stream(parameter.getAnnotations())
+                        .filter(ann -> FormDataParam.class.isInstance(ann))
+                        .map(ann -> FormDataParam.class.cast(ann))
+                        .findFirst().get().value();
+            final List<FormDataBodyPart> parts = getEntity(request).getFields(sourceName);
 
             final FormDataBodyPart part = parts != null ? parts.get(0) : null;
             final MediaType mediaType = part != null ? part.getMediaType() : MediaType.TEXT_PLAIN_TYPE;
@@ -396,44 +404,48 @@ final class FormDataParamValueParamProvider extends AbstractValueParamProvider {
             } else {
                 return null;
             }
-        } else if (parameter.getSourceAnnotation().annotationType() == FormDataParam.class) {
-            final String paramName = parameter.getSourceName();
-            if (paramName == null || paramName.isEmpty()) {
-                // Invalid query parameter name
-                return null;
-            }
+        } else {
+            for (Annotation sourceAnnotation : parameter.getAnnotations()) {
+                if (sourceAnnotation.annotationType() == FormDataParam.class) {
+                    final String paramName = ((FormDataParam) sourceAnnotation).value(); // sourceName refers to the last anno
+                    if (paramName == null || paramName.isEmpty()) {
+                        // Invalid query parameter name
+                        return null;
+                    }
 
-            if (Collection.class == rawType || List.class == rawType) {
-                final Class clazz = ReflectionHelper.getGenericTypeArgumentClasses(parameter.getType()).get(0);
+                    if (Collection.class == rawType || List.class == rawType) {
+                        final Class clazz = ReflectionHelper.getGenericTypeArgumentClasses(parameter.getType()).get(0);
 
-                if (FormDataBodyPart.class == clazz) {
-                    // Return a collection of form data body part.
-                    return new ListFormDataBodyPartValueProvider(paramName);
-                } else if (FormDataContentDisposition.class == clazz) {
-                    // Return a collection of form data content disposition.
-                    return new ListFormDataContentDispositionProvider(paramName);
-                } else {
-                    // Return a collection of specific type.
-                    return new FormDataParamValueProvider(parameter, get(parameter));
+                        if (FormDataBodyPart.class == clazz) {
+                            // Return a collection of form data body part.
+                            return new ListFormDataBodyPartValueProvider(paramName);
+                        } else if (FormDataContentDisposition.class == clazz) {
+                            // Return a collection of form data content disposition.
+                            return new ListFormDataContentDispositionProvider(paramName);
+                        } else {
+                            // Return a collection of specific type.
+                            return new FormDataParamValueProvider(parameter, get(parameter));
+                        }
+                    } else if (FormDataBodyPart.class == rawType) {
+                        return new FormDataBodyPartProvider(paramName);
+                    } else if (FormDataContentDisposition.class == rawType) {
+                        return new FormDataContentDispositionProvider(paramName);
+                    } else if (File.class == rawType) {
+                        return new FileProvider(paramName);
+                    } else {
+                        return new FormDataParamValueProvider(parameter, get(parameter));
+                    }
+                } else if (FormParam.class.equals(sourceAnnotation.annotationType())) {
+                    final String paramName = ((FormParam) sourceAnnotation).value();
+                    if (Collection.class == rawType || List.class == rawType) {
+                        final Class clazz = ReflectionHelper.getGenericTypeArgumentClasses(parameter.getType()).get(0);
+                        if (EntityPart.class.equals(clazz)) {
+                            return new ListEntityPartValueProvider(paramName);
+                        }
+                    } else if (EntityPart.class.equals(rawType)) {
+                        return new EntityPartValueProvider(paramName);
+                    }
                 }
-            } else if (FormDataBodyPart.class == rawType) {
-                return new FormDataBodyPartProvider(paramName);
-            } else if (FormDataContentDisposition.class == rawType) {
-                return new FormDataContentDispositionProvider(paramName);
-            } else if (File.class == rawType) {
-                return new FileProvider(paramName);
-            } else {
-                return new FormDataParamValueProvider(parameter, get(parameter));
-            }
-        } else if (FormParam.class.equals(parameter.getSourceAnnotation().annotationType())) {
-            final String paramName = parameter.getSourceName();
-            if (Collection.class == rawType || List.class == rawType) {
-                final Class clazz = ReflectionHelper.getGenericTypeArgumentClasses(parameter.getType()).get(0);
-                if (EntityPart.class.equals(clazz)) {
-                    return new ListEntityPartValueProvider(paramName);
-                }
-            } else if (EntityPart.class.equals(rawType)) {
-                return new EntityPartValueProvider(paramName);
             }
         }
 

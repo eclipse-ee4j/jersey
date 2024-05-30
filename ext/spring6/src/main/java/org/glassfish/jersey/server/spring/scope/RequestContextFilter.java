@@ -98,7 +98,9 @@ public final class RequestContextFilter implements ContainerRequestFilter, Conta
                 final AbstractRequestAttributes attributes =
                         (AbstractRequestAttributes) requestContext.getProperty(REQUEST_ATTRIBUTES_PROPERTY);
                 RequestContextHolder.resetRequestAttributes();
-                attributes.requestCompleted();
+                if (attributes != null) {
+                    attributes.requestCompleted();
+                }
             }
         } : EMPTY_ATTRIBUTE_CONTROLLER;
     }

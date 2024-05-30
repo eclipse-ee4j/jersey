@@ -217,7 +217,9 @@
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                     <excludes>
-                        <exclude>module-info.java</exclude><exclude>META-INF/versions/11/**</exclude>
+                        <exclude>module-info.java</exclude>
+                        <exclude>META-INF/versions/11/**</exclude>
+                        <exclude>META-INF/versions/21/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -314,6 +316,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>${shade.mvn.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

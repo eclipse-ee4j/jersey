@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2018, 2024 Oracle and/or its affiliates. All rights reserved. "
 [//]: # "  "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Public License v. 2.0, which is available at "
@@ -18,13 +18,14 @@ Thanks for your interest in this project.
 
 ## Project description
 
-Eclipse Jersey is a REST framework that provides a JAX-RS (JSR-370) implementation and more. 
+Eclipse Jersey is a REST framework that provides a <a href="https://jcp.org/en/jsr/detail?id=370">JAX-RS (JSR-370)</a>, 
+now mainly <a href="https://projects.eclipse.org/projects/ee4j.rest">Jakarta REST</a>, implementation and more. 
 Jersey provides its own APIs that extend the JAX-RS toolkit with additional features and utilities 
 to further simplify RESTful service and client development. Jersey also exposes numerous extension 
 SPIs so that developers may extend Jersey to best suit their needs.
  
 Goals of Jersey project can be summarized in the following points:
-* Track the JAX-RS API and provide regular releases of production quality implementations that ships with GlassFish;
+* Track the JAX-RS/Jakarta REST API and provide regular releases of production quality implementations that ships with GlassFish;
 
 * Provide APIs to extend Jersey & Build a community of users and developers; and finally
 
@@ -40,6 +41,21 @@ more.
 The project maintains the following source code repositories
 
 * https://github.com/eclipse-ee4j/jersey
+
+## Eclipse Development Process
+
+This Eclipse Foundation open project is governed by the Eclipse Foundation
+Development Process and operates under the terms of the Eclipse IP Policy.
+
+## Specifications
+
+This specification project operates under the terms of the Eclipse Foundation
+Specification process.
+
+* https://eclipse.org/projects/dev_process
+* https://www.eclipse.org/org/documents/Eclipse_IP_Policy.pdf
+* https://www.eclipse.org/projects/efsp/
+* https://www.eclipse.org/legal/efsp_non_assert.php
 
 ## Eclipse Contributor Agreement
 

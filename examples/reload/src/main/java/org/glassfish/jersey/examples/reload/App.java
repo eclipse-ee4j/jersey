@@ -18,7 +18,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -72,10 +72,10 @@ public class App {
             try {
                 watcher = FileSystems.getDefault().newWatchService();
 
-                Path srcDir = Paths.get("src/main/java/org/glassfish/jersey/examples/reload");
+                Path srcDir = Path.of("src/main/java/org/glassfish/jersey/examples/reload");
                 registerWatcher(watcher, srcDir);
 
-                Path configFilePath = Paths.get(".");
+                Path configFilePath = Path.of(".");
                 registerWatcher(watcher, configFilePath);
 
             } catch (IOException e) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -467,24 +467,6 @@ public final class ClientProperties {
     public static final String QUERY_PARAM_STYLE = "jersey.config.client.uri.query.param.style";
 
     /**
-     * <p>
-     *     Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
-     *     {@code HttpUrlConnector} and {@code JavaNetHttpConnector} need
-     *     to have an extra System Property set to allow HOST header.
-     *     As an option to HOST header, this property allows the HOST name to be pre-set on a Client and does not need to
-     *     be set on each request.
-     * </p>
-     * <p>
-     *     The value MUST be an instance of {@link java.lang.String}.
-     * </p>
-     * <p>
-     *     The name of the configuration property is <tt>{@value}</tt>.
-     * </p>
-     * @since 3.1.2
-     */
-    public static final String SNI_HOST_NAME = "jersey.config.client.sniHostName";
-
-    /**
      * Sets the {@link org.glassfish.jersey.client.spi.ConnectorProvider} class. Overrides the value from META-INF/services.
      *
      * <p>
@@ -499,6 +481,31 @@ public final class ClientProperties {
      * @since 2.40
      */
     public static final String CONNECTOR_PROVIDER = "jersey.config.client.connector.provider";
+
+    /**
+     * <p>
+     *     Sets the {@code hostName} to be used for calculating the {@link javax.net.ssl.SNIHostName} during the HTTPS request.
+     *     Takes precedence over the HTTP HOST header, if set.
+     * </p>
+     * <p>
+     *     By default, the {@code SNIHostName} is set when the HOST HTTP header differs from the HTTP request host.
+     *     When the {@code hostName} matches the HTTPS request host, the {@code SNIHostName} is not set,
+     *     and the HTTP HOST header is not used for setting the {@code SNIHostName}. This allows for Domain Fronting.
+     * </p>
+     * <p>
+     *    Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
+     *    {@code HttpUrlConnector} and {@code JavaNetHttpConnector} need
+     *    to have an extra System Property set to allow HOST header.
+     * </p>
+     * <p>
+     *     The value MUST be an instance of {@link java.lang.String}.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.2
+     */
+    public static final String SNI_HOST_NAME = "jersey.config.client.snihostname";
 
     /**
      * <p>The {@link javax.net.ssl.SSLContext} {@link java.util.function.Supplier} to be used to set ssl context in the current

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -350,7 +350,7 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
             }
             return result;
         } else if (location.startsWith(FILE_LOCATION)) {
-            return Files.newInputStream(Paths.get(URI.create(location)));
+            return Files.newInputStream(Path.of(URI.create(location)));
         } else {
             throw new IllegalStateException("Location of keystore must start with either classpath: or file:, but is: "
                                                     + location

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -319,6 +319,30 @@ public final class CommonProperties {
      * @since 2.40
      */
     public static final String PARAM_CONVERTERS_THROW_IAE = "jersey.config.paramconverters.throw.iae";
+
+    /**
+     * <p>
+     *     Defines the {@link java.util.concurrent.ThreadFactory} to be used by internal default Executor Services.
+     * </p>
+     * <p>
+     *     The default is {@link  java.util.concurrent.Executors#defaultThreadFactory()} on platform threads and
+     *     {@code Thread.ofVirtual().factory()} on virtual threads.
+     * </p>
+     * @since 3.1.7
+     */
+    public static String THREAD_FACTORY = "jersey.config.threads.factory";
+
+    /**
+     * <p>
+     *     Defines whether the virtual threads should be used by Jersey on JDK 21+ when not using an exact number
+     *     of threads by {@code FixedThreadPool}.
+     * </p>
+     * <p>
+     *     The default is {@code false} for this version of Jersey.
+     * </p>
+     * @since 3.1.7
+     */
+    public static String USE_VIRTUAL_THREADS = "jersey.config.threads.use.virtual";
 
     /**
      * Prevent instantiation.

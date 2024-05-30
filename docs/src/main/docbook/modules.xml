@@ -455,6 +455,14 @@
 <entry>Jersey extension module providing support for Mustache templates.</entry>
 </row>
 <row>
+    <entry>
+        <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-thymeleaf/dependencies.html">
+            jersey-mvc-thymeleaf
+        </link>
+    </entry>
+    <entry>Jersey extension module providing support for Thymeleaf templates.</entry>
+</row>
+<row>
 <entry>
 <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-proxy-client/dependencies.html">
     jersey-proxy-client

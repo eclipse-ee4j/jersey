@@ -36,6 +36,9 @@ import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.internal.TracingLogger;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -69,7 +72,7 @@ public class UriRoutingContext implements RoutingContext {
     private final LinkedList<ResourceMethod> matchedLocators = new LinkedList<>();
     private final LinkedList<Resource> locatorSubResources = new LinkedList<>();
 
-    private final TracingLogger tracingLogger;
+    private final LazyValue<TracingLogger> tracingLogger;
 
     private volatile ResourceMethod matchedResourceMethod = null;
     private volatile Throwable mappedThrowable = null;
@@ -89,7 +92,8 @@ public class UriRoutingContext implements RoutingContext {
      */
     public UriRoutingContext(final ContainerRequest requestContext) {
         this.requestContext = requestContext;
-        this.tracingLogger = TracingLogger.getInstance(requestContext);
+        // Tracing Logger is initialized after UriContext before pushMatchedResource
+        this.tracingLogger = Values.lazy((Value<TracingLogger>) () -> TracingLogger.getInstance(requestContext));
     }
 
     // RoutingContext
@@ -100,7 +104,7 @@ public class UriRoutingContext implements RoutingContext {
 
     @Override
     public void pushMatchedResource(final Object resource) {
-        tracingLogger.log(ServerTraceEvent.MATCH_RESOURCE, resource);
+        tracingLogger.get().log(ServerTraceEvent.MATCH_RESOURCE, resource);
         matchedResources.push(resource);
     }
 
@@ -111,7 +115,7 @@ public class UriRoutingContext implements RoutingContext {
 
     @Override
     public void pushMatchedLocator(final ResourceMethod resourceLocator) {
-        tracingLogger.log(ServerTraceEvent.MATCH_LOCATOR, resourceLocator.getInvocable().getHandlingMethod());
+        tracingLogger.get().log(ServerTraceEvent.MATCH_LOCATOR, resourceLocator.getInvocable().getHandlingMethod());
         matchedLocators.push(resourceLocator);
     }
 
@@ -192,14 +196,14 @@ public class UriRoutingContext implements RoutingContext {
 
     @Override
     public void setMatchedResourceMethod(final ResourceMethod resourceMethod) {
-        tracingLogger.log(ServerTraceEvent.MATCH_RESOURCE_METHOD, resourceMethod.getInvocable().getHandlingMethod());
+        tracingLogger.get().log(ServerTraceEvent.MATCH_RESOURCE_METHOD, resourceMethod.getInvocable().getHandlingMethod());
         this.matchedResourceMethod = resourceMethod;
     }
 
     @Override
     public void pushMatchedRuntimeResource(final RuntimeResource runtimeResource) {
-        if (tracingLogger.isLogEnabled(ServerTraceEvent.MATCH_RUNTIME_RESOURCE)) {
-            tracingLogger.log(ServerTraceEvent.MATCH_RUNTIME_RESOURCE,
+        if (tracingLogger.get().isLogEnabled(ServerTraceEvent.MATCH_RUNTIME_RESOURCE)) {
+            tracingLogger.get().log(ServerTraceEvent.MATCH_RUNTIME_RESOURCE,
                     runtimeResource.getResources().get(0).getPath(),
                     runtimeResource.getResources().get(0).getPathPattern().getRegex(),
                     matchResults.peek().group()

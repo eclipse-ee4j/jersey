@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.Properties;
 import jakarta.ws.rs.ext.ContextResolver;
 
 import org.glassfish.jersey.internal.util.PropertiesClass;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 /**
  * Injectable JavaBean containing the configuration parameters for
@@ -38,12 +39,17 @@ public class MultiPartProperties {
     /**
      * Default threshold size for buffer.
      */
-    public static final int DEFAULT_BUFFER_THRESHOLD = 4096;
+    public static final int DEFAULT_BUFFER_THRESHOLD = ReaderWriter.BUFFER_SIZE;
 
     /**
+     * <p>
      * Name of a properties resource that (if found in the classpath
      * for this application) will be used to configure the settings returned
      * by our getter methods.
+     * </p>
+     * <p>
+     *     The resource name is {@code jersey-multipart-config.properties}.
+     * </p>
      */
     public static final String MULTI_PART_CONFIG_RESOURCE = "jersey-multipart-config.properties";
 
@@ -51,7 +57,7 @@ public class MultiPartProperties {
      * Name of the resource property for the threshold size (in bytes) above which a body part entity will be
      * buffered to disk instead of being held in memory.
      *
-     * The default value is {@value #DEFAULT_BUFFER_THRESHOLD}.
+     * The default value is {@link #DEFAULT_BUFFER_THRESHOLD}.
      */
     public static final String BUFFER_THRESHOLD = "jersey.config.multipart.bufferThreshold";
 
@@ -61,8 +67,20 @@ public class MultiPartProperties {
     public static final int BUFFER_THRESHOLD_MEMORY_ONLY = -1;
 
     /**
+     * <p>
+     *     Limit the maximum number of parts the multipart entity can have. If the limit is over,
+     *     the error response status {@link jakarta.ws.rs.core.Response.Status#REQUEST_ENTITY_TOO_LARGE} is returned.
+     * </p>
+     * <p>
+     *     By default, the number is unlimited.
+     * </p>
+     * @since 2.44
+     */
+    public static final String MAX_PARTS = "jersey.config.multipart.maxParts";
+
+    /**
      * Name of the resource property for the directory to store temporary files containing body parts of multipart message that
-     * extends allowed memory threshold..
+     * extends allowed memory threshold.
      *
      * The default value is not set (will be taken from {@code java.io.tmpdir} system property).
      */
@@ -78,6 +96,11 @@ public class MultiPartProperties {
      * Directory to store temporary files containing body parts of multipart message that extends allowed memory threshold.
      */
     private String tempDir = null;
+
+    /**
+     * Maximum number of entity parts allowed.
+     */
+    private int maxParts = Integer.MAX_VALUE;
 
     /**
      * Load and customize (if necessary) the configuration values for the
@@ -114,6 +137,15 @@ public class MultiPartProperties {
     }
 
     /**
+     * Return maximum number of entity parts allowed.
+     * @return maximum number of parts.
+     * @since 2.44
+     */
+    public int getMaxParts() {
+        return maxParts;
+    }
+
+    /**
      * Set the size (in bytes) of the entity of an incoming {@link BodyPart} before it will be buffered to disk.
      *
      * @param threshold size of body part.
@@ -135,6 +167,17 @@ public class MultiPartProperties {
      */
     public MultiPartProperties tempDir(final String path) {
         this.tempDir = path;
+        return this;
+    }
+
+    /**
+     * Set the maximum number of received parts of a multipart entity.
+     * @param maxParts The maximum number of entity parts.
+     * @return {@code MultiPartProperties} instance.
+     * @since 2.44
+     */
+    public MultiPartProperties maxParts(int maxParts) {
+        this.maxParts = maxParts;
         return this;
     }
 
@@ -168,6 +211,9 @@ public class MultiPartProperties {
             }
             if (props.containsKey(TEMP_DIRECTORY)) {
                 this.tempDir = props.getProperty(TEMP_DIRECTORY);
+            }
+            if (props.contains(MAX_PARTS)) {
+                this.maxParts = Integer.parseInt(props.getProperty(MAX_PARTS));
             }
         } catch (final IOException e) {
             throw new IllegalArgumentException(e);

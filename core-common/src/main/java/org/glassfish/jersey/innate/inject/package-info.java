@@ -16,5 +16,6 @@
 
 /**
  * Jersey innate injection related packages. The innate packages will not be opened by JPMS outside of Jersey.
+ * Not for public use.
  */
 package org.glassfish.jersey.innate.inject;

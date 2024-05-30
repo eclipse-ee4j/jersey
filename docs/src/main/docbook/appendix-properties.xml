@@ -203,6 +203,39 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.common.CommonProperties.THREAD_FACTORY;(Jersey 3.1.7 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.threads.factory</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Defines the <literal>java.util.concurrent.ThreadFactory</literal> to be used by internal default
+                                <literal>ExecutorServices</literal>.
+                            </para>
+                            <para>
+                                The default is <literal>java.util.concurrent.Executors#defaultThreadFactory()</literal> on
+                                platform threads and<literal>Thread.ofVirtual().factory()</literal> on virtual threads.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.USE_VIRTUAL_THREADS;(Jersey 3.1.7 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.threads.use.virtual</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Defines whether the virtual threads should be used by Jersey on JDK 21+ when not using an exact number
+                                of threads by <literal>FixedThreadPool</literal>.
+                            </para>
+                            <para>
+                                The default is &lit.false; for this version of Jersey.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.logging.LoggingFeature.LOGGING_FEATURE_LOGGER_NAME;
                         </entry>
                         <entry>
@@ -1169,7 +1202,22 @@
                             </para>
                         </entry>
                     </row>
-
+                    <row>
+                        <entry>&jersey.client.ClientProperties.SNI_HOST_NAME; (Jersey 2.43 or later)</entry>
+                        <entry><literal>jersey.config.client.sniHostName</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the host name to be used for calculating the <literal>javax.net.ssl.SNIHostName</literal>
+                                during the HTTPS request. Takes precedence over the HTTP HOST header, if set.
+                            </para>
+                            <para>
+                                By default, the <literal>SNIHostName</literal> is set when the HOST HTTP header differs from
+                                the HTTP request host. When the property value host name matches the HTTPS request host,
+                                the <literal>SNIHostName</literal> is not set, and the HTTP HOST header is not used for
+                                setting the <literal>SNIHostName</literal>. This allows for Domain Fronting.
+                            </para>
+                        </entry>
+                    </row>
                     <row>
                         <entry>&jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION;
                             (Jersey 2.2 or later)</entry>
@@ -1351,7 +1399,7 @@
                         <entry>
                             <para>
                                 If set to &lit.true; then XML root element tag name for collections will
-                                be derived from <literal>javax.xml.bind.annotation.XmlRootElement</literal>
+                                be derived from <literal>jakarta.xml.bind.annotation.XmlRootElement</literal>
                                 annotation value and won't be de-capitalized.
                             </para>
                             <para>
@@ -1983,6 +2031,39 @@
                             </para>
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_HEADER_SIZE;</entry>
+                        <entry><literal>jersey.config.client.netty.maxHeaderSize</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the header size for the Netty connector
+
+                                Default header size is 8192b.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_CHUNK_SIZE;</entry>
+                        <entry><literal>jersey.config.client.netty.maxChunkSize</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the chunk size for the Netty connector
+
+                                Default chunk size is 8192b.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_INITIAL_LINE_LENGTH;</entry>
+                        <entry><literal>jersey.config.client.netty.maxInitialLineLength</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the initial line length for the Netty connector
+
+                                Default initial line length is 4096b.
+                            </para>
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
@@ -2084,6 +2165,82 @@
                             </para>
                             <para>
                                 The default value is &lit.null;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-multipart">
+        <title>Multipart configuration properties</title>
+
+        <para>
+            List of multipart configuration properties that can be found in &jersey.media.multipart.MultiPartProperties; class.
+        </para>
+
+        <table>
+            <title>
+                List of multipart configuration properties settable in the
+                &jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE; configuration file.
+            </title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.BUFFER_THRESHOLD;</entry>
+                        <entry><literal>jersey.config.multipart.bufferThreshold</literal></entry>
+                        <entry>
+                            <para>
+                                Name of the resource property for the threshold size (in bytes) above which a
+                                body part entity will be buffered to disk instead of being held in memory.
+                            </para>
+                            <para>
+                                The default value is &jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE;
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.MAX_PARTS;</entry>
+                        <entry><literal>jersey.config.multipart.maxParts</literal></entry>
+                        <entry>
+                            <para>
+                                Limit the maximum number of parts the multipart entity can have. If the limit is over,
+                                the error response status <literal>413 - REQUEST_ENTITY_TOO_LARGE</literal>
+                                is returned.
+                            </para>
+                            <para>
+                                By default, the number is unlimited.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE;</entry>
+                        <entry><literal>jersey-multipart-config.properties</literal></entry>
+                        <entry>
+                            <para>
+                                Name of a properties resource that (if found in the classpath
+                                for this application) will be used to configure the settings returned
+                                by our getter methods.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.TEMP_DIRECTORY;</entry>
+                        <entry><literal>jersey.config.multipart.tempDir</literal></entry>
+                        <entry>
+                            <para>
+                                Name of the resource property for the directory to store temporary files containing body parts
+                                of multipart message that extends allowed memory threshold.
+                            </para>
+                            <para>
+                                The default value is not set (will be taken from <literal>java.io.tmpdir</literal> system property).
                             </para>
                         </entry>
                     </row>

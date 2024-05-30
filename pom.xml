@@ -142,6 +142,9 @@
         <contributor>
             <name>Stepan Vavra</name>
         </contributor>
+        <contributor>
+            <name>Dmytro Dovnar</name>
+        </contributor>
     </contributors>
 
     <licenses>
@@ -305,7 +308,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>${clean.mvn.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -313,6 +316,8 @@
                     <version>${compiler.mvn.plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                         <compilerArguments>
                             <!--<Werror />-->
                             <!-- TODO work towards eliminating all warnings in order to be able to enable the -Xlint option -->
@@ -423,12 +428,10 @@
                                 junit.jupiter.execution.parallel.mode.default=same_thread
                             </configurationParameters>
                         </properties>
-                        <systemProperties>
-                            <property>
-                                <name>jersey.config.test.container.port</name>
-                                <value>${jersey.config.test.container.port}</value>
-                            </property>
-                        </systemProperties>
+                        <systemPropertyVariables>
+                            <jersey.config.test.container.port>${jersey.config.test.container.port}
+                            </jersey.config.test.container.port>
+                        </systemPropertyVariables>
                         <threadCount>124</threadCount>
                     </configuration>
                     <dependencies>
@@ -468,7 +471,7 @@
                         <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                         <windowtitle>Jersey ${jersey.version} API</windowtitle>
                         <bottom>
-                            <![CDATA[Copyright &#169; 2007-2023,
+                            <![CDATA[Copyright &#169; 2007-2024,
                                 <a href="http://www.oracle.com">Oracle</a>
                                 and/or its affiliates.
                                 All Rights Reserved. Use is subject to license terms.]]>
@@ -479,7 +482,7 @@
                             <link>https://eclipse-ee4j.github.io/jersey.github.io/apidocs/latest/jersey/</link>
                         </links>
                         <excludePackageNames>
-                            *.internal.*:*.innate.*:*.tests.*
+                            *.innate:*.innate.*:*.tests:*.tests.*
                         </excludePackageNames>
                         <includeDependencySources>false</includeDependencySources>
                         <dependencySourceIncludes>
@@ -542,11 +545,6 @@
                             <platform>felix</platform>
                         </options>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${site.mvn.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -635,12 +633,10 @@
                         <skipTests>${skip.tests}</skipTests>
                         <skipITs>${skip.tests}</skipITs>
                         <argLine>${failsafe.coverage.argline}</argLine>
-                        <systemProperties>
-                            <property>
-                                <name>jersey.config.test.container.port</name>
-                                <value>${jersey.config.test.container.port}</value>
-                            </property>
-                        </systemProperties>
+                        <systemPropertyVariables>
+                            <jersey.config.test.container.port>${jersey.config.test.container.port}
+                            </jersey.config.test.container.port>
+                        </systemPropertyVariables>
                     </configuration>
                     <executions>
                         <execution>
@@ -793,59 +789,9 @@
                         <dependency>
                             <groupId>org.apache.ant</groupId>
                             <artifactId>ant</artifactId>
-                            <version>1.10.12</version>
+                            <version>${mvn.ant.version}</version>
                         </dependency>
                     </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>org.fortasoft</groupId>
-                    <artifactId>gradle-maven-plugin</artifactId>
-                    <version>1.0.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.wvengen</groupId>
-                    <artifactId>proguard-maven-plugin</artifactId>
-                    <version>${proguard.mvn.plugin.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>net.sf.proguard</groupId>
-                            <artifactId>proguard-base</artifactId>
-                            <version>6.2.2</version><!-- transitive dependency version increased from 5.0 -->
-                            <scope>runtime</scope>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
-                    <executions>
-                        <!-- when module.info
-                                                        <execution>
-                                                            <id>default-compile</id>
-                                                            <configuration>
-                                                                compile everything to ensure module-info contains right entries
-                                                                <release>11</release>
-                                                            </configuration>
-                                                        </execution>
-                        -->
-                        <execution>
-                            <id>base-compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <!-- recompile everything for target VM except the module-info.java -->
-                            <configuration>
-                                <excludes>
-                                    <exclude>module-info.java</exclude>
-                                </excludes>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -895,7 +841,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${buildhelper.mvn.plugin.version}</version>
                 <configuration>
                     <portNames>
                         <portName>jersey.config.test.container.port</portName>
@@ -959,7 +904,6 @@
             <properties>
 <!--                <release.tests.args>-Dskip.tests=true</release.tests.args>-->
                 <skip.tests>true</skip.tests>
-                <skip.e2e>true</skip.e2e>
             </properties>
         </profile>
         <profile>
@@ -1118,14 +1062,6 @@
                     <version>${moxy.version}</version>
                 </dependency>
             </dependencies>
-            <repositories>
-                <repository>
-                    <id>eclipselink.repository</id>
-                    <name>Eclipse Maven Repository</name>
-                    <url>https://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
         </profile>
         <profile>
             <id>securityOff</id>
@@ -1143,7 +1079,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>3.4.5</version>
+                        <version>${project.info.reports.mvn.plugin.version}</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
@@ -1162,6 +1098,37 @@
                     <url>http://localhost</url>
                 </site>
             </distributionManagement>
+        </profile>
+        <profile>
+            <id>sbom</id>
+            <activation>
+                <property>
+                    <name>!skipSBOM</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.cyclonedx</groupId>
+                        <artifactId>cyclonedx-maven-plugin</artifactId>
+                        <version>${cyclonedx.mvn.plugin.version}</version>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>makeAggregateBom</goal>
+                                </goals>
+                                <configuration>
+                                    <!--                            <schemaVersion>1.4</schemaVersion>-->
+                                    <projectType>framework</projectType>
+                                    <excludeTestProject>true</excludeTestProject>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>sonar</id>
@@ -1304,51 +1271,6 @@
             </build>
         </profile>
         <profile>
-            <!--
-            Profile is aimed to run the build on travis
-            due to travis limitations for output (max 4MB) this profile is used along with grep which reduces
-            the output.
-            However some e2e tests produce output which is not grepped (thus is not visible) and run longer than
-            10 minutes which results in the whole build is being murdered by Travis because of death suspection
-
-            the whole build is run as clean install but excludes several e2e tests because of the not grepped output
-            -->
-            <id>travis_e2e_skip</id>
-            <properties>
-                <skip.e2e>true</skip.e2e>
-            </properties>
-        </profile>
-        <profile>
-            <!--
-             Profile is aimed to run the build on travis
-            due to travis limitations for output (max 4MB) this profile is used to run e2e tests only.
-
-            the only thing which is happen using profile is run of e2e tests (with additional build)
-            everything is already build using travis_e2e_skip profile
-
-            the whole build is run as test -Ptravis_e2e
-            -->
-            <id>travis_e2e</id>
-            <properties>
-                <skip.e2e>false</skip.e2e>
-                <skip.tests>true</skip.tests>
-            </properties>
-        </profile>
-        <profile>
-                <!-- Use -Peclipse_repo to use SNAPSHOTs stored in Eclipse's Nexus instance ("Nightly Builds") -->
-                <id>eclipse_repo</id>
-            <repositories>
-                    <repository>
-                        <snapshots>
-                            <enabled>true</enabled>
-                        </snapshots>
-                        <id>repo.jaxrs-api.eclipse.org</id>
-                        <name>JAX-RS API Repository - Snapshots</name>
-                        <url>https://repo.eclipse.org/content/repositories/jax-rs-api-snapshots</url>
-                    </repository>
-                </repositories>
-        </profile>
-        <profile>
             <id>license_check</id>
             <pluginRepositories>
                 <pluginRepository>
@@ -1371,7 +1293,7 @@
                     <plugin>
                         <groupId>org.eclipse.dash</groupId>
                         <artifactId>license-tool-plugin</artifactId>
-                        <version>1.0.2</version>
+                        <version>1.1.0</version>
                         <executions>
                             <execution>
                                 <id>license-check</id>
@@ -1424,20 +1346,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>${javadoc.mvn.plugin.version}</version>
                 <!-- Run this plugin report sets only in the main Jersey pom -->
                 <inherited>false</inherited>
                 <configuration>
                     <doctitle>Jersey ${jersey.version} API Documentation</doctitle>
                     <windowtitle>Jersey ${jersey.version} API</windowtitle>
                     <bottom>
-                        <![CDATA[Copyright &#169; 2007-2023,
+                        <![CDATA[Copyright &#169; 2007-2024,
                             <a href="http://www.oracle.com">Oracle</a>
                             and/or its affiliates.
                             All Rights Reserved. Use is subject to license terms.]]>
                     </bottom>
                     <excludePackageNames>
-                        com.sun.ws.rs.ext:*.examples.*:*.internal.*:*.tests.*
+                        com.sun.ws.rs.ext:*.examples.*:*.innate:*.innate.*:*.tests:*.tests.*
                     </excludePackageNames>
                     <links>
                         <link>https://jax-rs.github.io/apidocs/2.1</link>
@@ -1477,7 +1399,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
+                <version>${jxr.mvn.plugin.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -2121,7 +2043,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 <!--        <release.tests.args>-Dmaven.test.skip=false</release.tests.args>-->
 <!--        <release.preparationGoals>clean install</release.preparationGoals>-->
-        <skip.e2e>false</skip.e2e>
         <skip.tests>false</skip.tests>
         <xdk.absolute.path />
         <surefire.security.argline />
@@ -2132,13 +2053,15 @@
 
         <!-- Versions of Maven plugins -->
         <antrun.mvn.plugin.version>3.1.0</antrun.mvn.plugin.version>
+        <mvn.ant.version>1.10.14</mvn.ant.version>
         <assembly.mvn.plugin.version>3.7.1</assembly.mvn.plugin.version>
+        <clean.mvn.plugin.version>3.3.2</clean.mvn.plugin.version>
         <enforcer.mvn.plugin.version>3.4.1</enforcer.mvn.plugin.version>
         <exec.mvn.plugin.version>3.2.0</exec.mvn.plugin.version>
         <buildhelper.mvn.plugin.version>3.5.0</buildhelper.mvn.plugin.version>
         <buildnumber.mvn.plugin.version>3.2.0</buildnumber.mvn.plugin.version>
         <checkstyle.mvn.plugin.version>3.3.1</checkstyle.mvn.plugin.version>
-        <checkstyle.version>10.14.2</checkstyle.version>
+        <checkstyle.version>10.16.0</checkstyle.version>
         <compiler.mvn.plugin.version>3.13.0</compiler.mvn.plugin.version>
         <!--
         Special version of the compiler plugin just for the jersey-common. All versions above
@@ -2147,24 +2070,24 @@
         but the jersey-common module which has to have the separate version for OSGi reasons.
          -->
         <compiler.common.mvn.plugin.version>3.9.0</compiler.common.mvn.plugin.version>
+        <cyclonedx.mvn.plugin.version>2.8.0</cyclonedx.mvn.plugin.version>
         <dependency.mvn.plugin.version>3.6.1</dependency.mvn.plugin.version>
-        <deploy.mvn.plugin.version>3.1.1</deploy.mvn.plugin.version>
+        <deploy.mvn.plugin.version>3.1.2</deploy.mvn.plugin.version>
         <ear.mvn.plugin.version>3.3.0</ear.mvn.plugin.version>
         <failsafe.mvn.plugin.version>3.2.5</failsafe.mvn.plugin.version>
         <felix.mvn.plugin.version>5.1.9</felix.mvn.plugin.version>
         <findbugs.mvn.plugin.version>3.0.5</findbugs.mvn.plugin.version>
         <gfembedded.mvn.plugin.version>5.1</gfembedded.mvn.plugin.version>
-        <install.mvn.plugin.version>3.1.1</install.mvn.plugin.version>
+        <install.mvn.plugin.version>3.1.2</install.mvn.plugin.version>
         <istack.mvn.plugin.version>4.2.0</istack.mvn.plugin.version>
-        <jar.mvn.plugin.version>3.3.0</jar.mvn.plugin.version>
+        <jar.mvn.plugin.version>3.4.1</jar.mvn.plugin.version>
         <javadoc.mvn.plugin.version>3.6.3</javadoc.mvn.plugin.version>
         <jxr.mvn.plugin.version>3.3.2</jxr.mvn.plugin.version>
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
-        <proguard.mvn.plugin.version>2.6.1</proguard.mvn.plugin.version>
+        <project.info.reports.mvn.plugin.version>3.5.0</project.info.reports.mvn.plugin.version>
         <resources.mvn.plugin.version>3.3.1</resources.mvn.plugin.version>
-        <shade.mvn.plugin.version>3.5.2</shade.mvn.plugin.version>
-        <site.mvn.plugin.version>3.12.1</site.mvn.plugin.version>
-        <source.mvn.plugin.version>3.3.0</source.mvn.plugin.version>
+        <shade.mvn.plugin.version>3.5.3</shade.mvn.plugin.version>
+        <source.mvn.plugin.version>3.3.1</source.mvn.plugin.version>
         <surefire.mvn.plugin.version>3.2.5</surefire.mvn.plugin.version>
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
         <wiremock.mvn.plugin.version>2.11.0</wiremock.mvn.plugin.version>
@@ -2183,7 +2106,7 @@
         <aspectj.weaver.version>1.9.22</aspectj.weaver.version>
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
-        <commons.io.version>2.15.1</commons.io.version>
+        <commons.io.version>2.16.1</commons.io.version>
         <commons.codec.version>1.16.1</commons.codec.version>
 <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
         <commons.logging.version>1.3.1</commons.logging.version>
@@ -2193,8 +2116,8 @@
         <felix.framework.version>7.0.5</felix.framework.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <freemarker.version>2.3.32</freemarker.version>
-        <gae.version>2.0.25</gae.version>
-        <groovy.version>4.0.20</groovy.version>
+        <gae.version>2.0.26</gae.version>
+        <groovy.version>4.0.21</groovy.version>
         <gson.version>2.10.1</gson.version>
 
         <!--versions, extracted here due to maven-enforcer-plugin -->
@@ -2214,10 +2137,10 @@
         <helidon.jersey.connector.version>3.2.6</helidon.jersey.connector.version>
         <smallrye.config.version>3.7.1</smallrye.config.version>
 
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>33.1.0-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <xmlunit.version>2.9.1</xmlunit.version>
-        <httpcore.version>4.5.14</httpcore.version>
+        <xmlunit.version>2.10.0</xmlunit.version>
+        <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.3.1</httpclient5.version>
         <jackson.version>2.17.0</jackson.version>
         <javassist.version>3.30.2-GA</javassist.version>
@@ -2228,10 +2151,11 @@
         <junit4.version>4.13.2</junit4.version>
         <junit5.version>5.10.2</junit5.version>
         <junit-platform-suite.version>1.10.2</junit-platform-suite.version>
+        <junit-platform-suite.legacy.version>1.10.0</junit-platform-suite.legacy.version>
         <kryo.version>4.0.3</kryo.version>
-        <mockito.version>3.12.4</mockito.version> <!-- CQ 17673 -->
-        <mustache.version>0.9.11</mustache.version>
-        <netty.version>4.1.108.Final</netty.version>
+        <mockito.version>4.11.0</mockito.version> <!-- CQ 17673 -->
+        <mustache.version>0.9.12</mustache.version>
+        <netty.version>4.1.109.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
@@ -2249,10 +2173,12 @@
         <servlet4.version>4.0.3</servlet4.version>
         <servlet6.version>6.1.0-M2</servlet6.version>
 
-        <slf4j.version>2.0.12</slf4j.version>
+        <simple.version>6.0.1</simple.version>
+        <slf4j.version>2.0.13</slf4j.version>
         <spring6.version>6.0.18</spring6.version>
         <testng.version>7.9.0</testng.version>
         <testng6.version>6.9.13.6</testng6.version>
+        <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <!-- Jakartified, eligible for CQ -->
         <weld.version>6.0.0.Beta1</weld.version>
         <weld3.version>3.1.9.Final</weld3.version>
@@ -2262,7 +2188,7 @@
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
-        <graalvm.version>20.3.13</graalvm.version>
+        <graalvm.version>20.3.14</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
         <gf.impl.version>7.0.13</gf.impl.version>
