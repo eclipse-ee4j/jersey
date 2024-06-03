@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.server.internal.AbstractResourceFinderAdapter;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 
@@ -109,51 +110,16 @@ public final class JarFileScanner extends AbstractResourceFinderAdapter {
     @Override
     public InputStream open() {
         //noinspection NullableProblems
-        return new InputStream() {
+        return new InputStreamWrapper() {
 
             @Override
-            public int read() throws IOException {
-                return jarInputStream.read();
-            }
-
-            @Override
-            public int read(final byte[] bytes) throws IOException {
-                return jarInputStream.read(bytes);
-            }
-
-            @Override
-            public int read(final byte[] bytes, final int i, final int i2) throws IOException {
-                return jarInputStream.read(bytes, i, i2);
-            }
-
-            @Override
-            public long skip(final long l) throws IOException {
-                return jarInputStream.skip(l);
-            }
-
-            @Override
-            public int available() throws IOException {
-                return jarInputStream.available();
+            protected InputStream getWrapped() {
+                return jarInputStream;
             }
 
             @Override
             public void close() throws IOException {
                 jarInputStream.closeEntry();
-            }
-
-            @Override
-            public synchronized void mark(final int i) {
-                jarInputStream.mark(i);
-            }
-
-            @Override
-            public synchronized void reset() throws IOException {
-                jarInputStream.reset();
-            }
-
-            @Override
-            public boolean markSupported() {
-                return jarInputStream.markSupported();
             }
         };
     }

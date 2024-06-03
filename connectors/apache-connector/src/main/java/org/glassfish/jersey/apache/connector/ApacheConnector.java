@@ -60,6 +60,7 @@ import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -890,7 +891,7 @@ class ApacheConnector implements Connector {
         }
     }
 
-    private static class CancellableInputStream extends InputStream {
+    private static class CancellableInputStream extends InputStreamWrapper {
         private final InputStream in;
         private final Supplier<Boolean> isCancelled;
 
@@ -899,58 +900,17 @@ class ApacheConnector implements Connector {
             this.isCancelled = isCancelled;
         }
 
-        public int read(byte b[]) throws IOException {
-            checkAborted();
-            return in.read();
-        }
-
-        public int read(byte b[], int off, int len) throws IOException {
-            checkAborted();
-            return in.read(b, off, len);
+        @Override
+        protected InputStream getWrapped() {
+            return in;
         }
 
         @Override
-        public int read() throws IOException {
-            checkAborted();
-            return in.read();
-        }
-
-        public boolean markSupported() {
-            return in.markSupported();
-        }
-
-        @Override
-        public long skip(long n) throws IOException {
-            checkAborted();
-            return in.skip(n);
-        }
-
-        @Override
-        public int available() throws IOException {
-            checkAborted();
-            return in.available();
-        }
-
-        @Override
-        public void close() throws IOException {
-            in.close();
-        }
-
-        @Override
-        public void mark(int readlimit) {
-            in.mark(readlimit);
-        }
-
-        @Override
-        public void reset() throws IOException {
-            checkAborted();
-            in.reset();
-        }
-
-        private void checkAborted() throws IOException {
+        protected InputStream getWrappedIOE() throws IOException {
             if (isCancelled.get()) {
                 throw new IOException(new CancellationException());
             }
+            return in;
         }
     }
 }
