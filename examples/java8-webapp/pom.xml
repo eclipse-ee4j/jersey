@@ -56,7 +56,7 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <!-- TODO: Remove the version when JERSEY-2743 is resolved. -->
-                <version>9.2.6.v20141205</version>
+                <version>${jetty.version}</version>
                 <configuration>
                     <scanIntervalSeconds>5</scanIntervalSeconds>
                     <stopPort>9999</stopPort>

@@ -44,7 +44,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <version>${commons.logging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>${servlet3.version}</version>
         </dependency>
     </dependencies>
 
