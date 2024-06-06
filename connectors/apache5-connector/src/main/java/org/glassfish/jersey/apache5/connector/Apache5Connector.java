@@ -522,7 +522,7 @@ class Apache5Connector implements Connector {
             final HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null) {
+                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null && entity.getContentLength() >= 0) {
                     headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(entity.getContentLength()));
                 }
 

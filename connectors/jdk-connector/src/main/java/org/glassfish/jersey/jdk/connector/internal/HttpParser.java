@@ -514,7 +514,14 @@ class HttpParser {
             }
 
             return;
+        } else if (httpResponse.getHasContent()) {
+            // missing Content-Length
+            transferEncodingParser = TransferEncodingParser
+                    .createFixedLengthParser(httpResponse.getBodyStream(), Long.MAX_VALUE);
+            return;
         }
+
+
 
         // TODO what now? Expect no content or fail loudly?
     }
