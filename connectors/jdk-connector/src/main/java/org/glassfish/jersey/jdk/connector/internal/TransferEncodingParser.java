@@ -63,7 +63,7 @@ abstract class TransferEncodingParser {
             responseBody.notifyDataAvailable(parsed);
             consumedLength += data.length;
 
-            return consumedLength == expectedLength;
+            return consumedLength == expectedLength || expectedLength == Long.MAX_VALUE /* unknown at the beginning */;
         }
     }
 

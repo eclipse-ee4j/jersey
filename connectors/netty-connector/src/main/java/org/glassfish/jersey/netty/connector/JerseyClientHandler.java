@@ -98,6 +98,8 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
        if (readTimedOut) {
           responseDone.completeExceptionally(new TimeoutException("Stream closed: read timeout"));
+       } else if (jerseyRequest.isCancelled()) {
+          responseDone.completeExceptionally(new CancellationException());
        } else {
           responseDone.completeExceptionally(new IOException("Stream closed"));
        }
@@ -186,21 +188,10 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             }
 
             // request entity handling.
-            if ((response.headers().contains(HttpHeaders.CONTENT_LENGTH) && HttpUtil.getContentLength(response) > 0)
-                    || HttpUtil.isTransferEncodingChunked(response)) {
+            nis = new NettyInputStream();
+            responseDone.whenComplete((_r, th) -> nis.complete(th));
 
-                nis = new NettyInputStream();
-                responseDone.whenComplete((_r, th) -> nis.complete(th));
-
-                jerseyResponse.setEntityStream(nis);
-            } else {
-                jerseyResponse.setEntityStream(new InputStream() {
-                    @Override
-                    public int read() throws IOException {
-                        return -1;
-                    }
-                });
-            }
+            jerseyResponse.setEntityStream(nis);
         }
         if (msg instanceof HttpContent) {
 
