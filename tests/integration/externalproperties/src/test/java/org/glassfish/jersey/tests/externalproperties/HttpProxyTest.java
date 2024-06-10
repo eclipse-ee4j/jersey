@@ -23,8 +23,9 @@ import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,35 +41,35 @@ public class HttpProxyTest extends JerseyTest {
     }
 
     private static final String PROXY_HOST = "localhost";
-    private static final String PROXY_PORT = "0";
+    private static final int PROXY_PORT = 0;
     private static boolean proxyHit = false;
-
-    @Path("resource")
-    public static class ProxyTestResource {
-
-        @GET
-        public String getOK() {
-            return "OK";
-        }
-
-    }
+    private static Server server;
 
     @Override
     protected Application configure() {
         return new ResourceConfig(ProxyTestResource.class);
     }
 
-    @BeforeEach
-    public void startFakeProxy() {
+    @BeforeAll
+    static void startFakeProxy() {
         System.setProperty(ExternalProperties.HTTP_PROXY_HOST, PROXY_HOST);
-        Server server = new Server(Integer.parseInt(PROXY_PORT));
+        server = new Server(PROXY_PORT);
         server.setHandler(new ProxyHandler(false));
         try {
             server.start();
         } catch (Exception e) {
-
+            throw new RuntimeException("Proxy server failed to start.", e);
         }
         System.setProperty(ExternalProperties.HTTP_PROXY_PORT, String.valueOf(server.getURI().getPort()));
+    }
+
+    @AfterAll
+    static void stopFakeProxy() {
+        try {
+            server.stop();
+        } catch (Exception e) {
+            throw new RuntimeException("Proxy server failed to stop.", e);
+        }
     }
 
     @Test
@@ -78,10 +79,12 @@ public class HttpProxyTest extends JerseyTest {
         Response response = target("resource").request().get();
 
         Assertions.assertEquals(407, response.getStatus());
+        Assertions.assertTrue(proxyHit);
     }
 
     @Test
     public void testNonProxy() {
+        proxyHit = false;
         System.setProperty(ExternalProperties.HTTP_NON_PROXY_HOSTS, "localhost");
 
         Response response = target("resource").request().get();
@@ -91,7 +94,7 @@ public class HttpProxyTest extends JerseyTest {
         Assertions.assertFalse(proxyHit);
     }
 
-    class ProxyHandler extends AbstractHandler {
+    static class ProxyHandler extends AbstractHandler {
         @Override
         public void handle(String target,
                            Request baseRequest,
@@ -106,6 +109,16 @@ public class HttpProxyTest extends JerseyTest {
             super();
             proxyHit = pProxyHit;
         }
+    }
+
+    @Path("resource")
+    public static class ProxyTestResource {
+
+        @GET
+        public String getOK() {
+            return "OK";
+        }
+
     }
 
 }
