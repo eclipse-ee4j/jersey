@@ -16,10 +16,16 @@
 
 package org.glassfish.jersey.tests.externalproperties;
 
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.core.HttpHeaders;
+import java.io.IOException;
+import java.net.URI;
+
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
+import org.glassfish.jersey.ExternalProperties;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.internal.Version;
@@ -28,16 +34,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.HttpHeaders;
-import java.io.IOException;
-import java.net.URI;
-
 public class HttpAgentTest {
 
-    private final String AGENT = "Custom-agent";
     private final URI BASE_URI = URI.create("http://localhost:9997/");
+    private final String AGENT;
     private HttpServer server;
+
+    public HttpAgentTest() {
+        this.AGENT = System.getProperty(ExternalProperties.HTTP_AGENT);
+    }
 
     @Test
     public void testHttpAgentSetBySystemProperty() {
