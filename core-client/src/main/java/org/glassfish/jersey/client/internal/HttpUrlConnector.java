@@ -66,6 +66,7 @@ import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
+import org.glassfish.jersey.internal.util.collection.LRU;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.UnsafeValue;
 import org.glassfish.jersey.internal.util.collection.Value;
@@ -83,7 +84,7 @@ public class HttpUrlConnector implements Connector {
     private static final String ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY = "sun.net.http.allowRestrictedHeaders";
     // Avoid multi-thread uses of HttpsURLConnection.getDefaultSSLSocketFactory() because it does not implement a
     // proper lazy-initialization. See https://github.com/jersey/jersey/issues/3293
-    private static final LazyValue<SSLSocketFactory> DEFAULT_SSL_SOCKET_FACTORY =
+    private static final Value<SSLSocketFactory> DEFAULT_SSL_SOCKET_FACTORY =
             Values.lazy((Value<SSLSocketFactory>) () -> HttpsURLConnection.getDefaultSSLSocketFactory());
     // The list of restricted headers is extracted from sun.net.www.protocol.http.HttpURLConnection
     private static final String[] restrictedHeaders = {
@@ -114,7 +115,12 @@ public class HttpUrlConnector implements Connector {
     private final boolean fixLengthStreaming;
     private final boolean setMethodWorkaround;
     private final boolean isRestrictedHeaderPropertySet;
-    private LazyValue<SSLSocketFactory> sslSocketFactory;
+    private Value<SSLSocketFactory> sslSocketFactory;
+
+    // SSLContext#getSocketFactory not idempotent
+    // JDK KeepAliveCache keeps connections per Factory
+    // SSLContext set per request blows that -> keep factory in LRU
+    private final LRU<SSLContext, SSLSocketFactory> sslSocketFactoryCache = LRU.create();
 
     private final ConnectorExtension<HttpURLConnection, IOException> connectorExtension
             = new HttpUrlExpect100ContinueConnectorExtension();
@@ -142,6 +148,13 @@ public class HttpUrlConnector implements Connector {
         this.chunkSize = chunkSize;
         this.fixLengthStreaming = fixLengthStreaming;
         this.setMethodWorkaround = setMethodWorkaround;
+
+        this.sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() {
+            @Override
+            public SSLSocketFactory get() {
+                return client.getSslContext().getSocketFactory();
+            }
+        });
 
         // check if sun.net.http.allowRestrictedHeaders system property has been set and log the result
         // the property is being cached in the HttpURLConnection, so this is only informative - there might
@@ -342,16 +355,23 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private void setSslContextFactory(Client client, ClientRequest request) {
+    protected void setSslContextFactory(Client client, ClientRequest request) {
         final Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
 
-        sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() {
-            @Override
-            public SSLSocketFactory get() {
-                final SSLContext ctx = supplier == null ? client.getSslContext() : supplier.get();
-                return ctx.getSocketFactory();
-            }
-        });
+        if (supplier != null) {
+            sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() { // lazy for double-check locking if multiple requests
+                @Override
+                public SSLSocketFactory get() {
+                    SSLContext sslContext = supplier.get();
+                    SSLSocketFactory factory = sslSocketFactoryCache.getIfPresent(sslContext);
+                    if (factory == null) {
+                        factory = sslContext.getSocketFactory();
+                        sslSocketFactoryCache.put(sslContext, factory);
+                    }
+                    return factory;
+                }
+            });
+        }
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
