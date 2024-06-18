@@ -92,7 +92,7 @@ public class SSLSocketFactoryTest {
 
     @Test
     public void testSslContextFactoryOnRequestIsSameForConsecutiveRequests() throws IOException, URISyntaxException {
-        int firstRequestFactory, secondRequestFactory = 0;
+        SSLSocketFactory firstRequestFactory, secondRequestFactory = null;
         Client client = ClientBuilder.newClient();
         SSLContext sslContext = new SslContextClientBuilder().build();
         HttpUrlConnectorProvider.ConnectionFactory connectionFactory = (url) -> (HttpURLConnection) url.openConnection();
@@ -107,7 +107,7 @@ public class SSLSocketFactoryTest {
         connector.setSslContextFactory(client, new ClientRequest(url.toURI(),
                 (ClientConfig) client.getConfiguration(), propertiesDelegate));
         connector.secureConnection((JerseyClient) client, (HttpURLConnection) urlConnection);
-        firstRequestFactory = factoryHolder.get().hashCode();
+        firstRequestFactory = factoryHolder.get();
 
         // reset to the default socketFactory
         ((HttpsURLConnection) urlConnection).setSSLSocketFactory(defaultSocketFactory);
@@ -116,7 +116,7 @@ public class SSLSocketFactoryTest {
         connector.setSslContextFactory(client, new ClientRequest(url.toURI(),
                 (ClientConfig) client.getConfiguration(), propertiesDelegate));
         connector.secureConnection((JerseyClient) client, (HttpURLConnection) urlConnection);
-        secondRequestFactory = factoryHolder.get().hashCode();
+        secondRequestFactory = factoryHolder.get();
 
         MatcherAssert.assertThat(firstRequestFactory, Matchers.equalTo(secondRequestFactory));
     }
