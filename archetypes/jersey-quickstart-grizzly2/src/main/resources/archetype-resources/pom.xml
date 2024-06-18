@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>\${junit-jupiter.version}</version>
+            <version>\${junit5.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -50,7 +50,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${compiler.mvn.plugin.version}</version>
                 <inherited>true</inherited>
                 <configuration>
                     <source>1.8</source>
@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${exec.mvn.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -83,8 +83,7 @@
 
     <properties>
         <jersey.version>${project.version}</jersey.version>
-        <junit-jupiter.version>5.10.2</junit-jupiter.version>
+        <junit5.version>${junit5.version}</junit5.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefire.mvn.plugin.version>3.2.5</surefire.mvn.plugin.version>
     </properties>
 </project>

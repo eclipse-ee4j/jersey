@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,16 +52,21 @@ public class ArchetypesTest {
                     continue;
                 }
                 // Update the names with the ones in Jersey
-                Map.Entry<Object, Object> updatedEntry = updateEntry(pomEntry);
                 // Check the properties are there
-                if (properties.getProperty(updatedEntry.getKey().toString()) == null) {
+                final String key = pomEntry.getKey().toString();
+
+                if (properties.getProperty(key) == null) {
                     testResult.ok().append("Property ")
                             .append(pomEntry.getKey().toString())
                             .append(" from ").append(pom).println(" not in Jersey");
                     failed = true;
                 }
                 // check the values
-                else if (!properties.getProperty(updatedEntry.getKey().toString()).equals(updatedEntry.getValue())) {
+                else if (
+                        //archetype property value can be a variable from the main pom.xml - check and exclude if so
+                        !(properties.containsKey(key) && pomEntry.getValue().toString().contains(key))
+                        && !properties.getProperty(key).equals(pomEntry.getValue())
+                ) {
                     testResult.exception().append("The property ")
                             .append(pomEntry.getKey().toString())
                             .append(" in archetype pom ")
@@ -81,25 +86,4 @@ public class ArchetypesTest {
         }
     }
 
-    private Map.Entry<Object, Object> updateEntry(Map.Entry<Object, Object> pomEntry) {
-        if (pomEntry.getKey().equals("junit-jupiter.version")) {
-            return new Map.Entry<Object, Object>() {
-                @Override
-                public Object getKey() {
-                    return "junit5.version";
-                }
-
-                @Override
-                public Object getValue() {
-                    return pomEntry.getValue();
-                }
-
-                @Override
-                public Object setValue(Object value) {
-                    return value;
-                }
-            };
-        }
-        return pomEntry;
-    }
 }
