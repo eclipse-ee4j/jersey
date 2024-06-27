@@ -29,11 +29,23 @@ public class MoxyAsmTest {
         final Dependency moxyAsmDependency = moxyPom.getDependencies().stream()
                 .filter(dependency -> dependency.getArtifactId().equals("org.eclipse.persistence.asm"))
                 .findFirst().get();
-        final String asmVersion = MavenUtil.getModelFromFile("../../pom.xml").getProperties().getProperty("asm.version");
+        Model projectPom = MavenUtil.getModelFromFile("../../pom.xml");
+        final String asmVersion = projectPom.getProperties().getProperty("asm.version");
+        final String moxyAsmVersion = findVersionInModel(moxyAsmDependency.getVersion(), projectPom);
 
-        final String lastTwo = moxyAsmDependency.getVersion().substring(moxyAsmDependency.getVersion().length() - 2);
-        final String msg = "org.eclipse.persistence.asm version " + moxyAsmDependency.getVersion()
+        final String lastTwo = moxyAsmVersion.substring(moxyAsmVersion.length() - 2);
+        final String msg = "org.eclipse.persistence.asm version " + moxyAsmVersion
                 + " differs from asm version " + asmVersion + " in /media/moxy/pom.xml";
-        Assert.assertEquals(msg, asmVersion + lastTwo, moxyAsmDependency.getVersion());
+        Assert.assertEquals(msg, asmVersion + lastTwo, moxyAsmVersion);
+        System.out.println("Found expected Moxy ASM version " + moxyAsmVersion);
+    }
+
+    private static String findVersionInModel(String version, Model model) {
+        if (version.startsWith("${")) {
+            String _version = version.substring(2, version.length() - 1);
+            return model.getProperties().getProperty(_version);
+        } else {
+            return version;
+        }
     }
 }
