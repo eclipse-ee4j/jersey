@@ -404,8 +404,7 @@ public class WebComponent {
 
             if (configSetStatusOverSendError) {
                 servletResponse.reset();
-                //noinspection deprecation
-                servletResponse.setStatus(status.getStatusCode(), status.getReasonPhrase());
+                ServletContainer.setStatus(servletResponse, status.getStatusCode(), status.getReasonPhrase());
             } else {
                 servletResponse.sendError(status.getStatusCode(), status.getReasonPhrase());
             }
