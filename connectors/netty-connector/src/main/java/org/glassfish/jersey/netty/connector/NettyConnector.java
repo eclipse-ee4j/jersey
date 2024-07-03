@@ -88,6 +88,9 @@ import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.innate.VirtualThreadUtil;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.netty.connector.internal.NettyEntityWriter;
 
@@ -102,6 +105,17 @@ class NettyConnector implements Connector {
     final EventLoopGroup group;
     final Client client;
     final HashMap<String, ArrayList<Channel>> connections = new HashMap<>();
+
+    private static final LazyValue<String> NETTY_VERSION = Values.lazy(
+        (Value<String>) () -> {
+            String nettyVersion = null;
+            try {
+                nettyVersion = io.netty.util.Version.identify().values().iterator().next().artifactVersion();
+            } catch (Throwable t) {
+                nettyVersion = "4.1.x";
+            }
+            return "Netty " + nettyVersion;
+        });
 
     // If HTTP keepalive is enabled the value of "http.maxConnections" determines the maximum number
     // of idle connections that will be simultaneously kept alive, per destination.
@@ -524,7 +538,7 @@ class NettyConnector implements Connector {
 
     @Override
     public String getName() {
-        return "Netty 4.1.x";
+        return NETTY_VERSION.get();
     }
 
     @Override
