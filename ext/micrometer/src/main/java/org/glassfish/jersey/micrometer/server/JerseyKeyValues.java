@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,9 @@ import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.ExtendedUriInfo;
 import org.glassfish.jersey.server.monitoring.RequestEvent;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 /**
  * Factory methods for {@link KeyValue KeyValues} associated with a request-response
@@ -82,14 +85,24 @@ class JerseyKeyValues {
      * @return the uri KeyValue derived from the request event
      */
     static KeyValue uri(RequestEvent event) {
-        ContainerResponse response = event.getContainerResponse();
-        if (response != null) {
-            int status = response.getStatus();
+        int status = 0;
+        if (event.getContainerResponse() != null) {
+            status = event.getContainerResponse().getStatus();
+        } else if (WebApplicationException.class.isInstance(event.getException())) {
+            Response webAppResponse = ((WebApplicationException) event.getException()).getResponse();
+            if (webAppResponse != null) {
+                status = webAppResponse.getStatus();
+            }
+        }
+        if (status != 0) {
             if (JerseyTags.isRedirection(status) && event.getUriInfo().getMatchedResourceMethod() == null) {
                 return URI_REDIRECTION;
             }
             if (status == 404 && event.getUriInfo().getMatchedResourceMethod() == null) {
                 return URI_NOT_FOUND;
+            }
+            if (status >= 500 && status <= 599) {
+                return STATUS_SERVER_ERROR;
             }
         }
         String matchingPattern = JerseyTags.getMatchingPattern(event);
