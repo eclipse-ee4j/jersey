@@ -109,10 +109,11 @@
             <artifactId>parsson</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>${asm.version}</version>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.asm</artifactId>
+            <version>${moxy.asm.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>jakarta.xml.bind</groupId>

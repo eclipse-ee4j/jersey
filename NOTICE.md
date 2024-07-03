@@ -41,7 +41,7 @@ aopalliance Version 1
 * Project: http://aopalliance.sourceforge.net
 * Copyright: Material in the public domain is not protected by copyright
 
-Bean Validation API 3.1.0-M1
+Bean Validation API 3.1.0
 * License: Apache License, 2.0
 * Project: https://projects.eclipse.org/projects/ee4j.bean-validation
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors

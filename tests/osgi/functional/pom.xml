@@ -71,7 +71,6 @@
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                     <excludes>
-                        <exclude>**/BeanValidationTest*</exclude>
                         <exclude>**/JsonProcessingTest*</exclude>
                         <exclude>**/JaxRsRiBundleTest*</exclude>
                     </excludes>
