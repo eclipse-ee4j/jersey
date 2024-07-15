@@ -403,11 +403,16 @@ public class WadlResourceTest {
 
         @Test
         public void testLastModifiedGETOnJPLocale() {
-            Locale.setDefault(new Locale("ja", "JP"));
-            final WebTarget target = target("/application.wadl");
+            Locale defaultLocale = Locale.getDefault();
+            try {
+                Locale.setDefault(new Locale("ja", "JP"));
+                final WebTarget target = target("/application.wadl");
 
-            final Response r = target.queryParam(WadlUtils.DETAILED_WADL_QUERY_PARAM, "true").request().get(Response.class);
-            assertDoesNotThrow(() -> r.getLastModified());
+                final Response r = target.queryParam(WadlUtils.DETAILED_WADL_QUERY_PARAM, "true").request().get(Response.class);
+                assertDoesNotThrow(() -> r.getLastModified());
+            } finally {
+                Locale.setDefault(defaultLocale);
+            }
         }
 
         @Test
