@@ -2240,7 +2240,6 @@
 
         <guava.version>33.1.0-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <helidon.version>1.4.14</helidon.version>
         <xmlunit.version>2.10.0</xmlunit.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[2.5,4)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[2.5,4)"</hk2.jvnet.osgi.version>
@@ -2248,7 +2247,6 @@
         <httpclient5.version>5.3.1</httpclient5.version>
         <jackson.version>2.17.1</jackson.version>
         <javassist.version>3.30.2-GA</javassist.version>
-        <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <jboss.logging.8.version>3.4.3.Final</jboss.logging.8.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
@@ -2325,7 +2323,7 @@
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>11.0.20</jetty.version>
+        <jetty.version>11.0.22</jetty.version>
         <jetty.tracing.version>11.0.15</jetty.tracing.version> <!-- special version for tracing support tests, applied before JDK 21-->
         <jetty9.version>9.4.54.v20240208</jetty9.version>
         <jetty.plugin.version>11.0.20</jetty.plugin.version>

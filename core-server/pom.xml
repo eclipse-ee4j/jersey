@@ -259,6 +259,7 @@
             </activation>
             <properties>
                 <jboss.vfs.version>${jboss.vfs.jdk8.version}</jboss.vfs.version>
+                <jboss.logging.version>${jboss.logging.8.version}</jboss.logging.version>
             </properties>
         </profile>
         <profile>
