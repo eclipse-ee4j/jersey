@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -62,7 +63,7 @@ public final class WadlResource {
 
 
     public WadlResource() {
-        this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT).format(new Date());
+        this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT, Locale.US).format(new Date());
     }
 
     private boolean isCached(UriInfo uriInfo, boolean detailedWadl) {
@@ -81,7 +82,7 @@ public final class WadlResource {
             if ((wadlXmlRepresentation == null) || (!isCached(uriInfo, detailedWadl))) {
                 this.lastBaseUri = uriInfo.getBaseUri();
                 lastDetailedWadl = detailedWadl;
-                this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT).format(new Date());
+                this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT, Locale.US).format(new Date());
 
                 ApplicationDescription applicationDescription = wadlContext.getApplication(uriInfo,
                         detailedWadl);

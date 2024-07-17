@@ -318,10 +318,30 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
         final Response.Status badRequest = Response.Status.BAD_REQUEST;
         if (webComponent.configSetStatusOverSendError) {
             response.reset();
-            //noinspection deprecation
-            response.setStatus(badRequest.getStatusCode(), badRequest.getReasonPhrase());
+            setStatus(response, badRequest.getStatusCode(), badRequest.getReasonPhrase());
         } else {
             response.sendError(badRequest.getStatusCode(), badRequest.getReasonPhrase());
+        }
+    }
+
+    /**
+     * <p>
+     *     Set status and reason-phrase if the API still contains the method. Otherwise, only a status is sent.
+     * </p>
+     * <p>
+     *     It can happen the Servlet 6 API is used and the method is not there any longer. A proprietary API can be used,
+     *     or the class is transformed to Jakarta using some transformer means.
+     * </p>
+     * @param response the servlet {@link HttpServletResponse}
+     * @param statusCode the status code
+     * @param reasonPhrase the reason phrase
+     */
+    public static void setStatus(HttpServletResponse response, int statusCode, String reasonPhrase) {
+        try {
+            // noinspection deprecation
+            response.setStatus(statusCode, reasonPhrase);
+        } catch (NoSuchMethodError noSuchMethodError) {
+            response.setStatus(statusCode);
         }
     }
 

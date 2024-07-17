@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,8 @@
 package org.glassfish.jersey.servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.security.AccessController;
@@ -54,6 +56,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -401,8 +404,7 @@ public class WebComponent {
 
             if (configSetStatusOverSendError) {
                 servletResponse.reset();
-                //noinspection deprecation
-                servletResponse.setStatus(status.getStatusCode(), status.getReasonPhrase());
+                ServletContainer.setStatus(servletResponse, status.getStatusCode(), status.getReasonPhrase());
             } else {
                 servletResponse.sendError(status.getStatusCode(), status.getReasonPhrase());
             }
@@ -413,7 +415,7 @@ public class WebComponent {
     }
 
     /**
-     * Initialize {@code ContainerRequest} instance to used used to handle {@code servletRequest}.
+     * Initialize {@code ContainerRequest} instance to used to handle {@code servletRequest}.
      */
     private void initContainerRequest(
             final ContainerRequest requestContext,
@@ -421,7 +423,21 @@ public class WebComponent {
             final HttpServletResponse servletResponse,
             final ResponseWriter responseWriter) throws IOException {
 
-        requestContext.setEntityStream(servletRequest.getInputStream());
+        try {
+            requestContext.setEntityStream(new InputStreamWrapper() {
+                @Override
+                protected InputStream getWrapped() {
+                    try {
+                        return servletRequest.getInputStream();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+            });
+        } catch (UncheckedIOException e) {
+            throw e.getCause();
+        }
+
         requestContext.setRequestScopedInitializer(requestScopedInitializer.get(new RequestContextProvider() {
             @Override
             public HttpServletRequest getHttpServletRequest() {

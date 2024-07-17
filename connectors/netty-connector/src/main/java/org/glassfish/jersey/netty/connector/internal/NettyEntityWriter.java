@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,10 @@ import org.glassfish.jersey.client.RequestEntityProcessing;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The Entity Writer is used to write entity in Netty. One implementation is delayed,
@@ -196,10 +198,7 @@ public interface NettyEntityWriter {
                 for (Runnable runnable : delayedOps) {
                     runnable.run();
                 }
-
-                if (outputStream.b != null) {
-                    writer.getOutputStream().write(outputStream.b, outputStream.off, outputStream.len);
-                }
+                outputStream._flush();
             }
         }
 
@@ -216,7 +215,7 @@ public interface NettyEntityWriter {
 
         @Override
         public long getLength() {
-            return outputStream.len - outputStream.off;
+            return outputStream.writeLen;
         }
 
         @Override
@@ -225,9 +224,9 @@ public interface NettyEntityWriter {
         }
 
         private class DelayedOutputStream extends OutputStream {
-            private byte[] b;
-            private int off;
-            private int len;
+            private final List<WriteAction> actions = new ArrayList<>();
+            private int writeLen = 0;
+            private AtomicBoolean streamFlushed = new AtomicBoolean(false);
 
             @Override
             public void write(int b) throws IOException {
@@ -241,14 +240,38 @@ public interface NettyEntityWriter {
 
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
-                if (!flushed && this.b == null) {
-                    this.b = b;
-                    this.off = off;
-                    this.len = len;
+                if (!flushed) {
+                    actions.add(new WriteAction(b, off, len));
+                    writeLen += len;
                 } else {
-                    DelayedEntityWriter.this._flush();
+                    _flush();
                     writer.getOutputStream().write(b, off, len);
+                    writer.getOutputStream().flush();
                 }
+            }
+
+            public void _flush() throws IOException {
+                if (streamFlushed.compareAndSet(false, true)) {
+                    DelayedEntityWriter.this._flush();
+                    for (WriteAction action : actions) {
+                        action.run();
+                    }
+                    actions.clear();
+                }
+            }
+        }
+
+        private class WriteAction {
+            private final byte[] b;
+
+            private WriteAction(byte[] b, int off, int len) {
+                this.b = new byte[len]; // b passed in can be reused
+                System.arraycopy(b, off, this.b, 0, len);
+            }
+
+            public void run() throws IOException {
+                writer.getOutputStream().write(b, 0, b.length);
+                writer.getOutputStream().flush();
             }
         }
     }
