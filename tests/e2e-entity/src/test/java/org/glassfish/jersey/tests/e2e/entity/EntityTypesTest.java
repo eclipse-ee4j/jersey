@@ -326,13 +326,13 @@ public class EntityTypesTest extends AbstractTypeTester {
 
     @Override
     protected Application configure() {
-        return ((ResourceConfig) super.configure()).register(new JettisonFeature()).register(new PathProvider());
+        return ((ResourceConfig) super.configure()).register(new JettisonFeature());
     }
 
     @Override
     protected void configureClient(final ClientConfig config) {
         super.configureClient(config);
-        config.register(new JettisonFeature()).register(new PathProvider());
+        config.register(new JettisonFeature());
     }
 
     @Test

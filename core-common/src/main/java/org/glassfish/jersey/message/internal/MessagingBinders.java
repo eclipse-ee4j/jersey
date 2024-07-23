@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -92,6 +92,7 @@ public final class MessagingBinders {
             bindSingletonWorker(ByteArrayProvider.class);
             // bindSingletonWorker(DataSourceProvider.class);
             bindSingletonWorker(FileProvider.class);
+            bindSingletonWorker(PathProvider.class);
             bindSingletonWorker(FormMultivaluedMapProvider.class);
             bindSingletonWorker(FormProvider.class);
             bindSingletonWorker(InputStreamProvider.class);
