@@ -259,16 +259,6 @@
 
     <profiles>
         <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <jboss.vfs.version>${jboss.vfs.jdk8.version}</jboss.vfs.version>
-                <jboss.logging.version>${jboss.logging.8.version}</jboss.logging.version>
-            </properties>
-        </profile>
-        <profile>
             <id>securityOff</id>
             <properties>
                 <surefire.security.argline />
