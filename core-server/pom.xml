@@ -233,7 +233,13 @@
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
-            <version>3.2.6.Final</version>
+            <version>${jboss.vfs.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -252,6 +258,16 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <jboss.vfs.version>${jboss.vfs.jdk8.version}</jboss.vfs.version>
+                <jboss.logging.version>${jboss.logging.8.version}</jboss.logging.version>
+            </properties>
+        </profile>
         <profile>
             <id>securityOff</id>
             <properties>

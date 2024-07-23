@@ -42,7 +42,7 @@
         <dependency>
             <groupId>io.helidon.jersey</groupId>
             <artifactId>helidon-jersey-connector</artifactId>
-            <version>${helidon.jersey.connector.version}</version>
+            <version>${helidon.connector.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

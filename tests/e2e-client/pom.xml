@@ -321,6 +321,7 @@
                                 <configuration>
                                     <testExcludes>
                                         <testExclude>org/glassfish/jersey/tests/e2e/client/connector/proxy/Proxy*Test.java</testExclude>
+                                        <testExclude>org/glassfish/jersey/tests/e2e/client/connector/NoContentLengthTest.java</testExclude>
                                         <testExclude>org/glassfish/jersey/tests/e2e/client/nettyconnector/Expect100ContinueTest.java</testExclude>
                                     </testExcludes>
                                 </configuration>

@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.Locale;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -65,7 +66,7 @@ public final class WadlResource {
 
 
     public WadlResource() {
-        this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT).format(new Date());
+        this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT, Locale.US).format(new Date());
     }
 
     private boolean isCached(UriInfo uriInfo, boolean detailedWadl) {
@@ -85,7 +86,7 @@ public final class WadlResource {
             if ((wadlXmlRepresentation == null) || (!isCached(uriInfo, detailedWadl))) {
                 this.lastBaseUri = uriInfo.getBaseUri();
                 lastDetailedWadl = detailedWadl;
-                this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT).format(new Date());
+                this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT, Locale.US).format(new Date());
 
                 ApplicationDescription applicationDescription = wadlContext.getApplication(uriInfo,
                         detailedWadl);

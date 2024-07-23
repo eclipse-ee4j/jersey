@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -58,6 +58,12 @@ public class DownloadBomPomDependencies extends AbstractMojoTestCase {
             Artifact m = mavenEnvironment.resolveArtifact(member);
             System.out.append("Resolved ").append(member.getGroupId()).append(":").append(member.getArtifactId()).append(":")
                     .append(member.getVersion()).append(" to ").println(m.getFile().getName());
+            m = mavenEnvironment.resolveSource(member);
+            System.out.append("Resolved sources ").append(member.getGroupId()).append(":").append(member.getArtifactId())
+                    .append(":").append(member.getVersion()).append(" to ").println(m.getFile().getName());
+            m = mavenEnvironment.resolveJavadoc(member);
+            System.out.append("Resolved javadoc ").append(member.getGroupId()).append(":").append(member.getArtifactId())
+                    .append(":").append(member.getVersion()).append(" to ").println(m.getFile().getName());
         }
     }
 
@@ -72,6 +78,14 @@ public class DownloadBomPomDependencies extends AbstractMojoTestCase {
 
             Artifact m = mavenEnvironment.resolveArtifact(dependency);
             System.out.append("Resolved ").append(dependency.getGroupId()).append(":")
+                    .append(dependency.getArtifactId()).append(":")
+                    .append(dependency.getVersion()).append(" to ").println(m.getFile().getName());
+            m = mavenEnvironment.resolveSource(dependency);
+            System.out.append("Resolved source ").append(dependency.getGroupId()).append(":")
+                    .append(dependency.getArtifactId()).append(":")
+                    .append(dependency.getVersion()).append(" to ").println(m.getFile().getName());
+            m = mavenEnvironment.resolveJavadoc(dependency);
+            System.out.append("Resolved javadoc ").append(dependency.getGroupId()).append(":")
                     .append(dependency.getArtifactId()).append(":")
                     .append(dependency.getVersion()).append(" to ").println(m.getFile().getName());
         }
@@ -100,6 +114,16 @@ public class DownloadBomPomDependencies extends AbstractMojoTestCase {
         Artifact resolveArtifact(Dependency dependency) throws ArtifactResolutionException {
             dependency.setVersion(jerseyVersion);
             return DependencyResolver.resolveArtifact(dependency, remoteRepos, repositorySystem, repoSession);
+        }
+
+        Artifact resolveSource(Dependency dependency) throws ArtifactResolutionException {
+            dependency.setVersion(jerseyVersion);
+            return DependencyResolver.resolveSource(dependency, remoteRepos, repositorySystem, repoSession);
+        }
+
+        Artifact resolveJavadoc(Dependency dependency) throws ArtifactResolutionException {
+            dependency.setVersion(jerseyVersion);
+            return DependencyResolver.resolveJavadoc(dependency, remoteRepos, repositorySystem, repoSession);
         }
 
         private List<RemoteRepository> getRemoteRepositories() throws Exception {

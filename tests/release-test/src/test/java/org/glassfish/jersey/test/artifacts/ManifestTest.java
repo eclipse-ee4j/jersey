@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 public class ManifestTest {
     private static final File localRepository = MavenUtil.getLocalMavenRepository();
@@ -61,6 +62,25 @@ public class ManifestTest {
                 builder.append(jar.getName()).append(value == null ? " DOES NOT CONTAIN " : " CONTAINS ")
                         .append(ATTRIBUTE).println(" attribute");
             }
+        }
+
+        for (File jar : jars) {
+            JarFile jarFile = new JarFile(jar);
+            String value = jarFile.getManifest().getMainAttributes().getValue("Multi-Release");
+//            System.out.append("Accessing META-INF/versions").append(" of ").println(jar.getName());
+            ZipEntry versions = jarFile.getEntry("META-INF/versions/");
+            if (versions != null) {
+                if (!"true".equals(value)) {
+                    testResult.exception().append("'Multi-Release: true' not set for ").println(jar.getName());
+                } else {
+                    testResult.ok().append("'Multi-Release: true' set for ").println(jar.getName());
+                }
+            } else {
+                if ("true".equals(value)) {
+                    testResult.exception().append("'Multi-Release: true' SET for ").println(jar.getName());
+                }
+            }
+
         }
 
         //Assertions.assertTrue(testResult.result(), "Some error occurred, see previous messages");
