@@ -96,7 +96,7 @@
         <dependency>
             <groupId>io.specto</groupId>
             <artifactId>hoverfly-java-junit5</artifactId>
-            <version>0.14.0</version>
+            <version>0.18.1</version>
             <scope>test</scope>
         </dependency>
 

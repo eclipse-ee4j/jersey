@@ -182,7 +182,7 @@
                 <plugin>
                     <groupId>org.commonjava.maven.plugins</groupId>
                     <artifactId>directory-maven-plugin</artifactId>
-                    <version>0.3.1</version>
+                    <version>1.0</version>
                     <executions>
                         <execution>
                             <id>directories</id>
@@ -199,7 +199,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>${resources.mvn.plugin.version}</version>
                     <!-- Add legal information, NOTICE.md and LINCENSE.md to jars -->
                     <executions>
                         <execution>

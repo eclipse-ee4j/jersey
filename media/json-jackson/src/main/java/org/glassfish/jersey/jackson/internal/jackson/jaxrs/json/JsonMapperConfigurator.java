@@ -1,6 +1,7 @@
 package org.glassfish.jersey.jackson.internal.jackson.jaxrs.json;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.Annotations;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfiguratorBase;
@@ -16,14 +17,17 @@ import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
  * well as accessing it.
  */
 public class JsonMapperConfigurator
-    extends MapperConfiguratorBase<JsonMapperConfigurator, ObjectMapper>
+        extends MapperConfiguratorBase<JsonMapperConfigurator, ObjectMapper>
 {
+    // @since 2.17.1
+    private final ReentrantLock _lock = new ReentrantLock();
+
     /*
     /**********************************************************
     /* Construction
     /**********************************************************
      */
-    
+
     public JsonMapperConfigurator(ObjectMapper mapper, Annotations[] defAnnotations)
     {
         super(mapper, defAnnotations);
@@ -33,18 +37,24 @@ public class JsonMapperConfigurator
      * Method that locates, configures and returns {@link ObjectMapper} to use
      */
     @Override
-    public synchronized ObjectMapper getConfiguredMapper() {
-        /* important: should NOT call mapper(); needs to return null
-         * if no instance has been passed or constructed
-         */
+    public ObjectMapper getConfiguredMapper() {
+        // important: should NOT call mapper(); needs to return null
+        // if no instance has been passed or constructed
         return _mapper;
     }
 
     @Override
-    public synchronized ObjectMapper getDefaultMapper() {
+    public ObjectMapper getDefaultMapper() {
         if (_defaultMapper == null) {
-            _defaultMapper = new ObjectMapper();
-            _setAnnotations(_defaultMapper, _defaultAnnotationsToUse);
+            _lock.lock();
+            try {
+                if (_defaultMapper == null) {
+                    _defaultMapper = new ObjectMapper();
+                    _setAnnotations(_defaultMapper, _defaultAnnotationsToUse);
+                }
+            } finally {
+                _lock.unlock();
+            }
         }
         return _defaultMapper;
     }
@@ -64,8 +74,15 @@ public class JsonMapperConfigurator
     protected ObjectMapper mapper()
     {
         if (_mapper == null) {
-            _mapper = new ObjectMapper();
-            _setAnnotations(_mapper, _defaultAnnotationsToUse);
+            _lock.lock();
+            try {
+                if (_mapper == null) {
+                    _mapper = new ObjectMapper();
+                    _setAnnotations(_mapper, _defaultAnnotationsToUse);
+                }
+            } finally {
+                _lock.unlock();
+            }
         }
         return _mapper;
     }
@@ -100,22 +117,22 @@ public class JsonMapperConfigurator
     protected AnnotationIntrospector _resolveIntrospector(Annotations ann)
     {
         switch (ann) {
-        case JACKSON:
-            return new JacksonAnnotationIntrospector();
-        case JAXB:
-            /* For this, need to use indirection just so that error occurs
-             * when we get here, and not when this class is being loaded
-             */
-            try {
-                if (_jaxbIntrospectorClass == null) {
-                    _jaxbIntrospectorClass = JaxbAnnotationIntrospector.class;
+            case JACKSON:
+                return new JacksonAnnotationIntrospector();
+            case JAXB:
+                /* For this, need to use indirection just so that error occurs
+                 * when we get here, and not when this class is being loaded
+                 */
+                try {
+                    if (_jaxbIntrospectorClass == null) {
+                        _jaxbIntrospectorClass = JaxbAnnotationIntrospector.class;
+                    }
+                    return _jaxbIntrospectorClass.newInstance();
+                } catch (Exception e) {
+                    throw new IllegalStateException("Failed to instantiate JaxbAnnotationIntrospector: "+e.getMessage(), e);
                 }
-                return _jaxbIntrospectorClass.newInstance();
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to instantiate JaxbAnnotationIntrospector: "+e.getMessage(), e);
-            }
-        default:
-            throw new IllegalStateException(); 
+            default:
+                throw new IllegalStateException();
         }
     }
 }

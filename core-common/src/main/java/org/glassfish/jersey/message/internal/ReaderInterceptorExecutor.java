@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.ReaderInterceptor;
 import jakarta.ws.rs.ext.ReaderInterceptorContext;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.internal.inject.InjectionManager;
@@ -248,7 +249,7 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
      * {@link jakarta.ws.rs.ext.MessageBodyReader}s should not close the given {@link java.io.InputStream stream}. This input
      * stream makes sure that the stream is not closed even if MBR tries to do it.
      */
-    private static class UnCloseableInputStream extends InputStream {
+    private static class UnCloseableInputStream extends InputStreamWrapper {
 
         private final InputStream original;
         private final MessageBodyReader reader;
@@ -259,43 +260,8 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
         }
 
         @Override
-        public int read() throws IOException {
-            return original.read();
-        }
-
-        @Override
-        public int read(final byte[] b) throws IOException {
-            return original.read(b);
-        }
-
-        @Override
-        public int read(final byte[] b, final int off, final int len) throws IOException {
-            return original.read(b, off, len);
-        }
-
-        @Override
-        public long skip(final long l) throws IOException {
-            return original.skip(l);
-        }
-
-        @Override
-        public int available() throws IOException {
-            return original.available();
-        }
-
-        @Override
-        public synchronized void mark(final int i) {
-            original.mark(i);
-        }
-
-        @Override
-        public synchronized void reset() throws IOException {
-            original.reset();
-        }
-
-        @Override
-        public boolean markSupported() {
-            return original.markSupported();
+        protected InputStream getWrapped() {
+            return original;
         }
 
         @Override
@@ -303,10 +269,6 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.log(Level.FINE, LocalizationMessages.MBR_TRYING_TO_CLOSE_STREAM(reader.getClass()));
             }
-        }
-
-        private InputStream unwrap() {
-            return original;
         }
     }
 
@@ -320,7 +282,7 @@ public final class ReaderInterceptorExecutor extends InterceptorExecutor<ReaderI
      */
     public static InputStream closeableInputStream(InputStream inputStream) {
         if (inputStream instanceof UnCloseableInputStream) {
-            return ((UnCloseableInputStream) inputStream).unwrap();
+            return ((UnCloseableInputStream) inputStream).getWrapped();
         } else {
             return inputStream;
         }
