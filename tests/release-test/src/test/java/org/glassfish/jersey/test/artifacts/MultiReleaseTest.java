@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,12 +40,14 @@ public class MultiReleaseTest {
     private static final DependencyPair[] jdk11multiRelease = jdk11multiRelease(properties);
     private static final DependencyPair[] jdk12multiRelease = jdk12multiRelease(properties);
     private static final DependencyPair[] jdk17multiRelease = jdk17multiRelease(properties);
+    private static final DependencyPair[] jdk21multiRelease = jdk21multiRelease(properties);
 
     @Test
     public void testIsJdkMultiRelease() throws IOException, XmlPullParserException {
         TestResult result = testJdkVersions("11", jdk11multiRelease);
         result.append(testJdkVersions("12", jdk12multiRelease));
         result.append(testJdkVersions("17", jdk17multiRelease));
+        result.append(testJdkVersions("21", jdk21multiRelease));
         //Assertions.assertTrue(result.result(), "Some error occurred, see previous messages");
         Assert.assertTrue("Some error occurred, see previous messages", result.result());
     }
@@ -54,6 +56,7 @@ public class MultiReleaseTest {
             throws XmlPullParserException, IOException {
         final TestResult result = new TestResult();
         if (dependencies == null || dependencies.length == 0) {
+            System.out.append("No dependencies found for jdk ").println(version);
             return result;
         }
 
@@ -81,6 +84,7 @@ public class MultiReleaseTest {
                 result.exception().append("Not a multirelease jar ").append(jar.getName()).println("!");
             }
             ZipEntry versions = jarFile.getEntry("META-INF/versions/" + version);
+            System.out.append("Accessing META-INF/versions/").append(version).append(" of ").println(jar.getName());
             if (versions == null) {
                 result.exception().append("No classes for JDK ").append(version).append(" for ").println(jar.getName());
             }
@@ -93,6 +97,26 @@ public class MultiReleaseTest {
                     .findAny();
             JarEntry jarEntry = file.get();
             result.append(ClassVersionChecker.checkClassVersion(jarFile, jarEntry, properties));
+        }
+
+        // Verify that number of multirelease jars matches the expected dependencies
+        StringBuilder multi = new StringBuilder();
+        int multiCnt = 0;
+        List<File> allFiles = MavenUtil.streamJerseyJars()
+                .map(dependency -> MavenUtil.getArtifactJar(localRepository, dependency, properties))
+                .collect(Collectors.toList());
+        for (File jar : files) {
+            JarFile jarFile = new JarFile(jar);
+            if (jarFile.isMultiRelease()) {
+                multiCnt++;
+                multi.append("Multirelease jar ").append(jar.getName()).append('\n');
+            }
+        }
+        if (files.size() == multiCnt) {
+            result.ok().println("There is expected number of multirelease jars");
+        } else {
+            result.exception().println("There is unexpected number of multirelease jars:");
+            result.exception().append(multi).println("");
         }
 
         return result;
@@ -136,14 +160,40 @@ public class MultiReleaseTest {
 
     private static DependencyPair[] jdk17multiRelease(Properties properties) {
         String jerseyVersion = MavenUtil.getJerseyVersion(properties);
-        if (jerseyVersion.startsWith("3")) {
+        if (jerseyVersion.startsWith("3.0")) {
             return new DependencyPair[] {
                     new DependencyPair("org.glassfish.jersey.connectors", "jersey-helidon-connector"),
                     new DependencyPair("org.glassfish.jersey.connectors", "jersey-jetty-connector"),
                     new DependencyPair("org.glassfish.jersey.containers", "jersey-container-jetty-http"),
                     new DependencyPair("org.glassfish.jersey.ext", "jersey-spring6")
             };
+        } else if (jerseyVersion.startsWith("3")) {
+            return new DependencyPair[] {
+                    new DependencyPair("org.glassfish.jersey.connectors", "jersey-helidon-connector"),
+                    new DependencyPair("org.glassfish.jersey.connectors", "jersey-jetty-connector"),
+                    new DependencyPair("org.glassfish.jersey.connectors", "jersey-jetty-http2-connector"),
+                    new DependencyPair("org.glassfish.jersey.containers", "jersey-container-jetty-http"),
+                    new DependencyPair("org.glassfish.jersey.containers", "jersey-container-jetty-http2"),
+                    new DependencyPair("org.glassfish.jersey.test-framework.providers", "jersey-test-framework-provider-jetty"),
+                    new DependencyPair("org.glassfish.jersey.test-framework.providers",
+                            "jersey-test-framework-provider-jetty-http2"),
+                    new DependencyPair("org.glassfish.jersey.ext", "jersey-spring6")
+            };
         }
         return new DependencyPair[]{};
+    }
+
+    private static DependencyPair[] jdk21multiRelease(Properties properties) {
+        String jerseyVersion = MavenUtil.getJerseyVersion(properties);
+        if (jerseyVersion.startsWith("4")) {
+            return new DependencyPair[]{
+                    new DependencyPair("org.glassfish.jersey.core", "jersey-common")
+            };
+        } else {
+            return new DependencyPair[]{
+                    new DependencyPair("org.glassfish.jersey.bundles", "jaxrs-ri"),
+                    new DependencyPair("org.glassfish.jersey.core", "jersey-common")
+            };
+        }
     }
 }

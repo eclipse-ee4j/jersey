@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,7 +41,15 @@ public class LegalDocsIncludedTest extends AbstractMojoTestCase {
         List<File> jars = MavenUtil.streamJerseyJars()
                 .map(dependency -> MavenUtil.getArtifactJar(localRepository, dependency, properties))
                 .collect(Collectors.toList());
+        testLegalFiles(jars, testResult);
 
+        jars = MavenUtil.streamJerseySources()
+                .map(dependency -> MavenUtil.getArtifactJar(localRepository, dependency, properties))
+                .collect(Collectors.toList());
+        testLegalFiles(jars, testResult);
+    }
+
+    private void testLegalFiles(List<File> jars, TestResult testResult) throws IOException {
         for (File jar : jars) {
             for (String filename : new String[]{LICENSE_FILE, NOTICE_FILE}) {
                 JarFile jarFile = new JarFile(jar);
