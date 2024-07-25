@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -152,6 +152,7 @@ public class BroadcasterExecutorTest extends JerseyTest {
     @Test
     public void test() throws InterruptedException {
         final String[] onEventThreadName = {""};
+        final CountDownLatch onEventLatch = new CountDownLatch(1);
         SseEventSource eventSource = SseEventSource
                 .target(target().path("sse/events"))
                 .build();
@@ -159,6 +160,7 @@ public class BroadcasterExecutorTest extends JerseyTest {
         eventSource.register((event) -> {
                     LOGGER.info("Event: " + event + " from: " + Thread.currentThread().getName());
                     onEventThreadName[0] = Thread.currentThread().getName();
+                    onEventLatch.countDown();
                 }
         );
 
@@ -174,6 +176,7 @@ public class BroadcasterExecutorTest extends JerseyTest {
         Assertions.assertTrue(sendThreadOk, "send either not invoked at all or from wrong thread");
         Assertions.assertTrue(onCompleteThreadOk, "onComplete either not invoked at all or from wrong thread");
 
+        Assertions.assertTrue(onEventLatch.await(2_000L, TimeUnit.MILLISECONDS));
         Assertions.assertTrue(onEventThreadName[0].startsWith("custom-client-executor"),
                 "Client event called from wrong thread ( " + onEventThreadName[0] + ")");
     }
