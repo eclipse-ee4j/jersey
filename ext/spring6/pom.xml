@@ -229,6 +229,23 @@
 
     <profiles>
         <profile>
+            <id>HK2_JDK8_dependencyConvergence_skip</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <configuration>
+                            <rulesToSkip>dependencyConvergence</rulesToSkip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>SpringExclude</id>
             <activation>
                 <jdk>[1.8,17)</jdk>
@@ -377,23 +394,6 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <skipTests>true</skipTests>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>HK2_JDK8_dependencyConvergence_skip</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <configuration>
-                            <rulesToSkip>dependencyConvergence</rulesToSkip>
                         </configuration>
                     </plugin>
                 </plugins>
