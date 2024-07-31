@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.media</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.15</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-media-sse</artifactId>

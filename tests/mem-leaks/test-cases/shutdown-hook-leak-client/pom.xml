@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.memleaks.testcases</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.15</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>shutdown-hook-leak-client</artifactId>
