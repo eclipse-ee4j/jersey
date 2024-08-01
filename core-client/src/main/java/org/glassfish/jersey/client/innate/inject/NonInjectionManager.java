@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -90,7 +90,7 @@ public final class NonInjectionManager implements InjectionManager {
      */
     private class TypedInstances<TYPE> {
         private final MultivaluedMap<TYPE, InstanceContext<?>> singletonInstances = new MultivaluedHashMap<>();
-        private final ThreadLocal<MultivaluedMap<TYPE, InstanceContext<?>>> threadInstances = new ThreadLocal<>();
+        private ThreadLocal<MultivaluedMap<TYPE, InstanceContext<?>>> threadInstances = new ThreadLocal<>();
         private final List<Object> threadPredestroyables = Collections.synchronizedList(new LinkedList<>());
 
         private <T> List<InstanceContext<?>> _getSingletons(TYPE clazz) {
@@ -195,6 +195,8 @@ public final class NonInjectionManager implements InjectionManager {
         void dispose() {
             singletonInstances.forEach((clazz, instances) -> instances.forEach(instance -> preDestroy(instance.getInstance())));
             threadPredestroyables.forEach(NonInjectionManager.this::preDestroy);
+            /* The java.lang.ThreadLocal$ThreadLocalMap$Entry[] keeps references to this NonInjectionManager */
+            threadInstances = null;
         }
     }
 
