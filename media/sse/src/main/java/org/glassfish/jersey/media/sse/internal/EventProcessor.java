@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,6 +88,10 @@ public class EventProcessor implements Runnable, EventListener {
      * A map of listeners bound to receive only events of a particular name.
      */
     private final Map<String, List<EventListener>> boundListeners;
+    /**
+     * A list of Error Consumers.
+     */
+    private final List<Consumer<Throwable>> throwableConsumers;
 
     /**
      * Shutdown handler is invoked when Event processor reaches terminal stage.
@@ -111,6 +116,7 @@ public class EventProcessor implements Runnable, EventListener {
         this.unboundListeners = that.unboundListeners;
         this.eventListener = that.eventListener;
         this.shutdownHandler = that.shutdownHandler;
+        this.throwableConsumers = that.throwableConsumers;
     }
 
     private EventProcessor(Builder builder) {
@@ -128,6 +134,7 @@ public class EventProcessor implements Runnable, EventListener {
         this.unboundListeners = builder.unboundListeners == null ? Collections.EMPTY_LIST : builder.unboundListeners;
         this.eventListener = builder.eventListener;
         this.shutdownHandler = builder.shutdownHandler;
+        this.throwableConsumers = builder.throwableConsumers;
     }
 
     /**
@@ -199,6 +206,16 @@ public class EventProcessor implements Runnable, EventListener {
             }
             // if we're here, an unrecoverable error has occurred - just turn off the lights...
             shutdownHandler.shutdown();
+            // and notify error handlers
+            if (throwableConsumers != null) {
+                for (Consumer<Throwable> consumer : throwableConsumers) {
+                    try {
+                        consumer.accept(ex);
+                    } catch (Throwable throwable) {
+                        LOGGER.fine(String.format("User throwable ignored: %s", throwable.getMessage()));
+                    }
+                }
+            }
         } finally {
             if (eventInput != null && !eventInput.isClosed()) {
                 eventInput.close();
@@ -357,6 +374,7 @@ public class EventProcessor implements Runnable, EventListener {
         private boolean disableKeepAlive;
         private List<EventListener> unboundListeners;
         private Map<String, List<EventListener>> boundListeners;
+        private List<Consumer<Throwable>> throwableConsumers = null;
 
         private Builder(WebTarget target,
                         AtomicReference<State> state,
@@ -417,6 +435,17 @@ public class EventProcessor implements Runnable, EventListener {
          */
         public Builder disableKeepAlive() {
             this.disableKeepAlive = true;
+            return this;
+        }
+
+        /**
+         * Set the consumers of {@link Throwable} occurring during connection.
+         *
+         * @param throwableConsumers a list of consumers of throwable.
+         * @return updated builder instance.
+         */
+        public Builder throwableConsumers(List<Consumer<Throwable>> throwableConsumers) {
+            this.throwableConsumers = throwableConsumers;
             return this;
         }
 
