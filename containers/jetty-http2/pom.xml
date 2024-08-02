@@ -23,7 +23,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.containers</groupId>
-        <version>3.1.99-SNAPSHOT</version>
+        <version>3.1.8</version>
     </parent>
 
     <artifactId>jersey-container-jetty-http2</artifactId>
