@@ -91,7 +91,7 @@ public final class NonInjectionManager implements InjectionManager {
      */
     private class TypedInstances<TYPE> {
         private final MultivaluedMap<TYPE, InstanceContext<?>> singletonInstances = new MultivaluedHashMap<>();
-        private final ThreadLocal<MultivaluedMap<TYPE, InstanceContext<?>>> threadInstances = new ThreadLocal<>();
+        private ThreadLocal<MultivaluedMap<TYPE, InstanceContext<?>>> threadInstances = new ThreadLocal<>();
         private final List<Object> threadPredestroyables = Collections.synchronizedList(new LinkedList<>());
         private final ReentrantLock singletonInstancesLock = new ReentrantLock();
 
@@ -203,6 +203,8 @@ public final class NonInjectionManager implements InjectionManager {
         void dispose() {
             singletonInstances.forEach((clazz, instances) -> instances.forEach(instance -> preDestroy(instance.getInstance())));
             threadPredestroyables.forEach(NonInjectionManager.this::preDestroy);
+            /* The java.lang.ThreadLocal$ThreadLocalMap$Entry[] keeps references to this NonInjectionManager */
+            threadInstances = null;
         }
     }
 
