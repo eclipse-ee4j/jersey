@@ -17,6 +17,8 @@
 package org.glassfish.jersey.servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.security.AccessController;
@@ -54,6 +56,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
@@ -438,7 +441,7 @@ public class WebComponent {
     }
 
     /**
-     * Initialize {@code ContainerRequest} instance to be used to handle {@code servletRequest}.
+     * Initialize {@code ContainerRequest} instance to handle {@code servletRequest}.
      */
     private void initContainerRequest(
             final ContainerRequest requestContext,
@@ -446,7 +449,21 @@ public class WebComponent {
             final HttpServletResponse servletResponse,
             final ResponseWriter responseWriter) throws IOException {
 
-        requestContext.setEntityStream(servletRequest.getInputStream());
+        try {
+            requestContext.setEntityStream(new InputStreamWrapper() {
+                @Override
+                protected InputStream getWrapped() {
+                    try {
+                        return servletRequest.getInputStream();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+            });
+        } catch (UncheckedIOException e) {
+            throw e.getCause();
+        }
+
         requestContext.setRequestScopedInitializer(requestScopedInitializer.get(new RequestContextProvider() {
             @Override
             public HttpServletRequest getHttpServletRequest() {

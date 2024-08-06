@@ -96,6 +96,8 @@ public final class MessagingBinders {
             // bindSingletonWorker(DataSourceProvider.class);
             bindSingletonWorker(FileProvider.class, runtimeType == RuntimeType.CLIENT
                     ? InjectionIds.CLIENT_FILE_PROVIDER.id() : InjectionIds.SERVER_FILE_PROVIDER.id());
+            bindSingletonWorker(PathProvider.class, runtimeType == RuntimeType.CLIENT
+                    ? InjectionIds.CLIENT_PATH_PROVIDER.id() : InjectionIds.SERVER_PATH_PROVIDER.id());
             bindSingletonWorker(FormMultivaluedMapProvider.class, runtimeType == RuntimeType.CLIENT
                     ? InjectionIds.CLIENT_MULTIVALUED_MAP_PROVIDER.id() : InjectionIds.SERVER_MULTIVALUED_MAP_PROVIDER.id());
             bindSingletonWorker(FormProvider.class, runtimeType == RuntimeType.CLIENT

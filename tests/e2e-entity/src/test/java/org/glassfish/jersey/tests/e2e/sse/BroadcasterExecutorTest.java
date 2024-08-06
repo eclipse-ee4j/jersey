@@ -157,6 +157,7 @@ public class BroadcasterExecutorTest extends JerseyTest {
     @Test
     public void test() throws InterruptedException {
         final String[] onEventThreadName = {""};
+        final CountDownLatch onEventLatch = new CountDownLatch(1);
         SseEventSource eventSource = SseEventSource
                 .target(target().path("sse/events"))
                 .build();
@@ -164,6 +165,7 @@ public class BroadcasterExecutorTest extends JerseyTest {
         eventSource.register((event) -> {
                     LOGGER.info("Event: " + event + " from: " + Thread.currentThread().getName());
                     onEventThreadName[0] = Thread.currentThread().getName();
+                    onEventLatch.countDown();
                 }
         );
 
@@ -179,6 +181,7 @@ public class BroadcasterExecutorTest extends JerseyTest {
         Assertions.assertTrue(sendThreadOk, "send either not invoked at all or from wrong thread");
         Assertions.assertTrue(onCompleteThreadOk, "onComplete either not invoked at all or from wrong thread");
 
+        Assertions.assertTrue(onEventLatch.await(2_000L, TimeUnit.MILLISECONDS));
         Assertions.assertTrue(onEventThreadName[0].startsWith("custom-client-executor"),
                 "Client event called from wrong thread ( " + onEventThreadName[0] + ")");
     }

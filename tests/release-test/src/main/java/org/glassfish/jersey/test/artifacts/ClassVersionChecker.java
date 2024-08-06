@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,14 @@ import java.util.jar.JarFile;
 class ClassVersionChecker {
     static TestResult checkClassVersion(JarFile jar, JarEntry entry, Properties properties) throws IOException {
         final String jerseyVersion = MavenUtil.getJerseyVersion(properties);
-        final int minVersion = jerseyVersion.startsWith("3.1") ? 11 : 8;
+        final int minVersion;
+        if (jerseyVersion.startsWith("4")) {
+            minVersion = 17;
+        } else if (jerseyVersion.startsWith("3.1")) {
+            minVersion = 11;
+        } else {
+            minVersion = 8;
+        }
         return checkClassVersion(jar.getInputStream(entry), jar.getName() + File.separator + entry.getName(), minVersion);
     }
 
