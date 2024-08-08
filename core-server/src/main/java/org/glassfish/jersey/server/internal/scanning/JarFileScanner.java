@@ -26,6 +26,7 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.server.internal.AbstractResourceFinderAdapter;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 
@@ -111,62 +112,16 @@ public final class JarFileScanner extends AbstractResourceFinderAdapter {
     @Override
     public InputStream open() {
         //noinspection NullableProblems
-        return new InputStream() {
-            private final Lock markLock = new ReentrantLock();
+        return new InputStreamWrapper() {
 
             @Override
-            public int read() throws IOException {
-                return jarInputStream.read();
-            }
-
-            @Override
-            public int read(final byte[] bytes) throws IOException {
-                return jarInputStream.read(bytes);
-            }
-
-            @Override
-            public int read(final byte[] bytes, final int i, final int i2) throws IOException {
-                return jarInputStream.read(bytes, i, i2);
-            }
-
-            @Override
-            public long skip(final long l) throws IOException {
-                return jarInputStream.skip(l);
-            }
-
-            @Override
-            public int available() throws IOException {
-                return jarInputStream.available();
+            protected InputStream getWrapped() {
+                return jarInputStream;
             }
 
             @Override
             public void close() throws IOException {
                 jarInputStream.closeEntry();
-            }
-
-            @Override
-            public void mark(final int i) {
-                markLock.lock();
-                try {
-                    jarInputStream.mark(i);
-                } finally {
-                    markLock.unlock();
-                }
-            }
-
-            @Override
-            public void reset() throws IOException {
-                markLock.lock();
-                try {
-                    jarInputStream.reset();
-                } finally {
-                    markLock.unlock();
-                }
-            }
-
-            @Override
-            public boolean markSupported() {
-                return jarInputStream.markSupported();
             }
         };
     }

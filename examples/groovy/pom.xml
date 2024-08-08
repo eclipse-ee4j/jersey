@@ -140,7 +140,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${buildhelper.mvn.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>3</id>

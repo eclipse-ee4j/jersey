@@ -36,6 +36,6 @@
     </dependencies>
 
     <properties>
-        <jersey.version>3.0.99-SNAPSHOT</jersey.version>
+        <jersey.version>4.0.99-SNAPSHOT</jersey.version>
     </properties>
 </project>
