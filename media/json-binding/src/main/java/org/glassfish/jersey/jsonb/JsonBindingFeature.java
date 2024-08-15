@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,6 +55,11 @@ public class JsonBindingFeature implements Feature {
     @Override
     public boolean configure(final FeatureContext context) {
         final Configuration config = context.getConfiguration();
+
+        if (CommonProperties.getValue(config.getProperties(), config.getRuntimeType(),
+                CommonProperties.JSON_BINDING_FEATURE_DISABLE, Boolean.FALSE, Boolean.class)) {
+            return false;
+        }
 
         final String jsonFeature = CommonProperties.getValue(
                 config.getProperties(),
