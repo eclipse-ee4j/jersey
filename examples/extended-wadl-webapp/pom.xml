@@ -132,7 +132,7 @@
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -299,6 +299,33 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <echo>****************************************************</echo>
+                                    <echo>****THIS EXAMPLE WORKS ONLY ON JDKs PRIOR to 13!****</echo>
+                                    <echo>********CURRENT JDK IS NOT SUPPORTED!***************</echo>
+                                    <echo>****************************************************</echo>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb2-plugin</artifactId>
+                    <version>0.14.0</version>
+                    <configuration>
+                        <verbose>false</verbose>
                     </configuration>
                 </plugin>
             </plugins>
