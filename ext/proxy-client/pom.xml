@@ -41,10 +41,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Pckage>
+                        <Import-Package>
                             ${jakarta.rest.osgi.version},
                             *
-                        </Import-Pckage>
+                        </Import-Package>
                         <Export-Package>org.glassfish.jersey.client.proxy.*;version=${project.version}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
