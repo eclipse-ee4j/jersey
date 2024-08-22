@@ -42,6 +42,14 @@
                     <groupId>org.junit.jupiter</groupId>
                     <artifactId>junit-jupiter-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-commons</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

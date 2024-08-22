@@ -2190,7 +2190,7 @@
         <graalvm.version>20.3.14</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>8.0.0-JDK17-M7</gf.impl.version>
+        <gf.impl.version>8.0.0-JDK17-M6</gf.impl.version>
         <!-- Jakartified -->
         <cdi.api.version>4.1.0</cdi.api.version>
         <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,5)"</cdi.osgi.version>
@@ -2201,7 +2201,7 @@
         <hk2.version>4.0.0-M3</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[4.0,5)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[4.0,5)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>8.0.0-JDK17-M7</hk2.config.version>
+        <hk2.config.version>8.0.0-JDK17-M6</hk2.config.version>
         <jsp.version>4.0.0-M2</jsp.version>
         <jstl.version>3.0.1</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>

@@ -45,7 +45,6 @@ import io.micrometer.tracing.otel.bridge.OtelPropagator;
 import io.micrometer.tracing.otel.bridge.OtelTracer;
 import io.micrometer.tracing.otel.bridge.Slf4JBaggageEventListener;
 import io.micrometer.tracing.otel.bridge.Slf4JEventListener;
-import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.exporter.zipkin.ZipkinSpanExporterBuilder;
@@ -56,6 +55,7 @@ import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.SdkTracerProviderBuilder;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
+import io.opentelemetry.semconv.ResourceAttributes;
 import org.glassfish.jersey.micrometer.server.ObservationApplicationEventListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -64,7 +64,6 @@ import zipkin2.reporter.AsyncReporter;
 import zipkin2.reporter.brave.ZipkinSpanHandler;
 
 import static io.opentelemetry.sdk.trace.samplers.Sampler.alwaysOn;
-import static io.opentelemetry.semconv.ResourceAttributes.SERVICE_NAME;
 
 /**
  * Tests for {@link ObservationApplicationEventListener}.
@@ -152,7 +151,7 @@ class ObservationApplicationEventListenerTest {
             SdkTracerProviderBuilder builder = SdkTracerProvider.builder()
                     .setSampler(alwaysOn())
                     .addSpanProcessor(processor)
-                    .setResource(Resource.create(Attributes.of(SERVICE_NAME, "otel-test")));
+                    .setResource(Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "otel-test")));
 
             if (isZipkinAvailable()) {
                 builder.addSpanProcessor(SimpleSpanProcessor.create(spanExporter));
