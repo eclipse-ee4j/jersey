@@ -131,6 +131,19 @@ public final class CommonProperties {
     public static final String JSON_BINDING_FEATURE_DISABLE_SERVER = "jersey.config.server.disableJsonBinding";
 
     /**
+     * Disables configuration of Json Binding (JSR-367) feature for {@link javax.ws.rs.core.Application} subclasses whose
+     * package names are specified as a value. The value is comma-separated string defining prefixes of the application
+     * package names.
+     * <p>
+     * By default, Json Binding is automatically enabled.
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.45
+     */
+    public static final String JSON_BINDING_FEATURE_DISABLE_APPLICATION = "jersey.config.application.disableJsonBinding";
+
+    /**
      * If {@code true} then disable configuration of Json Processing (JSR-353) feature.
      * <p>
      * By default, Json Processing is automatically enabled. The value of this property may be overridden by the client/server
