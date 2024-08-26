@@ -81,6 +81,24 @@
                         <entry>
                             <para>
                                 Disables configuration of Json Binding (JSR-367) feature. Default value is <literal>false</literal>.
+                                Can also be set as a system property.
+                            </para>
+                            <para>
+                                Since 2.45.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_APPLICATION; </entry>
+                        <entry><literal>jersey.config.application.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature for <literal>javax.ws.rs.core.Application</literal>
+                                subclasses whose package names are specified as a value. The value is comma-separated string
+                                defining prefixes of the application package names. Can also be set as a system property.
+                            </para>
+                            <para>
+                                By default, Json Binding is automatically enabled.
                             </para>
                             <para>
                                 Since 2.45.

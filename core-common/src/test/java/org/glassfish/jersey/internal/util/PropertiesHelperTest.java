@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -199,4 +199,15 @@ public class PropertiesHelperTest {
 
     }
 
+    @Test
+    public void isPropertyOrNotSetTest() {
+        assertEquals(false, PropertiesHelper.isPropertyOrNotSet((Boolean) null));
+        assertEquals(true, PropertiesHelper.isPropertyOrNotSet(Boolean.TRUE));
+        assertEquals(false, PropertiesHelper.isPropertyOrNotSet(Boolean.FALSE));
+        assertEquals(false, PropertiesHelper.isPropertyOrNotSet((String) null));
+        assertEquals(true, PropertiesHelper.isPropertyOrNotSet(""));
+        assertEquals(false, PropertiesHelper.isPropertyOrNotSet("treu")); // false for non-boolean values
+        assertEquals(true, PropertiesHelper.isPropertyOrNotSet("TRUE"));
+        assertEquals(false, PropertiesHelper.isPropertyOrNotSet("false"));
+    }
 }
