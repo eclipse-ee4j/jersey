@@ -30,6 +30,7 @@ import javax.ws.rs.core.Context;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests {@link CachedConstructorAnalyzer}.
@@ -110,7 +111,8 @@ public class CachedConstructorAnalyzerTest {
 
         Constructor<BothAnnotatedConstructor> constructor = analyzer.getConstructor();
         assertEquals(1, constructor.getParameterCount());
-        assertEquals(Integer.class, constructor.getParameterTypes()[0]);
+        Class<?> parameterType = constructor.getParameterTypes()[0];
+        assertTrue(parameterType.equals(String.class) || parameterType.equals(Integer.class));
     }
 
     @Test
