@@ -20,43 +20,33 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Configuration;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
-import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.GuardianStringKeyMultivaluedMap;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
+import org.glassfish.jersey.io.spi.FlushedCloseable;
 
 /**
  * Base outbound message context implementation.
@@ -572,11 +562,13 @@ public class OutboundMessageContext extends MessageHeaderMethods {
         if (hasEntity()) {
             try {
                 final OutputStream es = getEntityStream();
-                es.flush();
+                if (!FlushedCloseable.class.isInstance(es)) {
+                    es.flush();
+                }
                 es.close();
             } catch (IOException e) {
                 // Happens when the client closed connection before receiving the full response.
-                // This is OK and not interesting in vast majority of the cases
+                // This is OK and not interesting in the vast majority of the cases
                 // hence the log level set to FINE to make sure it does not flood the log unnecessarily
                 // (especially for clients disconnecting from SSE listening, which is very common).
                 Logger.getLogger(OutboundMessageContext.class.getName()).log(Level.FINE, e.getMessage(), e);
