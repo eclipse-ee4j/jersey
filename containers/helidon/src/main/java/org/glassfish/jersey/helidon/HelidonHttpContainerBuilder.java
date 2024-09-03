@@ -19,6 +19,7 @@ package org.glassfish.jersey.helidon;
 
 import io.helidon.common.tls.Tls;
 import io.helidon.common.tls.TlsConfig;
+import io.helidon.config.Config;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
 import jakarta.ws.rs.core.Application;
@@ -136,7 +137,8 @@ public class HelidonHttpContainerBuilder {
 
     public HelidonHttpContainer build() {
         configureBaseUri();
-        webServerBuilder.routing(configureRouting());
+        webServerBuilder.config(Config.global())
+                        .routing(configureRouting());
         this.tls = configureTls();
         if (this.tls != null) {
             webServerBuilder.tls(this.tls);

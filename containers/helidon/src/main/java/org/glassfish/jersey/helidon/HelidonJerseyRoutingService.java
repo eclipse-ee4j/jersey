@@ -73,8 +73,6 @@ class HelidonJerseyRoutingService implements HttpService {
     private static final System.Logger LOGGER = System.getLogger(HelidonJerseyRoutingService.class.getName());
     private static final Type REQUEST_TYPE = (new GenericType<Ref<ServerRequest>>() { }).getType();
     private static final Type RESPONSE_TYPE = (new GenericType<Ref<ServerResponse>>() { }).getType();
-    private static final Set<InjectionManager> INJECTION_MANAGERS = Collections.newSetFromMap(new WeakHashMap<>());
-
     private final HelidonJerseyBridge bridge;
     private HelidonJerseyRoutingService(HelidonJerseyBridge bridge) {
         this.bridge = bridge;
@@ -114,16 +112,13 @@ class HelidonJerseyRoutingService implements HttpService {
     @Override
     public void beforeStart() {
         appHandler().onStartup(container());
-        INJECTION_MANAGERS.add(appHandler().getInjectionManager());
     }
 
     @Override
     public void afterStop() {
         try {
             final InjectionManager ij = appHandler().getInjectionManager();
-            if (INJECTION_MANAGERS.remove(ij)) {
-                appHandler().onShutdown(bridge.getContainer());
-            }
+            appHandler().onShutdown(bridge.getContainer());
         } catch (Exception e) {
             if (LOGGER.isLoggable(System.Logger.Level.DEBUG)) {
                 LOGGER.log(System.Logger.Level.DEBUG, "Exception during shutdown of Jersey", e);

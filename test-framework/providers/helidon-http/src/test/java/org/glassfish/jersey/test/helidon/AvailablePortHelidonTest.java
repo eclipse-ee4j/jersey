@@ -51,7 +51,7 @@ public class AvailablePortHelidonTest extends JerseyTest {
 
     @Override
     protected DeploymentContext configureDeployment() {
-        forceSet(TestProperties.CONTAINER_PORT, "8080");
+        forceSet(TestProperties.CONTAINER_PORT, "-1"); //Default not defined port in Helidon is -1
 
         return DeploymentContext.builder(new ResourceConfig(TestResource.class)).build();
     }

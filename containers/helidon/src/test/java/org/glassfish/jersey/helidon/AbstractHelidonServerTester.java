@@ -41,7 +41,6 @@ public abstract class AbstractHelidonServerTester {
      */
     protected final int getPort() {
         if (server != null) {
-            System.out.println(server.port());
             return server.port();
         }
 
