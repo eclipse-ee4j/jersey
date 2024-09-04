@@ -35,6 +35,9 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class NoJAXBNoWadlTest extends JerseyTest {
 
@@ -74,7 +77,9 @@ public class NoJAXBNoWadlTest extends JerseyTest {
 
         try (Response r = target("dummy").request(MediaTypes.WADL_TYPE).options()) {
             String headers = r.getHeaderString(HttpHeaders.ALLOW);
-            Assertions.assertEquals("OPTIONS,PUT", headers);
+            List<String> methods = Arrays.asList(headers.split(","));
+            Collections.sort(methods);
+            Assertions.assertEquals(Arrays.asList("OPTIONS", "PUT"), methods);
         }
         System.out.println(readableStream.toString());
         Assertions.assertEquals(!shouldHaveJaxb,
