@@ -59,10 +59,6 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     //do not register JaxbAnnotationModule because it brakes default annotations processing
     private static final String[] EXCLUDE_MODULE_NAMES = {"JaxbAnnotationModule", "JakartaXmlBindAnnotationModule"};
 
-    public DefaultJacksonJaxbJsonProvider() {
-        super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
-    }
-
     public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config, Annotations... annotationsToUse) {
         super(new JacksonMapperConfigurator(null, annotationsToUse));
         this.commonConfig = config;
