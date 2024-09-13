@@ -31,6 +31,8 @@ import javax.ws.rs.core.Configuration;
 
 import javax.inject.Inject;
 
+import org.glassfish.jersey.message.internal.ClosingDeflaterOutputStream;
+import org.glassfish.jersey.message.internal.ClosingInflaterInputStream;
 import org.glassfish.jersey.spi.ContentEncoder;
 
 /**
