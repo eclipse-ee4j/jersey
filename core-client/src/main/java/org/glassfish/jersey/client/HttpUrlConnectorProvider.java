@@ -21,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.client.Client;
@@ -295,9 +296,23 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
 
     private static class DefaultConnectionFactory implements ConnectionFactory {
 
+        private final ConcurrentHashMap<URL, Object> locks = new ConcurrentHashMap<>();
+
         @Override
         public HttpURLConnection getConnection(final URL url) throws IOException {
-            return (HttpURLConnection) url.openConnection();
+            return connect(url, null);
+        }
+
+        @Override
+        public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
+            return connect(url, proxy);
+        }
+
+        private HttpURLConnection connect(URL url, Proxy proxy) throws IOException {
+            Object lock = locks.computeIfAbsent(url, u -> new Object());
+            synchronized (lock){
+                return (proxy == null) ? (HttpURLConnection) url.openConnection() : (HttpURLConnection) url.openConnection(proxy);
+            }
         }
     }
 
