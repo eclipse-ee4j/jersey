@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,12 +24,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static org.glassfish.jersey.internal.guava.Preconditions.checkNotNull;
 
 /**
  * Collections utils, which provide transforming views for {@link List} and {@link Map}.
@@ -197,8 +196,8 @@ public class Views {
      * @return union view of given sets.
      */
     public static <E> Set<E> setUnionView(final Set<? extends E> set1, final Set<? extends E> set2) {
-        checkNotNull(set1, "set1");
-        checkNotNull(set2, "set2");
+        Objects.requireNonNull(set1, "set1");
+        Objects.requireNonNull(set2, "set2");
 
         return new AbstractSet<E>() {
             @Override
@@ -220,18 +219,19 @@ public class Views {
     }
 
     /**
-     * Create a view of a difference of provided sets.
+     * Create a view of a difference of provided sets, i.e. the diff filters out from the first set the items included
+     * in the second set.
      * <p>
      * View is updated whenever any of the provided set changes.
      *
      * @param set1 first set.
      * @param set2 second set.
      * @param <E>  set item type.
-     * @return union view of given sets.
+     * @return view that is a difference of given sets.
      */
     public static <E> Set<E> setDiffView(final Set<? extends E> set1, final Set<? extends E> set2) {
-        checkNotNull(set1, "set1");
-        checkNotNull(set2, "set2");
+        Objects.requireNonNull(set1, "set1");
+        Objects.requireNonNull(set2, "set2");
 
         return new AbstractSet<E>() {
             @Override
