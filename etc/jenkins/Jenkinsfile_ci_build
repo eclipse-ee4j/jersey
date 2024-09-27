@@ -2,7 +2,8 @@ pipeline {
     agent none
 
     options {
-          timeout(time: 30, activity: true, unit: 'HOURS')
+          timeout(time: 10, activity: true, unit: 'HOURS')
+          disableConcurrentBuilds()
     }
 
     stages {
