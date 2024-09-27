@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,9 @@
 
 package org.glassfish.jersey.tests.e2e.common.message.internal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -33,10 +36,13 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.RuntimeDelegate;
 
+import org.glassfish.jersey.io.spi.FlushedCloseable;
 import org.glassfish.jersey.message.internal.CookieProvider;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.tests.e2e.common.TestRuntimeDelegate;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.contains;
@@ -271,4 +277,38 @@ public class OutboundMessageContextTest {
         newCtx.setMediaType(MediaType.APPLICATION_XML_TYPE); // new value
         Assertions.assertEquals(MediaType.APPLICATION_XML_TYPE, newCtx.getMediaType());
     }
+
+    @Test
+    public void OutboundMessageContextFlushTest() throws IOException {
+        FlushCountOutputStream os = new FlushCountOutputStream();
+        OutboundMessageContext ctx = new OutboundMessageContext((Configuration) null);
+        ctx.setEntity("Anything");
+        ctx.setEntityStream(os);
+        os.flush();
+        ctx.close();
+        MatcherAssert.assertThat(os.flushedCnt, Matchers.is(2));
+
+        os = new FlushedClosableOutputStream();
+        ctx = new OutboundMessageContext((Configuration) null);
+        ctx.setEntity("Anything2");
+        ctx.setEntityStream(os);
+        os.flush();
+        ctx.close();
+        MatcherAssert.assertThat(os.flushedCnt, Matchers.is(1));
+    }
+
+    private static class FlushCountOutputStream extends ByteArrayOutputStream {
+        private int flushedCnt = 0;
+
+        @Override
+        public void flush() throws IOException {
+            flushedCnt++;
+            super.flush();
+        }
+    }
+
+    private static class FlushedClosableOutputStream extends FlushCountOutputStream implements FlushedCloseable {
+
+    }
 }
+
