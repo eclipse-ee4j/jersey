@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,32 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.inject.cdi.se;
 
-import jakarta.enterprise.inject.Vetoed;
+package org.glassfish.jersey;
+
+import jakarta.ws.rs.core.Application;
 
 /**
- * @author Petr Bouda
+ * Implementation of this interface is capable of returning {@link Application}.
  */
-@Vetoed
-public class CzechGreeting implements Greeting, Printable {
+public interface ApplicationSupplier {
+    /**
+     * Get Application.
+     *
+     * @return Application.
+     */
+    Application getApplication();
 
-    static final String GREETING = "Ahoj";
-
-    private String greeting = GREETING + "#" + Thread.currentThread().getName();
-
-    @Override
-    public String getGreeting() {
-        return greeting;
-    }
-
-    @Override
-    public void print() {
-        System.out.println(GREETING);
-    }
-
-    @Override
-    public String toString() {
-        return "CzechGreeting";
-    }
 }

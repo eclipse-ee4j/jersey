@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,20 +17,13 @@
 package org.glassfish.jersey.inject.cdi.se.bean;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.WeakHashMap;
-import java.util.function.Supplier;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.PassivationCapable;
 
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 
-import org.jboss.weld.bean.StringBeanIdentifier;
 import org.jboss.weld.bean.proxy.BeanInstance;
-import org.jboss.weld.bean.proxy.ContextBeanInstance;
 import org.jboss.weld.bean.proxy.ProxyFactory;
 import org.jboss.weld.manager.BeanManagerImpl;
 
@@ -106,32 +99,5 @@ public class SupplierThreadScopeBean extends JerseyBean<Object> {
     private <T> T createClientProxy(BeanInstance beanInstance, String contextId) {
         ProxyFactory<T> factory = new ProxyFactory<>(contextId, getBeanClass(), getTypes(), this);
         return factory.create(beanInstance);
-    }
-
-    private static class ThreadScopeBeanInstance<T> extends ContextBeanInstance<T> {
-
-        private final WeakHashMap<Thread, Object> instances = new WeakHashMap<>();
-
-        private final Supplier<T> supplier;
-
-        /**
-         * Creates a new invocation handler with supplier which provides a current injected value in proper scope.
-         *
-         * @param supplier provider of the value.
-         */
-        private ThreadScopeBeanInstance(Supplier<T> supplier, Bean<T> bean, String contextId) {
-            super(bean, new StringBeanIdentifier(((PassivationCapable) bean).getId()), contextId);
-            this.supplier = supplier;
-        }
-
-        @Override
-        public Object invoke(Object obj, Method method, Object... arguments) throws Throwable {
-            Object instance = instances.computeIfAbsent(Thread.currentThread(), thread -> supplier.get());
-            return super.invoke(instance, method, arguments);
-        }
-
-        public void dispose() {
-            this.instances.clear();
-        }
     }
 }
