@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.inject.cdi.se;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -167,7 +168,7 @@ public class ThreadScopeTest {
     }
 
     @Test
-    public void testThreadScopedInSingletonScope() {
+    public void testThreadScopedInSingletonScope() throws InterruptedException {
         InjectionManager injectionManager = BindingTestHelper.createInjectionManager();
         BindingTestHelper.bind(injectionManager, binder -> {
             binder.bindAsContract(SingletonObject.class)
@@ -188,6 +189,52 @@ public class ThreadScopeTest {
         assertNotNull(greeting2);
 
         assertEquals(greeting1, greeting2);
+
+        final AtomicReference<String> greetingAtomicReference = new AtomicReference<>();
+        Runnable runnable = () ->
+                greetingAtomicReference.set(injectionManager.getInstance(SingletonObject.class).getGreeting().getGreeting());
+
+        Thread newThread = new Thread(runnable);
+        newThread.start();
+        newThread.join();
+
+        assertEquals(greeting1.getGreeting(), greeting2.getGreeting());
+        assertNotEquals(greeting1.getGreeting(), greetingAtomicReference.get());
+    }
+
+    @Test
+    public void testSupplierClassBindingThreadScopedInSingletonScope() throws InterruptedException {
+        InjectionManager injectionManager = BindingTestHelper.createInjectionManager();
+        BindingTestHelper.bind(injectionManager, binder -> {
+            binder.bindAsContract(SingletonObject.class)
+                    .in(Singleton.class);
+
+            binder.bindFactory(SupplierGreeting.class)
+                    .to(Greeting.class)
+                    .in(PerThread.class);
+        });
+
+        SingletonObject instance1 = injectionManager.getInstance(SingletonObject.class);
+        Greeting greeting1 = instance1.getGreeting();
+        assertNotNull(greeting1);
+
+        // Precisely the same object
+        SingletonObject instance2 = injectionManager.getInstance(SingletonObject.class);
+        Greeting greeting2 = instance2.getGreeting();
+        assertNotNull(greeting2);
+
+        assertEquals(greeting1, greeting2);
+
+        final AtomicReference<String> greetingAtomicReference = new AtomicReference<>();
+        Runnable runnable = () ->
+                greetingAtomicReference.set(injectionManager.getInstance(SingletonObject.class).getGreeting().getGreeting());
+
+        Thread newThread = new Thread(runnable);
+        newThread.start();
+        newThread.join();
+
+        assertEquals(greeting1.getGreeting(), greeting2.getGreeting());
+        assertNotEquals(greeting1.getGreeting(), greetingAtomicReference.get());
     }
 
     @RequestScoped

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -116,18 +116,11 @@ public class BeanHelper {
      * @param <T>     type of the instance which is registered.
      */
     public static <T> void registerSupplier(SupplierInstanceBinding<T> binding, AfterBeanDiscovery abd, BeanManager beanManager) {
-        BeanManagerImpl manager;
-        if (beanManager instanceof BeanManagerProxy) {
-            manager = ((BeanManagerProxy) beanManager).unwrap();
-        } else {
-            manager = (BeanManagerImpl) beanManager;
-        }
-
         /*
          * CDI does not provide sufficient support for ThreadScoped Supplier
          */
         if (binding.getScope() == PerThread.class) {
-            abd.addBean(new SupplierThreadScopeBean(binding, manager));
+            abd.addBean(new SupplierThreadScopeBean(binding, beanManagerImpl(beanManager)));
         } else {
             abd.addBean(new SupplierInstanceBean<>(binding));
             abd.addBean(new SupplierInstanceBeanBridge<>(binding));
@@ -156,8 +149,23 @@ public class BeanHelper {
         InjectionTarget<Supplier<T>> jit = getJerseyInjectionTarget(supplierClass, injectionTarget, supplierBean, resolvers);
         supplierBean.setInjectionTarget(jit);
 
-        abd.addBean(supplierBean);
-        abd.addBean(new SupplierBeanBridge(binding, beanManager));
+        /*
+         * CDI does not provide sufficient support for ThreadScoped Supplier
+         */
+        if (binding.getScope() == PerThread.class) {
+            abd.addBean(new SupplierThreadScopeClassBean(binding, supplierBean, beanManagerImpl(beanManager)));
+        } else {
+            abd.addBean(supplierBean);
+            abd.addBean(new SupplierBeanBridge(binding, beanManager));
+        }
+    }
+
+    private static BeanManagerImpl beanManagerImpl(BeanManager beanManager) {
+        if (beanManager instanceof BeanManagerProxy) {
+            return ((BeanManagerProxy) beanManager).unwrap();
+        } else {
+            return (BeanManagerImpl) beanManager;
+        }
     }
 
     private static <T> InjectionTarget<T> getJerseyInjectionTarget(Class<T> clazz, InjectionTarget<T> injectionTarget,
