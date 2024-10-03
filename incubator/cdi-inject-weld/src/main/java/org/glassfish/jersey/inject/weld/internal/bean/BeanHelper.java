@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -129,13 +129,7 @@ public abstract class BeanHelper {
          * CDI does not provide sufficient support for ThreadScoped Supplier
          */
         if (binding.getScope() == PerThread.class) {
-            BeanManagerImpl manager;
-            if (beanManager instanceof BeanManagerProxy) {
-                manager = ((BeanManagerProxy) beanManager).unwrap();
-            } else {
-                manager = (BeanManagerImpl) beanManager;
-            }
-            abd.addBean(new InitializableSupplierThreadScopeBean(runtimeType, binding, manager));
+            abd.addBean(new InitializableSupplierThreadScopeBean(runtimeType, binding, beanManagerImpl(beanManager)));
         } else {
             abd.addBean(new InitializableSupplierInstanceBean<>(runtimeType, binding));
             abd.addBean(new InitializableSupplierInstanceBeanBridge<>(runtimeType, binding));
@@ -164,12 +158,18 @@ public abstract class BeanHelper {
         InjectionTarget<Supplier<T>> jit = getJerseyInjectionTarget(supplierClass, injectionTarget, supplierBean, resolvers);
         supplierBean.setInjectionTarget(jit);
 
-        final SupplierBeanBridge supplierBeanBridge = new SupplierBeanBridge(runtimeType, binding, beanManager);
-
-        abd.addBean(supplierBean);
-        abd.addBean(supplierBeanBridge);
-
-        return new BindingBeanPair(binding, supplierBean, supplierBeanBridge);
+        /*
+         * CDI does not provide sufficient support for ThreadScoped Supplier
+         */
+        if (binding.getScope() == PerThread.class) {
+            abd.addBean(new SupplierThreadScopeClassBean(runtimeType, binding, supplierBean, beanManagerImpl(beanManager)));
+            return null;
+        } else {
+            final SupplierBeanBridge supplierBeanBridge = new SupplierBeanBridge(runtimeType, binding, beanManager);
+            abd.addBean(supplierBean);
+            abd.addBean(supplierBeanBridge);
+            return new BindingBeanPair(binding, supplierBean, supplierBeanBridge);
+        }
     }
 
     /**
@@ -256,6 +256,14 @@ public abstract class BeanHelper {
             return constructorInjectionPoint;
         }
         return null;
+    }
+
+    private static BeanManagerImpl beanManagerImpl(BeanManager beanManager) {
+        if (beanManager instanceof BeanManagerProxy) {
+            return ((BeanManagerProxy) beanManager).unwrap();
+        } else {
+            return (BeanManagerImpl) beanManager;
+        }
     }
 
     private static <T> InjectionTarget<T> getJerseyInjectionTarget(Class<T> clazz, InjectionTarget<T> injectionTarget,

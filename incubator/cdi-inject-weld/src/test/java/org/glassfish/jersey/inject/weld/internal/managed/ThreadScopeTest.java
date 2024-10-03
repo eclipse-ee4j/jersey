@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.inject.weld.internal.managed;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -181,7 +182,7 @@ public class ThreadScopeTest extends TestParent {
     }
 
     @Test
-    public void testThreadScopedInSingletonScope() {
+    public void testThreadScopedInSingletonScope() throws InterruptedException {
 //        InjectionManager injectionManager = BindingTestHelper.createInjectionManager();
 //        BindingTestHelper.bind(injectionManager, binder -> {
 //            binder.bindAsContract(SingletonObject.class)
@@ -202,6 +203,52 @@ public class ThreadScopeTest extends TestParent {
         assertNotNull(greeting2);
 
         assertEquals(greeting1, greeting2);
+
+        final AtomicReference<String> greetingAtomicReference = new AtomicReference<>();
+        Runnable runnable = () ->
+                greetingAtomicReference.set(injectionManager.getInstance(SingletonObject.class).getGreeting().getGreeting());
+
+        Thread newThread = new Thread(runnable);
+        newThread.start();
+        newThread.join();
+
+        assertEquals(greeting1.getGreeting(), greeting2.getGreeting());
+        assertNotEquals(greeting1.getGreeting(), greetingAtomicReference.get());
+    }
+
+    @Test
+    public void testSupplierClassBindingThreadScopedInSingletonScope() throws InterruptedException {
+//        InjectionManager injectionManager = BindingTestHelper.createInjectionManager();
+//        BindingTestHelper.bind(injectionManager, binder -> {
+//            binder.bindAsContract(SingletonObject.class)
+//                    .in(Singleton.class);
+//
+//            binder.bindFactory(SupplierGreeting.class)
+//                    .to(Greeting.class)
+//                    .in(PerThread.class);
+//        });
+
+        SingletonObject3 instance1 = injectionManager.getInstance(SingletonObject3.class);
+        Greeting3 greeting1 = instance1.getGreeting();
+        assertNotNull(greeting1);
+
+        // Precisely the same object
+        SingletonObject3 instance2 = injectionManager.getInstance(SingletonObject3.class);
+        Greeting3 greeting2 = instance2.getGreeting();
+        assertNotNull(greeting2);
+
+        assertEquals(greeting1, greeting2);
+
+        final AtomicReference<String> greetingAtomicReference = new AtomicReference<>();
+        Runnable runnable = () ->
+                greetingAtomicReference.set(injectionManager.getInstance(SingletonObject3.class).getGreeting().getGreeting());
+
+        Thread newThread = new Thread(runnable);
+        newThread.start();
+        newThread.join();
+
+        assertEquals(greeting1.getGreeting(), greeting2.getGreeting());
+        assertNotEquals(greeting1.getGreeting(), greetingAtomicReference.get());
     }
 
     @RequestScoped
@@ -222,6 +269,17 @@ public class ThreadScopeTest extends TestParent {
         CzechGreeting greeting;
 
         public CzechGreeting getGreeting() {
+            return greeting;
+        }
+    }
+
+    @Singleton
+    public static class SingletonObject3 {
+
+        @Inject
+        Greeting3 greeting;
+
+        public Greeting3 getGreeting() {
             return greeting;
         }
     }
@@ -260,6 +318,14 @@ public class ThreadScopeTest extends TestParent {
     }
 
     @Vetoed
+    static class SupplierGreeting3 implements Supplier<Greeting3> {
+        @Override
+        public Greeting3 get() {
+            return new CzechGreeting3();
+        }
+    }
+
+    @Vetoed
     static class SupplierGreeting2 implements Supplier<Greeting2> {
 
         private final String greetingType;
@@ -291,13 +357,33 @@ public class ThreadScopeTest extends TestParent {
     }
 
     @Vetoed
+    static class CzechGreeting3 implements Greeting3 {
+
+        static final String GREETING = "Ahoj";
+
+        private String greeting = GREETING + "#" + Thread.currentThread().getName();
+
+        @Override
+        public String getGreeting() {
+            return greeting;
+        }
+
+        @Override
+        public String toString() {
+            return "CzechGreeting";
+        }
+    }
+
+    @Vetoed
     static class CzechGreeting2 implements Greeting2 {
 
         static final String GREETING = "Ahoj";
 
+        private String greeting = GREETING + "#" + Thread.currentThread().getName();
+
         @Override
         public String getGreeting() {
-            return GREETING + "#" + Thread.currentThread().getName();
+            return greeting;
         }
 
         @Override
@@ -374,15 +460,22 @@ public class ThreadScopeTest extends TestParent {
 
         static final String GREETING = "Ahoj";
 
+        private String greeting = GREETING + "#" + Thread.currentThread().getName();
+
         @Override
         public String getGreeting() {
-            return GREETING + "#" + Thread.currentThread().getName();
+            return greeting;
         }
 
         @Override
         public String toString() {
             return "CzechGreeting";
         }
+    }
+
+    @FunctionalInterface
+    static interface Greeting3 {
+        String getGreeting();
     }
 
     @FunctionalInterface

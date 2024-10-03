@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -304,7 +304,7 @@ public final class ServerProperties {
     /**
      * If {@code true} then disable auto discovery on server.
      *
-     * By default auto discovery is automatically enabled if global property
+     * By default, auto discovery is automatically enabled if global property
      * {@value org.glassfish.jersey.CommonProperties#FEATURE_AUTO_DISCOVERY_DISABLE} is not disabled. If set then the server
      * property value overrides the global property value.
      * <p>
@@ -345,9 +345,28 @@ public final class ServerProperties {
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER = CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_SERVER;
 
     /**
+     * If {@code true} then disable configuration of Json Binding (JSR-367) feature on server.
+     *
+     * By default, Json Binding is automatically enabled if global property
+     * {@value org.glassfish.jersey.CommonProperties#JSON_BINDING_FEATURE_DISABLE} is not disabled. If set then the server
+     * property value overrides the global property value.
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * <p>This constant is an alias for {@link CommonProperties#JSON_BINDING_FEATURE_DISABLE_SERVER}</p>
+     *
+     * @see org.glassfish.jersey.CommonProperties#JSON_BINDING_FEATURE_DISABLE
+     */
+    @PropertyAlias
+    public static final String JSON_BINDING_FEATURE_DISABLE = CommonProperties.JSON_BINDING_FEATURE_DISABLE_SERVER;
+
+    /**
      * If {@code true} then disable configuration of Json Processing (JSR-353) feature on server.
      *
-     * By default Json Processing is automatically enabled if global property
+     * By default, Json Processing is automatically enabled if global property
      * {@value org.glassfish.jersey.CommonProperties#JSON_PROCESSING_FEATURE_DISABLE} is not disabled. If set then the server
      * property value overrides the global property value.
      * <p>
@@ -366,7 +385,7 @@ public final class ServerProperties {
     /**
      * If {@code true} then disable META-INF/services lookup on server.
      *
-     * By default Jersey looks up SPI implementations described by META-INF/services/* files.
+     * By default, Jersey looks up SPI implementations described by META-INF/services/* files.
      * Then you can register appropriate provider classes by {@link jakarta.ws.rs.core.Application}.
      * <p>
      * The default value is {@code false}.
@@ -385,7 +404,7 @@ public final class ServerProperties {
     /**
      * If {@code true} then disable configuration of MOXy Json feature on server.
      *
-     * By default MOXy Json is automatically enabled if global property
+     * By default, MOXy Json is automatically enabled if global property
      * {@value org.glassfish.jersey.CommonProperties#MOXY_JSON_FEATURE_DISABLE} is not disabled. If set then the server
      * property value overrides the global property value.
      * <p>

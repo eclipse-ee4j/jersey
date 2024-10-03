@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -96,6 +96,13 @@ public class TestPreinitialization implements BootstrapPreinitialization {
                     .in(PerThread.class);
             binder.bindFactory(new ThreadScopeTest.SupplierGreeting2(ThreadScopeTest.EnglishGreeting2.GREETING))
                     .to(ThreadScopeTest.EnglishGreeting2.class)
+                    .in(PerThread.class);
+
+            //testSupplierClassBindingThreadScopedInSingletonScope
+            binder.bindAsContract(ThreadScopeTest.SingletonObject3.class)
+                    .in(Singleton.class);
+            binder.bindFactory(ThreadScopeTest.SupplierGreeting3.class)
+                    .to(ThreadScopeTest.Greeting3.class)
                     .in(PerThread.class);
         }
 
