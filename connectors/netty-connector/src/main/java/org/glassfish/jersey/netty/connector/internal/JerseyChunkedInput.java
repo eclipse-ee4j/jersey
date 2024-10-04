@@ -101,7 +101,15 @@ public class JerseyChunkedInput extends OutputStream implements ChunkedInput<Byt
 
     @Override
     public ByteBuf readChunk(ByteBufAllocator allocator) throws Exception {
+        try {
+            return readChunk0(allocator);
+        } catch (Exception e) {
+            closeOnThrowable();
+            throw e;
+        }
+    }
 
+    private ByteBuf readChunk0(ByteBufAllocator allocator) throws Exception {
         if (!open) {
             return null;
         }
@@ -141,6 +149,14 @@ public class JerseyChunkedInput extends OutputStream implements ChunkedInput<Byt
     @Override
     public long progress() {
         return offset;
+    }
+
+    private void closeOnThrowable() {
+        try {
+            close();
+        } catch (Throwable t) {
+            // do not throw other throwable
+        }
     }
 
     @Override
@@ -208,12 +224,12 @@ public class JerseyChunkedInput extends OutputStream implements ChunkedInput<Byt
         try {
             boolean queued = queue.offer(bufferSupplier.get(), WRITE_TIMEOUT, TimeUnit.MILLISECONDS);
             if (!queued) {
-                close();
+                closeOnThrowable();
                 throw new IOException("Buffer overflow.");
             }
 
         } catch (InterruptedException e) {
-            close();
+            closeOnThrowable();
             throw new IOException(e);
         }
     }
