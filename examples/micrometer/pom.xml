@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>project</artifactId>
-        <version>3.0.16</version>
+        <version>3.0.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-micrometer-webapp</artifactId>
