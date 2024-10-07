@@ -44,4 +44,15 @@
         <module>netty</module>
         <module>simple</module>
     </modules>
+    <profiles>
+        <profile>
+            <id>helidon-container</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <modules>
+                <module>helidon-http</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
