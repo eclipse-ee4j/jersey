@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.ext</groupId>
         <artifactId>project</artifactId>
-        <version>3.1.9</version>
+        <version>3.1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>jersey-mvc-mustache</artifactId>
