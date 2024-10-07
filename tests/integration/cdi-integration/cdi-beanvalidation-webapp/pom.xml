@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
         <artifactId>cdi-integration-project</artifactId>
-        <version>3.1.99-SNAPSHOT</version>
+        <version>3.1.9</version>
     </parent>
 
     <artifactId>cdi-beanvalidation-webapp</artifactId>
