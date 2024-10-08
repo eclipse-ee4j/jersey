@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.LookupCache;
 import com.fasterxml.jackson.databind.util.LRUMap;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -186,14 +187,12 @@ public abstract class ProviderBase<
     /**
      * Cache for resolved endpoint configurations when reading JSON data
      */
-    protected final LRUMap<AnnotationBundleKey, EP_CONFIG> _readers
-            = new LRUMap<AnnotationBundleKey, EP_CONFIG>(16, 120);
+    protected final LookupCache<AnnotationBundleKey, EP_CONFIG> _readers;
 
     /**
      * Cache for resolved endpoint configurations when writing JSON data
      */
-    protected final LRUMap<AnnotationBundleKey, EP_CONFIG> _writers
-            = new LRUMap<AnnotationBundleKey, EP_CONFIG>(16, 120);
+    protected final LookupCache<AnnotationBundleKey, EP_CONFIG> _writers;
 
     /*
     /**********************************************************
@@ -202,8 +201,9 @@ public abstract class ProviderBase<
      */
 
     protected ProviderBase(MAPPER_CONFIG mconfig) {
-        _mapperConfig = mconfig;
-        _jaxRSFeatures = JAXRS_FEATURE_DEFAULTS;
+        this(mconfig,
+                new LRUMap<>(16, 120),
+                new LRUMap<>(16, 120));
     }
 
     /**
@@ -214,8 +214,19 @@ public abstract class ProviderBase<
      */
     @Deprecated // just to denote it should NOT be directly called; will NOT be removed
     protected ProviderBase() {
-        _mapperConfig = null;
+        this(null);
+    }
+    /**
+     * @since 2.17
+     */
+    protected ProviderBase(MAPPER_CONFIG mconfig,
+            LookupCache<AnnotationBundleKey, EP_CONFIG> readerCache,
+            LookupCache<AnnotationBundleKey, EP_CONFIG> writerCache)
+    {
+        _mapperConfig = mconfig;
         _jaxRSFeatures = JAXRS_FEATURE_DEFAULTS;
+        _readers = readerCache;
+        _writers = writerCache;
     }
 
     /*
