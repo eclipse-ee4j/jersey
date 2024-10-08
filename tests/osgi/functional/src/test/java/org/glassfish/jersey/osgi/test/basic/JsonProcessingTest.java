@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,10 @@
 
 package org.glassfish.jersey.osgi.test.basic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+
 import java.net.URI;
 import java.util.List;
 
@@ -31,18 +35,17 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.osgi.test.util.Helper;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
-import static org.junit.Assert.assertEquals;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
 /**
  * Basic test of Json Processing.
@@ -89,6 +92,7 @@ public class JsonProcessingTest {
 
     @Test
     public void testJsonObject() throws Exception {
+        assertNotNull("OSGi is supposed to exist in this test, but was not found", ReflectionHelper.getOsgiRegistryInstance());
         final ResourceConfig resourceConfig = new ResourceConfig(Resource.class);
         final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
         final JsonObject jsonObject = Json.createObjectBuilder().add("foo", "bar").build();
