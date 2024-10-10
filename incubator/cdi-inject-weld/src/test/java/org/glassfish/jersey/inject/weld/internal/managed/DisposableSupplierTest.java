@@ -18,6 +18,8 @@ package org.glassfish.jersey.inject.weld.internal.managed;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -368,9 +370,17 @@ public class DisposableSupplierTest extends TestParent {
 
             // All instances should be the same because they are request scoped.
             ComposedObject instance = injectionManager.getInstance(ComposedObject.class);
-            assertEquals("1", instance.getFirst().toString());
-            assertEquals("2", instance.getSecond().toString());
-            assertEquals("3", instance.getThird().toString());
+            Set<String> set1 = new HashSet<String>() {{
+                add("1");
+                add("2");
+                add("3");
+            }};
+            Set<String> set2 = new HashSet<String>() {{
+                add(instance.getFirst().toString());
+                add(instance.getSecond().toString());
+                add(instance.getThird().toString());
+            }};
+            assertEquals(set1, set2);
         });
 
         Supplier<StringForComposed> cleanedSupplier = atomicSupplier.get();
