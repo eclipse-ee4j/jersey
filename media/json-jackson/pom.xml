@@ -137,8 +137,8 @@
                     <artifactId>jakarta.activation-api</artifactId>
                 </exclusion>
             </exclusions>
-<!--            <optional>true</optional>-->
-<!--            <scope>provided</scope>-->
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
