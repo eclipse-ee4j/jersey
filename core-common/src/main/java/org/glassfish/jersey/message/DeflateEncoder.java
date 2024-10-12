@@ -31,6 +31,8 @@ import javax.ws.rs.core.Configuration;
 
 import javax.inject.Inject;
 
+import org.glassfish.jersey.message.internal.ClosingDeflaterOutputStream;
+import org.glassfish.jersey.message.internal.ClosingInflaterInputStream;
 import org.glassfish.jersey.spi.ContentEncoder;
 
 /**
@@ -77,7 +79,7 @@ public class DeflateEncoder extends ContentEncoder {
             return new InflaterInputStream(markSupportingStream);
         } else {
             // no zlib wrapper
-            return new InflaterInputStream(markSupportingStream, new Inflater(true));
+            return new ClosingInflaterInputStream(markSupportingStream, true);
         }
     }
 
@@ -98,7 +100,7 @@ public class DeflateEncoder extends ContentEncoder {
         }
 
         return deflateWithoutZLib
-                ? new DeflaterOutputStream(entityStream, new Deflater(Deflater.DEFAULT_COMPRESSION, true))
+                ? new ClosingDeflaterOutputStream(entityStream, Deflater.DEFAULT_COMPRESSION, true)
                 : new DeflaterOutputStream(entityStream);
     }
 }
