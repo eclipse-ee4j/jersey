@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,6 +35,9 @@ import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class NoJAXBNoWadlTest extends JerseyTest {
 
@@ -72,7 +75,9 @@ public class NoJAXBNoWadlTest extends JerseyTest {
 
         try (Response r = target("dummy").request(MediaTypes.WADL_TYPE).options()) {
             String headers = r.getHeaderString(HttpHeaders.ALLOW);
-            Assertions.assertEquals("OPTIONS,PUT", headers);
+            List<String> methods = Arrays.asList(headers.split(","));
+            Collections.sort(methods);
+            Assertions.assertEquals(Arrays.asList("OPTIONS", "PUT"), methods);
         }
         System.out.println(readableStream.toString());
         Assertions.assertTrue(
