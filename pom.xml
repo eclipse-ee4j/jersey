@@ -579,6 +579,7 @@
                         <configLocation>etc/config/checkstyle.xml</configLocation>
                         <suppressionsLocation>etc/config/checkstyle-suppressions.xml</suppressionsLocation>
                         <outputFile>${project.build.directory}/checkstyle/checkstyle-result.xml</outputFile>
+                        <excludes>**/module-info.java</excludes>
                     </configuration>
                     <dependencies>
                         <dependency>

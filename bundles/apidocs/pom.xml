@@ -297,6 +297,7 @@
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>
                             <excludePackageNames>*.innate:*.innate.*</excludePackageNames>
+                            <legacyMode>true</legacyMode>
                         </configuration>
                     </execution>
                 </executions>
