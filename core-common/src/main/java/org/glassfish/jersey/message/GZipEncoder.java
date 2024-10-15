@@ -54,4 +54,10 @@ public class GZipEncoder extends ContentEncoder {
             throws IOException {
         return new GZIPOutputStream(entityStream);
     }
+
+    @Override
+    public OutputStream timeCriticalEncode(String contentEncoding, OutputStream entityStream)
+            throws IOException {
+        return new GZIPOutputStream(entityStream, true);
+    }
 }
