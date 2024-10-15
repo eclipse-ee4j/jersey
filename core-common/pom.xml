@@ -71,10 +71,10 @@
         </resources>
 
         <testResources>
-          <testResource>
-            <directory>${basedir}/src/test/resources</directory>
-            <filtering>true</filtering>
-          </testResource>
+            <testResource>
+                <directory>${basedir}/src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
         </testResources>
 
         <plugins>
@@ -84,6 +84,8 @@
                 <version>${compiler.common.mvn.plugin.version}</version>
                 <inherited>false</inherited>
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <compilerArguments>
                         <!-- Do not warn about using sun.misc.Unsafe -->
                         <XDignore.symbol.file />
@@ -213,13 +215,12 @@
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
-<!--
         <dependency>
             <groupId>org.eclipse.angus</groupId>
             <artifactId>angus-activation</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
@@ -260,9 +261,172 @@
 
     <profiles>
         <profile>
+            <id>build.jdk20-</id>
+            <activation>
+                <jdk>[11,21)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add.java20-</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/main/java20-</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>build.jdk21</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add.java20-</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/main/java21</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-compile</id>
+                                <configuration>
+                                    <!-- compile everything to ensure module-info contains right entries -->
+                                    <release>21</release>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo>Building for JDK 21+</echo>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>compile-java21</id>
+                                <phase>process-resources</phase>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${java21.build.outputDirectory}" />
+                                        <javac srcdir="${java21.sourceDirectory}${path.separator}${project.basedir}/src/main/java/org/glassfish/jersey/innate/virtual" destdir="${java21.build.outputDirectory}"
+                                               classpath="${project.build.outputDirectory}" includeantruntime="false" release="21"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>copyJDK21FilesToMultiReleaseJar</id>
+            <activation>
+                <file>
+                    <!-- ${java21.build.outputDirectory} does not work here -->
+                    <exists>target/classes-java21/org/glassfish/jersey/innate/VirtualThreadSupport.class</exists>
+                </file>
+                <jdk>[11,21)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Multi-Release>true</Multi-Release>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>copy-jdk21-sources</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/21/org/glassfish/jersey/innate</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java21.sourceDirectory}/org/glassfish/jersey/innate</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-jdk21-classes-to-meta-inf</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/21</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${java21.build.outputDirectory}</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
             <id>securityOff</id>
             <properties>
-               <surefire.security.argline />
+                <surefire.security.argline />
             </properties>
             <build>
                 <plugins>
@@ -299,6 +463,8 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/surefire.policy</surefire.security.argline>
+        <java21.build.outputDirectory>${project.build.directory}/classes-java21</java21.build.outputDirectory>
+        <java21.sourceDirectory>${project.basedir}/src/main/java21</java21.sourceDirectory>
         <surefire.coverage.argline>
             --add-reads org.glassfish.jersey.core.common=ALL-UNNAMED
             --add-modules=ALL-MODULE-PATH

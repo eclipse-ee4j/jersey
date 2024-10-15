@@ -15,9 +15,6 @@ jersey.
 Contents
 --------
 
-The description of what's done here you'll find in the [jersey 1
-wiki](https://wikis.oracle.com/display/Jersey/HowToConfigureExtendedWADL).
-
 The difference in configuration against jersey 1.x is in property
 configuring the custom WadlGeneratorConfig. Instead of property key
 'com.sun.jersey.config.property.WadlGeneratorConfig' use the property
@@ -47,6 +44,8 @@ If you are working with Jersey GlassFish update center module installed
 into your existing GlassFish instance, you will need to follow
 instructions at [the module README file](../../README.html) in order to
 deploy the example.
+
+NOTE: the example must be run with a JDK prior to JDK 13 otherwise javadoc plugin won't work properly.
 
 Otherwise, you can run the example using embedded GlassFish as follows:
 

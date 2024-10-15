@@ -53,24 +53,8 @@
                     <artifactId>commons-io</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.aether</groupId>
-                    <artifactId>aether-util</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-classworlds</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-utils</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>

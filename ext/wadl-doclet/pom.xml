@@ -35,8 +35,8 @@
     
     <properties>
         <java.sourceDirectory>${project.basedir}/src/main/java</java.sourceDirectory>
-        <java8_11.build.outputDirectory>${project.basedir}/target</java8_11.build.outputDirectory>
-        <java8_11.sourceDirectory>${project.basedir}/src/main/java8_11</java8_11.sourceDirectory>
+        <java11.build.outputDirectory>${project.basedir}/target</java11.build.outputDirectory>
+        <java11.sourceDirectory>${project.basedir}/src/main/java8_11</java11.sourceDirectory>
         <java12.build.outputDirectory>${project.basedir}/target-java12</java12.build.outputDirectory>
         <java12.sourceDirectory>${project.basedir}/src/main/java12</java12.sourceDirectory>
     </properties>
@@ -44,12 +44,12 @@
 
     <profiles>
         <profile>
-            <id>jdk1.8_11</id>
+            <id>jdk11</id>
             <activation>
-                <jdk>[1.8,12)</jdk>
+                <jdk>[11,12)</jdk>
             </activation>
             <build>
-            	<directory>${java8_11.build.outputDirectory}</directory>
+            	<directory>${java11.build.outputDirectory}</directory>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -63,7 +63,7 @@
                                 <configuration>
                                     <sources>
                                         <source>${java.sourceDirectory}</source>
-                                        <source>${java8_11.sourceDirectory}</source>
+                                        <source>${java11.sourceDirectory}</source>
                                     </sources>
                                 </configuration>
                             </execution>
@@ -109,7 +109,7 @@
                     <!-- ${java12.build.outputDirectory} does not work here -->
                     <exists>target-java12/classes/org/glassfish/jersey/wadl/doclet/ResourceDoclet.class</exists>
                 </file>
-                <jdk>[1.8,12)</jdk>
+                <jdk>[11,12)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -136,7 +136,7 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${java8_11.build.outputDirectory}/classes/META-INF/versions/12</outputDirectory>
+                                    <outputDirectory>${java11.build.outputDirectory}/classes/META-INF/versions/12</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${java12.build.outputDirectory}/classes</directory>
@@ -155,7 +155,7 @@
                                 <phase>package</phase>
                                 <configuration>
                                     <target>
-                                    	<property name="sources-jar" value="${java8_11.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
+                                    	<property name="sources-jar" value="${java11.build.outputDirectory}/${project.artifactId}-${project.version}-sources.jar"/>
                                     	<echo>sources-jar: ${sources-jar}</echo>
                                     	<zip destfile="${sources-jar}" update="true">
                                     		<zipfileset dir="${java12.sourceDirectory}" prefix="META-INF/versions/12"/>

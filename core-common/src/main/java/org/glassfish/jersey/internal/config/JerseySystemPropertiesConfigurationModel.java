@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,9 +29,11 @@ class JerseySystemPropertiesConfigurationModel extends SystemPropertiesConfigura
             "org.glassfish.jersey.servlet.ServletProperties",
             "org.glassfish.jersey.message.MessageProperties",
             "org.glassfish.jersey.apache.connector.ApacheClientProperties",
+            "org.glassfish.jersey.apache5.connector.Apache5ClientProperties",
             "org.glassfish.jersey.helidon.connector.HelidonClientProperties",
             "org.glassfish.jersey.jdk.connector.JdkConnectorProperties",
             "org.glassfish.jersey.jetty.connector.JettyClientProperties",
+            "org.glassfish.jersey.jnh.connector.JavaNetHttpClientProperties",
             "org.glassfish.jersey.netty.connector.NettyClientProperties",
             "org.glassfish.jersey.media.multipart.MultiPartProperties",
             "org.glassfish.jersey.server.oauth1.OAuth1ServerProperties");

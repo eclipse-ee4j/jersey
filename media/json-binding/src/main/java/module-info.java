@@ -15,6 +15,8 @@
  */
 
 module org.glassfish.jersey.media.jsonb {
+    requires java.logging;
+
     requires jakarta.annotation;
     requires jakarta.inject;
     requires jakarta.json.bind;

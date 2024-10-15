@@ -94,6 +94,14 @@
                     <groupId>jakarta.json</groupId>
                     <artifactId>jakarta.json-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>jakarta.json</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.parsson</groupId>
+                    <artifactId>parsson</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 

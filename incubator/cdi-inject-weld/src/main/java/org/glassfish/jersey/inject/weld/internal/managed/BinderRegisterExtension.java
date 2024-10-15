@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -347,8 +347,10 @@ class BinderRegisterExtension implements Extension {
                 }
                 BindingBeanPair pair = BeanHelper.registerSupplier(
                         runtimeType, (SupplierClassBinding<?>) binding, abd, injectionResolvers, beanManager);
-                for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
-                    supplierClassBindings.add(contract, pair);
+                if (pair != null) {
+                    for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
+                        supplierClassBindings.add(contract, pair);
+                    }
                 }
             } else if (InitializableInstanceBinding.class.isAssignableFrom(binding.getClass())) {
                 if (RuntimeType.SERVER == runtimeType

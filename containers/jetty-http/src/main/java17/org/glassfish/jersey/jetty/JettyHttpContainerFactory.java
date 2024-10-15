@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +20,10 @@ import java.net.URI;
 import java.util.concurrent.ThreadFactory;
 
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Configuration;
 
+import org.glassfish.jersey.innate.VirtualThreadUtil;
+import org.glassfish.jersey.innate.virtual.LoomishExecutors;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
@@ -254,7 +257,8 @@ public final class JettyHttpContainerFactory {
         }
         final int port = (uri.getPort() == -1) ? defaultPort : uri.getPort();
 
-        final Server server = new Server(new JettyConnectorThreadPool());
+        final Configuration configuration = handler != null ? handler.getConfiguration() : null;
+        final Server server = new Server(new JettyConnectorThreadPool(configuration));
         final HttpConfiguration config = new HttpConfiguration();
         if (sslContextFactory != null) {
             config.setSecureScheme("https");
@@ -292,10 +296,20 @@ public final class JettyHttpContainerFactory {
     //
     //  Keeping this for backwards compatibility for the time being
     private static final class JettyConnectorThreadPool extends QueuedThreadPool {
-        private final ThreadFactory threadFactory = new ThreadFactoryBuilder()
-                .setNameFormat("jetty-http-server-%d")
-                .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
-                .build();
+        private final ThreadFactory threadFactory;
+
+        private JettyConnectorThreadPool(Configuration configuration) {
+            final LoomishExecutors executors = VirtualThreadUtil.withConfig(configuration, false);
+            if (executors.isVirtual()) {
+                super.setMaxThreads(Integer.MAX_VALUE - 1);
+            }
+
+            this.threadFactory = new ThreadFactoryBuilder()
+                    .setNameFormat("jetty-http-server-%d")
+                    .setUncaughtExceptionHandler(new JerseyProcessingUncaughtExceptionHandler())
+                    .setThreadFactory(executors.getThreadFactory())
+                    .build();
+        }
 
         @Override
         public Thread newThread(Runnable runnable) {

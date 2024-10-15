@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -147,6 +147,7 @@ public final class JettyHttpContainer extends AbstractHandler implements Contain
         final Response response = request.getResponse();
         final ResponseWriter responseWriter = new ResponseWriter(request, response, configSetStatusOverSendError);
         try {
+            LOGGER.debugLog(LocalizationMessages.CONTAINER_STARTED());
             final URI baseUri = getBaseUri(request);
             final URI requestUri = getRequestUri(request, baseUri);
             final ContainerRequest requestContext = new ContainerRequest(

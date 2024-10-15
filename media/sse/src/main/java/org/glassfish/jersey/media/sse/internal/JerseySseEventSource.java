@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.media.sse.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,6 +74,10 @@ public class JerseySseEventSource implements SseEventSource {
      * Client provided executor facade.
      */
     private final ClientExecutor clientExecutor;
+    /**
+     * List of Throwable consumers passed to EventProcessor.Builder.
+     */
+    private final List<Consumer<Throwable>> throwableConsumers = new ArrayList<>();
 
     /**
      * Private constructor.
@@ -110,11 +116,13 @@ public class JerseySseEventSource implements SseEventSource {
     public void register(final Consumer<InboundSseEvent> onEvent, final Consumer<Throwable> onError) {
         this.subscribe(DEFAULT_SUBSCRIPTION_HANDLER, onEvent, onError, () -> {
         });
+        throwableConsumers.add(onError);
     }
 
     @Override
     public void register(final Consumer<InboundSseEvent> onEvent, final Consumer<Throwable> onError, final Runnable onComplete) {
         this.subscribe(DEFAULT_SUBSCRIPTION_HANDLER, onEvent, onError, onComplete);
+        throwableConsumers.add(onError);
     }
 
     private void subscribe(final Consumer<Flow.Subscription> onSubscribe,
@@ -173,6 +181,7 @@ public class JerseySseEventSource implements SseEventSource {
         EventProcessor processor = EventProcessor
                 .builder(endpoint, state, clientExecutor, this::onEvent, this::close)
                 .reconnectDelay(reconnectDelay, reconnectTimeUnit)
+                .throwableConsumers(throwableConsumers)
                 .build();
         clientExecutor.submit(processor);
 

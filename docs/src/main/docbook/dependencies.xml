@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,18 +33,10 @@
         <title>Java SE Compatibility</title>
 
         <para>
-            <emphasis>3.x branch: </emphasis>
+            <emphasis>3.1 branch: </emphasis>
             <itemizedlist>
                 <listitem>
-                    <para>This user guide refers only to version 3 and above of Jersey, its compatibility is described below</para>
-                </listitem>
-                <listitem>
-                    <para>Since version 3.0.0 all Jersey components are compiled with Java SE 1.8 target.
-                    It means, that you will need at least Java SE 1.8 to be able to compile and run your application
-                        which uses the latest Jersey 3.0.x.
-                    Some modules, however, are fully compatible with JDK 11 and above (Jetty modules based on Jetty 11).
-                    Some modules (Helidon Connector, Spring 6) require JDK 17.
-                    </para>
+                    <para>This user guide refers only to version 3.1.x of Jersey, its compatibility is described below.</para>
                 </listitem>
                 <listitem>
                     <para>Since version 3.1.0 all Jersey components are compiled with Java SE 11 target.
@@ -60,7 +52,47 @@
                     </para>
                 </listitem>
             </itemizedlist>
+            <table pgwide="1" frame='all' xml:id="jersey-jdk-compatibility">
+                <title>Jersey 3.1.x JDK compatibility</title>
+                <tgroup cols='3' align='center' colsep='1' rowsep='1'>
+                    <colspec colname='c1'/>
+                    <colspec colname='c2'/>
+                    <colspec colname='c3'/>
+                    <thead>
+                        <row>
+                            <entry>Jersey version</entry>
+                            <entry>JDK min version</entry>
+                            <entry>JDK max version</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row><entry>3.1.0</entry><entry>11</entry><entry>19</entry></row>
+                        <row><entry>3.1.1</entry><entry>11</entry><entry>19</entry></row>
+                        <row><entry>3.1.2</entry><entry>11</entry><entry>21</entry></row>
+                        <row><entry>3.1.3</entry><entry>11</entry><entry>21</entry></row>
+                        <row><entry>3.1.4</entry><entry>11</entry><entry>22</entry></row>
+                        <row><entry>3.1.5</entry><entry>11</entry><entry>22</entry></row>
+                        <row><entry>3.1.6</entry><entry>11</entry><entry>23</entry></row>
+                        <row><entry>3.1.7</entry><entry>11</entry><entry>23</entry></row>
+                    </tbody>
+                </tgroup>
+            </table>
         </para>
+        <section>
+            <title>Virtual Threads and Thread Factories</title>
+            <para>
+                With JDK 21 and above, Jersey (since 2.44) has the ability to use virtual threads instead of
+                the <literal>CachedThreadPool</literal> in the internal <literal>ExecutorServices</literal>.
+                Jersey also has the ability to specify the backing <literal>ThreadFactory</literal> for the
+                default <literal>ExecutorServices</literal> (the default <literal>ExecutorServices</literal>
+                can be overridden by the &jersey.common.spi.ExecutorServiceProvider; SPI).
+            </para>
+            <para>
+                To enable virtual threads and/or specify the <literal>ThreadFactory</literal>, use
+                &jersey.common.CommonProperties.USE_VIRTUAL_THREADS; and/or &jersey.common.CommonProperties.THREAD_FACTORY;
+                properties, respectively. See also the <xref linkend="appendix-properties-common"/> in appendix for property details.
+            </para>
+        </section>
     </section>
     <section>
         <title>Introduction to Jersey dependencies</title>

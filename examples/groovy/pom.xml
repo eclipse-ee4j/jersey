@@ -42,6 +42,18 @@
                     <groupId>org.ow2.asm</groupId>
                     <artifactId>asm-tree</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -62,7 +74,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.8.2</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -140,7 +152,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${buildhelper.mvn.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>3</id>

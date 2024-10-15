@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -121,7 +121,7 @@ public class MemoryLeakUtils {
             throws InvocationTargetException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, IOException {
         conditionallyInitHotSpotDiagnosticMXBean();
         try {
-            java.nio.file.Files.deleteIfExists(Paths.get(fileName));
+            java.nio.file.Files.deleteIfExists(Path.of(fileName));
         } catch (IOException e) {
             // do nothing and try to go further
         }

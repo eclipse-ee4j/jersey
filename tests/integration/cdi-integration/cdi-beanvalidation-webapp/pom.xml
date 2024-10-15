@@ -31,6 +31,16 @@
 
     <description>Jersey CDI/Bean Validation test web application</description>
 
+    <properties>
+        <surefire.coverage.argline>
+            --add-reads org.jboss.logging=weld.core.impl
+            --add-reads org.jboss.logging=weld.environment.common
+            --add-reads org.jboss.logging=weld.se.core
+            --add-reads org.jboss.logging=org.hibernate.validator
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -73,7 +83,13 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
-            <scope>provided</scope>
+<!--            <scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld.environment</groupId>
+            <artifactId>weld-environment-common</artifactId>
+            <version>${weld.version}</version>
+<!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -119,6 +135,11 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

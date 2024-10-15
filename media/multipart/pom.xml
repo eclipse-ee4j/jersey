@@ -36,6 +36,9 @@
 
     <properties>
         <surefire.coverage.argline>
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate=ALL-UNNAMED
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.virtual=ALL-UNNAMED
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.io=ALL-UNNAMED
             --add-exports org.glassfish.jersey.core.client/org.glassfish.jersey.client.innate=ALL-UNNAMED
             --add-modules=ALL-MODULE-PATH
         </surefire.coverage.argline>
@@ -143,6 +146,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <inherited>true</inherited>
                         <configuration>
                             <testExcludes>
                                 <testExclude>org/glassfish/jersey/media/multipart/internal/MultiPartHeaderModificationTest.java</testExclude>

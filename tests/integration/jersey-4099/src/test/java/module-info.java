@@ -26,6 +26,7 @@ module org.glassfish.jersey.tests.integration.jersey4099 {
     requires org.glassfish.jersey.core.server;
 
     requires org.junit.jupiter.api;
+    requires org.junit.platform.engine;
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
 

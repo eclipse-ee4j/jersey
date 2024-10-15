@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,7 +45,7 @@ public class FormDataContentDispositionTest extends ContentDispositionTest {
                 .modificationDate(date).readDate(date).size(1222).build();
         assertFormDataContentDisposition(contentDisposition, date);
         try {
-            final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
+            final String dateString = HttpDateFormat.getPreferredDateFormatter().format(date);
             final String header = contentDispositionType + ";filename=\"test.file\";creation-date=\"" + dateString
                     + "\";modification-date=\"" + dateString + "\";read-date=\"" + dateString + "\";size=1222"
                     + ";name=\"testData\"";
@@ -92,7 +92,7 @@ public class FormDataContentDispositionTest extends ContentDispositionTest {
         final FormDataContentDisposition contentDisposition = FormDataContentDisposition.name("testData")
                 .fileName("test.file").creationDate(date).modificationDate(date)
                         .readDate(date).size(1222).build();
-        final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
+        final String dateString = HttpDateFormat.getPreferredDateFormatter().format(date);
         final String header = contentDispositionType + "; filename=\"test.file\"; creation-date=\"" + dateString
                 + "\"; modification-date=\"" + dateString + "\"; read-date=\"" + dateString + "\"; size=1222"
                 + "; name=\"testData\"";

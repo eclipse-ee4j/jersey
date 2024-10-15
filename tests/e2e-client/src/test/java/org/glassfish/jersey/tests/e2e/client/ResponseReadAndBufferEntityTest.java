@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,6 +35,7 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -57,7 +58,7 @@ public class ResponseReadAndBufferEntityTest extends JerseyTest {
 
     private static final Logger LOGGER = Logger.getLogger(ResponseReadAndBufferEntityTest.class.getName());
 
-    public static class CorruptableInputStream extends InputStream {
+    public static class CorruptableInputStream extends InputStreamWrapper {
 
         private final AtomicInteger closeCounter = new AtomicInteger(0);
 
@@ -71,53 +72,16 @@ public class ResponseReadAndBufferEntityTest extends JerseyTest {
         }
 
         @Override
-        public synchronized int read() throws IOException {
+        protected InputStream getWrapped() {
+            return delegate;
+        }
+
+        @Override
+        protected InputStream getWrappedIOE() throws IOException {
             if (corruptRead) {
                 corrupt();
             }
-            return delegate.read();
-        }
-
-        @Override
-        public int read(final byte[] b) throws IOException {
-            if (corruptRead) {
-                corrupt();
-            }
-            return delegate.read(b);
-        }
-
-        @Override
-        public int read(final byte[] b, final int off, final int len) throws IOException {
-            if (corruptRead) {
-                corrupt();
-            }
-            return delegate.read(b, off, len);
-        }
-
-        @Override
-        public long skip(final long n) throws IOException {
-            if (corruptRead) {
-                corrupt();
-            }
-            return delegate.skip(n);
-        }
-
-        @Override
-        public int available() throws IOException {
-            if (corruptRead) {
-                corrupt();
-            }
-            return delegate.available();
-        }
-
-        @Override
-        public boolean markSupported() {
-            return delegate.markSupported();
-        }
-
-        @Override
-        public void mark(final int readAheadLimit) {
-            delegate.mark(readAheadLimit);
+            return delegate;
         }
 
         @Override

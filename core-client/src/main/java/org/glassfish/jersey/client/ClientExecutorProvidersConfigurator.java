@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,10 +32,11 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.model.internal.ComponentBag;
-import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.AbstractExecutorProvidersConfigurator;
 import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
+
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Configurator which initializes and register {@link ExecutorServiceProvider} and
@@ -64,7 +65,8 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
 
     @Override
     public void init(InjectionManager injectionManager, BootstrapBag bootstrapBag) {
-        Map<String, Object> runtimeProperties = bootstrapBag.getConfiguration().getProperties();
+        final Configuration configuration = bootstrapBag.getConfiguration();
+        Map<String, Object> runtimeProperties = configuration.getProperties();
 
         ExecutorServiceProvider defaultAsyncExecutorProvider;
         ScheduledExecutorServiceProvider defaultScheduledExecutorProvider;
@@ -94,12 +96,12 @@ class ClientExecutorProvidersConfigurator extends AbstractExecutorProvidersConfi
                         .named("ClientAsyncThreadPoolSize");
                 injectionManager.register(asyncThreadPoolSizeBinding);
 
-                defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(asyncThreadPoolSize);
+                defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(asyncThreadPoolSize, configuration);
             } else {
                 if (MANAGED_EXECUTOR_SERVICE != null) {
                     defaultAsyncExecutorProvider = new ClientExecutorServiceProvider(MANAGED_EXECUTOR_SERVICE);
                 } else {
-                    defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(0);
+                    defaultAsyncExecutorProvider = new DefaultClientAsyncExecutorProvider(0, configuration);
                 }
             }
         }

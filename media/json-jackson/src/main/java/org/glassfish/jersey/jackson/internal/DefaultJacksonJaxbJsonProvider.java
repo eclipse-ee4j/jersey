@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,7 @@ import org.glassfish.jersey.message.MessageProperties;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
@@ -57,10 +58,6 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
     //do not register JaxbAnnotationModule because it brakes default annotations processing
     private static final String[] EXCLUDE_MODULE_NAMES = {"JaxbAnnotationModule", "JakartaXmlBindAnnotationModule"};
-
-    public DefaultJacksonJaxbJsonProvider() {
-        super(new JacksonMapperConfigurator(null, DEFAULT_ANNOTATIONS));
-    }
 
     public DefaultJacksonJaxbJsonProvider(Providers providers, Configuration config, Annotations... annotationsToUse) {
         super(new JacksonMapperConfigurator(null, annotationsToUse));
@@ -104,7 +101,13 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
                         commonConfig.getRuntimeType(),
                         CommonProperties.JSON_JACKSON_ENABLED_MODULES, String.class);
 
-        final List<Module> modules = ObjectMapper.findModules();
+        final List<Module> modules;
+        try {
+            modules = ObjectMapper.findModules();
+        } catch (Throwable e) {
+            LOGGER.warning(LocalizationMessages.ERROR_MODULES_NOT_LOADED(e.getMessage()));
+            return Collections.emptyList();
+        }
         for (String exludeModuleName : EXCLUDE_MODULE_NAMES) {
             modules.removeIf(mod -> mod.getModuleName().contains(exludeModuleName));
         }
@@ -129,7 +132,11 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
             final StreamReadConstraints constraints = jsonFactory.streamReadConstraints();
             jsonFactory.setStreamReadConstraints(
                     StreamReadConstraints.builder()
+                            // our
                             .maxStringLength(maxStringLength)
+                            // customers
+                            .maxDocumentLength(constraints.getMaxDocumentLength())
+                            .maxNameLength(constraints.getMaxNameLength())
                             .maxNestingDepth(constraints.getMaxNestingDepth())
                             .maxNumberLength(constraints.getMaxNumberLength())
                             .build()

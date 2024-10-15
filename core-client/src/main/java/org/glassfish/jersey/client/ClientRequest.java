@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,6 +94,8 @@ public class ClientRequest extends OutboundMessageContext
     private  LazyValue<PropertiesResolver> propertiesResolver = Values.lazy(
             (Value<PropertiesResolver>) () -> PropertiesResolver.create(getConfiguration(), getPropertiesDelegate())
     );
+    // by default nothing to be cancelled.
+    private Future cancellable = NotCancellable.INSTANCE;
 
     private static final Logger LOGGER = Logger.getLogger(ClientRequest.class.getName());
 
@@ -126,6 +132,7 @@ public class ClientRequest extends OutboundMessageContext
         this.writerInterceptors = original.writerInterceptors;
         this.propertiesDelegate = new MapPropertiesDelegate(original.propertiesDelegate);
         this.ignoreUserAgent = original.ignoreUserAgent;
+        this.cancellable = original.cancellable;
     }
 
     @Override
@@ -598,5 +605,67 @@ public class ClientRequest extends OutboundMessageContext
      */
     public void ignoreUserAgent(final boolean ignore) {
         this.ignoreUserAgent = ignore;
+    }
+
+    /**
+     * Sets the new {@code Future} that may cancel this {@link ClientRequest}.
+     * @param cancellable
+     */
+    void setCancellable(Future cancellable) {
+        this.cancellable = cancellable;
+    }
+
+    /**
+     * Cancels this {@link ClientRequest}. May result in {@link java.util.concurrent.CancellationException} later in this
+     * request processing if this {@link ClientRequest} is backed by a {@link Future} provided to
+     * {@link JerseyInvocation.Builder#setCancellable(Future)}.
+     * @param mayInterruptIfRunning may have no effect or {@code true} if the thread executing this task should be interrupted
+     *                              (if the thread is known to the implementation);
+     *                              otherwise, in-progress tasks are allowed to complete
+     */
+    public void cancel(boolean mayInterruptIfRunning) {
+        cancellable.cancel(mayInterruptIfRunning);
+    }
+
+    /**
+     * Returns {@code true} if this {@link ClientRequest} was cancelled
+     * before it completed normally.
+     *
+     * @return {@code true} if this {@link ClientRequest} was cancelled
+     * before it completed normally
+     */
+    public boolean isCancelled() {
+        return cancellable.isCancelled();
+    }
+
+    private static class NotCancellable implements Future {
+        public static final Future INSTANCE = new NotCancellable();
+        private boolean isCancelled = false;
+
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            isCancelled = true;
+            return isCancelled;
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return isCancelled;
+        }
+
+        @Override
+        public boolean isDone() {
+            return false;
+        }
+
+        @Override
+        public Object get() throws InterruptedException, ExecutionException {
+            return null;
+        }
+
+        @Override
+        public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            return null;
+        }
     }
 }

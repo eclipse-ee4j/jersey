@@ -1,0 +1,99 @@
+#
+# Copyright (c) 2024 Contributors to the Eclipse Foundation
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License v. 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0,
+# or the Eclipse Distribution License v. 1.0 which is available at
+# http://www.eclipse.org/org/documents/edl-v10.php.
+#
+# SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
+#
+
+name: "Validate"
+
+on: [pull_request, push]
+
+env:
+  JAVA_VERSION: '21'
+  JAVA_DISTRO: 'temurin'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  copyright:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: ${{ env.JAVA_DISTRO }}
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+      - name: Copyright
+        run: etc/scripts/copyright.sh
+      - name: Upload copyright info
+        uses: actions/upload-artifact@v4
+        with:
+          name: copyright_results
+          path: copyright.log
+          retention-days: 5
+  checkstyle:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: ${{ env.JAVA_DISTRO }}
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+      - name: Checkstyle
+        run: etc/scripts/checkstyle.sh
+      - name: Upload checkstyle info
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle_results
+          path: target/checkstyle/checkstyle-result.xml
+          retention-days: 5
+  apidocs:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: ${{ env.JAVA_DISTRO }}
+          java-version: 17
+          cache: maven
+      - name: Build JDK17+ required modules
+        run: mvn -B -U -V clean install -DskipTests -pl :jersey-helidon-connector -am
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: ${{ env.JAVA_DISTRO }}
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+      - name: Build ApiDocs
+        run: etc/scripts/apidocs.sh
+  archetypes:
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: ${{ env.JAVA_DISTRO }}
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+      - name: Test archetypes
+        run: etc/scripts/test-archetypes.sh

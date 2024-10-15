@@ -92,4 +92,13 @@
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <surefire.coverage.argline>
+            --add-opens weld.core.impl/org.jboss.weld.logging=org.jboss.logging
+            --add-reads org.jboss.logging=weld.core.impl
+            --add-reads org.jboss.logging=weld.environment.common
+            --add-reads org.jboss.logging=weld.se.core
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
 </project>

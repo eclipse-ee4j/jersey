@@ -22,6 +22,7 @@ module org.glassfish.jersey.container.grizzly2.servlet {
     requires org.glassfish.grizzly.http.server;
 
     requires org.glassfish.jersey.core.common;
+    requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.container.servlet.core;
     requires org.glassfish.jersey.container.grizzly2.http;
 

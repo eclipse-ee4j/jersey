@@ -16,13 +16,13 @@
 
 package org.glassfish.jersey.server.mvc.spi;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -182,7 +182,7 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
             // File-system path.
             if (reader == null) {
                 try {
-                    reader = new InputStreamReader(Files.newInputStream(new File(template).toPath()), encoding);
+                    reader = new InputStreamReader(Files.newInputStream(Path.of(template)), encoding);
                 } catch (final IOException ioe) {
                     // NOOP.
                 }

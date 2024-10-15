@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,8 @@ import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +59,7 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
 
     private static final Map<Class<?>, WeakReference<JAXBContext>> jaxbContexts =
             new WeakHashMap<Class<?>, WeakReference<JAXBContext>>();
+    private static final Lock jaxbContextsLock = new ReentrantLock();
     private final Providers jaxrsProviders;
     private final boolean fixedResolverMediaType;
     private final Value<ContextResolver<JAXBContext>> mtContext;
@@ -149,7 +152,7 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
     /**
      * Get the JAXB unmarshaller for the given class and media type.
      * <p>
-     * In case this provider instance has been {@link #AbstractJaxbProvider(Providers, MediaType)
+     * In case this provider instance has been {@link AbstractJaxbProvider(Providers, MediaType)
      * created with a fixed resolver media type}, the supplied media type argument will be ignored.
      * </p>
      *
@@ -192,7 +195,7 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
     /**
      * Get the JAXB marshaller for the given class and media type.
      * <p>
-     * In case this provider instance has been {@link #AbstractJaxbProvider(Providers, MediaType)
+     * In case this provider instance has been {@link AbstractJaxbProvider(Providers, MediaType)
      * created with a fixed resolver media type}, the supplied media type argument will be ignored.
      * </p>
      *
@@ -280,7 +283,8 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
      * @throws JAXBException in case the JAXB context retrieval fails.
      */
     protected JAXBContext getStoredJaxbContext(Class type) throws JAXBException {
-        synchronized (jaxbContexts) {
+        jaxbContextsLock.lock();
+        try {
             final WeakReference<JAXBContext> ref = jaxbContexts.get(type);
             JAXBContext c = (ref != null) ? ref.get() : null;
             if (c == null) {
@@ -288,7 +292,10 @@ public abstract class AbstractJaxbProvider<T> extends AbstractMessageReaderWrite
                 jaxbContexts.put(type, new WeakReference<JAXBContext>(c));
             }
             return c;
+        } finally {
+            jaxbContextsLock.unlock();
         }
+
     }
 
     /**

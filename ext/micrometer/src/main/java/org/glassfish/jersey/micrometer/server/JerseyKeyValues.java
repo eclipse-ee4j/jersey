@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,9 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.ExtendedUriInfo;
 import org.glassfish.jersey.server.monitoring.RequestEvent;
 
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+
 /**
  * Factory methods for {@link KeyValue KeyValues} associated with a request-response
  * exchange that is handled by Jersey server.
@@ -37,6 +40,9 @@ class JerseyKeyValues {
 
     private static final KeyValue URI_ROOT = JerseyObservationDocumentation.JerseyLegacyLowCardinalityTags.URI
         .withValue("root");
+
+    private static final KeyValue URI_UNKNOWN = JerseyObservationDocumentation.JerseyLegacyLowCardinalityTags.URI
+            .withValue("UNKNOWN");
 
     private static final KeyValue EXCEPTION_NONE = JerseyObservationDocumentation.JerseyLegacyLowCardinalityTags.EXCEPTION
         .withValue("None");
@@ -82,17 +88,30 @@ class JerseyKeyValues {
      * @return the uri KeyValue derived from the request event
      */
     static KeyValue uri(RequestEvent event) {
-        ContainerResponse response = event.getContainerResponse();
-        if (response != null) {
-            int status = response.getStatus();
+        int status = 0;
+        if (event.getContainerResponse() != null) {
+            status = event.getContainerResponse().getStatus();
+        } else if (WebApplicationException.class.isInstance(event.getException())) {
+            Response webAppResponse = ((WebApplicationException) event.getException()).getResponse();
+            if (webAppResponse != null) {
+                status = webAppResponse.getStatus();
+            }
+        }
+        if (status != 0) {
             if (JerseyTags.isRedirection(status) && event.getUriInfo().getMatchedResourceMethod() == null) {
                 return URI_REDIRECTION;
             }
             if (status == 404 && event.getUriInfo().getMatchedResourceMethod() == null) {
                 return URI_NOT_FOUND;
             }
+            if (status >= 500 && status <= 599) {
+                return STATUS_SERVER_ERROR;
+            }
         }
         String matchingPattern = JerseyTags.getMatchingPattern(event);
+        if (matchingPattern == null) {
+            return URI_UNKNOWN;
+        }
         if (matchingPattern.equals("/")) {
             return URI_ROOT;
         }

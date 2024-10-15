@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +31,7 @@ abstract class TransferEncodingParser {
 
     abstract boolean parse(ByteBuffer input) throws ParseException;
 
-    static TransferEncodingParser createFixedLengthParser(AsynchronousBodyInputStream responseBody, int expectedLength) {
+    static TransferEncodingParser createFixedLengthParser(AsynchronousBodyInputStream responseBody, long expectedLength) {
         return new FixedLengthEncodingParser(responseBody, expectedLength);
     }
 
@@ -42,11 +42,11 @@ abstract class TransferEncodingParser {
 
     private static class FixedLengthEncodingParser extends TransferEncodingParser {
 
-        private final int expectedLength;
+        private final long expectedLength;
         private final AsynchronousBodyInputStream responseBody;
-        private volatile int consumedLength = 0;
+        private volatile long consumedLength = 0;
 
-        FixedLengthEncodingParser(AsynchronousBodyInputStream responseBody, int expectedLength) {
+        FixedLengthEncodingParser(AsynchronousBodyInputStream responseBody, long expectedLength) {
             this.expectedLength = expectedLength;
             this.responseBody = responseBody;
         }
@@ -63,7 +63,7 @@ abstract class TransferEncodingParser {
             responseBody.notifyDataAvailable(parsed);
             consumedLength += data.length;
 
-            return consumedLength == expectedLength;
+            return consumedLength == expectedLength || expectedLength == Long.MAX_VALUE /* unknown at the beginning */;
         }
     }
 

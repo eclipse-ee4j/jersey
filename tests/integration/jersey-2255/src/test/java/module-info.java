@@ -19,6 +19,7 @@ module org.glassfish.jersey.tests.integration.jersey_2255 {
     requires jakarta.xml.bind;
 
     requires org.junit.jupiter.api;
+    requires org.junit.platform.engine;
     requires org.hamcrest;
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.tests.framework.provider.external;

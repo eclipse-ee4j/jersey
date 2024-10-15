@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,8 @@ package org.glassfish.jersey.server.internal;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +44,7 @@ public class JerseyRequestTimeoutHandler {
     private ScheduledFuture<?> timeoutTask = null; // guarded by runtimeLock
     private ContainerResponseWriter.TimeoutHandler timeoutHandler = null; // guarded by runtimeLock
     private boolean suspended = false; // guarded by runtimeLock
-    private final Object runtimeLock = new Object();
+    private final Lock runtimeLock = new ReentrantLock();
 
     private final ContainerResponseWriter containerResponseWriter;
     private final ScheduledExecutorService executor;
@@ -71,7 +73,8 @@ public class JerseyRequestTimeoutHandler {
      * @see ContainerResponseWriter#suspend(long, TimeUnit, ContainerResponseWriter.TimeoutHandler)
      */
     public boolean suspend(final long timeOut, final TimeUnit unit, final TimeoutHandler handler) {
-        synchronized (runtimeLock) {
+        runtimeLock.lock();
+        try {
             if (suspended) {
                 return false;
             }
@@ -81,6 +84,8 @@ public class JerseyRequestTimeoutHandler {
 
             containerResponseWriter.setSuspendTimeout(timeOut, unit);
             return true;
+        } finally {
+            runtimeLock.unlock();
         }
     }
 
@@ -94,7 +99,8 @@ public class JerseyRequestTimeoutHandler {
      * @see ContainerResponseWriter#setSuspendTimeout(long, TimeUnit)
      */
     public void setSuspendTimeout(final long timeOut, final TimeUnit unit) throws IllegalStateException {
-        synchronized (runtimeLock) {
+        runtimeLock.lock();
+        try {
             if (!suspended) {
                 throw new IllegalStateException(LocalizationMessages.SUSPEND_NOT_SUSPENDED());
             }
@@ -110,18 +116,21 @@ public class JerseyRequestTimeoutHandler {
 
                     @Override
                     public void run() {
+                        runtimeLock.lock();
                         try {
-                            synchronized (runtimeLock) {
-                                timeoutHandler.onTimeout(containerResponseWriter);
-                            }
+                            timeoutHandler.onTimeout(containerResponseWriter);
                         } catch (final Throwable throwable) {
                             LOGGER.log(Level.WARNING, LocalizationMessages.SUSPEND_HANDLER_EXECUTION_FAILED(), throwable);
+                        } finally {
+                            runtimeLock.unlock();
                         }
                     }
                 }, timeOut, unit);
             } catch (final IllegalStateException ex) {
                 LOGGER.log(Level.WARNING, LocalizationMessages.SUSPEND_SCHEDULING_ERROR(), ex);
             }
+        } finally {
+            runtimeLock.unlock();
         }
     }
 
@@ -132,10 +141,15 @@ public class JerseyRequestTimeoutHandler {
         close(false);
     }
 
-    private synchronized void close(final boolean interruptIfRunning) {
-        if (timeoutTask != null) {
-            timeoutTask.cancel(interruptIfRunning);
-            timeoutTask = null;
+    private void close(final boolean interruptIfRunning) {
+        runtimeLock.lock();
+        try {
+            if (timeoutTask != null) {
+                timeoutTask.cancel(interruptIfRunning);
+                timeoutTask = null;
+            }
+        } finally {
+            runtimeLock.unlock();
         }
     }
 }

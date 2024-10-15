@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,8 +32,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -103,6 +105,7 @@ import org.glassfish.jersey.client.innate.ClientProxy;
 import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.client.spi.AsyncConnectorCallback;
 import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
@@ -519,7 +522,7 @@ class Apache5Connector implements Connector {
             final HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null) {
+                if (headers.get(HttpHeaders.CONTENT_LENGTH) == null && entity.getContentLength() >= 0) {
                     headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(entity.getContentLength()));
                 }
 
@@ -531,7 +534,7 @@ class Apache5Connector implements Connector {
 
             try {
                 final ConnectionClosingMechanism closingMechanism = new ConnectionClosingMechanism(clientRequest, request);
-                responseContext.setEntityStream(getInputStream(response, closingMechanism));
+                responseContext.setEntityStream(getInputStream(response, closingMechanism, () -> clientRequest.isCancelled()));
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, null, e);
             }
@@ -741,17 +744,19 @@ class Apache5Connector implements Connector {
     }
 
     private static InputStream getInputStream(final CloseableHttpResponse response,
-                                              final ConnectionClosingMechanism closingMechanism) throws IOException {
+                                              final ConnectionClosingMechanism closingMechanism,
+                                              final Supplier<Boolean> isCancelled) throws IOException {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
             inputStream = new ByteArrayInputStream(new byte[0]);
         } else {
-            final InputStream i = response.getEntity().getContent();
+            final InputStream i = new CancellableInputStream(response.getEntity().getContent(), isCancelled);
             if (i.markSupported()) {
                 inputStream = i;
             } else {
-                inputStream = new BufferedInputStream(i, ReaderWriter.BUFFER_SIZE);
+                inputStream = ReaderWriter.AUTOSIZE_BUFFER ? new BufferedInputStream(i)
+                        : new BufferedInputStream(i, ReaderWriter.BUFFER_SIZE);
             }
         }
 
@@ -878,7 +883,8 @@ class Apache5Connector implements Connector {
                 Object objectRequest = context.getAttribute(JERSEY_REQUEST_ATTR_NAME);
                 if (objectRequest != null) {
                     ClientRequest clientRequest = (ClientRequest) objectRequest;
-                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest).build();
+                    SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(clientRequest)
+                            .setSNIHostName(clientRequest).build();
                     sniConfig.setSNIServerName(socket);
 
                     final int socketTimeout = ((ClientRequest) objectRequest).resolveProperty(ClientProperties.READ_TIMEOUT, -1);
@@ -889,4 +895,28 @@ class Apache5Connector implements Connector {
             }
         }
     }
+
+    private static class CancellableInputStream extends InputStreamWrapper {
+        private final InputStream in;
+        private final Supplier<Boolean> isCancelled;
+
+        private CancellableInputStream(InputStream in, Supplier<Boolean> isCancelled) {
+            this.in = in;
+            this.isCancelled = isCancelled;
+        }
+
+        @Override
+        protected InputStream getWrapped() {
+            return in;
+        }
+
+        @Override
+        protected InputStream getWrappedIOE() throws IOException {
+            if (isCancelled.get()) {
+                throw new IOException(new CancellationException());
+            }
+            return in;
+        }
+    }
+
 }

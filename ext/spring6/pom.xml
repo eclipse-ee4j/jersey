@@ -81,7 +81,6 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -93,6 +92,22 @@
                 <exclusion>
                     <groupId>org.ow2.asm</groupId>
                     <artifactId>asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm-util</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm-tree</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm-analysis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -113,6 +128,10 @@
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -209,6 +228,23 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>HK2_JDK8_dependencyConvergence_skip</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <configuration>
+                            <rulesToSkip>dependencyConvergence</rulesToSkip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>SpringExclude</id>
             <activation>

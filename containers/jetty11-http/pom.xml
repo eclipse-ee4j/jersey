@@ -114,6 +114,13 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rulesToSkip>dependencyConvergence</rulesToSkip>
+                </configuration>
+            </plugin>
         </plugins>
 
         <resources>

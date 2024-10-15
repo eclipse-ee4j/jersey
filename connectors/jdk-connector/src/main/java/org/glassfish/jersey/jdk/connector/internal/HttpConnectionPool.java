@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,8 @@ class HttpConnectionPool {
     void send(HttpRequest httpRequest, CompletionHandler<HttpResponse> completionHandler) {
         final Map<String, List<Object>> headers = new HashMap<>();
         httpRequest.getHeaders().forEach((k, v) -> headers.put(k, (List) v));
-        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().uri(httpRequest.getUri()).headers(headers).build();
+        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().uri(httpRequest.getUri())
+                .headers(headers).setSNIHostName(connectorConfiguration.getConfiguration()).build();
         connectorConfiguration.setSniConfig(sniConfig);
 
         final DestinationConnectionPool.DestinationKey destinationKey = new DestinationConnectionPool.DestinationKey(

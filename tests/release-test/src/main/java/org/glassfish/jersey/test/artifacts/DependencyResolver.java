@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,30 @@ final class DependencyResolver {
             throws ArtifactResolutionException {
         DefaultArtifact artifact = new DefaultArtifact(
                 d.getGroupId(), d.getArtifactId(), d.getClassifier(), d.getType(), d.getVersion()
+        );
+        ArtifactRequest request = new ArtifactRequest();
+        request.setArtifact(artifact);
+        request.setRepositories(remoteRepos);
+        return repoSystem.resolveArtifact(repoSession, request).getArtifact();
+    }
+
+    static Artifact resolveSource(org.apache.maven.model.Dependency d, List<RemoteRepository> remoteRepos,
+                                    RepositorySystem repoSystem, RepositorySystemSession repoSession)
+            throws ArtifactResolutionException {
+        DefaultArtifact artifact = new DefaultArtifact(
+                d.getGroupId(), d.getArtifactId(), "sources", d.getType(), d.getVersion()
+        );
+        ArtifactRequest request = new ArtifactRequest();
+        request.setArtifact(artifact);
+        request.setRepositories(remoteRepos);
+        return repoSystem.resolveArtifact(repoSession, request).getArtifact();
+    }
+
+    static Artifact resolveJavadoc(org.apache.maven.model.Dependency d, List<RemoteRepository> remoteRepos,
+                                  RepositorySystem repoSystem, RepositorySystemSession repoSession)
+            throws ArtifactResolutionException {
+        DefaultArtifact artifact = new DefaultArtifact(
+                d.getGroupId(), d.getArtifactId(), "javadoc", d.getType(), d.getVersion()
         );
         ArtifactRequest request = new ArtifactRequest();
         request.setArtifact(artifact);

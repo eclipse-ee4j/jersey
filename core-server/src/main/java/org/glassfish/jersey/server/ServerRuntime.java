@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,6 +34,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,6 +131,14 @@ public class ServerRuntime {
     private final boolean rfc7231LocationHeaderRelativeUriResolution;
 
     /**
+     * Cached value of configuration property
+     * {@link org.glassfish.jersey.server.ServerProperties#RESPONSE_SET_STATUS_OVER_SEND_ERROR}.
+     * If {@code true} method {@link ServerRuntime.CompletionCallbackRunner#onComplete(Throwable)}
+     * is used over {@link DefaultExceptionMapper#toResponse(Throwable)}.
+     */
+    private final boolean configSetStatusOverSendError;
+
+    /**
      * Default exception mapper (@since 3.1.0 according to JAX-RS 3.1 spec)
      */
     private static final ExceptionMapper<Throwable> DEFAULT_EXCEPTION_MAPPER = new DefaultExceptionMapper();
@@ -195,6 +205,9 @@ public class ServerRuntime {
         this.rfc7231LocationHeaderRelativeUriResolution = ServerProperties.getValue(configuration.getProperties(),
                 ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_RFC7231,
                 Boolean.FALSE, Boolean.class);
+
+        this.configSetStatusOverSendError = ServerProperties.getValue(configuration.getProperties(),
+                ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, false, Boolean.class);
     }
 
     /**
@@ -450,15 +463,17 @@ public class ServerRuntime {
 
                 if (!processResponseError(responseError)) {
                     // Pass the exception to the container.
-                    LOGGER.log(Level.WARNING, LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER(), responseError);
-
                     try {
                         request.getResponseWriter().failure(responseError);
                     } finally {
-                        defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
-
-                        // completionCallbackRunner.onComplete(responseError); is called from
-                        // processResponseWithDefaultExceptionMapper
+                        if (runtime.configSetStatusOverSendError) {
+                            completionCallbackRunner.onComplete(responseError);
+                        } else {
+                            LOGGER.log(Level.WARNING,
+                                    LocalizationMessages.ERROR_EXCEPTION_MAPPING_THROWN_TO_CONTAINER(),
+                                    responseError);
+                            defaultMapperResponse = processResponseWithDefaultExceptionMapper(responseError, request);
+                        }
                     }
 
                 }
@@ -544,9 +559,8 @@ public class ServerRuntime {
 
                         waeResponse = webApplicationException.getResponse();
                         if (waeResponse != null && waeResponse.hasEntity()) {
-                            LOGGER.log(Level.FINE,
-                                    LocalizationMessages.EXCEPTION_MAPPING_WAE_ENTITY(waeResponse.getStatus()),
-                                    throwable);
+                            LOGGER.log(Level.FINE, LocalizationMessages
+                                    .EXCEPTION_MAPPING_WAE_ENTITY(waeResponse.getStatus()), throwable);
                             return waeResponse;
                         }
                     }
@@ -801,7 +815,7 @@ public class ServerRuntime {
             }
         };
 
-        private final Object stateLock = new Object();
+        private final ReadWriteLock stateLock = new ReentrantReadWriteLock();
         private State state = RUNNING;
         private boolean cancelled = false;
 
@@ -833,11 +847,13 @@ public class ServerRuntime {
         @Override
         public void onTimeout(final ContainerResponseWriter responseWriter) {
             final TimeoutHandler handler = timeoutHandler;
+            stateLock.readLock().lock();
             try {
-                synchronized (stateLock) {
-                    if (state == SUSPENDED) {
-                        handler.handleTimeout(this);
-                    }
+                if (state == SUSPENDED) {
+                    stateLock.readLock().unlock(); // unlock before handleTimeout to prevent write lock in handleTimeout
+                    handler.handleTimeout(this);
+                } else {
+                    stateLock.readLock().unlock();
                 }
             } catch (final Throwable throwable) {
                 resume(throwable);
@@ -846,9 +862,9 @@ public class ServerRuntime {
 
         @Override
         public void onComplete(final Throwable throwable) {
-            synchronized (stateLock) {
-                state = COMPLETED;
-            }
+            stateLock.writeLock().lock();
+            state = COMPLETED;
+            stateLock.writeLock().unlock();
         }
 
         @Override
@@ -876,14 +892,19 @@ public class ServerRuntime {
 
         @Override
         public boolean suspend() {
-            synchronized (stateLock) {
-                if (state == RUNNING) {
-                    if (responder.processingContext.request().getResponseWriter().suspend(
-                            AsyncResponse.NO_TIMEOUT, TimeUnit.SECONDS, this)) {
-                        state = SUSPENDED;
-                        return true;
-                    }
+            stateLock.readLock().lock();
+            if (state == RUNNING) {
+                stateLock.readLock().unlock();
+                if (responder.processingContext.request().getResponseWriter().suspend(
+                        AsyncResponse.NO_TIMEOUT, TimeUnit.SECONDS, this)) {
+                    // Must release read lock before acquiring write lock
+                    stateLock.writeLock().lock();
+                    state = SUSPENDED;
+                    stateLock.writeLock().unlock();
+                    return true;
                 }
+            } else {
+                stateLock.readLock().unlock();
             }
             return false;
         }
@@ -926,12 +947,17 @@ public class ServerRuntime {
         }
 
         private boolean resume(final Runnable handler) {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 if (state != SUSPENDED) {
                     return false;
                 }
-                state = RESUMED;
+            } finally {
+                stateLock.readLock().unlock();
             }
+            stateLock.writeLock().lock();
+            state = RESUMED;
+            stateLock.writeLock().unlock();
 
             try {
                 responder.runtime.requestScope.runInScope(requestContext, handler);
@@ -979,7 +1005,8 @@ public class ServerRuntime {
         }
 
         private boolean cancel(final Value<Response> responseValue) {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 if (cancelled) {
                     return true;
                 }
@@ -987,9 +1014,14 @@ public class ServerRuntime {
                 if (state != SUSPENDED) {
                     return false;
                 }
-                state = RESUMED;
-                cancelled = true;
+            } finally {
+                stateLock.readLock().unlock();
             }
+
+            stateLock.writeLock().lock();
+            state = RESUMED;
+            cancelled = true;
+            stateLock.writeLock().unlock();
 
             responder.runtime.requestScope.runInScope(requestContext, new Runnable() {
                 @Override
@@ -1007,29 +1039,41 @@ public class ServerRuntime {
         }
 
         public boolean isRunning() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return state == RUNNING;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 
         @Override
         public boolean isSuspended() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return state == SUSPENDED;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 
         @Override
         public boolean isCancelled() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return cancelled;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 
         @Override
         public boolean isDone() {
-            synchronized (stateLock) {
+            stateLock.readLock().lock();
+            try {
                 return state == COMPLETED;
+            } finally {
+                stateLock.readLock().unlock();
             }
         }
 

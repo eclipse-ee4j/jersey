@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -294,6 +294,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
         final URI baseUri;
         final URI requestUri;
         try {
+            LOGGER.debugLog("ServletContainer.service(...) started");
             baseUri = absoluteUriBuilder.replacePath(encodedBasePath).build();
             String queryParameters = ContainerUtils.encodeUnsafeCharacters(request.getQueryString());
             if (queryParameters == null) {
@@ -530,6 +531,7 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
         final URI baseUri;
         final URI requestUri;
         try {
+            LOGGER.debugLog("ServletContainer.doFilter(...) started");
             final UriBuilder absoluteUriBuilder = UriBuilder.fromUri(request.getRequestURL().toString());
 
             // depending on circumstances, use the correct path to replace in the absolute request URI

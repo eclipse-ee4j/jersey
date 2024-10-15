@@ -43,10 +43,25 @@
             <artifactId>jersey-test-framework-provider-external</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.util.logging.config.file>${project.build.testOutputDirectory}/logging.properties</java.util.logging.config.file>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -87,4 +102,34 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>jdk11+</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <!--
+                            Since Jetty 11 for some reason is not possibly to properly set responseHeaderSize property
+                            which should be jetty.response.header.size with adjusted value 16192. The property however
+                            is never recognized by the plugin so resulting in the
+                                            org.eclipse.jetty.http.BadMessageException: 500: Response header too large
+                            exception. For this reason the test is being excluded.
+                              -->
+                            <testExcludes>
+                                <testExclude>
+                                    org/glassfish/jersey/tests/integration/tracing/AllTracingSupportITCase.java
+                                </testExclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

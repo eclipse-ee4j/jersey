@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,6 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.core.Application;
-
 
 import jakarta.annotation.ManagedBean;
 import jakarta.enterprise.context.Dependent;
@@ -143,6 +142,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     private volatile Map<Class<?>, Set<Method>> methodsToSkip = new HashMap<>();
     private volatile Map<Class<?>, Set<Field>> fieldsToSkip = new HashMap<>();
 
+    private boolean initialized = false;
+
     public CdiComponentProvider() {
         customHk2TypesProvider = CdiUtil.lookupService(Hk2CustomBoundTypesProvider.class);
         injectionManagerStore = CdiUtil.createHk2InjectionManagerStore();
@@ -154,7 +155,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         this.injectionManager = injectionManager;
         this.beanManager = CdiUtil.getBeanManager();
 
-        if (beanManager != null) {
+        if (beanManager != null && !injectionManager.getClass().getSimpleName().equals("NonInjectionManager")) {
             // Try to get CdiComponentProvider created by CDI.
             final CdiComponentProvider extension = beanManager.getExtension(CdiComponentProvider.class);
 
@@ -167,18 +168,19 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 bindHk2ClassAnalyzer();
 
                 LOGGER.config(LocalizationMessages.CDI_PROVIDER_INITIALIZED());
+                initialized = true;
             }
         }
     }
 
     @Override
     public boolean bind(final Class<?> clazz, final Set<Class<?>> providerContracts) {
-        return bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
+        return initialized && bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
     }
 
     @Override
     public boolean bind(Class<?> component, ContractProvider contractProvider) {
-        return contractProvider != null
+        return initialized && contractProvider != null
                 ? bind(component, contractProvider.getContracts(), contractProvider.getPriority(component))
                 : bind(component, Collections.EMPTY_SET);
     }
@@ -628,11 +630,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         ClassAnalyzer defaultClassAnalyzer =
                 injectionManager.getInstance(ClassAnalyzer.class, ClassAnalyzer.DEFAULT_IMPLEMENTATION_NAME);
 
-        int skippedElements = methodsToSkip.size() + fieldsToSkip.size();
-
-        ClassAnalyzer customizedClassAnalyzer = skippedElements > 0
-                ? new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip, beanManager)
-                : defaultClassAnalyzer;
+        ClassAnalyzer customizedClassAnalyzer =
+                new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip, beanManager);
 
         Binder binder = new AbstractBinder() {
             @Override

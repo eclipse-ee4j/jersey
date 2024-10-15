@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,7 +66,7 @@ public class ContentDispositionTest {
             contentDisposition = new ContentDisposition(header);
             assertNotNull(contentDisposition);
             assertEquals(contentDispositionType, contentDisposition.getType());
-            final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
+            final String dateString = HttpDateFormat.getPreferredDateFormatter().format(date);
             header = contentDispositionType + ";filename=\"test.file\";creation-date=\""
                     + dateString + "\";modification-date=\"" + dateString + "\";read-date=\""
                     + dateString + "\";size=1222";
@@ -89,11 +89,19 @@ public class ContentDispositionTest {
     }
 
     @Test
+    void testContentDispositionEncoded() {
+        final Date date = new Date();
+        final ContentDisposition contentDisposition = ContentDisposition.type(contentDispositionType).fileName("\"rm\\ -rf\".sh")
+                .creationDate(date).modificationDate(date).readDate(date).size(312).build();
+        assertEquals("\\\"rm\\\\ -rf\\\".sh", contentDisposition.getFileName());
+    }
+
+    @Test
     public void testToString() {
         final Date date = new Date();
         final ContentDisposition contentDisposition = ContentDisposition.type(contentDispositionType).fileName("test.file")
                 .creationDate(date).modificationDate(date).readDate(date).size(1222).build();
-        final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
+        final String dateString = HttpDateFormat.getPreferredDateFormatter().format(date);
         final String header = contentDispositionType + "; filename=\"test.file\"; creation-date=\""
                 + dateString + "\"; modification-date=\"" + dateString + "\"; read-date=\"" + dateString + "\"; size=1222";
         assertEquals(header, contentDisposition.toString());
@@ -244,7 +252,7 @@ public class ContentDispositionTest {
             final boolean decode
     ) throws ParseException {
         final Date date = new Date();
-        final String dateString = HttpDateFormat.getPreferredDateFormat().format(date);
+        final String dateString = HttpDateFormat.getPreferredDateFormatter().format(date);
         final String prefixHeader = contentDispositionType + ";filename=\"" + actualFileName + "\";"
                 + "creation-date=\"" + dateString + "\";modification-date=\"" + dateString + "\";read-date=\""
                 + dateString + "\";size=1222" + ";name=\"testData\";" + "filename*=\"";

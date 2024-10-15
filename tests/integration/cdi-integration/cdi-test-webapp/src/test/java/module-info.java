@@ -48,6 +48,7 @@ module org.glassfish.jersey.tests.integration.cdi.test.webapp.test {
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
     requires org.junit.jupiter.params;
+    requires org.junit.platform.engine;
 
     exports org.glassfish.jersey.tests.cdi.resources.test;
 

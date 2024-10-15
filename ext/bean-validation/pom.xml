@@ -141,10 +141,15 @@
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

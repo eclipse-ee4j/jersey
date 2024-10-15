@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -797,17 +799,20 @@ public final class ServiceFinder<T> implements Iterable<T> {
     public abstract static class ServiceIteratorProvider {
 
         private static volatile ServiceIteratorProvider sip;
-        private static final Object sipLock = new Object();
+        private static final Lock sipLock = new ReentrantLock();
 
         private static ServiceIteratorProvider getInstance() {
             // TODO: check the following is a good practice: Double-check idiom for lazy initialization of fields.
             ServiceIteratorProvider result = sip;
             if (result == null) { // First check (no locking)
-                synchronized (sipLock) {
+                sipLock.lock();
+                try {
                     result = sip;
                     if (result == null) { // Second check (with locking)
                         sip = result = new DefaultServiceIteratorProvider();
                     }
+                } finally {
+                    sipLock.unlock();
                 }
             }
             return result;
@@ -819,8 +824,11 @@ public final class ServiceFinder<T> implements Iterable<T> {
                 final ReflectPermission rp = new ReflectPermission("suppressAccessChecks");
                 security.checkPermission(rp);
             }
-            synchronized (sipLock) {
+            sipLock.lock();
+            try {
                 ServiceIteratorProvider.sip = sip;
+            } finally {
+                sipLock.unlock();
             }
         }
 

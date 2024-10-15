@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -142,12 +142,7 @@ public class ResponseWriter implements ContainerResponseWriter {
             }
         }
 
-        final String reasonPhrase = responseContext.getStatusInfo().getReasonPhrase();
-        if (reasonPhrase != null) {
-            response.setStatus(responseContext.getStatus());
-        } else {
-            response.setStatus(responseContext.getStatus());
-        }
+        response.setStatus(responseContext.getStatus());
 
         if (!responseContext.hasEntity()) {
             return null;
@@ -214,12 +209,13 @@ public class ResponseWriter implements ContainerResponseWriter {
         try {
             if (!response.isCommitted()) {
                 try {
+                    final int statusCode = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
                     if (configSetStatusOverSendError) {
                         response.reset();
                         //noinspection deprecation
-                        response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                        response.setStatus(statusCode);
                     } else {
-                        response.sendError(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()/*, "Request failed."*/);
+                        response.sendError(statusCode, "Request failed.");
                     }
                 } catch (final IllegalStateException ex) {
                     // a race condition externally committing the response can still occur...
