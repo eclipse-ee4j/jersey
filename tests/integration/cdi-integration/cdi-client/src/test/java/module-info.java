@@ -25,6 +25,8 @@ module org.glassfish.jersey.tests.integration.cdi.client.test {
     requires weld.core.impl;
     requires weld.se.core;
 
+    requires org.jboss.logging;
+
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.inject.hk2;
     requires org.glassfish.jersey.ext.cdi1x ;

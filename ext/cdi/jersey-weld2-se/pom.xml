@@ -67,6 +67,18 @@
                     <groupId>jakarta.interceptor</groupId>
                     <artifactId>jakarta.interceptor-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

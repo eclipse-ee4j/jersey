@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -79,7 +79,8 @@ public class PackageScanningTest {
                         .versionAsInProject(),
 
                 // MBR/MBW for JSON-P is on the classpath.
-                mavenBundle().groupId("jakarta.json").artifactId("jakarta.json-api").versionAsInProject()
+                mavenBundle().groupId("jakarta.json").artifactId("jakarta.json-api").versionAsInProject(),
+                mavenBundle().groupId("org.eclipse.parsson").artifactId("parsson").versionAsInProject()
         ));
 
         options = Helper.addPaxExamMavenLocalRepositoryProperty(options);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.test.jetty;
 
+import java.util.Map;
 import jakarta.ws.rs.ProcessingException;
 import org.glassfish.jersey.test.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -25,6 +26,13 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
 import java.net.URI;
 
 public class JettyTestContainerFactory implements TestContainerFactory {
+
+    public JettyTestContainerFactory() {
+    }
+
+    public JettyTestContainerFactory(Map<String, Object> properties) {
+    }
+
 
     @Override
     public TestContainer create(final URI baseUri, final DeploymentContext context) throws IllegalArgumentException {

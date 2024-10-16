@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -477,6 +477,14 @@
 </link>
 </entry>
 <entry>Jersey extension module providing support for Mustache templates.</entry>
+</row>
+<row>
+    <entry>
+        <link xlink:href="https://eclipse-ee4j.github.io/jersey.github.io/project-info/&version;/jersey/project/jersey-mvc-thymeleaf/dependencies.html">
+            jersey-mvc-thymeleaf
+        </link>
+    </entry>
+    <entry>Jersey extension module providing support for Thymeleaf templates.</entry>
 </row>
 <row>
 <entry>

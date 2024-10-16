@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,8 +27,6 @@ import org.glassfish.jersey.media.multipart.internal.LocalizationMessages;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 import org.glassfish.jersey.uri.UriComponent;
-
-import jakarta.ws.rs.core.HttpHeaders;
 
 /**
  * A content disposition header.
@@ -60,10 +58,13 @@ public class ContentDisposition {
     private static final Pattern FILENAME_VALUE_CHARS_PATTERN =
             Pattern.compile("(%[a-f0-9]{2}|[a-z0-9!#$&+.^_`|~-])+", Pattern.CASE_INSENSITIVE);
 
+    private static final char QUOTE = '"';
+    private static final char BACK_SLASH = '\\';
+
     protected ContentDisposition(final String type, final String fileName, final Date creationDate,
                                  final Date modificationDate, final Date readDate, final long size) {
         this.type = type;
-        this.fileName = fileName;
+        this.fileName = encodeAsciiFileName(fileName);
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
         this.readDate = readDate;
@@ -201,7 +202,9 @@ public class ContentDisposition {
 
     protected void addDateParameter(final StringBuilder sb, final String name, final Date p) {
         if (p != null) {
-            sb.append("; ").append(name).append("=\"").append(HttpDateFormat.getPreferredDateFormat().format(p)).append("\"");
+            sb.append("; ").append(name).append("=\"")
+                    .append(HttpDateFormat.getPreferredDateFormatter().format(p))
+                    .append("\"");
         }
     }
 
@@ -209,6 +212,23 @@ public class ContentDisposition {
         if (p != -1) {
             sb.append("; ").append(name).append('=').append(Long.toString(p));
         }
+    }
+
+    protected String encodeAsciiFileName(String fileName) {
+        if (fileName == null
+                || (fileName.indexOf(QUOTE) == -1
+                && fileName.indexOf(BACK_SLASH) == -1)) {
+            return fileName;
+        }
+        final char[] chars = fileName.toCharArray();
+        final StringBuilder encodedBuffer = new StringBuilder();
+        for (char c : chars) {
+            if (c == QUOTE || c == BACK_SLASH) {
+                encodedBuffer.append(BACK_SLASH);
+            }
+            encodedBuffer.append(c);
+        }
+        return encodedBuffer.toString();
     }
 
     private void createParameters() throws ParseException {
@@ -229,7 +249,7 @@ public class ContentDisposition {
         final String fileNameExt = parameters.get("filename*");
 
         if (fileNameExt == null) {
-            this.fileName = fileName;
+            this.fileName = encodeAsciiFileName(fileName);
             return;
         }
 
@@ -284,7 +304,7 @@ public class ContentDisposition {
         if (value == null) {
             return null;
         }
-        return HttpDateFormat.getPreferredDateFormat().parse(value);
+        return HttpDateFormat.getPreferredDateFormatter().toDate(value);
     }
 
     private long createLong(final String name) throws ParseException {

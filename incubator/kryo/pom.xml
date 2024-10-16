@@ -36,6 +36,8 @@
 
     <properties>
         <surefire.coverage.argline>
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate=ALL-UNNAMED
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.virtual=ALL-UNNAMED
             --add-reads org.glassfish.jersey.incubator.media.kryo=org.glassfish.jersey.core.server
             --add-reads org.glassfish.jersey.incubator.media.kryo=org.glassfish.jersey.core.client
             --add-modules=ALL-MODULE-PATH

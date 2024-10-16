@@ -108,6 +108,13 @@
             <activation>
                 <jdk>[17,)</jdk>
             </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-engine</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
             <build>
                 <directory>${java17.build.outputDirectory}</directory>
                 <plugins>

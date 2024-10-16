@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,6 +35,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Collector to retrieve parameters for setting up the HTTP request sent in the invoke method of WebResourceFactory
@@ -145,7 +147,7 @@ class RequestParameters {
             throws IllegalAccessException, IntrospectionException, InvocationTargetException {
         Class<?> beanClass = beanParam.getClass();
         List<Field> fields = new ArrayList<>();
-        getAllFields(fields, beanClass);
+        getAllNonStaticFields(fields, beanClass);
 
         for (final Field field : fields) {
             Object value = null;
@@ -156,7 +158,7 @@ class RequestParameters {
                 anns.put(ann.annotationType(), ann);
             }
 
-            if (hasAnyParamAnnotation(anns)) {
+            if (field.canAccess(beanParam) && hasAnyParamAnnotation(anns)) {
                 value = field.get(beanParam);
             } else {
                 // get getter annotations if there are no field annotations
@@ -178,11 +180,15 @@ class RequestParameters {
         }
     }
 
-    private List<Field> getAllFields(List<Field> fields, Class<?> type) {
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+    private List<Field> getAllNonStaticFields(List<Field> fields, Class<?> type) {
+
+        List<Field> nonStaticFields = Arrays.stream(type.getDeclaredFields())
+                .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .collect(Collectors.toList());
+        fields.addAll(nonStaticFields);
 
         if (type.getSuperclass() != null) {
-            getAllFields(fields, type.getSuperclass());
+            getAllNonStaticFields(fields, type.getSuperclass());
         }
 
         return fields;

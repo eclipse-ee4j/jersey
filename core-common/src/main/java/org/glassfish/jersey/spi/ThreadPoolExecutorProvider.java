@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import jakarta.annotation.PreDestroy;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Default implementation of the Jersey {@link org.glassfish.jersey.spi.ExecutorServiceProvider executor service provider SPI}.
@@ -59,6 +60,17 @@ public class ThreadPoolExecutorProvider extends AbstractThreadPoolProvider<Threa
      */
     public ThreadPoolExecutorProvider(final String name) {
         super(name);
+    }
+
+    /**
+     * Create a new instance of the thread pool executor provider.
+     *
+     * @param name provider name. The name will be used to name the threads created & used by the
+     *             provisioned thread pool executor.
+     * @param configuration {@link Configuration} properties.
+     */
+    public ThreadPoolExecutorProvider(final String name, Configuration configuration) {
+        super(name, configuration);
     }
 
     @Override

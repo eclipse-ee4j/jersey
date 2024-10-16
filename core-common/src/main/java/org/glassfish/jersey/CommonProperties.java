@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,7 +71,7 @@ public final class CommonProperties {
     /**
      * If {@code true} then disable feature auto discovery globally on client/server.
      * <p>
-     * By default auto discovery is automatically enabled. The value of this property may be overridden by the client/server
+     * By default, auto discovery is automatically enabled. The value of this property may be overridden by the client/server
      * variant of this property.
      * <p>
      * The default value is {@code false}.
@@ -98,10 +98,55 @@ public final class CommonProperties {
      */
     public static final String FEATURE_AUTO_DISCOVERY_DISABLE_SERVER = "jersey.config.server.disableAutoDiscovery";
 
+
+    /**
+     * If {@code true} then disable configuration of Json Binding (JSR-367) feature.
+     * <p>
+     * By default, Json Binding is automatically enabled. The value of this property may be overridden by the client/server
+     * variant of this property.
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.45
+     */
+    public static final String JSON_BINDING_FEATURE_DISABLE = "jersey.config.disableJsonBinding";
+
+    /**
+     * Client-specific version of {@link CommonProperties#JSON_BINDING_FEATURE_DISABLE}.
+     *
+     * If present, it overrides the generic one for the client environment.
+     * @since 2.45
+     */
+    public static final String JSON_BINDING_FEATURE_DISABLE_CLIENT = "jersey.config.client.disableJsonBinding";
+
+    /**
+     * Server-specific version of {@link CommonProperties#JSON_BINDING_FEATURE_DISABLE}.
+     *
+     * If present, it overrides the generic one for the server environment.
+     * @since 2.45
+     */
+    public static final String JSON_BINDING_FEATURE_DISABLE_SERVER = "jersey.config.server.disableJsonBinding";
+
+    /**
+     * Disables configuration of Json Binding (JSR-367) feature for {@link jakarta.ws.rs.core.Application} subclasses whose
+     * package names are specified as a value. The value is comma-separated string defining prefixes of the application
+     * package names.
+     * <p>
+     * By default, Json Binding is automatically enabled.
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 2.45
+     */
+    public static final String JSON_BINDING_FEATURE_DISABLE_APPLICATION = "jersey.config.application.disableJsonBinding";
+
     /**
      * If {@code true} then disable configuration of Json Processing (JSR-353) feature.
      * <p>
-     * By default Json Processing is automatically enabled. The value of this property may be overridden by the client/server
+     * By default, Json Processing is automatically enabled. The value of this property may be overridden by the client/server
      * variant of this property.
      * <p>
      * The default value is {@code false}.
@@ -131,7 +176,7 @@ public final class CommonProperties {
     /**
      * If {@code true} then disable META-INF/services lookup globally on client/server.
      * <p>
-     * By default Jersey looks up SPI implementations described by META-INF/services/* files.
+     * By default, Jersey looks up SPI implementations described by META-INF/services/* files.
      * Then you can register appropriate provider classes by {@link jakarta.ws.rs.core.Application}.
      * </p>
      * <p>
@@ -164,7 +209,7 @@ public final class CommonProperties {
     /**
      * If {@code true} then disable configuration of MOXy Json feature.
      * <p>
-     * By default MOXy Json is automatically enabled. The value of this property may be overridden by the client/server
+     * By default, MOXy Json is automatically enabled. The value of this property may be overridden by the client/server
      * variant of this property.
      * <p>
      * The default value is {@code false}.
@@ -319,6 +364,30 @@ public final class CommonProperties {
      * @since 2.40
      */
     public static final String PARAM_CONVERTERS_THROW_IAE = "jersey.config.paramconverters.throw.iae";
+
+    /**
+     * <p>
+     *     Defines the {@link java.util.concurrent.ThreadFactory} to be used by internal default Executor Services.
+     * </p>
+     * <p>
+     *     The default is {@link  java.util.concurrent.Executors#defaultThreadFactory()} on platform threads and
+     *     {@code Thread.ofVirtual().factory()} on virtual threads.
+     * </p>
+     * @since 3.1.7
+     */
+    public static String THREAD_FACTORY = "jersey.config.threads.factory";
+
+    /**
+     * <p>
+     *     Defines whether the virtual threads should be used by Jersey on JDK 21+ when not using an exact number
+     *     of threads by {@code FixedThreadPool}.
+     * </p>
+     * <p>
+     *     The default is {@code false} for this version of Jersey.
+     * </p>
+     * @since 3.1.7
+     */
+    public static String USE_VIRTUAL_THREADS = "jersey.config.threads.use.virtual";
 
     /**
      * Prevent instantiation.

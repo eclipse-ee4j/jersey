@@ -64,7 +64,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${compiler.mvn.plugin.version}</version>
                 <inherited>true</inherited>
                 <configuration>
                     <source>11</source>
@@ -117,9 +117,6 @@
 
     <properties>
         <jersey.version>${project.version}</jersey.version>
-        <jetty.version>12.0.3</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefire.mvn.plugin.version>3.2.1</surefire.mvn.plugin.version>
-        <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
     </properties>
 </project>

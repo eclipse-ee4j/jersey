@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,10 +53,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class SslContextPerRequestTest extends JerseyTest {
+public class SslContextPerRequestTest extends SslParentTest {
 
-    private SSLContext serverSslContext;
-    private SSLParameters serverSslParameters;
     private static final String MESSAGE = "Message for Netty with SSL";
 
     @Override
@@ -75,33 +73,6 @@ public class SslContextPerRequestTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(TestResource.class);
-    }
-
-    @Override
-    protected URI getBaseUri() {
-        return UriBuilder
-                .fromUri("https://localhost")
-                .port(getPort())
-                .build();
-    }
-
-    @Override
-    protected Optional<SSLContext> getSslContext() {
-        if (serverSslContext == null) {
-            serverSslContext = SslUtils.createServerSslContext();
-        }
-
-        return Optional.of(serverSslContext);
-    }
-
-    @Override
-    protected Optional<SSLParameters> getSslParameters() {
-        if (serverSslParameters == null) {
-            serverSslParameters = new SSLParameters();
-            serverSslParameters.setNeedClientAuth(false);
-        }
-
-        return Optional.of(serverSslParameters);
     }
 
     public static Stream<ConnectorProvider> connectorProviders() {
@@ -167,44 +138,5 @@ public class SslContextPerRequestTest extends JerseyTest {
 
         String s = target.request().get(String.class);
         Assertions.assertEquals(MESSAGE, s);
-    }
-
-    private static class SslUtils {
-
-        private static final String SERVER_IDENTITY_PATH = "server-identity.jks";
-        private static final char[] SERVER_IDENTITY_PASSWORD = "secret".toCharArray();
-
-        private static final String CLIENT_TRUSTSTORE_PATH = "client-truststore.jks";
-        private static final char[] CLIENT_TRUSTSTORE_PASSWORD = "secret".toCharArray();
-
-        private static final String KEYSTORE_TYPE = "PKCS12";
-
-        private SslUtils() {}
-
-        public static SSLContext createServerSslContext() {
-            return new SslContextClientBuilder()
-                    .keyStore(getKeyStore(SERVER_IDENTITY_PATH, SERVER_IDENTITY_PASSWORD), SERVER_IDENTITY_PASSWORD)
-                    .get();
-        }
-
-        public static Supplier<SSLContext> createClientSslContext() {
-            return new SslContextClientBuilder()
-                    .trustStore(getKeyStore(CLIENT_TRUSTSTORE_PATH, CLIENT_TRUSTSTORE_PASSWORD));
-
-        }
-
-        private static KeyStore getKeyStore(String path, char[] keyStorePassword) {
-            try (InputStream inputStream = getResource(path)) {
-                KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
-                keyStore.load(inputStream, keyStorePassword);
-                return keyStore;
-            } catch (Exception e) {
-                throw new ProcessingException(e);
-            }
-        }
-
-        private static InputStream getResource(String path) {
-            return SslUtils.class.getClassLoader().getResourceAsStream(path);
-        }
     }
 }

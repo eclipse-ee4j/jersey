@@ -53,5 +53,10 @@
             <artifactId>jersey-container-grizzly2-servlet</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

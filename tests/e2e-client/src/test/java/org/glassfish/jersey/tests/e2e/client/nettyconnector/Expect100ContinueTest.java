@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,11 +28,8 @@ import org.glassfish.jersey.netty.connector.NettyClientProperties;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -66,9 +63,10 @@ public class Expect100ContinueTest /*extends JerseyTest*/ {
 
     private static Server server;
     @BeforeAll
-    public static void startExpect100ContinueTestServer() {
+    private static void startExpect100ContinueTestServer() {
         server = new Server(portNumber);
-        server.setHandler(new Expect100ContinueTestHandler());
+        server.setDefaultHandler(new Expect100ContinueTestHandler());
+        server.setDynamic(true);
         try {
             server.start();
         } catch (Exception e) {
@@ -77,31 +75,28 @@ public class Expect100ContinueTest /*extends JerseyTest*/ {
     }
 
     @AfterAll
-    public static void stopExpect100ContinueTestServer() {
+    private static void stopExpect100ContinueTestServer() {
         try {
             server.stop();
         } catch (Exception e) {
         }
     }
 
-    private static Client client;
-    @BeforeEach
-    public void beforeEach() {
+    @BeforeAll
+    private static void initClient() {
         final ClientConfig config = new ClientConfig();
-        this.configureClient(config);
+        config.connectorProvider(new NettyConnectorProvider());
         client = ClientBuilder.newClient(config);
     }
 
-    private Client client() {
-        return client;
+    @AfterAll
+    private static void stopClient() {
+        client.close();
     }
 
+    private static Client client;
     public WebTarget target(String path) {
-        return client().target(String.format("http://localhost:%d", portNumber)).path(path);
-    }
-
-    protected void configureClient(ClientConfig config) {
-        config.connectorProvider(new NettyConnectorProvider());
+        return client.target(String.format("http://localhost:%d", portNumber)).path(path);
     }
 
     @Test
@@ -231,6 +226,11 @@ public class Expect100ContinueTest /*extends JerseyTest*/ {
             if (expected && !failed) {
                 System.out.println("Expect:100-continue found, sending response header");
                 response.setStatus(204);
+                callback.succeeded();
+                return true;
+            }
+            if (!expected && !failed) {
+                response.reset();
                 callback.succeeded();
                 return true;
             }

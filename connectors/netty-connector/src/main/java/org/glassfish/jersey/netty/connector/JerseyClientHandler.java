@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
@@ -97,6 +98,8 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
        if (readTimedOut) {
           responseDone.completeExceptionally(new TimeoutException("Stream closed: read timeout"));
+       } else if (jerseyRequest.isCancelled()) {
+          responseDone.completeExceptionally(new CancellationException());
        } else {
           responseDone.completeExceptionally(new IOException("Stream closed"));
        }
@@ -157,6 +160,10 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
+        if (jerseyRequest.isCancelled()) {
+            responseAvailable.completeExceptionally(new CancellationException());
+            return;
+        }
         if (msg instanceof HttpResponse) {
             final HttpResponse response = (HttpResponse) msg;
             jerseyResponse = new ClientResponse(new Response.StatusType() {
@@ -181,21 +188,10 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             }
 
             // request entity handling.
-            if ((response.headers().contains(HttpHeaders.CONTENT_LENGTH) && HttpUtil.getContentLength(response) > 0)
-                    || HttpUtil.isTransferEncodingChunked(response)) {
+            nis = new NettyInputStream();
+            responseDone.whenComplete((_r, th) -> nis.complete(th));
 
-                nis = new NettyInputStream();
-                responseDone.whenComplete((_r, th) -> nis.complete(th));
-
-                jerseyResponse.setEntityStream(nis);
-            } else {
-                jerseyResponse.setEntityStream(new InputStream() {
-                    @Override
-                    public int read() throws IOException {
-                        return -1;
-                    }
-                });
-            }
+            jerseyResponse.setEntityStream(nis);
         }
         if (msg instanceof HttpContent) {
 

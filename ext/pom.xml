@@ -50,6 +50,7 @@
         <module>mvc-freemarker</module>
         <module>mvc-jsp</module>
         <module>mvc-mustache</module>
+        <module>mvc-thymeleaf</module>
         <module>proxy-client</module>
         <module>rx</module>
         <module>spring6</module>

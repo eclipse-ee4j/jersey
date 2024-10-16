@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,9 @@
  */
 
 package org.glassfish.jersey.internal.util.collection;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A collection of {@link Value Value provider} factory & utility methods.
@@ -297,25 +300,28 @@ public final class Values {
 
     private static class LazyValueImpl<T> implements LazyValue<T> {
 
-        private final Object lock;
+        private final Lock lock;
         private final Value<T> delegate;
 
         private volatile Value<T> value;
 
         public LazyValueImpl(final Value<T> delegate) {
             this.delegate = delegate;
-            this.lock = new Object();
+            this.lock = new ReentrantLock();
         }
 
         @Override
         public T get() {
             Value<T> result = value;
             if (result == null) {
-                synchronized (lock) {
+                lock.lock();
+                try {
                     result = value;
                     if (result == null) {
                         value = result = Values.of(delegate.get());
                     }
+                } finally {
+                    lock.unlock();
                 }
             }
             return result.get();
@@ -380,21 +386,22 @@ public final class Values {
 
     private static class LazyUnsafeValueImpl<T, E extends Throwable> implements LazyUnsafeValue<T, E> {
 
-        private final Object lock;
+        private final Lock lock;
         private final UnsafeValue<T, E> delegate;
 
         private volatile UnsafeValue<T, E> value;
 
         public LazyUnsafeValueImpl(final UnsafeValue<T, E> delegate) {
             this.delegate = delegate;
-            this.lock = new Object();
+            this.lock = new ReentrantLock();
         }
 
         @Override
         public T get() throws E {
             UnsafeValue<T, E> result = value;
             if (result == null) {
-                synchronized (lock) {
+                lock.lock();
+                try {
                     result = value;
                     //noinspection ConstantConditions
                     if (result == null) {
@@ -406,6 +413,8 @@ public final class Values {
                         }
                         value = result;
                     }
+                } finally {
+                    lock.unlock();
                 }
             }
             return result.get();

@@ -32,6 +32,8 @@ module org.glassfish.jersey.ext.bean.validation {
 
     exports org.glassfish.jersey.server.validation;
     exports org.glassfish.jersey.server.validation.internal;
+    exports org.glassfish.jersey.server.validation.internal.hibernate;
+    opens org.glassfish.jersey.server.validation;
     opens org.glassfish.jersey.server.validation.internal;
     opens org.glassfish.jersey.server.validation.internal.hibernate;
 }

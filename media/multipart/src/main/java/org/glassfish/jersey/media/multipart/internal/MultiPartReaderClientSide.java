@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.ConstrainedTo;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.RuntimeType;
@@ -36,6 +37,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.Providers;
@@ -79,6 +81,7 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
      */
     private Provider<MessageBodyWorkers> messageBodyWorkers;
     private final MIMEConfig mimeConfig;
+    private final int maxParts;
 
     /**
      * Accepts constructor injection of the configuration parameters for this
@@ -97,6 +100,8 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
         if (properties == null) {
             properties = new MultiPartProperties();
         }
+
+        maxParts = properties.getMaxParts();
 
         this.messageBodyWorkers = messageBodyWorkers;
         mimeConfig = createMimeConfig(properties);
@@ -205,7 +210,12 @@ public class MultiPartReaderClientSide implements MessageBodyReader<MultiPart> {
             fileNameFix = userAgent != null && userAgent.contains(" MSIE ");
         }
 
-        for (final MIMEPart mimePart : getMimeParts(mimeMessage)) {
+        final List<MIMEPart> mimeParts = getMimeParts(mimeMessage);
+        if (mimeParts.size() > maxParts) {
+            throw new ClientErrorException(Response.Status.REQUEST_ENTITY_TOO_LARGE);
+        }
+
+        for (final MIMEPart mimePart : mimeParts) {
             final BodyPart bodyPart = formData ? new FormDataBodyPart(fileNameFix) : new BodyPart();
 
             // Configure providers.

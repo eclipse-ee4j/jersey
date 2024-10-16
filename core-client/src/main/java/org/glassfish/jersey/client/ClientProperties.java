@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -241,10 +241,33 @@ public final class ClientProperties {
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER = CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT;
 
     /**
+     * If {@code true} then disable configuration of Json Binding (JSR-367)
+     * feature on client.
+     * <p>
+     * By default, Json Binding on client is automatically enabled if global
+     * property
+     * {@value org.glassfish.jersey.CommonProperties#JSON_BINDING_FEATURE_DISABLE}
+     * is not disabled. If set then the client property value overrides the
+     * global property value.
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * <p>This constant is an alias for {@link CommonProperties#JSON_BINDING_FEATURE_DISABLE_CLIENT}.</p>
+     *
+     * @see org.glassfish.jersey.CommonProperties#JSON_BINDING_FEATURE_DISABLE
+     * @since 2.45
+     */
+    @PropertyAlias
+    public static final String JSON_BINDING_FEATURE_DISABLE = CommonProperties.JSON_BINDING_FEATURE_DISABLE_CLIENT;
+
+    /**
      * If {@code true} then disable configuration of Json Processing (JSR-353)
      * feature on client.
      * <p>
-     * By default Json Processing on client is automatically enabled if global
+     * By default, Json Processing on client is automatically enabled if global
      * property
      * {@value org.glassfish.jersey.CommonProperties#JSON_PROCESSING_FEATURE_DISABLE}
      * is not disabled. If set then the client property value overrides the
@@ -265,7 +288,7 @@ public final class ClientProperties {
     /**
      * If {@code true} then disable META-INF/services lookup on client.
      * <p>
-     * By default Jersey looks up SPI implementations described by {@code META-INF/services/*} files.
+     * By default,  Jersey looks up SPI implementations described by {@code META-INF/services/*} files.
      * Then you can register appropriate provider  classes by {@link jakarta.ws.rs.core.Application}.
      * </p>
      * <p>
@@ -467,24 +490,6 @@ public final class ClientProperties {
     public static final String QUERY_PARAM_STYLE = "jersey.config.client.uri.query.param.style";
 
     /**
-     * <p>
-     *     Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
-     *     {@code HttpUrlConnector} and {@code JavaNetHttpConnector} need
-     *     to have an extra System Property set to allow HOST header.
-     *     As an option to HOST header, this property allows the HOST name to be pre-set on a Client and does not need to
-     *     be set on each request.
-     * </p>
-     * <p>
-     *     The value MUST be an instance of {@link java.lang.String}.
-     * </p>
-     * <p>
-     *     The name of the configuration property is <tt>{@value}</tt>.
-     * </p>
-     * @since 3.1.2
-     */
-    public static final String SNI_HOST_NAME = "jersey.config.client.sniHostName";
-
-    /**
      * Sets the {@link org.glassfish.jersey.client.spi.ConnectorProvider} class. Overrides the value from META-INF/services.
      *
      * <p>
@@ -499,6 +504,31 @@ public final class ClientProperties {
      * @since 2.40
      */
     public static final String CONNECTOR_PROVIDER = "jersey.config.client.connector.provider";
+
+    /**
+     * <p>
+     *     Sets the {@code hostName} to be used for calculating the {@link javax.net.ssl.SNIHostName} during the HTTPS request.
+     *     Takes precedence over the HTTP HOST header, if set.
+     * </p>
+     * <p>
+     *     By default, the {@code SNIHostName} is set when the HOST HTTP header differs from the HTTP request host.
+     *     When the {@code hostName} matches the HTTPS request host, the {@code SNIHostName} is not set,
+     *     and the HTTP HOST header is not used for setting the {@code SNIHostName}. This allows for Domain Fronting.
+     * </p>
+     * <p>
+     *    Most connectors support HOST header value to be used as an SNIHostName. However, the HOST header is restricted in JDK.
+     *    {@code HttpUrlConnector} and {@code JavaNetHttpConnector} need
+     *    to have an extra System Property set to allow HOST header.
+     * </p>
+     * <p>
+     *     The value MUST be an instance of {@link java.lang.String}.
+     * </p>
+     * <p>
+     *     The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * @since 3.1.2
+     */
+    public static final String SNI_HOST_NAME = "jersey.config.client.snihostname";
 
     /**
      * <p>The {@link javax.net.ssl.SSLContext} {@link java.util.function.Supplier} to be used to set ssl context in the current

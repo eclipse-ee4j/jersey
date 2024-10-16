@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,7 +53,26 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.uri;
     exports org.glassfish.jersey.uri.internal;
 
+
+    exports org.glassfish.jersey.innate to org.glassfish.jersey.container.grizzly2.http,
+                                           org.glassfish.jersey.container.servlet.core,
+                                           org.glassfish.jersey.container.jetty.http,
+                                           org.glassfish.jersey.netty.connector,
+                                           org.glassfish.jersey.ext.mp.rest.client;
+    exports org.glassfish.jersey.innate.virtual to org.glassfish.jersey.container.grizzly2.http,
+                                                   org.glassfish.jersey.container.jetty.http,
+                                                   org.glassfish.jersey.netty.connector,
+                                                   org.glassfish.jersey.ext.mp.rest.client;
+
+    opens org.glassfish.jersey.innate.virtual to org.glassfish.jersey.container.grizzly2.http,
+                                                 org.glassfish.jersey.container.jetty.http;
+    opens org.glassfish.jersey.innate to org.glassfish.jersey.container.servlet.core;
+
+    exports org.glassfish.jersey.innate.io to org.glassfish.jersey.core.server,
+                                              org.glassfish.jersey.container.servlet.core,
+                                              org.glassfish.jersey.apache.connector;
     exports org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
+    exports org.glassfish.jersey.innate.inject.spi to org.glassfish.jersey.inject.hk2;
 
     opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;

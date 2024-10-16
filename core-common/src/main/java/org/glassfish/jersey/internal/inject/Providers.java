@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,9 @@ import jakarta.ws.rs.core.Feature;
 import jakarta.annotation.Priority;
 
 import org.glassfish.jersey.JerseyPriorities;
+import org.glassfish.jersey.innate.inject.spi.ExternalRegistrables;
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.model.ContractProvider;
 import org.glassfish.jersey.model.internal.RankedComparator;
 import org.glassfish.jersey.model.internal.RankedProvider;
@@ -103,6 +105,14 @@ public final class Providers {
         interfaces.putAll(JAX_RS_PROVIDER_INTERFACE_WHITELIST);
         interfaces.put(jakarta.ws.rs.core.Feature.class, ProviderRuntime.BOTH);
         interfaces.put(Binder.class, ProviderRuntime.BOTH);
+
+        try {
+            ServiceFinder<ExternalRegistrables> registerables = ServiceFinder.find(ExternalRegistrables.class, true);
+            registerables.forEach(regs -> regs.registrableContracts()
+                    .forEach(pair -> interfaces.put(pair.getContract(), ProviderRuntime.fromRuntimeType(pair.getRuntimeType()))));
+        } catch (Throwable t) {
+            LOGGER.warning(LocalizationMessages.ERROR_EXTERNAL_REGISTERABLES_IGNORED(t.getMessage()));
+        }
         return interfaces;
     }
 
@@ -118,6 +128,10 @@ public final class Providers {
 
         public RuntimeType getRuntime() {
             return runtime;
+        }
+
+        private static ProviderRuntime fromRuntimeType(RuntimeType type) {
+            return type == null ? BOTH : (type == RuntimeType.SERVER ? SERVER : CLIENT);
         }
     }
 

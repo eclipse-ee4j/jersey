@@ -15,7 +15,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>${compiler.mvn.plugin.version}</version>
                 <inherited>true</inherited>
             </plugin>
             <plugin>
@@ -59,6 +59,5 @@
     <properties>
         <jersey.version>${project.version}</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
     </properties>
 </project>

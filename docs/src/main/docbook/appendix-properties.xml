@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,6 +68,40 @@
                         <entry>
                             <para>
                                 Disables feature auto discovery globally on client/server. Default value is <literal>false</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE; /
+                            &jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_CLIENT; /
+                            &jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_SERVER;</entry>
+                        <entry><literal>jersey.config.disableJsonBinding</literal> /
+                            <literal>jersey.config.client.disableJsonBinding</literal> /
+                            <literal>jersey.config.server.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature. Default value is <literal>false</literal>.
+                                Can also be set as a system property.
+                            </para>
+                            <para>
+                                Since 2.45.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_APPLICATION; </entry>
+                        <entry><literal>jersey.config.application.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature for <literal>jakarta.ws.rs.core.Application</literal>
+                                subclasses whose package names are specified as a value. The value is comma-separated string
+                                defining prefixes of the application package names. Can also be set as a system property.
+                            </para>
+                            <para>
+                                By default, Json Binding is automatically enabled.
+                            </para>
+                            <para>
+                                Since 2.45.
                             </para>
                         </entry>
                     </row>
@@ -199,6 +233,39 @@
                                 Internally the <literal>Exception</literal> is caught by Jersey and usually converted to
                                 <literal>null</literal>
                                 Therefore, the default value is set to &lit.false; to speed up the conversion.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.THREAD_FACTORY;(Jersey 3.1.7 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.threads.factory</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Defines the <literal>java.util.concurrent.ThreadFactory</literal> to be used by internal default
+                                <literal>ExecutorServices</literal>.
+                            </para>
+                            <para>
+                                The default is <literal>java.util.concurrent.Executors#defaultThreadFactory()</literal> on
+                                platform threads and<literal>Thread.ofVirtual().factory()</literal> on virtual threads.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.USE_VIRTUAL_THREADS;(Jersey 3.1.7 or later)
+                        </entry>
+                        <entry>
+                            <literal>jersey.config.threads.use.virtual</literal>
+                        </entry>
+                        <entry>
+                            <para>
+                                Defines whether the virtual threads should be used by Jersey on JDK 21+ when not using an exact number
+                                of threads by <literal>FixedThreadPool</literal>.
+                            </para>
+                            <para>
+                                The default is &lit.false; for this version of Jersey.
                             </para>
                         </entry>
                     </row>
@@ -379,6 +446,15 @@
                                 Defines configuration of HTTP method overriding.
                                 This property is used by &jersey.server.HttpMethodOverrideFilter; to determine
                                 where it should look for method override information (e.g. request header or query parameters).
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.server.ServerProperties.JSON_BINDING_FEATURE_DISABLE;</entry>
+                        <entry><literal>jersey.config.server.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Processing (JSR-353) feature. Default value is <literal>false</literal>.
                             </para>
                         </entry>
                     </row>
@@ -1073,6 +1149,15 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.client.ClientProperties.JSON_BINDING_FEATURE_DISABLE;</entry>
+                        <entry><literal>jersey.config.client.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature. Default value is <literal>false</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.client.ClientProperties.JSON_PROCESSING_FEATURE_DISABLE;</entry>
                         <entry><literal>jersey.config.client.disableJsonProcessing</literal></entry>
                         <entry>
@@ -1170,7 +1255,22 @@
                             </para>
                         </entry>
                     </row>
-
+                    <row>
+                        <entry>&jersey.client.ClientProperties.SNI_HOST_NAME; (Jersey 2.43 or later)</entry>
+                        <entry><literal>jersey.config.client.sniHostName</literal></entry>
+                        <entry>
+                            <para>
+                                Sets the host name to be used for calculating the <literal>javax.net.ssl.SNIHostName</literal>
+                                during the HTTPS request. Takes precedence over the HTTP HOST header, if set.
+                            </para>
+                            <para>
+                                By default, the <literal>SNIHostName</literal> is set when the HOST HTTP header differs from
+                                the HTTP request host. When the property value host name matches the HTTPS request host,
+                                the <literal>SNIHostName</literal> is not set, and the HTTP HOST header is not used for
+                                setting the <literal>SNIHostName</literal>. This allows for Domain Fronting.
+                            </para>
+                        </entry>
+                    </row>
                     <row>
                         <entry>&jersey.client.ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION;
                             (Jersey 2.2 or later)</entry>
@@ -1352,7 +1452,7 @@
                         <entry>
                             <para>
                                 If set to &lit.true; then XML root element tag name for collections will
-                                be derived from <literal>javax.xml.bind.annotation.XmlRootElement</literal>
+                                be derived from <literal>jakarta.xml.bind.annotation.XmlRootElement</literal>
                                 annotation value and won't be de-capitalized.
                             </para>
                             <para>
@@ -1411,6 +1511,88 @@
         </table>
 
 
+    </section>
+    <section xml:id="appendix-properties-client-default">
+        <title>The default HttpUrlConnector properties</title>
+        <para>
+            List of properties defined in &jersey.client.HttpUrlConnectorProvider; class.
+        </para>
+
+        <table>
+            <title>List of the default &jersey.client.HttpUrlConnectorProvider; properites</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.client.HttpUrlConnectorProvider.SET_METHOD_WORKAROUND;</entry>
+                        <entry><literal>jersey.config.client.httpUrlConnection.setMethodWorkaround</literal></entry>
+                        <entry>
+                            <para>
+                                A value of &lit.true; declares that the client will try to set
+                                unsupported HTTP method to <literal>java.net.HttpURLConnection</literal> via
+                                reflection as a workaround for a missing HTTP method.
+                            </para>
+                            <para>
+                                NOTE: Enabling this property may cause security related warnings/errors
+                                and it may break when other JDK implementation is used. <emphasis>Use only
+                                when you know what you are doing.</emphasis>
+                            </para>
+                            <para>
+                                The value MUST be an instance of &lit.jdk6.Boolean;. The default value is &lit.false;.
+                            </para>
+                            <para>Since JDK 16 the JDK internal classes are not opened for reflection and the workaround method
+                                does not work, unless <literal>--add-opens java.base/java.net=ALL-UNNAMED</literal> for HTTP
+                                requests and additional <literal>--add-opens java.base/sun.net.www.protocol.https=ALL-UNNAMED</literal>
+                                for HTTPS (<literal>javax.net.ssl.HttpsUrlConnection</literal>) options are set.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING;</entry>
+                        <entry><literal>jersey.config.client.httpUrlConnector.useFixedLengthStreaming</literal></entry>
+                        <entry>
+                            <para>
+                                If &lit.true;, the &lit.jersey.client.HttpUrlConnector; (if used) will assume the content length
+                                from the value of <literal>jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal> request
+                                header (if present).
+                            </para>
+                            <para>
+                                When this property is enabled and the request has a valid non-zero content length
+                                value specified in its <literal>jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal> request
+                                header, that this value will be used as an input to the
+                                <literal>java.net.HttpURLConnection#setFixedLengthStreamingMode(int)</literal> method call
+                                invoked on the underlying <literal>java.net.HttpURLConnection</literal>.
+                                This will also suppress the entity buffering in the <literal>HttpURLConnection</literal>,
+                                which is undesirable in certain scenarios, e.g. when streaming large entities.
+                            </para>
+                            <para>
+                                Note that the content length value defined in the request header must exactly match
+                                the real size of the entity. If the <literal>jakarta.ws.rs.core.HttpHeaders#CONTENT_LENGTH</literal>
+                                header is explicitly specified in a request, this property will be ignored and the
+                                request entity will be still buffered by the underlying <literal>HttpURLConnection</literal> infrastructure.
+                            </para>
+                            <para>
+                                This property also overrides the behaviour enabled by the &jersey.client.ClientProperties.CHUNKED_ENCODING_SIZE;
+                                property. Chunked encoding will only be used, if the size is not specified in the header of the request.
+                            </para>
+                            <para>
+                                Note that this property only applies to client run-times that are configured to use the default
+                                &lit.jersey.client.HttpUrlConnector; as the client connector. The property is ignored by other connectors.
+                            </para>
+                            <para>
+                                The default value is &lit.false;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
     </section>
     <section xml:id="appendix-properties-client-apache">
         <title>Apache HTTP client configuration properties</title>
@@ -2199,6 +2381,42 @@
                             </para>
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_HEADER_SIZE;</entry>
+                        <entry><literal>jersey.config.client.netty.maxHeaderSize</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the header size for the Netty connector
+
+                                Default header size is 8192b.
+                                <literal>Since 2.44</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_CHUNK_SIZE;</entry>
+                        <entry><literal>jersey.config.client.netty.maxChunkSize</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the chunk size for the Netty connector
+
+                                Default chunk size is 8192b.
+                                <literal>Since 2.44</literal>
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.MAX_INITIAL_LINE_LENGTH;</entry>
+                        <entry><literal>jersey.config.client.netty.maxInitialLineLength</literal></entry>
+                        <entry>
+                            <para>
+                                Parameter which allows extending of the initial line length for the Netty connector
+
+                                Default initial line length is 4096b.
+                                <literal>Since 2.44</literal>
+                            </para>
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
@@ -2300,6 +2518,82 @@
                             </para>
                             <para>
                                 The default value is &lit.null;.
+                            </para>
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+    <section xml:id="appendix-properties-multipart">
+        <title>Multipart configuration properties</title>
+
+        <para>
+            List of multipart configuration properties that can be found in &jersey.media.multipart.MultiPartProperties; class.
+        </para>
+
+        <table>
+            <title>
+                List of multipart configuration properties settable in the
+                &jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE; configuration file.
+            </title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Constant</entry>
+                        <entry>Value</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.BUFFER_THRESHOLD;</entry>
+                        <entry><literal>jersey.config.multipart.bufferThreshold</literal></entry>
+                        <entry>
+                            <para>
+                                Name of the resource property for the threshold size (in bytes) above which a
+                                body part entity will be buffered to disk instead of being held in memory.
+                            </para>
+                            <para>
+                                The default value is &jersey.message.MessageProperties.IO_DEFAULT_BUFFER_SIZE;
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.MAX_PARTS;</entry>
+                        <entry><literal>jersey.config.multipart.maxParts</literal></entry>
+                        <entry>
+                            <para>
+                                Limit the maximum number of parts the multipart entity can have. If the limit is over,
+                                the error response status <literal>413 - REQUEST_ENTITY_TOO_LARGE</literal>
+                                is returned.
+                            </para>
+                            <para>
+                                By default, the number is unlimited.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.MULTI_PART_CONFIG_RESOURCE;</entry>
+                        <entry><literal>jersey-multipart-config.properties</literal></entry>
+                        <entry>
+                            <para>
+                                Name of a properties resource that (if found in the classpath
+                                for this application) will be used to configure the settings returned
+                                by our getter methods.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.media.multipart.MultiPartProperties.TEMP_DIRECTORY;</entry>
+                        <entry><literal>jersey.config.multipart.tempDir</literal></entry>
+                        <entry>
+                            <para>
+                                Name of the resource property for the directory to store temporary files containing body parts
+                                of multipart message that extends allowed memory threshold.
+                            </para>
+                            <para>
+                                The default value is not set (will be taken from <literal>java.io.tmpdir</literal> system property).
                             </para>
                         </entry>
                     </row>

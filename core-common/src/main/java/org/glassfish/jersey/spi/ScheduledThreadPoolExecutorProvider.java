@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 
 import jakarta.annotation.PreDestroy;
+import jakarta.ws.rs.core.Configuration;
 
 /**
  * Default implementation of the Jersey {@link org.glassfish.jersey.spi.ScheduledExecutorServiceProvider
@@ -64,6 +65,17 @@ public class ScheduledThreadPoolExecutorProvider extends AbstractThreadPoolProvi
      */
     public ScheduledThreadPoolExecutorProvider(final String name) {
         super(name);
+    }
+
+    /**
+     * Create a new instance of the scheduled thread pool executor provider.
+     *
+     * @param name provider name. The name will be used to name the threads created & used by the
+     *             provisioned scheduled thread pool executor.
+     * @@param configuration {@link Configuration} properties.
+     */
+    public ScheduledThreadPoolExecutorProvider(final String name, Configuration configuration) {
+        super(name, configuration);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,11 +17,13 @@
 package org.glassfish.jersey.test.jetty;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.core.UriBuilder;
 
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -42,15 +44,20 @@ import org.eclipse.jetty.server.ServerConnector;
  */
 public class JettyTestContainerFactory implements TestContainerFactory {
 
+    private final Map<String, Object> propertiesMap;
+
     private static class JettyTestContainer implements TestContainer {
 
         private static final Logger LOGGER = Logger.getLogger(JettyTestContainer.class.getName());
 
+        private final Map<String, Object> propertiesMap;
+
         private URI baseUri;
         private final Server server;
-
-        private JettyTestContainer(final URI baseUri, final DeploymentContext context) {
+        private JettyTestContainer(final URI baseUri, final DeploymentContext context, final Map<String, Object> propertiesMap) {
             final URI base = UriBuilder.fromUri(baseUri).path(context.getContextPath()).build();
+
+            this.propertiesMap = propertiesMap;
 
             if (!"/".equals(base.getRawPath())) {
                 throw new TestContainerException(String.format(
@@ -66,6 +73,26 @@ public class JettyTestContainerFactory implements TestContainerFactory {
             }
 
             this.server = JettyHttpContainerFactory.createServer(this.baseUri, context.getResourceConfig(), false);
+        }
+
+        @Override
+        public void configureContainer() {
+
+            if (propertiesMap == null
+                    || !propertiesMap.containsKey(JettyTestContainerProperties.HEADER_SIZE)) {
+                return;
+            }
+
+            for (Connector c : server.getConnectors()) {
+                c.getConnectionFactory(HttpConnectionFactory.class)
+                        .getHttpConfiguration().setRequestHeaderSize(
+                                (Integer) propertiesMap.get(JettyTestContainerProperties.HEADER_SIZE));
+                c.getConnectionFactory(HttpConnectionFactory.class)
+                        .getHttpConfiguration().setResponseHeaderSize(
+                                (Integer) propertiesMap.get(JettyTestContainerProperties.HEADER_SIZE));
+                c.getConnectionFactory(HttpConnectionFactory.class);
+            }
+
         }
 
         @Override
@@ -123,6 +150,14 @@ public class JettyTestContainerFactory implements TestContainerFactory {
 
     @Override
     public TestContainer create(final URI baseUri, final DeploymentContext context) throws IllegalArgumentException {
-        return new JettyTestContainer(baseUri, context);
+        return new JettyTestContainer(baseUri, context, propertiesMap);
+    }
+
+    public JettyTestContainerFactory() {
+        this(null);
+    }
+
+    public JettyTestContainerFactory(Map<String, Object> properties) {
+        this.propertiesMap = properties;
     }
 }

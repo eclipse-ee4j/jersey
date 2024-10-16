@@ -58,6 +58,12 @@
     "allDeclaredConstructors":true
   },
   {
+    "name":"org.glassfish.jersey.message.internal.PathProvider",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true,
+    "allDeclaredConstructors":true
+  },
+  {
     "name":"org.glassfish.jersey.message.internal.FormMultivaluedMapProvider",
     "allDeclaredFields":true,
     "allDeclaredMethods":true,

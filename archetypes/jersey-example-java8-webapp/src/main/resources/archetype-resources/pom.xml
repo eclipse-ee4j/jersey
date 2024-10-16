@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -125,6 +125,5 @@
     <properties>
         <java.version>11</java.version>
         <jersey.config.test.container.port>8080</jersey.config.test.container.port>
-        <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
     </properties>
 </project>

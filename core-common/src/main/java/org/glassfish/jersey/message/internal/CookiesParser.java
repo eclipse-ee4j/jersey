@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -168,7 +168,7 @@ public class CookiesParser {
                     cookie.sameSite = NewCookie.SameSite.valueOf(value.toUpperCase());
                 }  else if (param.startsWith("expires")) {
                     try {
-                        cookie.expiry = HttpDateFormat.readDate(value + ", " + bites[++i]);
+                        cookie.expiry = HttpDateFormat.readDate(value + ", " + bites[++i].trim());
                     } catch (ParseException e) {
                         LOGGER.log(Level.FINE, LocalizationMessages.ERROR_NEWCOOKIE_EXPIRES(value), e);
                     }

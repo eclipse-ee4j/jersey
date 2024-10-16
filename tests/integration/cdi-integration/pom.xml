@@ -31,6 +31,18 @@
     <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
     <artifactId>cdi-integration-project</artifactId>
     <name>cdi-integration-project</name>
+
+    <properties>
+        <surefire.coverage.argline>
+            --add-opens weld.core.impl/org.jboss.weld.logging=org.jboss.logging
+            --add-reads org.jboss.logging=weld.core.impl
+            --add-reads org.jboss.logging=weld.environment.common
+            --add-reads org.jboss.logging=weld.se.core
+            --add-modules=ALL-MODULE-PATH
+        </surefire.coverage.argline>
+    </properties>
+
+
     <modules>
         <module>cdi-beanvalidation-webapp</module>
         <module>cdi-client</module>
@@ -43,6 +55,7 @@
         <module>cdi-multipart-webapp</module>
         <module>cdi-resource-with-at-context</module>
         <module>cdi-singleton</module>
+        <module>cdi-skipping-analyzer</module>
         <module>cdi-test-webapp</module>
         <module>cdi-with-jersey-injection-custom-cfg-webapp</module>
         <module>cdi-with-jersey-injection-custom-hk2-banned-webapp</module>

@@ -34,6 +34,7 @@ module org.glassfish.jersey.tests.integration.cdi.manually.bound.test {
 
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
+    requires org.junit.platform.engine;
 
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.tests.framework.provider.external;

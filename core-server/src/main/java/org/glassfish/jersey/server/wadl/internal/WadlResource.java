@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,6 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.Locale;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -56,13 +59,14 @@ public final class WadlResource {
 
     private byte[] wadlXmlRepresentation;
     private String lastModified;
+    private final Lock lock = new ReentrantLock();
 
     @Context
     private WadlApplicationContext wadlContext;
 
 
     public WadlResource() {
-        this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT).format(new Date());
+        this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT, Locale.US).format(new Date());
     }
 
     private boolean isCached(UriInfo uriInfo, boolean detailedWadl) {
@@ -71,7 +75,8 @@ public final class WadlResource {
 
     @Produces({"application/vnd.sun.wadl+xml", "application/xml"})
     @GET
-    public synchronized Response getWadl(@Context UriInfo uriInfo) {
+    public Response getWadl(@Context UriInfo uriInfo) {
+        lock.lock();
         try {
             if (!wadlContext.isWadlGenerationEnabled()) {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -81,7 +86,7 @@ public final class WadlResource {
             if ((wadlXmlRepresentation == null) || (!isCached(uriInfo, detailedWadl))) {
                 this.lastBaseUri = uriInfo.getBaseUri();
                 lastDetailedWadl = detailedWadl;
-                this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT).format(new Date());
+                this.lastModified = new SimpleDateFormat(HTTPDATEFORMAT, Locale.US).format(new Date());
 
                 ApplicationDescription applicationDescription = wadlContext.getApplication(uriInfo,
                         detailedWadl);
@@ -103,6 +108,8 @@ public final class WadlResource {
             return Response.ok(new ByteArrayInputStream(wadlXmlRepresentation)).header("Last-modified", lastModified).build();
         } catch (Exception e) {
             throw new ProcessingException("Error generating /application.wadl.", e);
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -110,9 +117,10 @@ public final class WadlResource {
     @Produces({"application/xml"})
     @GET
     @Path("{path}")
-    public synchronized Response getExternalGrammar(
+    public Response getExternalGrammar(
             @Context UriInfo uriInfo,
             @PathParam("path") String path) {
+        lock.lock();
         try {
             // Fail if wadl generation is disabled
             if (!wadlContext.isWadlGenerationEnabled()) {
@@ -135,6 +143,8 @@ public final class WadlResource {
                     .build();
         } catch (Exception e) {
             throw new ProcessingException(LocalizationMessages.ERROR_WADL_RESOURCE_EXTERNAL_GRAMMAR(), e);
+        } finally {
+            lock.unlock();
         }
     }
 

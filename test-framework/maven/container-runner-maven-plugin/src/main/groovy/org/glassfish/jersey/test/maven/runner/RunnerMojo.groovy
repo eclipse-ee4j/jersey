@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@ import org.apache.maven.plugins.annotations.Parameter
 import org.apache.maven.project.MavenProject
 
 import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.Path
 import java.util.regex.Pattern
 
 /**
@@ -96,7 +96,7 @@ trait RunnerMojo implements SuperRunnerMojo {
 
         def command = string.split(" +(?=((.*?(?<!\\\\)'){2})*[^']*\$)")
 
-        return command?.length > 0 && Files.exists(Paths.get(command[0])) ? command : ["sh"]
+        return command?.length > 0 && Files.exists(Path.of(command[0])) ? command : ["sh"]
     }
 
     abstract Map commonEnvironment()
@@ -184,8 +184,8 @@ trait RunnerMojo implements SuperRunnerMojo {
             sb.append(System.lineSeparator())
             def matcher = Pattern.compile("(#![^\r\n]*)(.*)", Pattern.DOTALL).matcher(new String(shellContent))
             def string = matcher.matches() ? matcher.replaceFirst("\$1${sb.toString()}\$2") : sb.append(shellContent).toString()
-            Paths.get(scriptsDirectory).toFile().mkdirs()
-            def reExecutableShell = Paths.get(scriptsDirectory, Paths.get(shell).fileName.toString())
+            Path.of(scriptsDirectory).toFile().mkdirs()
+            def reExecutableShell = Path.of(scriptsDirectory, Path.of(shell).fileName.toString())
             Files.write(reExecutableShell, string.bytes)
             getLog().info("Re-executable shell written to: $reExecutableShell")
         } catch (Exception e) {

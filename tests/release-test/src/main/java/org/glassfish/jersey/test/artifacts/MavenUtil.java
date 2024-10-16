@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class MavenUtil {
@@ -37,7 +38,7 @@ public final class MavenUtil {
     private static final String PROJECT_VERSION = "project.version";
 
     static File getArtifactJar(File repositoryRoot, Dependency dependency, Properties properties) {
-        return getArtifactFile(repositoryRoot, dependency, properties, "jar");
+        return getArtifactFile(repositoryRoot, dependency, properties, dependency.getType());
     }
 
     private static File getArtifactFile(File repositoryRoot, Dependency dependency, Properties properties, String extension) {
@@ -52,7 +53,11 @@ public final class MavenUtil {
         }
         String version = MavenUtil.getDependencyVersion(dependency, properties);
         fileSuffix.append(version).append(File.separator);
-        fileSuffix.append(dependency.getArtifactId()).append('-').append(version).append(".").append(extension);
+        fileSuffix.append(dependency.getArtifactId()).append('-').append(version);
+        if (dependency.getClassifier() != null) {
+            fileSuffix.append('-').append(dependency.getClassifier());
+        }
+        fileSuffix.append(".").append(extension);
         return new File(repositoryRoot, fileSuffix.toString());
     }
 
@@ -103,7 +108,16 @@ public final class MavenUtil {
     static Stream<Dependency> streamJerseyJars() throws IOException, XmlPullParserException {
         Model model = getModelFromFile("pom.xml");
         List<Dependency> deps = getBomPomDependencies(model);
+        return streamJerseyJars(deps);
+    }
 
+    static Stream<Dependency> streamJerseySources() throws IOException, XmlPullParserException {
+        Model model = getModelFromFile("pom.xml");
+        List<Dependency> deps = getBomPomSources(model);
+        return streamJerseyJars(deps);
+    }
+
+    private static Stream<Dependency> streamJerseyJars(List<Dependency> deps) throws IOException, XmlPullParserException {
         return deps.stream()
                 .filter(dep -> dep.getGroupId().startsWith("org.glassfish.jersey"))
                 .filter(dep -> dep.getType().equals("jar"));
@@ -137,6 +151,15 @@ public final class MavenUtil {
         File pom = getArtifactFile(getLocalMavenRepository(), bomPom, model.getProperties(), "pom");
         Model bomPomModel = getModelFromFile(pom);
         return bomPomModel.getDependencyManagement().getDependencies();
+    }
+
+    private static List<Dependency> getBomPomSources(Model model) throws XmlPullParserException, IOException {
+        return getBomPomDependencies(model).stream()
+                .map(dependency -> {
+                    dependency.setClassifier("sources");
+                    return dependency;
+                })
+                .collect(Collectors.toList());
     }
 
     static String getJerseyVersion(Properties properties) {

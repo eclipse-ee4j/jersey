@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.glassfish.jersey.internal.OsgiRegistry;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -54,7 +56,7 @@ import org.glassfish.jersey.uri.UriComponent;
  * URI schemes.
  * <p>
  * Further schemes may be registered by registering an implementation of
- * {@link UriSchemeResourceFinderFactory} in the META-INF/services file whose name is the
+ * {@link UriSchemeResourceFinderFactory} in the META-INF/services file whose name is
  * the fully qualified class name of {@link UriSchemeResourceFinderFactory}.
  * <p>
  * If a URI scheme is not supported a {@link ResourceFinderException} will be thrown
@@ -195,13 +197,15 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
     public abstract static class ResourcesProvider {
 
         private static volatile ResourcesProvider provider;
+        private static final Lock RESOURCE_PROVIDER_LOCK = new ReentrantLock();
 
         private static ResourcesProvider getInstance() {
             // Double-check idiom for lazy initialization
             ResourcesProvider result = provider;
 
             if (result == null) { // first check without locking
-                synchronized (ResourcesProvider.class) {
+                RESOURCE_PROVIDER_LOCK.lock();
+                try {
                     result = provider;
                     if (result == null) { // second check with locking
                         provider = result = new ResourcesProvider() {
@@ -214,6 +218,8 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
                         };
 
                     }
+                } finally {
+                    RESOURCE_PROVIDER_LOCK.unlock();
                 }
 
             }
@@ -226,9 +232,9 @@ public final class PackageNamesScanner extends AbstractResourceFinderAdapter {
                 final ReflectPermission rp = new ReflectPermission("suppressAccessChecks");
                 security.checkPermission(rp);
             }
-            synchronized (ResourcesProvider.class) {
-                ResourcesProvider.provider = provider;
-            }
+            RESOURCE_PROVIDER_LOCK.lock();
+            ResourcesProvider.provider = provider;
+            RESOURCE_PROVIDER_LOCK.unlock();
         }
 
         /**

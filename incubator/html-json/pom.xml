@@ -44,6 +44,8 @@
         <surefire.coverage.argline>
             --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
             --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate=ALL-UNNAMED
+            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.virtual=ALL-UNNAMED
             --add-reads org.glassfish.jersey.incubator.html.json=org.glassfish.jersey.core.server
             --add-reads org.glassfish.jersey.incubator.html.json=org.glassfish.jersey.tests.framework.core
             --add-reads org.glassfish.jersey.incubator.html.json=org.glassfish.jersey.tests.framework.provider.grizzly
@@ -105,6 +107,16 @@
             <groupId>org.netbeans.html</groupId>
             <artifactId>ko-ws-tyrus</artifactId>
             <version>${net.java.html.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>grizzly-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>grizzly-http-server</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>runtime</scope>
         </dependency>
         <!-- Overwrite Grizzly dependency defined in ko-ws-tyrus -->

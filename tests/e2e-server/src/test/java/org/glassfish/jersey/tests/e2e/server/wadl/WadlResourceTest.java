@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -108,6 +109,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -397,6 +399,20 @@ public class WadlResourceTest {
 
             final Response r = target.queryParam(WadlUtils.DETAILED_WADL_QUERY_PARAM, "true").request().get(Response.class);
             assertTrue(r.getHeaders().containsKey("Last-modified"));
+        }
+
+        @Test
+        public void testLastModifiedGETOnJPLocale() {
+            Locale defaultLocale = Locale.getDefault();
+            try {
+                Locale.setDefault(new Locale("ja", "JP"));
+                final WebTarget target = target("/application.wadl");
+
+                final Response r = target.queryParam(WadlUtils.DETAILED_WADL_QUERY_PARAM, "true").request().get(Response.class);
+                assertDoesNotThrow(() -> r.getLastModified());
+            } finally {
+                Locale.setDefault(defaultLocale);
+            }
         }
 
         @Test

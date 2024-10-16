@@ -63,12 +63,6 @@
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-apache-connector</artifactId>
             <version>${project.version}</version>
-            <!--<exclusions>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
@@ -131,11 +125,7 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.servlet</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -299,12 +289,15 @@
                                 <fileExclude>META-INF/versions/17/org/glassfish/jersey/jetty/connector/*.java</fileExclude>
                                 <fileExclude>META-INF/versions/17/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/helidon/connector/*.java</fileExclude>
+                                <fileExclude>org/glassfish/jersey/jetty/*.java</fileExclude>
+                                <fileExclude>org/glassfish/jersey/jetty/connector/*.java</fileExclude>
                                 <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                             </sourceFileExcludes>
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>
                             </dependencySourceIncludes>
-                            <excludePackageNames>*.internal.*:*.innate.*</excludePackageNames>
+                            <excludePackageNames>*.innate:*.innate.*</excludePackageNames>
+                            <legacyMode>true</legacyMode>
                         </configuration>
                     </execution>
                 </executions>

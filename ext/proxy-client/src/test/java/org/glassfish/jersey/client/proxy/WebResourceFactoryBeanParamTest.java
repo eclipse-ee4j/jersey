@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -135,6 +135,16 @@ public class WebResourceFactoryBeanParamTest  extends JerseyTest {
         myGetBeanParam.setQueryParam("query");
 
         String response = resourceWithBeanParam.getSubResource().echoQuery(myGetBeanParam);
+
+        assertEquals("query", response);
+    }
+
+    @Test
+    public void testBeanParamPrivateFieldQuery() {
+        MyBeanParamWithPrivateField myGetBeanParam = new MyBeanParamWithPrivateField();
+        myGetBeanParam.setPrivateFieldParam("query");
+
+        String response = resourceWithBeanParam.echoPrivateField(myGetBeanParam);
 
         assertEquals("query", response);
     }

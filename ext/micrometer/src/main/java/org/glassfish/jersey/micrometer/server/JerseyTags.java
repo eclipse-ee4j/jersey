@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,6 +42,8 @@ public final class JerseyTags {
     private static final Tag URI_REDIRECTION = Tag.of("uri", "REDIRECTION");
 
     private static final Tag URI_ROOT = Tag.of("uri", "root");
+
+    private static final Tag URI_UNKNOWN = Tag.of("uri", "UNKNOWN");
 
     private static final Tag EXCEPTION_NONE = Tag.of("exception", "None");
 
@@ -95,7 +97,10 @@ public final class JerseyTags {
             }
         }
         String matchingPattern = getMatchingPattern(event);
-        if (matchingPattern.equals("/")) {
+        if (matchingPattern == null) {
+            return URI_UNKNOWN;
+        }
+        else if (matchingPattern.equals("/")) {
             return URI_ROOT;
         }
         return Tag.of("uri", matchingPattern);
@@ -108,7 +113,9 @@ public final class JerseyTags {
     static String getMatchingPattern(RequestEvent event) {
         ExtendedUriInfo uriInfo = event.getUriInfo();
         List<UriTemplate> templates = uriInfo.getMatchedTemplates();
-
+        if (templates.isEmpty()) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         sb.append(uriInfo.getBaseUri().getPath());
         for (int i = templates.size() - 1; i >= 0; i--) {

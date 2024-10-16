@@ -40,6 +40,7 @@ module org.glassfish.jersey.tests.integration.cdi.inject.server.test {
     requires org.glassfish.jersey.ext.cdi1x;
 
     requires org.junit.jupiter.api;
+    requires org.junit.platform.engine;
     requires org.glassfish.jersey.tests.framework.core;
     requires org.glassfish.jersey.tests.framework.provider.grizzly;
 

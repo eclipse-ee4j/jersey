@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,13 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,11 +46,13 @@ import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.security.AuthenticationState;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.util.Callback;
+import org.eclipse.jetty.util.thread.Scheduler;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.ReferencingFactory;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.internal.util.collection.Ref;
+import org.glassfish.jersey.jetty.internal.LocalizationMessages;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerException;
@@ -137,6 +142,7 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
 
         final ResponseWriter responseWriter = new ResponseWriter(request, response, callback, configSetStatusOverSendError);
         try {
+            LOGGER.debugLog(LocalizationMessages.CONTAINER_STARTED());
             final URI baseUri = getBaseUri(request);
             final URI requestUri = getRequestUri(request, baseUri);
             final ContainerRequest requestContext = new ContainerRequest(
@@ -246,38 +252,51 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
         }
     }
 
-    private static final class ResponseWriter implements ContainerResponseWriter {
+    private static class ResponseWriter implements ContainerResponseWriter {
 
         private final Request request;
         private final Response response;
         private final Callback callback;
         private final boolean configSetStatusOverSendError;
-        private final Timer timer = new Timer();
-        private final long asyncStartTimeMillis;
+        private final long asyncStartTimeNanos;
+        private final Scheduler scheduler;
         private final ConcurrentLinkedQueue<TimeoutHandler> timeoutHandlerQueue = new ConcurrentLinkedQueue<>();
-        private TimerTask currentTimerTask;
+        private Scheduler.Task currentTimerTask;
 
-        ResponseWriter(final Request request, final Response response, final Callback callback,
-                       final boolean configSetStatusOverSendError) {
+        ResponseWriter(final Request request, final Response response,
+                       final Callback callback, final boolean configSetStatusOverSendError) {
             this.request = request;
             this.response = response;
             this.callback = callback;
-            this.asyncStartTimeMillis = System.currentTimeMillis();
+            this.asyncStartTimeNanos = System.nanoTime();
             this.configSetStatusOverSendError = configSetStatusOverSendError;
+
+            this.scheduler = request.getComponents().getScheduler();
         }
 
         private synchronized void setNewTimeout(long timeOut, TimeUnit timeUnit) {
-            long timeOutMillis = timeUnit.toMillis(timeOut);
+            long timeOutNanos = timeUnit.toNanos(timeOut);
             if (currentTimerTask != null) {
+                // Do not interrupt, see callTimeoutHandlers()
                 currentTimerTask.cancel();
             }
-            currentTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    timeoutHandlerQueue.forEach(timeoutHandler -> timeoutHandler.onTimeout(ResponseWriter.this));
+            // Use System.nanoTime() as the clock source here, because the returned value is not prone to wall-clock
+            // drift - unlike System.currentTimeMillis().
+            long delayNanos = Math.max(asyncStartTimeNanos - System.nanoTime() + timeOutNanos, 0L);
+            currentTimerTask = scheduler.schedule(this::callTimeoutHandlers, delayNanos, TimeUnit.NANOSECONDS);
+        }
+
+        private void callTimeoutHandlers() {
+            // Note: Although it might not happen in practice, it is in theory possible that this function is
+            // called multiple times concurrently. To prevent any timeout handler being called twice, we poll()
+            // timeout handlers from the queue, instead of iterating over the queue.
+            while (true) {
+                TimeoutHandler handler = timeoutHandlerQueue.poll();
+                if (handler == null) {
+                    break;
                 }
-            };
-            timer.schedule(currentTimerTask, Math.max(0, timeOutMillis + asyncStartTimeMillis - System.currentTimeMillis()));
+                handler.onTimeout(ResponseWriter.this);
+            }
         }
 
         @Override
@@ -417,7 +436,14 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
         super.doStop();
         appHandler.onShutdown(this);
         appHandler = null;
+
+        boolean needInterrupt = false;
+        if (needInterrupt) {
+            Thread.currentThread().interrupt();
+        }
     }
+
+    private static final AtomicInteger TIMEOUT_HANDLER_ID_GEN = new AtomicInteger();
 
     /**
      * Create a new Jetty HTTP container.

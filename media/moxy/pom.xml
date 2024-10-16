@@ -62,21 +62,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>de.jflex</groupId>
-                <artifactId>maven-jflex-plugin</artifactId>
-                <version>1.4.3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -111,6 +96,11 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
             <exclusions>
@@ -121,6 +111,14 @@
                 <exclusion>
                     <groupId>org.eclipse.angus</groupId>
                     <artifactId>angus-activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -138,12 +136,4 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>eclipselink.repository</id>
-            <name>Eclipse Maven Repository</name>
-            <url>https://download.eclipse.org/rt/eclipselink/maven.repo</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
 </project>
