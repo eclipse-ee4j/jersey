@@ -436,7 +436,7 @@ class NettyConnector implements Connector {
                     };
                 ch.closeFuture().addListener(closeListener);
 
-                final NettyEntityWriter entityWriter = NettyEntityWriter.getInstance(jerseyRequest, ch);
+                final NettyEntityWriter entityWriter = nettyEntityWriter(jerseyRequest, ch);
                 switch (entityWriter.getType()) {
                     case CHUNKED:
                         HttpUtil.setTransferEncodingChunked(nettyRequest, true);
@@ -522,6 +522,10 @@ class NettyConnector implements Connector {
         } catch (IOException | InterruptedException e) {
             responseDone.completeExceptionally(e);
         }
+    }
+
+    /* package */ NettyEntityWriter nettyEntityWriter(ClientRequest clientRequest, Channel channel) {
+        return NettyEntityWriter.getInstance(clientRequest, channel);
     }
 
     private SSLContext getSslContext(Client client, ClientRequest request) {

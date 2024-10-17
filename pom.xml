@@ -2119,15 +2119,15 @@
         <arquillian.weld.version>3.0.1.Final</arquillian.weld.version> <!-- 3.0.2.Final fails microprofile TCK tests -->
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.7</asm.version>
+        <asm.version>9.7.1</asm.version>
         <!--required for spring (ext) modules integration -->
         <aspectj.weaver.version>1.9.22.1</aspectj.weaver.version>
         <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons.io.version>2.16.1</commons.io.version>
         <commons.codec.version>1.16.1</commons.codec.version>
-        <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
-        <commons.logging.version>1.3.3</commons.logging.version>
+<!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
+        <commons.logging.version>1.3.4</commons.logging.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
         <felix.framework.security.version>2.8.4</felix.framework.security.version>
@@ -2161,7 +2161,7 @@
         <xmlunit.version>2.10.0</xmlunit.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.3.1</httpclient5.version>
-        <jackson.version>2.17.2</jackson.version>
+        <jackson.version>2.18.0</jackson.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jboss.vfs.version>3.3.2.Final</jboss.vfs.version>
@@ -2191,7 +2191,7 @@
         <servlet6.version>6.0.0</servlet6.version>
 
         <simple.version>6.0.1</simple.version>
-        <slf4j.version>2.0.13</slf4j.version>
+        <slf4j.version>2.0.16</slf4j.version>
         <spring6.version>6.0.18</spring6.version>
         <testng.version>7.10.2</testng.version>
         <testng6.version>6.14.3</testng6.version>
