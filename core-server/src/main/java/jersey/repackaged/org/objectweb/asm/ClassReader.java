@@ -195,7 +195,7 @@ public class ClassReader {
     this.b = classFileBuffer;
     // Check the class' major_version. This field is after the magic and minor_version fields, which
     // use 4 and 2 bytes respectively.
-    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V23) {
+    if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V24) {
       throw new IllegalArgumentException(
           "Unsupported class file major version " + readShort(classFileOffset + 6));
     }
@@ -3595,6 +3595,20 @@ public class ClassReader {
    */
   public int readByte(final int offset) {
     return classFileBuffer[offset] & 0xFF;
+  }
+
+  /**
+   * Reads several bytes in this {@link ClassReader}. <i>This method is intended for {@link
+   * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
+   *
+   * @param offset the start offset of the bytes to be read in this {@link ClassReader}.
+   * @param length the number of bytes to read.
+   * @return the read bytes.
+   */
+  public byte[] readBytes(final int offset, final int length) {
+    byte[] result = new byte[length];
+    System.arraycopy(classFileBuffer, offset, result, 0, length);
+    return result;
   }
 
   /**

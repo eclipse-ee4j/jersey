@@ -215,7 +215,7 @@ final class Constants {
     }
     if (minorVersion != 0xFFFF) {
       throw new IllegalStateException(
-          "ASM9_EXPERIMENTAL can only be used by classes compiled with --enable-preview");
+          "ASM10_EXPERIMENTAL can only be used by classes compiled with --enable-preview");
     }
   }
 }

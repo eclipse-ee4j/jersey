@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2022, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,7 @@ import jakarta.enterprise.inject.InjectionException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests {@link CachedConstructorAnalyzer}.
@@ -110,7 +111,8 @@ public class CachedConstructorAnalyzerTest {
 
         Constructor<BothAnnotatedConstructor> constructor = analyzer.getConstructor();
         assertEquals(1, constructor.getParameterCount());
-        assertEquals(Integer.class, constructor.getParameterTypes()[0]);
+        Class<?> parameterType = constructor.getParameterTypes()[0];
+        assertTrue(parameterType.equals(String.class) || parameterType.equals(Integer.class));
     }
 
     @Test

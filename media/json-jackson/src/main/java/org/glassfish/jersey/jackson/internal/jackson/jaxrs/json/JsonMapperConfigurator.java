@@ -9,7 +9,7 @@ import org.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg.MapperConfigurato
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
 
 /**
  * Helper class used to encapsulate details of configuring an
@@ -125,7 +125,7 @@ public class JsonMapperConfigurator
                  */
                 try {
                     if (_jaxbIntrospectorClass == null) {
-                        _jaxbIntrospectorClass = JaxbAnnotationIntrospector.class;
+                        _jaxbIntrospectorClass = JakartaXmlBindAnnotationIntrospector.class;
                     }
                     return _jaxbIntrospectorClass.newInstance();
                 } catch (Exception e) {

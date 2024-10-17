@@ -52,7 +52,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  */
 @Provider
 @Consumes(MediaType.WILDCARD) // NOTE: required to support "non-standard" JSON variants
-@Produces(MediaType.WILDCARD)
+@Produces({MediaType.APPLICATION_JSON, "text/json", MediaType.WILDCARD})
 public class JacksonJsonProvider
     extends ProviderBase<JacksonJsonProvider,
             ObjectMapper,

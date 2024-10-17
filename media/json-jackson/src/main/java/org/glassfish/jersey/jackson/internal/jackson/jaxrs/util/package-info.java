@@ -1,4 +1,4 @@
 /**
  * Miscellaneous helper classes used by providers.
  */
-package com.fasterxml.jackson.jaxrs.util;
+package org.glassfish.jersey.jackson.internal.jackson.jaxrs.util;

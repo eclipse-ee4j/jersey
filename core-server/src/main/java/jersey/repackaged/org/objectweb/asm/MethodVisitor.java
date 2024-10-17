@@ -34,15 +34,16 @@ package jersey.repackaged.org.objectweb.asm;
  * visitTypeAnnotation} | {@code visitAttribute} )* [ {@code visitCode} ( {@code visitFrame} |
  * {@code visit<i>X</i>Insn} | {@code visitLabel} | {@code visitInsnAnnotation} | {@code
  * visitTryCatchBlock} | {@code visitTryCatchAnnotation} | {@code visitLocalVariable} | {@code
- * visitLocalVariableAnnotation} | {@code visitLineNumber} )* {@code visitMaxs} ] {@code visitEnd}.
- * In addition, the {@code visit<i>X</i>Insn} and {@code visitLabel} methods must be called in the
- * sequential order of the bytecode instructions of the visited code, {@code visitInsnAnnotation}
- * must be called <i>after</i> the annotated instruction, {@code visitTryCatchBlock} must be called
- * <i>before</i> the labels passed as arguments have been visited, {@code
- * visitTryCatchBlockAnnotation} must be called <i>after</i> the corresponding try catch block has
- * been visited, and the {@code visitLocalVariable}, {@code visitLocalVariableAnnotation} and {@code
- * visitLineNumber} methods must be called <i>after</i> the labels passed as arguments have been
- * visited.
+ * visitLocalVariableAnnotation} | {@code visitLineNumber} | {@code visitAttribute} )* {@code
+ * visitMaxs} ] {@code visitEnd}. In addition, the {@code visit<i>X</i>Insn} and {@code visitLabel}
+ * methods must be called in the sequential order of the bytecode instructions of the visited code,
+ * {@code visitInsnAnnotation} must be called <i>after</i> the annotated instruction, {@code
+ * visitTryCatchBlock} must be called <i>before</i> the labels passed as arguments have been
+ * visited, {@code visitTryCatchBlockAnnotation} must be called <i>after</i> the corresponding try
+ * catch block has been visited, and the {@code visitLocalVariable}, {@code
+ * visitLocalVariableAnnotation} and {@code visitLineNumber} methods must be called <i>after</i> the
+ * labels passed as arguments have been visited. Finally, the {@code visitAttribute} method must be
+ * called before {@code visitCode} for non-code attributes, and after it for code attributes.
  *
  * @author Eric Bruneton
  */

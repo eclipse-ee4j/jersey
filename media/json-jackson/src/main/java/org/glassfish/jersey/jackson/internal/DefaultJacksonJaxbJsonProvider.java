@@ -18,6 +18,8 @@ package org.glassfish.jersey.jackson.internal;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.StreamReadConstraints;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.core.json.PackageVersion;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -130,17 +132,22 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
 
         if (maxStringLength != StreamReadConstraints.DEFAULT_MAX_STRING_LEN) {
             final StreamReadConstraints constraints = jsonFactory.streamReadConstraints();
-            jsonFactory.setStreamReadConstraints(
-                    StreamReadConstraints.builder()
-                            // our
-                            .maxStringLength(maxStringLength)
-                            // customers
-                            .maxDocumentLength(constraints.getMaxDocumentLength())
-                            .maxNameLength(constraints.getMaxNameLength())
-                            .maxNestingDepth(constraints.getMaxNestingDepth())
-                            .maxNumberLength(constraints.getMaxNumberLength())
-                            .build()
-            );
+            StreamReadConstraints.Builder builder = StreamReadConstraints.builder()
+                // our
+                .maxStringLength(maxStringLength)
+                // customers
+                .maxDocumentLength(constraints.getMaxDocumentLength())
+                .maxNameLength(constraints.getMaxNameLength())
+                .maxNestingDepth(constraints.getMaxNestingDepth())
+                .maxNumberLength(constraints.getMaxNumberLength());
+
+            if (PackageVersion.VERSION.getMinorVersion() >= 18) {
+                 builder.maxTokenCount(constraints.getMaxTokenCount());
+            } else {
+                LOGGER.warning(LocalizationMessages.ERROR_JACKSON_STREAMREADCONSTRAINTS_218("maxTokenCount"));
+            }
+
+            jsonFactory.setStreamReadConstraints(builder.build());
         }
     }
 }

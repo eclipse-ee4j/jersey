@@ -19,7 +19,9 @@ package org.glassfish.jersey.jackson.internal;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.StreamReadConstraints;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.exc.StreamConstraintsException;
+import com.fasterxml.jackson.core.json.PackageVersion;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -130,7 +132,27 @@ public class StreamReadConstrainsTest extends JerseyTest {
         }
     }
 
+    @Test
+    void testMatchingVersion() {
+        final Version coreVersion = PackageVersion.VERSION;
+        final Version jerseyVersion = org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.PackageVersion.VERSION;
 
+        StringBuilder message = new StringBuilder();
+        message.append("Dependency Jackson Version is ")
+                .append(coreVersion.getMajorVersion())
+                .append(".")
+                .append(coreVersion.getMinorVersion());
+        message.append("\n Repackaged Jackson Version is ")
+                .append(jerseyVersion.getMajorVersion())
+                .append(".")
+                .append(jerseyVersion.getMinorVersion());
+
+        Assertions.assertEquals(coreVersion.getMajorVersion(), jerseyVersion.getMajorVersion(), message.toString());
+        Assertions.assertEquals(coreVersion.getMinorVersion(), jerseyVersion.getMinorVersion(), message.toString());
+        Assertions.assertEquals(coreVersion.getMajorVersion(), 2,
+                "update " + DefaultJacksonJaxbJsonProvider.class.getName()
+                        + " updateFactoryConstraints method to support version " + coreVersion.getMajorVersion());
+    }
 
     @Test
     void testStreamReadConstraintsMethods() {
@@ -138,7 +160,9 @@ public class StreamReadConstrainsTest extends JerseyTest {
                 + " Please update the code in " + DefaultJacksonJaxbJsonProvider.class.getName()
                 + " updateFactoryConstraints method";
         Method[] method = StreamReadConstraints.Builder.class.getDeclaredMethods();
-        Assertions.assertEquals(6, method.length, message); // five setMax... + build() methods
+        // 2.17 : five setMax... + build() methods
+        // 2.18 : six setMax... + build() methods
+        Assertions.assertEquals(7, method.length, message);
     }
 
     @Path("len")

@@ -5,6 +5,10 @@ pipeline {
     triggers {
         pollSCM('H H * * *')
     }
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr:'15', artifactNumToKeepStr: '2' ))
+    }
     tools {
         jdk 'oracle-jdk8-latest'
         maven 'apache-maven-latest'
