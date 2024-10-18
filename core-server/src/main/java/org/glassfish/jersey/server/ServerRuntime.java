@@ -669,11 +669,18 @@ public class ServerRuntime {
 
             } catch (final Throwable ex) {
                 if (response.isCommitted()) {
-                    /**
-                     * We're done with processing here. There's nothing we can do about the exception so
-                     * let's just log it.
-                     */
-                    LOGGER.log(Level.SEVERE, LocalizationMessages.ERROR_WRITING_RESPONSE_ENTITY(), ex);
+                    if (ex.getCause() instanceof IOException) {
+                        skipFinally = true;
+                        LOGGER.log(Level.WARNING, "Response was sent, but there is IO issue", ex);
+                        // Connection is broken. Re-throw to the web container to remove the connection.
+                        throw new MappableException("Response was sent, but there is IO issue", ex);
+                    } else {
+                        /**
+                         * We're done with processing here. There's nothing we can do about the exception so
+                         * let's just log it.
+                         */
+                        LOGGER.log(Level.SEVERE, LocalizationMessages.ERROR_WRITING_RESPONSE_ENTITY(), ex);
+                    }
                 } else {
                     skipFinally = true;
                     if (ex instanceof RuntimeException) {
