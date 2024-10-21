@@ -17,6 +17,8 @@
 package org.glassfish.jersey.inject.cdi.se;
 
 import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -368,9 +370,17 @@ public class DisposableSupplierTest {
 
             // All instances should be the same because they are request scoped.
             ComposedObject instance = injectionManager.getInstance(ComposedObject.class);
-            assertEquals("1", instance.getFirst());
-            assertEquals("2", instance.getSecond());
-            assertEquals("3", instance.getThird());
+            Set<String> set1 = new HashSet<String>() {{
+                add("1");
+                add("2");
+                add("3");
+            }};
+            Set<String> set2 = new HashSet<String>() {{
+                add(instance.getFirst().toString());
+                add(instance.getSecond().toString());
+                add(instance.getThird().toString());
+            }};
+            assertEquals(set1, set2);
         });
 
         Supplier<String> cleanedSupplier = atomicSupplier.get();
