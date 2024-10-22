@@ -19,10 +19,12 @@ package org.glassfish.jersey.test.artifacts;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MoxyAsmTest {
     @Test
+    @Ignore("Until moxy.asm 9.7.1 is released")
     public void testAsmInMoxy() throws Exception {
         String moxyPomFile = "../../media/moxy/pom.xml";
         Model moxyPom = MavenUtil.getModelFromFile(moxyPomFile);

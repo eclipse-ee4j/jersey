@@ -111,31 +111,4 @@ public class InitializableSupplierThreadScopeBean extends JerseyBean<Object> {
         ProxyFactory<T> factory = new ProxyFactory<>(contextId, getBeanClass(), getTypes(), this);
         return factory.create(beanInstance);
     }
-
-    private static class ThreadScopeBeanInstance<T> extends ContextBeanInstance<T> {
-
-        private final WeakHashMap<Thread, Object> instances = new WeakHashMap<>();
-
-        private final Supplier<T> supplier;
-
-        /**
-         * Creates a new invocation handler with supplier which provides a current injected value in proper scope.
-         *
-         * @param supplier provider of the value.
-         */
-        private ThreadScopeBeanInstance(Supplier<T> supplier, Bean<T> bean, String contextId) {
-            super(bean, new StringBeanIdentifier(((PassivationCapable) bean).getId()), contextId);
-            this.supplier = supplier;
-        }
-
-        @Override
-        public Object invoke(Object obj, Method method, Object... arguments) throws Throwable {
-            Object instance = instances.computeIfAbsent(Thread.currentThread(), thread -> supplier.get());
-            return super.invoke(instance, method, arguments);
-        }
-
-        public void dispose() {
-            this.instances.clear();
-        }
-    }
 }

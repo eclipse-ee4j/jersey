@@ -241,10 +241,33 @@ public final class ClientProperties {
     public static final String OUTBOUND_CONTENT_LENGTH_BUFFER = CommonProperties.OUTBOUND_CONTENT_LENGTH_BUFFER_CLIENT;
 
     /**
+     * If {@code true} then disable configuration of Json Binding (JSR-367)
+     * feature on client.
+     * <p>
+     * By default, Json Binding on client is automatically enabled if global
+     * property
+     * {@value org.glassfish.jersey.CommonProperties#JSON_BINDING_FEATURE_DISABLE}
+     * is not disabled. If set then the client property value overrides the
+     * global property value.
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     * <p>This constant is an alias for {@link CommonProperties#JSON_BINDING_FEATURE_DISABLE_CLIENT}.</p>
+     *
+     * @see org.glassfish.jersey.CommonProperties#JSON_BINDING_FEATURE_DISABLE
+     * @since 2.45
+     */
+    @PropertyAlias
+    public static final String JSON_BINDING_FEATURE_DISABLE = CommonProperties.JSON_BINDING_FEATURE_DISABLE_CLIENT;
+
+    /**
      * If {@code true} then disable configuration of Json Processing (JSR-353)
      * feature on client.
      * <p>
-     * By default Json Processing on client is automatically enabled if global
+     * By default, Json Processing on client is automatically enabled if global
      * property
      * {@value org.glassfish.jersey.CommonProperties#JSON_PROCESSING_FEATURE_DISABLE}
      * is not disabled. If set then the client property value overrides the
@@ -265,7 +288,7 @@ public final class ClientProperties {
     /**
      * If {@code true} then disable META-INF/services lookup on client.
      * <p>
-     * By default Jersey looks up SPI implementations described by {@code META-INF/services/*} files.
+     * By default,  Jersey looks up SPI implementations described by {@code META-INF/services/*} files.
      * Then you can register appropriate provider  classes by {@link jakarta.ws.rs.core.Application}.
      * </p>
      * <p>

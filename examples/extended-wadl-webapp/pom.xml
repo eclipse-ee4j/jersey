@@ -150,7 +150,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>2.5.0</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>xjc</id>
@@ -290,6 +290,57 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>javadocAndTestsSkipJDK13</id>
+            <activation>
+                <jdk>[13,)</jdk>
+            </activation>
+            <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <echo>****************************************************</echo>
+                                    <echo>****THIS EXAMPLE WORKS ONLY ON JDKs PRIOR to 13!****</echo>
+                                    <echo>********CURRENT JDK IS NOT SUPPORTED!***************</echo>
+                                    <echo>****************************************************</echo>
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb2-plugin</artifactId>
+                    <version>0.14.0</version>
+                    <configuration>
+                        <verbose>false</verbose>
+                    </configuration>
+                </plugin>
+            </plugins>
+            </build>
+        </profile>
         <profile>
             <id>pre-release</id>
             <build>

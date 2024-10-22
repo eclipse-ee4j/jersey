@@ -143,6 +143,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     private volatile boolean isHk2Environment;
 
+    private boolean initialized = false;
+
     public CdiComponentProvider() {
         customHk2TypesProvider = CdiUtil.lookupService(Hk2CustomBoundTypesProvider.class);
         injectionManagerStore = CdiUtil.createHk2InjectionManagerStore();
@@ -155,7 +157,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         this.beanManager = CdiUtil.getBeanManager();
         this.isHk2Environment = injectionManager.getClass().getPackageName().contains("hk2");
 
-        if (beanManager != null) {
+        if (beanManager != null && !injectionManager.getClass().getSimpleName().equals("NonInjectionManager")) {
             // Try to get CdiComponentProvider created by CDI.
             final CdiComponentProvider extension = beanManager.getExtension(CdiComponentProvider.class);
 
@@ -170,13 +172,14 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 }
 
                 LOGGER.config(LocalizationMessages.CDI_PROVIDER_INITIALIZED());
+                initialized = true;
             }
         }
     }
 
     @Override
     public boolean bind(final Class<?> clazz, final Set<Class<?>> providerContracts) {
-        return isHk2Environment && bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
+        return isHk2Environment && initialized && bind(clazz, providerContracts, ContractProvider.NO_PRIORITY);
     }
 
     @Override
@@ -184,7 +187,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         if (!isHk2Environment) {
             return false;
         }
-        return contractProvider != null
+        return initialized && contractProvider != null
                 ? bind(component, contractProvider.getContracts(), contractProvider.getPriority(component))
                 : bind(component, Collections.EMPTY_SET);
     }
@@ -629,11 +632,8 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         ClassAnalyzer defaultClassAnalyzer =
                 injectionManager.getInstance(ClassAnalyzer.class, ClassAnalyzer.DEFAULT_IMPLEMENTATION_NAME);
 
-        int skippedElements = methodsToSkip.size() + fieldsToSkip.size();
-
-        ClassAnalyzer customizedClassAnalyzer = skippedElements > 0
-                ? new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip, beanManager)
-                : defaultClassAnalyzer;
+        ClassAnalyzer customizedClassAnalyzer =
+                new InjecteeSkippingAnalyzer(defaultClassAnalyzer, methodsToSkip, fieldsToSkip, beanManager);
 
         Binder binder = new InternalBinder() {
             @Override

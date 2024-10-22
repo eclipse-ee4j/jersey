@@ -1,4 +1,4 @@
-# Notice for Jersey 
+# Notice for Jersey
 This content is produced and maintained by the Eclipse Jersey project.
 
 *  Project home: https://projects.eclipse.org/projects/ee4j.jersey
@@ -57,25 +57,25 @@ Bootstrap v3.3.7
 * Project: http://getbootstrap.com
 * Copyright: 2011-2016 Twitter, Inc
 
-Google Guava Version 18.0
+Google Guava Version 33.3.0-jre
 * License: Apache License, 2.0
-* Copyright (C) 2009 The Guava Authors
+* Copyright (C) 2009, 2024 The Guava Authors
 
-jakarta.inject Version: 1
+jakarta.inject Version: 2.0.1
 * License: Apache License, 2.0
-* Copyright (C) 2009 The JSR-330 Expert Group
+* Copyright (C) 2009, 2021 The JSR-330 Expert Group
 
 Javassist Version 3.30.2-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.17.1
+Jackson JAX-RS Providers Version 2.18.0
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
 * Copyright: (c) 2009-2024 FasterXML, LLC. All rights reserved unless otherwise indicated.
 
-jQuery v1.12.4
+jQuery v3.7.1
 * License: jquery.org/license
 * Project: jquery.org
 * Copyright: (c) jQuery Foundation
@@ -95,7 +95,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.7
+org.objectweb.asm Version 9.7.1
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 

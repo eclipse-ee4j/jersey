@@ -72,6 +72,40 @@
                         </entry>
                     </row>
                     <row>
+                        <entry>&jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE; /
+                            &jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_CLIENT; /
+                            &jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_SERVER;</entry>
+                        <entry><literal>jersey.config.disableJsonBinding</literal> /
+                            <literal>jersey.config.client.disableJsonBinding</literal> /
+                            <literal>jersey.config.server.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature. Default value is <literal>false</literal>.
+                                Can also be set as a system property.
+                            </para>
+                            <para>
+                                Since 2.45.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.common.CommonProperties.JSON_BINDING_FEATURE_DISABLE_APPLICATION; </entry>
+                        <entry><literal>jersey.config.application.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature for <literal>jakarta.ws.rs.core.Application</literal>
+                                subclasses whose package names are specified as a value. The value is comma-separated string
+                                defining prefixes of the application package names. Can also be set as a system property.
+                            </para>
+                            <para>
+                                By default, Json Binding is automatically enabled.
+                            </para>
+                            <para>
+                                Since 2.45.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
                         <entry>&jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE; /
                             &jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE_CLIENT; /
                             &jersey.common.CommonProperties.JSON_PROCESSING_FEATURE_DISABLE_SERVER;</entry>
@@ -412,6 +446,15 @@
                                 Defines configuration of HTTP method overriding.
                                 This property is used by &jersey.server.HttpMethodOverrideFilter; to determine
                                 where it should look for method override information (e.g. request header or query parameters).
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.server.ServerProperties.JSON_BINDING_FEATURE_DISABLE;</entry>
+                        <entry><literal>jersey.config.server.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Processing (JSR-353) feature. Default value is <literal>false</literal>.
                             </para>
                         </entry>
                     </row>
@@ -1102,6 +1145,15 @@
                         <entry>
                             <para>
                                 Declares that the client will automatically redirect to the URI declared in 3xx responses. Default value is <literal>true</literal>.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.client.ClientProperties.JSON_BINDING_FEATURE_DISABLE;</entry>
+                        <entry><literal>jersey.config.client.disableJsonBinding</literal></entry>
+                        <entry>
+                            <para>
+                                Disables configuration of Json Binding (JSR-367) feature. Default value is <literal>false</literal>.
                             </para>
                         </entry>
                     </row>

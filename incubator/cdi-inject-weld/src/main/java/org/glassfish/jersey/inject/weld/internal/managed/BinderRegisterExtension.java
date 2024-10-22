@@ -382,8 +382,10 @@ class BinderRegisterExtension implements Extension {
                 }
                 BindingBeanPair pair = BeanHelper.registerSupplier(
                         runtimeType, (SupplierClassBinding<?>) binding, abd, injectionResolvers, beanManager);
-                for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
-                    supplierClassBindings.add(contract, pair);
+                if (pair != null) {
+                    for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
+                        supplierClassBindings.add(contract, pair);
+                    }
                 }
             } else if (InitializableInstanceBinding.class.isAssignableFrom(binding.getClass())) {
 /*
