@@ -102,6 +102,12 @@ public class TestPreinitialization implements org.glassfish.jersey.innate.Bootst
                     bindFactory(new ThreadScopeTest.SupplierGreeting2(ThreadScopeTest.EnglishGreeting2.GREETING))
                             .to(ThreadScopeTest.EnglishGreeting2.class)
                             .in(PerThread.class);
+                    //testSupplierClassBindingThreadScopedInSingletonScope
+                    bindAsContract(ThreadScopeTest.SingletonObject3.class)
+                            .in(Singleton.class);
+                    bindFactory(ThreadScopeTest.SupplierGreeting3.class)
+                            .to(ThreadScopeTest.Greeting3.class)
+                            .in(PerThread.class);
                 }
 
                 //ClientInstanceInjectionTest

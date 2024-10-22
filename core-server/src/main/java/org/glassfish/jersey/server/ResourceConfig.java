@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,6 +39,7 @@ import jakarta.ws.rs.core.Configurable;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Feature;
 
+import org.glassfish.jersey.ApplicationSupplier;
 import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.config.ExternalPropertiesConfigurationFactory;
 import org.glassfish.jersey.internal.inject.Binder;
@@ -70,7 +71,7 @@ import org.glassfish.jersey.uri.UriComponent;
  * @author Michal Gajdos
  * @author Marek Potociar
  */
-public class ResourceConfig extends Application implements Configurable<ResourceConfig>, ServerConfig {
+public class ResourceConfig extends Application implements Configurable<ResourceConfig>, ServerConfig, ApplicationSupplier {
 
     private static final Logger LOGGER = Logger.getLogger(ResourceConfig.class.getName());
 
