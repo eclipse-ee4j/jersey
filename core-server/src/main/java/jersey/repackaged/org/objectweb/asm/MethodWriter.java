@@ -1519,14 +1519,14 @@ final class MethodWriter extends MethodVisitor {
       return lastCodeRuntimeVisibleTypeAnnotation =
           new AnnotationWriter(
               symbolTable,
-              /* useNamedValues = */ true,
+              /* useNamedValues= */ true,
               typeAnnotation,
               lastCodeRuntimeVisibleTypeAnnotation);
     } else {
       return lastCodeRuntimeInvisibleTypeAnnotation =
           new AnnotationWriter(
               symbolTable,
-              /* useNamedValues = */ true,
+              /* useNamedValues= */ true,
               typeAnnotation,
               lastCodeRuntimeInvisibleTypeAnnotation);
     }
@@ -1642,7 +1642,7 @@ final class MethodWriter extends MethodVisitor {
           code.data[endOffset] = (byte) Opcodes.ATHROW;
           // Emit a frame for this unreachable block, with no local and a Throwable on the stack
           // (so that the ATHROW could consume this Throwable if it were reachable).
-          int frameIndex = visitFrameStart(startOffset, /* numLocal = */ 0, /* numStack = */ 1);
+          int frameIndex = visitFrameStart(startOffset, /* numLocal= */ 0, /* numStack= */ 1);
           currentFrame[frameIndex] =
               Frame.getAbstractTypeFromInternalName(symbolTable, "java/lang/Throwable");
           visitFrameEnd();
