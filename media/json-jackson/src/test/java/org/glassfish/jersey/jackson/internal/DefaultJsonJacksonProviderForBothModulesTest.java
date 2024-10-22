@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,9 @@ import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Application;
 
+import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DefaultJsonJacksonProviderForBothModulesTest extends JerseyTest {
@@ -36,8 +39,12 @@ public class DefaultJsonJacksonProviderForBothModulesTest extends JerseyTest {
     public final void testDisabledModule() {
         final String response = target("entity/simple")
                 .request().get(String.class);
+        String expected = "{\"name\":\"Hello\",\"value\":\"World\"}";
+        List<String> response_list = Arrays.asList(response.replaceAll("[{}]", "").split(","));
+        List<String> expected_list = Arrays.asList(expected.replaceAll("[{}]", "").split(","));
+        Collections.sort(response_list);
 
-        assertEquals("{\"name\":\"Hello\",\"value\":\"World\"}", response);
+        assertEquals(expected_list, response_list);
     }
 
 }
