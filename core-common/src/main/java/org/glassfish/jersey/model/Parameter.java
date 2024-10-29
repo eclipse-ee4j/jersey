@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -447,14 +447,20 @@ public class Parameter implements AnnotatedElement {
                 parameterClass);
     }
 
-
     private static String getValue(Annotation a) {
         try {
-            Method m = a.annotationType().getMethod("value");
-            if (m.getReturnType() != String.class) {
-                return null;
+            Method[] methods = a.annotationType().getMethods();
+            for (Method method : methods) {
+                if ("value".equals(method.getName())) {
+                    if (method.getReturnType() != String.class) {
+                        return null;
+                    } else {
+                        return (String) method.invoke(a);
+                    }
+                }
             }
-            return (String) m.invoke(a);
+            LOGGER.log(Level.FINER, () ->
+                    String.format("Unable to get the %s annotation value property", a.getClass().getName()));
         } catch (Exception ex) {
             if (LOGGER.isLoggable(Level.FINER)) {
                 LOGGER.log(Level.FINER,
