@@ -1136,7 +1136,7 @@ public JaxbBean getSimpleJSONP() {
 public class JsonbContextResolver implements ContextResolver&lt;Jsonb&gt; {
 
         @Override
-        public Jsonb getContext(Class&gt;?&lt; type) {
+        public Jsonb getContext(Class&lt;?&gt; type) {
             JsonbConfig config = new JsonbConfig();
             // configure JsonbConfig
             ...
