@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.PushbackInputStream;
 
 import javax.ws.rs.ProcessingException;
 
+import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.internal.LocalizationMessages;
 
 /**
@@ -33,7 +34,7 @@ import org.glassfish.jersey.internal.LocalizationMessages;
  *
  * @author Marek Potociar
  */
-public class EntityInputStream extends InputStream {
+public class EntityInputStream extends InputStreamWrapper {
 
     private InputStream input;
     private boolean closed = false;
@@ -64,40 +65,6 @@ public class EntityInputStream extends InputStream {
         this.input = input;
     }
 
-    @Override
-    public int read() throws IOException {
-        return input.read();
-    }
-
-    @Override
-    public int read(byte[] b) throws IOException {
-        return input.read(b);
-    }
-
-    @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        return input.read(b, off, len);
-    }
-
-    @Override
-    public long skip(long n) throws IOException {
-        return input.skip(n);
-    }
-
-    @Override
-    public int available() throws IOException {
-        return input.available();
-    }
-
-    @Override
-    public void mark(int readLimit) {
-        input.mark(readLimit);
-    }
-
-    @Override
-    public boolean markSupported() {
-        return input.markSupported();
-    }
 
     /**
      * {@inheritDoc}
@@ -231,5 +198,10 @@ public class EntityInputStream extends InputStream {
      */
     public final void setWrappedStream(InputStream wrapped) {
         input = wrapped;
+    }
+
+    @Override
+    protected InputStream getWrapped() {
+        return input;
     }
 }

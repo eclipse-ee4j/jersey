@@ -310,7 +310,7 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <!-- Compile these files with jdk 8 and put them aside to be included in multirelase jar -->
+                                <!-- Compile these files with jdk 8 and put them aside to be included in multi-release jar -->
                                 <!-- Multi-release jar is built by jdk 11+, but these classes are buildable by jdk 8 only -->
                                 <id>compile-2-java8</id>
                                 <phase>process-resources</phase>
@@ -497,10 +497,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/11/org/glassfish/jersey/internal/jsr166</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/11/org/glassfish/jersey</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${java11.sourceDirectory}/org/glassfish/jersey/internal/jsr166</directory>
+                                            <directory>${java11.sourceDirectory}/org/glassfish/jersey</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
