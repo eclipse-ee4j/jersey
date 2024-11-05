@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,12 +20,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -200,7 +203,12 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
     @Override
     public void close() throws ProcessingException {
         closed = true;
-        context.close();
+        try {
+            context.close();
+        } catch (IOException | UncheckedIOException e) {
+            // Just log the exception
+            Logger.getLogger(OutboundJaxrsResponse.class.getName()).log(Level.FINE, e.getMessage(), e);
+        }
         if (buffered) {
             // release buffer
             context.setEntity(null);

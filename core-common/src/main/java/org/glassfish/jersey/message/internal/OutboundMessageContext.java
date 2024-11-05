@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Configuration;
@@ -557,8 +555,9 @@ public class OutboundMessageContext extends MessageHeaderMethods {
 
     /**
      * Closes the context. Flushes and closes the entity stream.
+     * @throws IOException if errors
      */
-    public void close() {
+    public void close() throws IOException {
         if (hasEntity()) {
             try {
                 final OutputStream es = getEntityStream();
@@ -566,22 +565,12 @@ public class OutboundMessageContext extends MessageHeaderMethods {
                     es.flush();
                 }
                 es.close();
-            } catch (IOException e) {
-                // Happens when the client closed connection before receiving the full response.
-                // This is OK and not interesting in the vast majority of the cases
-                // hence the log level set to FINE to make sure it does not flood the log unnecessarily
-                // (especially for clients disconnecting from SSE listening, which is very common).
-                Logger.getLogger(OutboundMessageContext.class.getName()).log(Level.FINE, e.getMessage(), e);
             } finally {
                 // In case some of the output stream wrapper does not delegate close() call we
                 // close the root stream manually to make sure it commits the data.
                 if (!committingOutputStream.isClosed()) {
-                    try {
-                        committingOutputStream.close();
-                    } catch (IOException e) {
-                        // Just log the exception
-                        Logger.getLogger(OutboundMessageContext.class.getName()).log(Level.FINE, e.getMessage(), e);
-                    }
+                    // It is possible that es.flush() or es.close() threw one exception already and we throw a new one here.
+                    committingOutputStream.close();
                 }
             }
         }

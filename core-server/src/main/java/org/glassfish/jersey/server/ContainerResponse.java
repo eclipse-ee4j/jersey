@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,8 @@ import java.lang.reflect.WildcardType;
 import java.net.URI;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Map;
 import java.util.Set;
 
@@ -400,9 +402,14 @@ public class ContainerResponse implements ContainerResponseContext {
     public void close() {
         if (!closed) {
             closed = true;
-            messageContext.close();
-            requestContext.getResponseWriter().commit();
-            requestContext.setWorkers(null);
+            try {
+                messageContext.close();
+                requestContext.setWorkers(null);
+                requestContext.getResponseWriter().commit();
+            } catch (Exception e) {
+                Logger.getLogger(ContainerResponse.class.getName()).log(Level.FINE, e.getMessage(), e);
+                requestContext.getResponseWriter().failure(e);
+            }
         }
     }
 
