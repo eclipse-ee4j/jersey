@@ -18,6 +18,7 @@ package org.glassfish.jersey.message.internal;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -555,9 +556,9 @@ public class OutboundMessageContext extends MessageHeaderMethods {
 
     /**
      * Closes the context. Flushes and closes the entity stream.
-     * @throws IOException if errors
+     * @throws UncheckedIOException if IO errors
      */
-    public void close() throws IOException {
+    public void close() {
         if (hasEntity()) {
             try {
                 final OutputStream es = getEntityStream();
@@ -565,12 +566,17 @@ public class OutboundMessageContext extends MessageHeaderMethods {
                     es.flush();
                 }
                 es.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
             } finally {
                 // In case some of the output stream wrapper does not delegate close() call we
                 // close the root stream manually to make sure it commits the data.
                 if (!committingOutputStream.isClosed()) {
-                    // It is possible that es.flush() or es.close() threw one exception already and we throw a new one here.
-                    committingOutputStream.close();
+                    try {
+                        committingOutputStream.close();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
                 }
             }
         }

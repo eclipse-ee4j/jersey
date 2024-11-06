@@ -69,7 +69,7 @@ public class Issue5783Test extends JerseyTest {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                     if ("failure".equals(method.getName())) {
-                        exceptionMessage = ((Throwable) args[0]).getMessage();
+                        exceptionMessage = ((Throwable) args[0]).getCause().getMessage();
                     }
                     return method.invoke(writer, args);
                 }

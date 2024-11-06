@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.Arrays;
@@ -205,7 +204,7 @@ public class OutboundJaxrsResponse extends javax.ws.rs.core.Response {
         closed = true;
         try {
             context.close();
-        } catch (IOException | UncheckedIOException e) {
+        } catch (Exception e) {
             // Just log the exception
             Logger.getLogger(OutboundJaxrsResponse.class.getName()).log(Level.FINE, e.getMessage(), e);
         }
