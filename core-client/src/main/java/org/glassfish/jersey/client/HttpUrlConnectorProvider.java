@@ -21,9 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
@@ -290,15 +287,11 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
          * @throws java.io.IOException in case the connection cannot be provided.
          */
         default HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
-            synchronized (this){
-                return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
-            }
+            return (proxy == null) ? getConnection(url) : (HttpURLConnection) url.openConnection(proxy);
         }
     }
 
     private static class DefaultConnectionFactory implements ConnectionFactory {
-
-        private final ConcurrentHashMap<URL, Lock> locks = new ConcurrentHashMap<>();
 
         @Override
         public HttpURLConnection getConnection(final URL url) throws IOException {
@@ -311,13 +304,7 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
         }
 
         private HttpURLConnection connect(URL url, Proxy proxy) throws IOException {
-            Lock lock = locks.computeIfAbsent(url, u -> new ReentrantLock());
-            lock.lock();
-            try {
-                return (proxy == null) ? (HttpURLConnection) url.openConnection() : (HttpURLConnection) url.openConnection(proxy);
-            } finally {
-                lock.unlock();
-            }
+            return (proxy == null) ? (HttpURLConnection) url.openConnection() : (HttpURLConnection) url.openConnection(proxy);
         }
     }
 

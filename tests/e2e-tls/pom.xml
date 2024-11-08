@@ -164,6 +164,24 @@
                 </http.patch.addopens>
             </properties>
         </profile>
+        <profile>
+            <id>JDK_17-</id>
+            <activation>
+                <jdk>[1.8,17)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- The certificate is not working with JDK 11 -->
+                            <excludes><exclude>**/ConcurrentHttpsUrlConnectionTest*</exclude></excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
