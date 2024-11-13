@@ -17,7 +17,6 @@
 package org.glassfish.jersey.netty.connector;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +46,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponse;
-import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
@@ -145,7 +143,21 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                           ClientRequest newReq = new ClientRequest(jerseyRequest);
                           newReq.setUri(newUri);
                           restrictRedirectRequest(newReq, cr);
-                          connector.execute(newReq, redirectUriHistory, responseAvailable);
+
+                          final NettyConnector newConnector = new NettyConnector(newReq.getClient());
+                          newConnector.execute(newReq, redirectUriHistory, new CompletableFuture<ClientResponse>() {
+                              @Override
+                              public boolean complete(ClientResponse value) {
+                                  newConnector.close();
+                                  return responseAvailable.complete(value);
+                              }
+
+                              @Override
+                              public boolean completeExceptionally(Throwable ex) {
+                                  newConnector.close();
+                                  return responseAvailable.completeExceptionally(ex);
+                              }
+                          });
                       }
                   } catch (IllegalArgumentException e) {
                       responseAvailable.completeExceptionally(
