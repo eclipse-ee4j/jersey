@@ -49,7 +49,7 @@ import javax.net.ssl.TrustManagerFactory;
  * BUG 5749
  */
 public class ConcurrentHttpsUrlConnectionTest {
-    private static int THREAD_NUMBER = 2;
+    private static int THREAD_NUMBER = 5;
 
     private static volatile int responseCounter = 0;
 
