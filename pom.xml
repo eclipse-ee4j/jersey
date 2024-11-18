@@ -1647,24 +1647,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-http</artifactId>
-                <version>${simple.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-transport</artifactId>
-                <version>${simple.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-common</artifactId>
-                <version>${simple.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.codehaus.jettison</groupId>
                 <artifactId>jettison</artifactId>
                 <version>${jettison.version}</version>
@@ -2192,7 +2174,6 @@
         <servlet4.version>4.0.4</servlet4.version>
         <servlet6.version>6.1.0</servlet6.version>
 
-        <simple.version>6.0.1</simple.version>
         <slf4j.version>2.0.13</slf4j.version>
         <spring6.version>6.0.23</spring6.version>
         <testng.version>7.10.2</testng.version>

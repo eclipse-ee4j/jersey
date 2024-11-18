@@ -112,15 +112,6 @@
 
     <profiles>
         <profile>
-            <id>jdk8_tests</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <junit5.version>${junit5.jdk8.version}</junit5.version>
-            </properties>
-        </profile>
-        <profile>
             <id>pre-release</id>
             <build>
                 <plugins>
