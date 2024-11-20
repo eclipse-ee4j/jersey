@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
@@ -38,6 +39,7 @@ import io.micrometer.tracing.test.simple.SpanAssert;
 import io.micrometer.tracing.test.simple.SpansAssert;
 import org.glassfish.jersey.micrometer.server.ObservationApplicationEventListener;
 import org.glassfish.jersey.micrometer.server.ObservationRequestEventListener;
+import org.glassfish.jersey.micrometer.server.mapper.ResourceGoneExceptionMapper;
 import org.glassfish.jersey.micrometer.server.resources.TestResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -85,6 +87,7 @@ abstract class AbstractObservationRequestEventListenerTest extends JerseyTest {
         final ResourceConfig config = new ResourceConfig();
         config.register(listener);
         config.register(TestResource.class);
+        config.register(ResourceGoneExceptionMapper.class);
 
         return config;
     }
@@ -131,6 +134,53 @@ abstract class AbstractObservationRequestEventListenerTest extends JerseyTest {
                 .hasTag("outcome", "SUCCESS")
                 .hasTag("status", "200")
                 .hasTag("uri", "/sub-resource/sub-hello/{name}");
+        assertThat(observationRegistry.getCurrentObservation()).isNull();
+    }
+
+    @Test
+    void errorResourcesAreTimed() {
+        try {
+            target("throws-exception").request().get();
+        }
+        catch (Exception ignored) {
+        }
+        try {
+            target("throws-webapplication-exception").request().get();
+        }
+        catch (Exception ignored) {
+        }
+        try {
+            target("throws-mappable-exception").request().get();
+        }
+        catch (Exception ignored) {
+        }
+        try {
+            target("produces-text-plain").request(MediaType.APPLICATION_JSON).get();
+        }
+        catch (Exception ignored) {
+        }
+
+        assertThat(registry.get(METRIC_NAME)
+                       .tags(tagsFrom("/throws-exception", "500", "SERVER_ERROR", "IllegalArgumentException"))
+                       .timer()
+                       .count()).isEqualTo(1);
+
+        assertThat(registry.get(METRIC_NAME)
+                       .tags(tagsFrom("/throws-webapplication-exception", "401", "CLIENT_ERROR", "NotAuthorizedException"))
+                       .timer()
+                       .count()).isEqualTo(1);
+
+        assertThat(registry.get(METRIC_NAME)
+                       .tags(tagsFrom("/throws-mappable-exception", "410", "CLIENT_ERROR", "ResourceGoneException"))
+                       .timer()
+                       .count()).isEqualTo(1);
+
+        assertThat(registry.get(METRIC_NAME)
+                       .tags(tagsFrom("UNKNOWN", "406", "CLIENT_ERROR", "NotAcceptableException"))
+                       .timer()
+                       .count()).isEqualTo(1);
+
+        assertThat(observationRegistry.getCurrentObservation()).isNull();
     }
 
     private static Iterable<Tag> tagsFrom(String uri, String status, String outcome, String exception) {
