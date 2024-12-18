@@ -198,13 +198,6 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.examples</groupId>
-            <artifactId>groovy</artifactId>
-            <version>${project.version}</version>
-            <classifier>project-src</classifier>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.examples</groupId>
             <artifactId>helloworld</artifactId>
             <version>${project.version}</version>
             <classifier>project-src</classifier>
@@ -742,5 +735,23 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>groovy_jdk_11</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.examples</groupId>
+                    <artifactId>groovy</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>project-src</classifier>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
