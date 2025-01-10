@@ -34,6 +34,7 @@
         <module>config</module>
         <module>rest-client</module>
         <module>rest-client-tck</module>
+        <module>rest-client-tck3</module>
     </modules>
 
     <build>

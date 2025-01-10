@@ -27,31 +27,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jersey-rest-client-tck</artifactId>
+    <artifactId>jersey-rest-client-tck3</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.ext.microprofile</groupId>
             <artifactId>jersey-mp-rest-client</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.microprofile.rest.client</groupId>
-                    <artifactId>microprofile-rest-client-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.rest.client</groupId>
-            <artifactId>microprofile-rest-client-api</artifactId>
-            <version>${microprofile.rest.client.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.rest.client</groupId>
-            <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>${microprofile.rest.client.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Overrides CDI from parent pom -->
@@ -69,8 +51,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.smallrye.config</groupId>
@@ -79,15 +62,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-tck</artifactId>
+            <version>${microprofile.rest.client.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wiremock</groupId>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng6.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>${wiremock.jetty11.version}</version>
+            <version>${wiremock.jetty9.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -182,11 +171,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-weld2-se</artifactId>
             <scope>test</scope>
@@ -201,13 +185,15 @@
     <profiles>
         <profile>
             <id>testRunner</id>
-            <activation>
-                <property>
-                    <name>skipTests</name>
-                    <value>!true</value>
-                </property>
-                <jdk>[17,)</jdk>
-            </activation>
+<!-- DO NOT ACTIVATE BY DEFAULT, tests are run by rest-client-tck (4) -->
+<!-- Kept for case of an error found in version 3 -->
+<!--            <activation>-->
+<!--                <property>-->
+<!--                    <name>skipTests</name>-->
+<!--                    <value>!true</value>-->
+<!--                </property>-->
+<!--                <jdk>[17,)</jdk>-->
+<!--            </activation>-->
             <build>
                 <plugins>
                     <plugin>
@@ -268,7 +254,8 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/server.policy</surefire.security.argline>
-        <jetty.version>${jetty11.version}</jetty.version>
+        <jetty.version>${jetty9.version}</jetty.version>
+        <microprofile.rest.client.version>${microprofile.rest.client3.version}</microprofile.rest.client.version>
     </properties>
 
 

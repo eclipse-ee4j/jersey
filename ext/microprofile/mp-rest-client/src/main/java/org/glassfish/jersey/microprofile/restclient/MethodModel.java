@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -379,6 +379,11 @@ class MethodModel {
         if (!headersContext.isPresent()) {
             for (InboundHeadersProvider provider : interfaceModel.context().inboundHeadersProviders()) {
                 inbound.putAll(provider.inboundHeaders());
+                if (RestClientBuilderImpl.DefaultInboundHeaderProvider.class.isInstance(provider)) {
+                    MultivaluedMap<String, String> fromFactory =
+                            ((ClientHeadersFactory) provider).update(inbound, customHeaders);
+                    customHeaders.putAll(fromFactory);
+                }
             }
         }
 

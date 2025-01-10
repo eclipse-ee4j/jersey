@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,8 +47,11 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 
+import jakarta.ws.rs.ext.RuntimeDelegate;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
@@ -56,6 +59,7 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
+import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
@@ -66,10 +70,12 @@ import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiUtil;
 import org.glassfish.jersey.innate.VirtualThreadUtil;
+import org.glassfish.jersey.internal.RuntimeDelegateDecorator;
 import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.uri.JerseyQueryParamStyle;
 
 /**
@@ -92,6 +98,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private final List<AsyncInvocationInterceptorFactoryPriorityWrapper> asyncInterceptorFactories;
     private final Config config;
     private final ConfigWrapper configWrapper;
+    private final DefaultInboundHeaderProvider defaultInboundHeaderProvider;
     private URI uri;
     private ClientBuilder clientBuilder;
     private Supplier<ExecutorService> executorService;
@@ -112,6 +119,9 @@ class RestClientBuilderImpl implements RestClientBuilder {
         config = ConfigProvider.getConfig();
         configWrapper = new ConfigWrapper(clientBuilder.getConfiguration());
         executorService = () -> VirtualThreadUtil.withConfig(configWrapper).newCachedThreadPool();
+
+        defaultInboundHeaderProvider = new DefaultInboundHeaderProvider(clientBuilder.getConfiguration());
+        inboundHeaderProviders.add(defaultInboundHeaderProvider);
     }
 
     @Override
@@ -491,6 +501,11 @@ class RestClientBuilderImpl implements RestClientBuilder {
         return this;
     }
 
+    public RestClientBuilder header(String s, Object o) {
+        defaultInboundHeaderProvider.header(s, o);
+        return this;
+    }
+
     private static class InjectionManagerExposer implements Feature {
         InjectionManager injectionManager;
 
@@ -526,6 +541,36 @@ class RestClientBuilderImpl implements RestClientBuilder {
                 priority = JerseyPriorities.getPriorityValue(factory.getClass(), Priorities.USER);
             }
             return priority;
+        }
+    }
+
+    /* package*/ static class DefaultInboundHeaderProvider implements InboundHeadersProvider, ClientHeadersFactory {
+        private final RuntimeDelegate delegate;
+        private final MultivaluedMap<String, String> headers = new MultivaluedHashMap<>();
+
+        private DefaultInboundHeaderProvider(Configuration configuration) {
+            this.delegate = RuntimeDelegateDecorator.configured(configuration);
+        }
+
+        private void header(String key, Object value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            headers.add(key, HeaderUtils.asString(value, delegate));
+        }
+
+        @Override
+        public Map<String, List<String>> inboundHeaders() {
+            return headers;
+        }
+
+        @Override
+        public MultivaluedMap<String, String> update(MultivaluedMap<String, String> incomingHeaders,
+                                                     MultivaluedMap<String, String> clientOutgoingHeaders) {
+            MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
+            map.putAll(incomingHeaders);
+            clientOutgoingHeaders.forEach((k, v) -> map.addAll(k, v));
+            return map;
         }
     }
 

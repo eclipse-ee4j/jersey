@@ -2150,7 +2150,8 @@
 
         <!-- microprofile -->
         <microprofile.config.version>3.0.3</microprofile.config.version>
-        <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
+        <microprofile.rest.client3.version>3.0.1</microprofile.rest.client3.version>
+        <microprofile.rest.client.version>4.0</microprofile.rest.client.version>
         <helidon.config.version>3.2.6</helidon.config.version>
         <helidon.connector.version>3.2.8</helidon.connector.version>
         <helidon.config.11.version>1.4.14</helidon.config.11.version> <!-- JDK 11- support -->
@@ -2201,7 +2202,8 @@
         <weld3.version>3.1.9.Final</weld3.version>
         <validation.impl.version>8.0.1.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
-        <wiremock.version>2.27.2</wiremock.version>
+        <wiremock.jetty9.version>2.27.2</wiremock.jetty9.version>
+        <wiremock.jetty11.version>3.10.0</wiremock.jetty11.version>
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->

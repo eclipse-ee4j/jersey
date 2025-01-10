@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -161,6 +161,13 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
 
     @Override
     public void destroy(Object instance, CreationalContext<Object> creationalContext) {
+        if (AutoCloseable.class.isInstance(instance)) {
+            try {
+                ((AutoCloseable) instance).close();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
     }
 
     @Override
