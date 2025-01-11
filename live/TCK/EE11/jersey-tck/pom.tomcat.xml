@@ -32,7 +32,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <jersey.version>4.0.99-SNAPSHOT</jersey.version> <!-- the public version that pass the tck -->
-        <tomcat.container.version>11.0.0-M18</tomcat.container.version>
+        <tomcat.container.version>11.0.2</tomcat.container.version>
         <tomcat.home>${project.build.directory}/apache-tomcat-${tomcat.container.version}</tomcat.home>
         <tomcat.modules>${tomcat.home}/lib</tomcat.modules>
         <jakarta.platform.version>10.0.0</jakarta.platform.version>
@@ -40,7 +40,7 @@
         <jakarta.rest.version>4.0.0</jakarta.rest.version>
         <tck.artifactId>jakarta-restful-ws-tck</tck.artifactId>
         <tck.version>4.0.0</tck.version>
-        <hk2.version>4.0.0-M1</hk2.version>
+        <hk2.version>4.0.0-M3</hk2.version>
         <mimepull.version>1.9.15</mimepull.version>
     </properties>
 
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-tomcat-managed-10</artifactId>
-            <version>1.2.1-SNAPSHOT</version>
+            <version>1.2.2.Final</version>
         </dependency>
 
         <dependency>
