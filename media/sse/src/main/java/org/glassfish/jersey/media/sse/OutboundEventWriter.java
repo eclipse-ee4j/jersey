@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -124,18 +124,15 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
                     httpHeaders,
                     new OutputStream() {
 
-                        private boolean start = true;
+                        private int lastChar = '\n';
 
                         @Override
                         public void write(final int i) throws IOException {
-                            if (start) {
+                            if (lastChar == '\n') {
                                 entityStream.write(DATA_LEAD);
-                                start = false;
                             }
                             entityStream.write(i);
-                            if (i == '\n') {
-                                entityStream.write(DATA_LEAD);
-                            }
+                            lastChar = i;
                         }
                     });
             entityStream.write(EOL);
