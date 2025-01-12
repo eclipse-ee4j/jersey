@@ -122,20 +122,26 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
                     annotations,
                     eventMediaType,
                     httpHeaders,
-                    new OutputStream() {
-
-                        private int lastChar = '\n';
-
-                        @Override
-                        public void write(final int i) throws IOException {
-                            if (lastChar == '\n') {
-                                entityStream.write(DATA_LEAD);
-                            }
-                            entityStream.write(i);
-                            lastChar = i;
-                        }
-                    });
+                    new DataLeadStream(entityStream));
             entityStream.write(EOL);
+        }
+    }
+
+    private static final class DataLeadStream extends OutputStream {
+        private final OutputStream entityStream;
+        private int lastChar = '\n';
+
+        DataLeadStream(final OutputStream entityStream) {
+            this.entityStream = entityStream;
+        }
+
+        @Override
+        public final void write(final int i) throws IOException {
+            if (lastChar == '\n') {
+                entityStream.write(DATA_LEAD);
+            }
+            entityStream.write(i);
+            lastChar = i;
         }
     }
 }
