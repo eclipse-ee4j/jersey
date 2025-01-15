@@ -147,7 +147,18 @@
                         </Import-Package>
                         <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>
-                        <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.8))"</Require-Capability>
+                        <!-- Needed to integrate ServiceLoader mechanism with OSGi -->
+                        <Require-Capability><![CDATA[
+                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.processor)(version>=1.0.0)(!(version>=2.0.0)))";
+                         resolution:=optional,osgi.serviceloader;filter:="(osgi.serviceloader=jakarta.ws.rs.ext.RuntimeDelegate)";osgi.serviceloader="jakarta.ws.rs.ext.RuntimeDelegate";cardinality:=multiple;
+                         resolution:=optional,osgi.serviceloader;filter:="(osgi.serviceloader=org.glassfish.jersey.internal.spi.AutoDiscoverable)";osgi.serviceloader="org.glassfish.jersey.internal.spi.AutoDiscoverable";cardinality:=multiple;
+                         resolution:=optional,osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.registrar)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+                         ]]></Require-Capability>
+                        <Provide-Capability><![CDATA[
+                        osgi.serviceloader;osgi.serviceloader="jakarta.ws.rs.ext.RuntimeDelegate",
+                        osgi.serviceloader;osgi.serviceloader="org.glassfish.jersey.internal.spi.AutoDiscoverable"
+                        ]]></Provide-Capability>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

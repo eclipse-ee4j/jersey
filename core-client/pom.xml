@@ -95,6 +95,16 @@
                             *
                         </Import-Package>
                         <unpackBundle>true</unpackBundle>
+                        <!-- Needed to integrate ServiceLoader mechanism with OSGi -->
+                        <Require-Capability><![CDATA[
+                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.processor)(version>=1.0.0)(!(version>=2.0.0)))";
+                         resolution:=optional,osgi.serviceloader;filter:="(osgi.serviceloader=jakarta.ws.rs.client.ClientBuilder)";osgi.serviceloader="jakarta.ws.rs.ClientBuilder";cardinality:=multiple;
+                         resolution:=optional,osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.registrar)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+                         ]]></Require-Capability>
+                        <Provide-Capability><![CDATA[
+                        osgi.serviceloader;osgi.serviceloader="jakarta.ws.rs.client.ClientBuilder"
+                        ]]></Provide-Capability>
                     </instructions>
                 </configuration>
             </plugin>
