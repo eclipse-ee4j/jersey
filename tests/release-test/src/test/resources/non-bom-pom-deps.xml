@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2023, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,44 +33,39 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson1</artifactId>
-            <version>2.27</version>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth1-client</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth1-server</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
             <artifactId>oauth1-signature</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.incubator</groupId>
             <artifactId>jersey-injectless-client</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.incubator</groupId>
             <artifactId>jersey-open-tracing</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-kryo</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-declarative-linking</artifactId>
-            <version>2.27</version>
+            <version>4.0.0-M2</version>
         </dependency>
     </dependencies>
 

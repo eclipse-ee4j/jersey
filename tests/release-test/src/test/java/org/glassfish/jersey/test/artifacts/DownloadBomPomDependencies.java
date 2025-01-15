@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,9 +72,6 @@ public class DownloadBomPomDependencies extends AbstractMojoTestCase {
         MavenEnvironment mavenEnvironment = new MavenEnvironment();
         MavenProject project = mavenEnvironment.getMavenProjectForResourceFile("/non-bom-pom-deps.xml");
         for (Dependency dependency : project.getDependencies()) {
-            if (dependency.getArtifactId().contains("jackson1") && mavenEnvironment.jerseyVersion.startsWith("3")) {
-                continue;
-            }
 
             Artifact m = mavenEnvironment.resolveArtifact(dependency);
             System.out.append("Resolved ").append(dependency.getGroupId()).append(":")

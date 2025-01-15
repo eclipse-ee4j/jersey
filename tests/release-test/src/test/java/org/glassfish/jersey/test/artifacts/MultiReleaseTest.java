@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,16 +37,12 @@ public class MultiReleaseTest {
     private static final File localRepository = MavenUtil.getLocalMavenRepository();
     private static final Properties properties = MavenUtil.getMavenProperties();
 
-    private static final DependencyPair[] jdk11multiRelease = jdk11multiRelease(properties);
-    private static final DependencyPair[] jdk12multiRelease = jdk12multiRelease(properties);
     private static final DependencyPair[] jdk17multiRelease = jdk17multiRelease(properties);
     private static final DependencyPair[] jdk21multiRelease = jdk21multiRelease(properties);
 
     @Test
     public void testIsJdkMultiRelease() throws IOException, XmlPullParserException {
-        TestResult result = testJdkVersions("11", jdk11multiRelease);
-        result.append(testJdkVersions("12", jdk12multiRelease));
-        result.append(testJdkVersions("17", jdk17multiRelease));
+        TestResult result = testJdkVersions("17", jdk17multiRelease);
         result.append(testJdkVersions("21", jdk21multiRelease));
         //Assertions.assertTrue(result.result(), "Some error occurred, see previous messages");
         Assert.assertTrue("Some error occurred, see previous messages", result.result());
