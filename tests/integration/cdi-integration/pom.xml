@@ -66,7 +66,7 @@
         <profile>
             <id>gf-inject</id>
             <activation>
-                <jdk>[11,)</jdk>
+                <jdk>[11,24)</jdk>
             </activation>
             <modules>
                 <module>gf-cdi-inject</module>

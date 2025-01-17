@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.jdk.connector.JdkConnectorProvider;
 import org.glassfish.jersey.jnh.connector.JavaNetHttpConnectorProvider;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
@@ -48,6 +49,7 @@ import java.util.concurrent.TimeoutException;
 public class SniTest {
     private static final int PORT = 8443;
     private static final String LOCALHOST = "127.0.0.1";
+    private static JdkVersion jdkVersion = JdkVersion.getJdkVersion();
 
     static {
 // Debug
@@ -58,14 +60,17 @@ public class SniTest {
     }
 
     public static ConnectorProvider[] getConnectors() {
-        return new ConnectorProvider[] {
-                new NettyConnectorProvider(),
-                new ApacheConnectorProvider(),
-                new Apache5ConnectorProvider(),
-                new JdkConnectorProvider(),
-                new HttpUrlConnectorProvider(),
-                new JavaNetHttpConnectorProvider()
-        };
+        ConnectorProvider[] providers = new ConnectorProvider[jdkVersion.getMajor() < 24 ? 6 : 5];
+        providers[0] = new NettyConnectorProvider();
+        providers[1] = new ApacheConnectorProvider();
+        providers[2] = new Apache5ConnectorProvider();
+        providers[3] = new JdkConnectorProvider();
+        providers[4] = new HttpUrlConnectorProvider();
+        if (jdkVersion.getMajor() < 24) {
+            /* The trick with 127.0.0.1 instead of the host in uri to get the SNI does not work for JDK 24 any longer */
+            providers[5] = new JavaNetHttpConnectorProvider();
+        }
+        return providers;
     }
 
     @ParameterizedTest
@@ -122,7 +127,7 @@ public class SniTest {
                 .path("host")
                 .request();
         if (!JavaNetHttpConnectorProvider.class.isInstance(provider)) {
-            builder = builder.header(HttpHeaders.HOST, hostName + ":8080");
+            builder = builder.header(HttpHeaders.HOST, hostName + ":" + PORT);
         }
         try (Response r = builder.get()) {
             // empty
