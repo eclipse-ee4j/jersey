@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,9 @@
 package org.glassfish.jersey.netty.connector;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -462,10 +464,15 @@ class NettyConnector implements Connector {
                 jerseyRequest.setStreamProvider(new OutboundMessageContext.StreamProvider() {
                     @Override
                     public OutputStream getOutputStream(int contentLength) throws IOException {
-                        replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
-                        setHostHeader(jerseyRequest, nettyRequest);
-                        headersSet.countDown();
-
+                        try {
+                            replaceHeaders(jerseyRequest, nettyRequest.headers()); // WriterInterceptor changes
+                            setHostHeader(jerseyRequest, nettyRequest);
+                        } catch (Exception e) {
+                            responseDone.completeExceptionally(e);
+                            throw new IOException(e);
+                        } finally {
+                            headersSet.countDown();
+                        }
                         return entityWriter.getOutputStream();
                     }
                 });
