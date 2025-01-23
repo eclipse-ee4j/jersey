@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,111 +16,130 @@
 
 package org.glassfish.jersey.netty.connector;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.FullHttpMessage;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpUtil;
-import org.glassfish.jersey.client.ClientRequest;
+import io.netty.handler.codec.http.LastHttpContent;
 
 import javax.ws.rs.ProcessingException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 
 public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
 
-    private boolean isExpected;
+    private ExpectationState currentState = ExpectationState.IDLE;
 
-    private static final List<HttpResponseStatus> statusesToBeConsidered = Arrays.asList(HttpResponseStatus.CONTINUE,
-            HttpResponseStatus.UNAUTHORIZED, HttpResponseStatus.EXPECTATION_FAILED,
-            HttpResponseStatus.METHOD_NOT_ALLOWED, HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE);
+    private static final List<HttpResponseStatus> finalErrorStatuses = Arrays.asList(HttpResponseStatus.UNAUTHORIZED,
+            HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE);
+    private static final List<HttpResponseStatus> reSendErrorStatuses = Arrays.asList(
+            HttpResponseStatus.METHOD_NOT_ALLOWED,
+            HttpResponseStatus.EXPECTATION_FAILED);
 
-    private CompletableFuture<HttpResponseStatus> expectedFuture = new CompletableFuture<>();
+    private static final List<HttpResponseStatus> errorStatuses = new ArrayList<>(finalErrorStatuses);
+    private static final List<HttpResponseStatus> statusesToBeConsidered = new ArrayList<>(reSendErrorStatuses);
+
+    static {
+        errorStatuses.addAll(reSendErrorStatuses);
+        statusesToBeConsidered.addAll(finalErrorStatuses);
+        statusesToBeConsidered.add(HttpResponseStatus.CONTINUE);
+    }
+
+    private HttpResponseStatus status = null;
+
+    private CountDownLatch latch = null;
+
+    private boolean propagateLastMessage = false;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (isExpected && msg instanceof HttpResponse) {
-            final HttpResponse response = (HttpResponse) msg;
-            if (statusesToBeConsidered.contains(response.status())) {
-                expectedFuture.complete(response.status());
-            }
-            if (!HttpResponseStatus.CONTINUE.equals(response.status())) {
+
+        if (checkExpectResponse(msg)) {
+            currentState = ExpectationState.AWAITING;
+        }
+        switch (currentState) {
+            case AWAITING:
+                final HttpResponse response = (HttpResponse) msg;
+                status = response.status();
+
+                boolean handshakeDone = processErrorStatuses(status, ctx) || msg instanceof FullHttpMessage;
+                currentState = (handshakeDone) ? ExpectationState.IDLE : ExpectationState.FINISHING;
+                processLatch();
+                return;
+            case FINISHING:
+                if (msg instanceof LastHttpContent) {
+                    currentState = ExpectationState.IDLE;
+                    if (propagateLastMessage) {
+                        propagateLastMessage = false;
+                        ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+                    }
+                }
+                return;
+            default:
                 ctx.fireChannelRead(msg); //bypass the message to the next handler in line
-            } else {
-                ctx.pipeline().remove(JerseyExpectContinueHandler.class);
-            }
-        } else {
-            if (!isExpected) {
-                ctx.pipeline().remove(JerseyExpectContinueHandler.class);
-            }
-            ctx.fireChannelRead(msg); //bypass the message to the next handler in line
         }
     }
 
-    CompletableFuture<HttpResponseStatus> processExpect100ContinueRequest(HttpRequest nettyRequest,
-                                                                          ClientRequest jerseyRequest,
-                                                                          Channel ch,
-                                                                          Integer timeout)
-            throws InterruptedException, ExecutionException, TimeoutException {
-        //check for 100-Continue presence/availability
-        final Expect100ContinueConnectorExtension expect100ContinueExtension
-                = new Expect100ContinueConnectorExtension();
-
-        final DefaultFullHttpRequest nettyRequestHeaders =
-                new DefaultFullHttpRequest(nettyRequest.protocolVersion(), nettyRequest.method(), nettyRequest.uri());
-        nettyRequestHeaders.headers().setAll(nettyRequest.headers());
-
-        if (!nettyRequestHeaders.headers().contains(HttpHeaderNames.HOST)) {
-            nettyRequestHeaders.headers().add(HttpHeaderNames.HOST, jerseyRequest.getUri().getHost());
+    private boolean checkExpectResponse(Object msg) {
+        if (currentState == ExpectationState.IDLE && latch != null && msg instanceof HttpResponse) {
+            return statusesToBeConsidered.contains(((HttpResponse) msg).status());
         }
-
-        //If Expect:100-continue feature is enabled and client supports it, the nettyRequestHeaders will be
-        //enriched with the 'Expect:100-continue' header.
-        expect100ContinueExtension.invoke(jerseyRequest, nettyRequestHeaders);
-
-        final ChannelFuture expect100ContinueFuture = (HttpUtil.is100ContinueExpected(nettyRequestHeaders))
-                // Send only head of the HTTP request enriched with Expect:100-continue header.
-                ? ch.writeAndFlush(nettyRequestHeaders)
-                // Expect:100-Continue either is not supported or is turned off
-                : null;
-        isExpected = expect100ContinueFuture != null;
-        if (!isExpected) {
-            ch.pipeline().remove(JerseyExpectContinueHandler.class);
-        } else {
-            final HttpResponseStatus status = expectedFuture
-                    .get(timeout, TimeUnit.MILLISECONDS);
-
-            processExpectationStatus(status);
-        }
-        return expectedFuture;
+        return false;
     }
 
-    private void processExpectationStatus(HttpResponseStatus status)
-            throws TimeoutException {
+    boolean processErrorStatuses(HttpResponseStatus status, ChannelHandlerContext ctx)
+            throws InterruptedException {
+        if (reSendErrorStatuses.contains(status)) {
+            propagateLastMessage = true;
+        }
+        return (finalErrorStatuses.contains(status));
+    }
+
+    boolean processExpectationStatus()
+            throws TimeoutException, IOException {
+        if (status == null) {
+            throw new TimeoutException(); // continue without expectations
+        }
         if (!statusesToBeConsidered.contains(status)) {
             throw new ProcessingException(LocalizationMessages
                     .UNEXPECTED_VALUE_FOR_EXPECT_100_CONTINUE_STATUSES(status.code()), null);
         }
-        if (!expectedFuture.isDone() || HttpResponseStatus.EXPECTATION_FAILED.equals(status)) {
-            isExpected = false;
-            throw new TimeoutException(); // continue without expectations
+
+        if (finalErrorStatuses.contains(status)) {
+            throw new IOException(LocalizationMessages
+                    .EXPECT_100_CONTINUE_FAILED_REQUEST_FAILED(), null);
         }
-        if (!HttpResponseStatus.CONTINUE.equals(status)) {
-            throw new ProcessingException(LocalizationMessages
-                    .UNEXPECTED_VALUE_FOR_EXPECT_100_CONTINUE_STATUSES(status.code()), null);
+
+        if (reSendErrorStatuses.contains(status)) {
+            throw new TimeoutException(LocalizationMessages
+                    .EXPECT_100_CONTINUE_FAILED_REQUEST_SHOULD_BE_RESENT()); // Re-send request without expectations
+        }
+
+        return true;
+    }
+
+    void resetHandler() {
+        latch = null;
+    }
+
+    void attachCountDownLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
+    private void processLatch() {
+        if (latch != null) {
+            latch.countDown();
         }
     }
 
-    boolean isExpected() {
-        return isExpected;
+    private enum ExpectationState {
+        AWAITING,
+        FINISHING,
+        IDLE
     }
 }

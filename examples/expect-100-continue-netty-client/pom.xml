@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2025 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.jersey.examples</groupId>
+        <artifactId>project</artifactId>
+        <version>2.47-SNAPSHOT</version>
+    </parent>
+
+
+
+    <artifactId>jersey-example-expect-100-continue-netty-client</artifactId>
+    <packaging>jar</packaging>
+    <name>jersey-example-expect-100-continue-netty-client</name>
+
+    <description>Jersey example for Expect: 100-continue header usage with netty connector.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-netty-connector</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <showWarnings>false</showWarnings>
+                    <fork>false</fork>
+                </configuration>
+            </plugin>
+
+            <!-- Run the application using "mvn jetty:run" -->
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>client</id>
+            <properties>
+                <mainClass>org.glassfish.jersey.examples.expect100continue.netty.connector.NettyClient</mainClass>
+            </properties>
+        </profile>
+        <profile>
+            <id>pre-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>xml-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <properties>
+        <mainClass>org.glassfish.jersey.examples.expect100continue.netty.connector.SocketServer</mainClass>
+    </properties>
+</project>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -67,6 +67,7 @@
         <module>entity-filtering-security</module>
         <module>extended-wadl-webapp</module>
         <module>exception-mapping</module>
+        <module>expect-100-continue-netty-client</module>
         <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
         <!--<module>flight-mgmt-webapp</module>-->
