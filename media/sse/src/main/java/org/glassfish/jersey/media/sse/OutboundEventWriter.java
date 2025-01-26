@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -87,7 +87,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
 
         final Charset charset = MessageUtils.getCharset(mediaType);
         if (outboundEvent.getComment() != null) {
-            for (final String comment : outboundEvent.getComment().split("\n")) {
+            for (final String comment : outboundEvent.getComment().split("\r\n|\r|\n")) {
                 entityStream.write(COMMENT_LEAD);
                 entityStream.write(comment.getBytes(charset));
                 entityStream.write(EOL);
