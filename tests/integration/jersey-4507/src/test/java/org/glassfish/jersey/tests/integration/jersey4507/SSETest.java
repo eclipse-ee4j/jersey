@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.integration.jersey4507;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientLifecycleListener;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.examples.sse.jersey.App;
 import org.glassfish.jersey.examples.sse.jersey.DomainResource;
 import org.glassfish.jersey.examples.sse.jersey.ServerSentEventsResource;
@@ -33,8 +34,13 @@ import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -44,6 +50,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SSETest extends JerseyTest {
     private static final int MAX_CLIENTS = 10;
@@ -123,11 +130,27 @@ public class SSETest extends JerseyTest {
         }
 
         System.gc();
+        triggerCleanupOfWeakHashMap();
         closeLatch.await(15_000, TimeUnit.MILLISECONDS);
         // One ClientConfig is on the Client
         // + COUNT of them is created by .register(SseFeature.class)
         Assertions.assertEquals(COUNT + 1, atomicInteger.get());
         Assertions.assertEquals(0, closeLatch.getCount());
+    }
+
+    // WeakHashMap does not clean after GC. It cleans after some operations. This triggers it.
+    private void triggerCleanupOfWeakHashMap() throws Exception {
+        Field field = JerseyClient.class.getDeclaredField("clientRuntimeLifeCycle");
+        field.setAccessible(true);
+        Map<InputStream, Object> clientRuntimeLifeCycle = (Map<InputStream, Object>) field.get(client());
+        assertEquals(0, clientRuntimeLifeCycle.size());
+        clientRuntimeLifeCycle.clear();
+        System.gc();
+        Thread.sleep(100);
+        // Required to invoke WeakHashMap#expungeStaleEntries
+        ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
+        clientRuntimeLifeCycle.put(in, new Object());
+        clientRuntimeLifeCycle.size();
     }
 
 

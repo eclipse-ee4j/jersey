@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,13 @@
 
 package org.glassfish.jersey.client;
 
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -69,6 +71,8 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
     private final LinkedBlockingDeque<WeakReference<JerseyClient.ShutdownHook>> shutdownHooks =
                                         new LinkedBlockingDeque<WeakReference<JerseyClient.ShutdownHook>>();
     private final ReferenceQueue<JerseyClient.ShutdownHook> shReferenceQueue = new ReferenceQueue<JerseyClient.ShutdownHook>();
+    // Keeps ClientRuntime alive till InputStream is GCed
+    private final Map<InputStream, ClientRuntime> clientRuntimeLifeCycle = new WeakHashMap<>();
 
     /**
      * Client instance shutdown hook.
@@ -386,5 +390,9 @@ public class JerseyClient implements javax.ws.rs.client.Client, Initializable<Je
     public JerseyClient preInitialize() {
         config.preInitialize();
         return this;
+    }
+
+    void putClientRuntimeLifeCycle(InputStream in, ClientRuntime cr) {
+        clientRuntimeLifeCycle.put(in, cr);
     }
 }

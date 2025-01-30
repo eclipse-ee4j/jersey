@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.client;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -173,6 +174,8 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
                     @Override
                     public void response(final ClientResponse response) {
+                        InputStream in = response.getEntityStream();
+                        request.getClientConfig().getClient().putClientRuntimeLifeCycle(in, ClientRuntime.this);
                         requestScope.runInScope(() -> processResponse(request, response, callback));
                     }
 
@@ -298,6 +301,8 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
 
             try {
                 response = connector.apply(addUserAgent(Stages.process(request, requestProcessingRoot), connector.getName()));
+                InputStream in = response.getEntityStream();
+                request.getClientConfig().getClient().putClientRuntimeLifeCycle(in, this);
             } catch (final AbortException aborted) {
                 response = aborted.getAbortResponse();
             }
