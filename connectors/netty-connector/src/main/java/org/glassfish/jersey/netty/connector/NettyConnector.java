@@ -491,7 +491,14 @@ class NettyConnector implements Connector {
                                 contentLengthSet.countDown();
                             }
 
-                        } catch (IOException e) {
+                        } catch (Exception e) {
+                            if (entityWriter.getChunkedInput() != null) {
+                                try {
+                                    entityWriter.getChunkedInput().close();
+                                } catch (Exception ex) {
+                                    // Ignore ex in favor of e
+                                }
+                            }
                             responseDone.completeExceptionally(e);
                         }
                     }

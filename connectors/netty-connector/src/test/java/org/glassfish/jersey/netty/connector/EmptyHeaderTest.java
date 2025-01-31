@@ -34,11 +34,9 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
+/* Bug 5836 reproducer */
 public class EmptyHeaderTest extends JerseyTest {
-
-    private static final Logger LOGGER = Logger.getLogger(EmptyHeaderTest.class.getName());
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         new EmptyHeaderTest().testEmptyHeaders();
