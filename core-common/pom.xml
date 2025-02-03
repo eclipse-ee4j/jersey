@@ -149,10 +149,10 @@
                         <Export-Package>org.glassfish.jersey.*;version=${project.version}</Export-Package>
                         <!-- Needed to integrate ServiceLoader mechanism with OSGi -->
                         <Require-Capability><![CDATA[
-                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.processor)(version>=1.0.0)(!(version>=2.0.0)))";
-                         resolution:=optional,osgi.serviceloader;filter:="(osgi.serviceloader=jakarta.ws.rs.ext.RuntimeDelegate)";osgi.serviceloader="jakarta.ws.rs.ext.RuntimeDelegate";cardinality:=multiple;
-                         resolution:=optional,osgi.serviceloader;filter:="(osgi.serviceloader=org.glassfish.jersey.internal.spi.AutoDiscoverable)";osgi.serviceloader="org.glassfish.jersey.internal.spi.AutoDiscoverable";cardinality:=multiple;
-                         resolution:=optional,osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.registrar)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.processor)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.registrar)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.serviceloader;filter:="(osgi.serviceloader=jakarta.ws.rs.ext.RuntimeDelegate)";osgi.serviceloader="jakarta.ws.rs.ext.RuntimeDelegate";cardinality:=multiple;resolution:=optional,
+                         osgi.serviceloader;filter:="(osgi.serviceloader=org.glassfish.jersey.internal.spi.AutoDiscoverable)";osgi.serviceloader="org.glassfish.jersey.internal.spi.AutoDiscoverable";cardinality:=multiple;resolution:=optional,
                          osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
                          ]]></Require-Capability>
                         <Provide-Capability><![CDATA[
