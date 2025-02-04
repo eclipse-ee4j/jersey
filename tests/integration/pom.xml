@@ -159,6 +159,7 @@
                 <module>jersey-2892</module>
                 <module>jersey-3796</module>
                 <module>jersey-4949</module>
+                <module>resteasy-client</module>
                 <module>security-digest</module>
                 <module>servlet-2.5-autodiscovery-1</module>
                 <module>servlet-2.5-autodiscovery-2</module>

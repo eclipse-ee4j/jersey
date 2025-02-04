@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,6 +50,7 @@ import jakarta.ws.rs.ext.Providers;
 public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     private Configuration commonConfig;
     private static final Logger LOGGER = Logger.getLogger(DefaultJacksonJaxbJsonProvider.class.getName());
+    private final boolean hasConfig;
 
     @Inject
     public DefaultJacksonJaxbJsonProvider(@Context Providers providers, @Context Configuration config) {
@@ -64,10 +65,18 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         this.commonConfig = config;
         _providers = providers;
 
-        Object jaxrsFeatureBag = config.getProperty(JaxrsFeatureBag.JAXRS_FEATURE);
-        if (jaxrsFeatureBag != null && (JaxrsFeatureBag.class.isInstance(jaxrsFeatureBag))) {
-            ((JaxrsFeatureBag) jaxrsFeatureBag).configureJaxrsFeatures(this);
+        boolean ex = true;
+        try {
+            Object jaxrsFeatureBag = config.getProperty(JaxrsFeatureBag.JAXRS_FEATURE);
+            if (jaxrsFeatureBag != null && (JaxrsFeatureBag.class.isInstance(jaxrsFeatureBag))) {
+                ((JaxrsFeatureBag) jaxrsFeatureBag).configureJaxrsFeatures(this);
+            }
+        } catch (RuntimeException e) {
+            // ignore - not configured
+            LOGGER.fine(LocalizationMessages.ERROR_CONFIGURING(e.getMessage()));
+            ex = false;
         }
+        hasConfig = ex;
     }
 
     @Override
@@ -82,7 +91,9 @@ public class DefaultJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
     @Override
     protected JsonEndpointConfig _configForReading(ObjectReader reader, Annotation[] annotations) {
         try {
-            updateFactoryConstraints(reader.getFactory());
+            if (hasConfig) {
+                updateFactoryConstraints(reader.getFactory());
+            }
         } catch (Throwable t) {
             // A Jackson 14 would throw NoSuchMethodError, ClassNotFoundException, NoClassDefFoundError or similar
             // that should have been ignored
