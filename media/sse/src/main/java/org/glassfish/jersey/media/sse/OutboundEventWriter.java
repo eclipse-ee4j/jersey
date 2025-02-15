@@ -102,7 +102,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
             }
             if (outboundEvent.getId() != null) {
                 entityStream.write(ID_LEAD);
-                entityStream.write(outboundEvent.getId().getBytes(charset));
+                entityStream.write(outboundEvent.getId().replace("\r", "").replace("\n", "").getBytes(charset));
                 entityStream.write(EOL);
             }
             if (outboundEvent.getReconnectDelay() > SseFeature.RECONNECT_NOT_SET) {
