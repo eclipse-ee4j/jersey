@@ -115,6 +115,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
                     outboundEvent.getMediaType() == null ? MediaType.TEXT_PLAIN_TYPE : outboundEvent.getMediaType();
             final MessageBodyWriter messageBodyWriter = workersProvider.get().getMessageBodyWriter(outboundEvent.getType(),
                     outboundEvent.getGenericType(), annotations, eventMediaType);
+            final var dataLeadStream = new DataLeadStream(entityStream);
             messageBodyWriter.writeTo(
                     outboundEvent.getData(),
                     outboundEvent.getType(),
@@ -122,23 +123,39 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
                     annotations,
                     eventMediaType,
                     httpHeaders,
-                    new OutputStream() {
-
-                        private boolean start = true;
-
-                        @Override
-                        public void write(final int i) throws IOException {
-                            if (start) {
-                                entityStream.write(DATA_LEAD);
-                                start = false;
-                            }
-                            entityStream.write(i);
-                            if (i == '\n') {
-                                entityStream.write(DATA_LEAD);
-                            }
-                        }
-                    });
+                    dataLeadStream);
+            dataLeadStream.finish();
             entityStream.write(EOL);
+        }
+    }
+
+    private static final class DataLeadStream extends OutputStream {
+        private final OutputStream entityStream;
+
+        private int lastChar = -1;
+
+        DataLeadStream(final OutputStream entityStream) {
+            this.entityStream = entityStream;
+        }
+
+        @Override
+        public void write(final int i) throws IOException {
+            if (lastChar == -1) {
+                entityStream.write(DATA_LEAD);
+            } else if (lastChar != '\n' && lastChar != '\r') {
+                entityStream.write(lastChar);
+            } else if (lastChar == '\n' || lastChar == '\r' && i != '\n') {
+                entityStream.write(EOL);
+                entityStream.write(DATA_LEAD);
+            }
+
+            lastChar = i;
+        }
+
+        void finish() throws IOException {
+            if (lastChar != -1) {
+                write(-1);
+            }
         }
     }
 }
