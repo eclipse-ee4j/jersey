@@ -97,7 +97,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
         if (outboundEvent.getType() != null) {
             if (outboundEvent.getName() != null) {
                 entityStream.write(NAME_LEAD);
-                entityStream.write(outboundEvent.getName().getBytes(charset));
+                entityStream.write(outboundEvent.getName().replace("\r", "").replace("\n", "").getBytes(charset));
                 entityStream.write(EOL);
             }
             if (outboundEvent.getId() != null) {
