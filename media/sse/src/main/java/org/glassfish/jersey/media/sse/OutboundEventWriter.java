@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Objects;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -150,6 +151,41 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
             }
 
             lastChar = i;
+        }
+
+        private static int indexOfEol(final byte[] b, final int fromIndex, final int toIndex) {
+            for (var i = fromIndex; i < toIndex; i++) {
+                if (b[i] == '\n' || b[i] == '\r') {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        @Override
+        public void write(final byte[] b, final int off, final int len) throws IOException {
+            Objects.checkFromIndexSize(off, len, b.length);
+            if (len == 0) {
+                return;
+            }
+            write(b[off]);
+            if (len > 1) {
+                final var end = off + len - 1;
+                var i = off;
+                for (var j = indexOfEol(b, i, end); j != -1; j = indexOfEol(b, i, end)) {
+                    entityStream.write(b, i, j - i);
+                    entityStream.write(EOL);
+                    entityStream.write(DATA_LEAD);
+                    if (b[j] == '\r' && b[j + 1] == '\n') {
+                        j++;
+                    }
+                    i = ++j;
+                }
+                if (i < end) {
+                    entityStream.write(b, i, end - i);
+                }
+                lastChar = b[end];
+            }
         }
 
         void finish() throws IOException {
