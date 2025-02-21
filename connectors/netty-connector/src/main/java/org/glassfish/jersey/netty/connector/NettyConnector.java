@@ -633,7 +633,7 @@ class NettyConnector implements Connector {
         if (!nettyRequest.headers().contains(HttpHeaderNames.HOST)) {
             int requestPort = jerseyRequest.getUri().getPort();
             final String hostHeader;
-            if (requestPort != 80 && requestPort != 443) {
+            if (requestPort != -1 && requestPort != 80 && requestPort != 443) {
                 hostHeader = jerseyRequest.getUri().getHost() + ":" + requestPort;
             } else {
                 hostHeader = jerseyRequest.getUri().getHost();
