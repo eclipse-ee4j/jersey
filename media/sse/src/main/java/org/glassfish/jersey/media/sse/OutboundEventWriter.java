@@ -129,7 +129,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
         }
     }
 
-    private static final class DataLeadStream extends OutputStream {
+    static final class DataLeadStream extends OutputStream {
         private final OutputStream entityStream;
 
         private int lastChar = -1;
