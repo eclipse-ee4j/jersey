@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -2172,6 +2172,16 @@
                     </row>
                 </thead>
                 <tbody>
+                    <row>
+                        <entry>&jersey.netty.NettyClientProperties.HTTP_REDIRECT_CONTROLLER;</entry>
+                        <entry><literal>jersey.config.client.netty.http.redirect.controller</literal></entry>
+                        <entry>
+                            <para>
+                                The implementation of custom &jersey.netty.NettyHttpRedirectController; redirect logic.
+                                <literal>Since 2.47</literal>
+                            </para>
+                        </entry>
+                    </row>
                     <row>
                         <entry>&jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY;</entry>
                         <entry><literal>jersey.config.client.filter.headers.proxy</literal></entry>

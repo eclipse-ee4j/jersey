@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,8 +18,6 @@ package org.glassfish.jersey.netty.connector;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -28,8 +26,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
@@ -67,6 +63,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
     private final boolean followRedirects;
     private final int maxRedirects;
     private final NettyConnector connector;
+    private final NettyHttpRedirectController redirectController;
 
     private NettyInputStream nis;
     private ClientResponse jerseyResponse;
@@ -83,6 +80,10 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
         this.followRedirects = jerseyRequest.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, true);
         this.maxRedirects = jerseyRequest.resolveProperty(NettyClientProperties.MAX_REDIRECTS, DEFAULT_MAX_REDIRECTS);
         this.connector = connector;
+
+        final NettyHttpRedirectController customRedirectController = jerseyRequest
+                .resolveProperty(NettyClientProperties.HTTP_REDIRECT_CONTROLLER, NettyHttpRedirectController.class);
+        this.redirectController = customRedirectController == null ? new NettyHttpRedirectController() : customRedirectController;
     }
 
     @Override
@@ -142,22 +143,24 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                       } else {
                           ClientRequest newReq = new ClientRequest(jerseyRequest);
                           newReq.setUri(newUri);
-                          restrictRedirectRequest(newReq, cr);
+                          if (redirectController.prepareRedirect(newReq, cr)) {
+                              final NettyConnector newConnector = new NettyConnector(newReq.getClient());
+                              newConnector.execute(newReq, redirectUriHistory, new CompletableFuture<ClientResponse>() {
+                                  @Override
+                                  public boolean complete(ClientResponse value) {
+                                      newConnector.close();
+                                      return responseAvailable.complete(value);
+                                  }
 
-                          final NettyConnector newConnector = new NettyConnector(newReq.getClient());
-                          newConnector.execute(newReq, redirectUriHistory, new CompletableFuture<ClientResponse>() {
-                              @Override
-                              public boolean complete(ClientResponse value) {
-                                  newConnector.close();
-                                  return responseAvailable.complete(value);
-                              }
-
-                              @Override
-                              public boolean completeExceptionally(Throwable ex) {
-                                  newConnector.close();
-                                  return responseAvailable.completeExceptionally(ex);
-                              }
-                          });
+                                  @Override
+                                  public boolean completeExceptionally(Throwable ex) {
+                                      newConnector.close();
+                                      return responseAvailable.completeExceptionally(ex);
+                                  }
+                              });
+                          } else {
+                              responseAvailable.complete(cr);
+                          }
                       }
                   } catch (IllegalArgumentException e) {
                       responseAvailable.completeExceptionally(
@@ -226,8 +229,6 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
         }
     }
 
-
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, final Throwable cause) {
         responseDone.completeExceptionally(cause);
@@ -241,53 +242,6 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
        } else {
            super.userEventTriggered(ctx, evt);
        }
-    }
-
-    /*
-     * RFC 9110 Section 15.4
-     * https://httpwg.org/specs/rfc9110.html#rfc.section.15.4
-     */
-    private void restrictRedirectRequest(ClientRequest newRequest, ClientResponse response) {
-        final MultivaluedMap<String, Object> headers = newRequest.getHeaders();
-        final Boolean keepMethod = newRequest.resolveProperty(NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT, Boolean.TRUE);
-
-        if (Boolean.FALSE.equals(keepMethod) && newRequest.getMethod().equals(HttpMethod.POST)) {
-            switch (response.getStatus()) {
-                case 301 /* MOVED PERMANENTLY */:
-                case 302 /* FOUND */:
-                    removeContentHeaders(headers);
-                    newRequest.setMethod(HttpMethod.GET);
-                    newRequest.setEntity(null);
-                    break;
-            }
-        }
-
-        for (final Iterator<Map.Entry<String, List<Object>>> it = headers.entrySet().iterator(); it.hasNext(); ) {
-            final Map.Entry<String, List<Object>> entry = it.next();
-            if (ProxyHeaders.INSTANCE.test(entry.getKey())) {
-                it.remove();
-            }
-        }
-
-        headers.remove(HttpHeaders.IF_MATCH);
-        headers.remove(HttpHeaders.IF_NONE_MATCH);
-        headers.remove(HttpHeaders.IF_MODIFIED_SINCE);
-        headers.remove(HttpHeaders.IF_UNMODIFIED_SINCE);
-        headers.remove(HttpHeaders.AUTHORIZATION);
-        headers.remove(HttpHeaders.REFERER);
-        headers.remove(HttpHeaders.COOKIE);
-    }
-
-    private void removeContentHeaders(MultivaluedMap<String, Object> headers) {
-        for (final Iterator<Map.Entry<String, List<Object>>> it = headers.entrySet().iterator(); it.hasNext(); ) {
-            final Map.Entry<String, List<Object>> entry = it.next();
-            final String lowName = entry.getKey().toLowerCase(Locale.ROOT);
-            if (lowName.startsWith("content-")) {
-                it.remove();
-            }
-        }
-        headers.remove(HttpHeaders.LAST_MODIFIED);
-        headers.remove(HttpHeaders.TRANSFER_ENCODING);
     }
 
     /* package */ static class ProxyHeaders implements Predicate<String> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +54,15 @@ public class NettyClientProperties {
      * @since 2.41
      */
     public static final String FILTER_HEADERS_FOR_PROXY = "jersey.config.client.filter.headers.proxy";
+
+    /**
+     * <p>
+     *     The implementation of custom {@link NettyHttpRedirectController} redirect logic.
+     * </p>
+     *
+     * @since 2.47
+     */
+    public static final String HTTP_REDIRECT_CONTROLLER = "jersey.config.client.netty.http.redirect.controller";
 
     /**
      * <p>

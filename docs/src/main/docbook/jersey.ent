@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <!--
 
-    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -571,6 +571,7 @@
 <!ENTITY jersey.message.filtering.SecurityEntityFilteringFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SecurityEntityFilteringFeature.html'>SecurityEntityFilteringFeature</link>">
 <!ENTITY jersey.message.filtering.SelectableEntityFilteringFeature "<link xlink:href='&jersey.javadoc.uri.prefix;/message/filtering/SelectableEntityFilteringFeature.html'>SelectableEntityFilteringFeature</link>">
 <!ENTITY jersey.netty.NettyClientProperties "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html'>NettyClientProperties</link>" >
+<!ENTITY jersey.netty.NettyClientProperties.HTTP_REDIRECT_CONTROLLER "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#HTTP_REDIRECT_CONTROLLER'>NettyClientProperties.HTTP_REDIRECT_CONTROLLER</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.FILTER_HEADERS_FOR_PROXY "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#FILTER_HEADERS_FOR_PROXY'>NettyClientProperties.FILTER_HEADERS_FOR_PROXY</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#IDLE_CONNECTION_PRUNE_TIMEOUT'>NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CONNECTIONS "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CONNECTIONS'>NettyClientProperties.MAX_CONNECTIONS</link>" >
@@ -582,6 +583,7 @@
 <!ENTITY jersey.netty.NettyClientProperties.MAX_INITIAL_LINE_LENGTH "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_INITIAL_LINE_LENGTH'>NettyClientProperties.MAX_INITIAL_LINE_LENGTH</link>" >
 <!ENTITY jersey.netty.NettyClientProperties.MAX_CHUNK_SIZE "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyClientProperties.html#MAX_CHUNK_SIZE'>NettyClientProperties.MAX_CHUNK_SIZE</link>" >
 <!ENTITY jersey.netty.NettyConnectorProvider "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyConnectorProvider.html'>NettyConnectorProvider</link>">
+<!ENTITY jersey.netty.NettyHttpRedirectController "<link xlink:href='&jersey.javadoc.uri.prefix;/netty/connector/NettyHttpRedirectController.html'>NettyHttpRedirectController</link>">
 <!ENTITY jersey.server.ApplicationHandler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/ApplicationHandler.html'>ApplicationHandler</link>">
 <!ENTITY jersey.server.BackgroundScheduler "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundScheduler.html'>@BackgroundScheduler</link>">
 <!ENTITY jersey.server.BackgroundSchedulerLiteral "<link xlink:href='&jersey.javadoc.uri.prefix;/server/BackgroundSchedulerLiteral.html'>BackgroundSchedulerLiteral</link>">
