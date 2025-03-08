@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.media.sse;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -44,14 +46,12 @@ import org.glassfish.jersey.message.MessageUtils;
  */
 class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
 
-    private static final Charset UTF8 = Charset.forName("UTF-8");
-
     // encoding does not matter (lower ASCII characters)
-    private static final byte[] COMMENT_LEAD = ": ".getBytes(UTF8);
-    private static final byte[] NAME_LEAD = "event: ".getBytes(UTF8);
-    private static final byte[] ID_LEAD = "id: ".getBytes(UTF8);
-    private static final byte[] RETRY_LEAD = "retry: ".getBytes(UTF8);
-    private static final byte[] DATA_LEAD = "data: ".getBytes(UTF8);
+    private static final byte[] COMMENT_LEAD = ": ".getBytes(UTF_8);
+    private static final byte[] NAME_LEAD = "event: ".getBytes(UTF_8);
+    private static final byte[] ID_LEAD = "id: ".getBytes(UTF_8);
+    private static final byte[] RETRY_LEAD = "retry: ".getBytes(UTF_8);
+    private static final byte[] DATA_LEAD = "data: ".getBytes(UTF_8);
     private static final byte[] EOL = {'\n'};
 
     private final Provider<MessageBodyWorkers> workersProvider;
