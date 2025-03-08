@@ -24,6 +24,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -53,6 +54,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
     private static final byte[] RETRY_LEAD = "retry: ".getBytes(UTF_8);
     private static final byte[] DATA_LEAD = "data: ".getBytes(UTF_8);
     private static final byte[] EOL = {'\n'};
+    private static final Pattern EOL_PATTERN = Pattern.compile("\r\n|\r|\n");
 
     private final Provider<MessageBodyWorkers> workersProvider;
 
@@ -88,7 +90,7 @@ class OutboundEventWriter implements MessageBodyWriter<OutboundSseEvent> {
 
         final Charset charset = MessageUtils.getCharset(mediaType);
         if (outboundEvent.getComment() != null) {
-            for (final String comment : outboundEvent.getComment().split("\r\n|\r|\n")) {
+            for (final String comment : EOL_PATTERN.split(outboundEvent.getComment())) {
                 entityStream.write(COMMENT_LEAD);
                 entityStream.write(comment.getBytes(charset));
                 entityStream.write(EOL);
