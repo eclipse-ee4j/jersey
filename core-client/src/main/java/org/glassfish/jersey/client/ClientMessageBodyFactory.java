@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.jersey.client;
 
+import org.glassfish.jersey.innate.io.SafelyClosable;
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
 import org.glassfish.jersey.internal.inject.Bindings;
@@ -29,7 +30,7 @@ import org.glassfish.jersey.message.internal.MessageBodyFactory;
 
 import javax.ws.rs.core.Configuration;
 
-class ClientMessageBodyFactory extends MessageBodyFactory {
+class ClientMessageBodyFactory extends MessageBodyFactory implements SafelyClosable {
 
     /**
      * Keep reference to {@link ClientRuntime} so that {@code finalize} on it is not called
@@ -39,7 +40,7 @@ class ClientMessageBodyFactory extends MessageBodyFactory {
      * but if the finalizer is invoked before that, the HK2 injection manager gets closed.
      * </p>
      */
-    private final LazyValue<ClientRuntime> clientRuntime;
+    private LazyValue<ClientRuntime> clientRuntime;
 
     /**
      * Create a new message body factory.
@@ -50,6 +51,11 @@ class ClientMessageBodyFactory extends MessageBodyFactory {
     private ClientMessageBodyFactory(Configuration configuration, Value<ClientRuntime> clientRuntimeValue) {
         super(configuration);
         clientRuntime = Values.lazy(clientRuntimeValue);
+    }
+
+    @Override
+    public void close() {
+        clientRuntime = null;
     }
 
     /**

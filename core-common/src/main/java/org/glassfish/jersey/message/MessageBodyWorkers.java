@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,6 +32,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.WriterInterceptor;
 
+import org.glassfish.jersey.innate.io.SafelyClosable;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 
 /**
@@ -43,7 +44,7 @@ import org.glassfish.jersey.internal.PropertiesDelegate;
  * @see MessageBodyReader
  * @see MessageBodyWriter
  */
-public interface MessageBodyWorkers {
+public interface MessageBodyWorkers extends SafelyClosable {
     /**
      * Get the map of media type to list of message body writers that are compatible with
      * a media type.
