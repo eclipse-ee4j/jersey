@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -153,6 +153,19 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>mockito_jdk_11</id>
+            <activation>
+                <jdk>11</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>sonar</id>
             <build>

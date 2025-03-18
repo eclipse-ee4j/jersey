@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +17,8 @@
 package org.glassfish.jersey.client.authentication;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.ClientRequestContext;
@@ -96,20 +96,22 @@ final class BasicAuthenticator {
      * @throws ResponseAuthenticationException in case that basic credentials missing or are in invalid format
      */
     public boolean filterResponseAndAuthenticate(ClientRequestContext request, ClientResponseContext response) {
-        final String authenticate = response.getHeaders().getFirst(HttpHeaders.WWW_AUTHENTICATE);
-        if (authenticate != null && authenticate.trim().toUpperCase(Locale.ROOT).startsWith("BASIC")) {
-            HttpAuthenticationFilter.Credentials credentials = HttpAuthenticationFilter
-                    .getCredentials(request, defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
-
-            if (credentials == null) {
-                if (response.hasEntity()) {
-                    AuthenticationUtil.discardInputAndClose(response.getEntityStream());
-                }
-                throw new ResponseAuthenticationException(null, LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_BASIC());
-            }
-
-            return HttpAuthenticationFilter.repeatRequest(request, response, calculateAuthentication(credentials));
+        final List<String> authHeaders = response.getHeaders().get(HttpHeaders.WWW_AUTHENTICATE);
+        if (authHeaders == null || authHeaders.size() == 0 || authHeaders.stream()
+                .noneMatch(h -> h != null && h.toUpperCase(Locale.ROOT).startsWith("BASIC"))) {
+            return false;
         }
-        return false;
+
+        HttpAuthenticationFilter.Credentials credentials = HttpAuthenticationFilter
+                .getCredentials(request, defaultCredentials, HttpAuthenticationFilter.Type.BASIC);
+
+        if (credentials == null) {
+            if (response.hasEntity()) {
+                AuthenticationUtil.discardInputAndClose(response.getEntityStream());
+            }
+            throw new ResponseAuthenticationException(null, LocalizationMessages.AUTHENTICATION_CREDENTIALS_MISSING_BASIC());
+        }
+
+        return HttpAuthenticationFilter.repeatRequest(request, response, calculateAuthentication(credentials));
     }
 }
