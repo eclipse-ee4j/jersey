@@ -88,7 +88,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
-       notifyResponse();
+       notifyResponse(ctx);
     }
 
     @Override
@@ -104,7 +104,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
        }
     }
 
-    protected void notifyResponse() {
+    protected void notifyResponse(ChannelHandlerContext ctx) {
        if (jerseyResponse != null) {
           ClientResponse cr = jerseyResponse;
           jerseyResponse = null;
@@ -143,6 +143,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                       } else {
                           ClientRequest newReq = new ClientRequest(jerseyRequest);
                           newReq.setUri(newUri);
+                          ctx.close();
                           if (redirectController.prepareRedirect(newReq, cr)) {
                               final NettyConnector newConnector = new NettyConnector(newReq.getClient());
                               newConnector.execute(newReq, redirectUriHistory, new CompletableFuture<ClientResponse>() {
@@ -224,7 +225,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
             if (msg instanceof LastHttpContent) {
                 responseDone.complete(null);
-                notifyResponse();
+                notifyResponse(ctx);
             }
         }
     }
