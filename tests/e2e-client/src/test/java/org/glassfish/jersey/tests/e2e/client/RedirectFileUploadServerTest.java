@@ -80,12 +80,8 @@ class RedirectFileUploadServerTest {
                     return;
                 }
 
-                final BufferedReader reader
-                        = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8));
-                while (reader.readLine() != null) {
-                    //discard payload - required for JDK 1.8
-                }
-                reader.close();
+                //discard payload - required for JDK 1.8
+                exchange.getRequestBody().readAllBytes();
 
                 // Send a 307 Temporary Redirect to /upload
                 // This preserves the POST method and body in the redirect
