@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -1603,7 +1603,7 @@
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
-                <version>1.0.3</version>
+                <version>1.0.3</version> <!-- JDK 17 needed for 1.0.4 -->
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
@@ -2214,8 +2214,8 @@
         <microprofile.config.version>3.0.3</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
         <helidon.config.version>3.2.6</helidon.config.version>
-        <helidon.connector.version>3.2.8</helidon.connector.version>
-        <helidon.config.11.version>1.4.14</helidon.config.11.version> <!-- JDK 11- support -->
+        <helidon.connector.version>3.2.12</helidon.connector.version>
+        <helidon.config.11.version>1.4.15</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.7.1</smallrye.config.version>
 
         <guava.version>33.3.0-jre</guava.version>
@@ -2256,7 +2256,7 @@
         <rxjava2.version>2.2.21</rxjava2.version>
         <simple.version>6.0.1</simple.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <spring6.version>6.0.18</spring6.version>
+        <spring6.version>6.0.23</spring6.version>
         <testng.version>7.10.2</testng.version>
         <testng6.version>6.14.3</testng6.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
