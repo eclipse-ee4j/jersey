@@ -95,7 +95,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.7.1
+org.objectweb.asm Version 9.8
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 
