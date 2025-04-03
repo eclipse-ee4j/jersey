@@ -400,7 +400,7 @@ public class EventProcessor implements Runnable, EventListener {
          */
         public Builder reconnectDelay(long reconnectDelay, TimeUnit unit) {
             this.reconnectDelay = reconnectDelay;
-            this.reconnectUnit = reconnectUnit;
+            this.reconnectUnit = unit;
             return this;
         }
 
