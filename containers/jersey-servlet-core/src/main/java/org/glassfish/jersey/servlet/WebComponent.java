@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletInputStream;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
@@ -425,13 +426,18 @@ public class WebComponent {
 
         try {
             requestContext.setEntityStream(new InputStreamWrapper() {
+
+                private ServletInputStream wrappedStream;
                 @Override
                 protected InputStream getWrapped() {
-                    try {
-                        return servletRequest.getInputStream();
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
+                    if (wrappedStream == null) {
+                        try {
+                            wrappedStream = servletRequest.getInputStream();
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
                     }
+                    return wrappedStream;
                 }
             });
         } catch (UncheckedIOException e) {
