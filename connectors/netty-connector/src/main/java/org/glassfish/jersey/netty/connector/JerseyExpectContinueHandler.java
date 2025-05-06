@@ -41,11 +41,9 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
             HttpResponseStatus.METHOD_NOT_ALLOWED,
             HttpResponseStatus.EXPECTATION_FAILED);
 
-    private static final List<HttpResponseStatus> errorStatuses = new ArrayList<>(finalErrorStatuses);
     private static final List<HttpResponseStatus> statusesToBeConsidered = new ArrayList<>(reSendErrorStatuses);
 
     static {
-        errorStatuses.addAll(reSendErrorStatuses);
         statusesToBeConsidered.addAll(finalErrorStatuses);
         statusesToBeConsidered.add(HttpResponseStatus.CONTINUE);
     }
@@ -59,15 +57,14 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        if (checkExpectResponse(msg)) {
+        if (checkExpectResponse(msg) || checkInvalidExpect(msg)) {
             currentState = ExpectationState.AWAITING;
         }
         switch (currentState) {
             case AWAITING:
                 final HttpResponse response = (HttpResponse) msg;
                 status = response.status();
-
-                boolean handshakeDone = processErrorStatuses(status, ctx) || msg instanceof FullHttpMessage;
+                boolean handshakeDone = processErrorStatuses(status) || msg instanceof FullHttpMessage;
                 currentState = (handshakeDone) ? ExpectationState.IDLE : ExpectationState.FINISHING;
                 processLatch();
                 return;
@@ -92,15 +89,22 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
         return false;
     }
 
-    boolean processErrorStatuses(HttpResponseStatus status, ChannelHandlerContext ctx)
-            throws InterruptedException {
+    private boolean checkInvalidExpect(Object msg) {
+        return (ExpectationState.IDLE.equals(currentState)
+                && msg instanceof HttpResponse
+                && (HttpResponseStatus.CONTINUE.equals(((HttpResponse) msg).status())
+                       || reSendErrorStatuses.contains(((HttpResponse) msg).status()))
+        );
+    }
+
+    boolean processErrorStatuses(HttpResponseStatus status) {
         if (reSendErrorStatuses.contains(status)) {
             propagateLastMessage = true;
         }
         return (finalErrorStatuses.contains(status));
     }
 
-    boolean processExpectationStatus()
+    void processExpectationStatus()
             throws TimeoutException, IOException {
         if (status == null) {
             throw new TimeoutException(); // continue without expectations
@@ -120,7 +124,6 @@ public class JerseyExpectContinueHandler extends ChannelInboundHandlerAdapter {
                     .EXPECT_100_CONTINUE_FAILED_REQUEST_SHOULD_BE_RESENT()); // Re-send request without expectations
         }
 
-        return true;
     }
 
     void resetHandler() {

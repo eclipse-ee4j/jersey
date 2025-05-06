@@ -17,9 +17,7 @@
 package org.glassfish.jersey.netty.connector;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
