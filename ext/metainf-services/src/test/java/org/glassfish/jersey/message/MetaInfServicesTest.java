@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,11 +38,14 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.JerseyTest;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -115,6 +118,17 @@ public class MetaInfServicesTest {
 
     public static class Enable extends JerseyTest {
 
+        @BeforeAll
+        public static void beforeClass() {
+            ServiceFinder.setIteratorProvider(new ServiceFinder.ServiceReflectionIteratorProvider());
+        }
+
+        @AfterAll
+        public static void afterClass() {
+            // Restore the default
+            ServiceFinder.setIteratorProvider(null);
+        }
+
         @Override
         protected Application configure() {
             return new ResourceConfig(MetaInfServicesResource.class);
@@ -132,6 +146,17 @@ public class MetaInfServicesTest {
 
     public static class DisableServer extends JerseyTest {
 
+        @BeforeAll
+        public static void beforeClass() {
+            ServiceFinder.setIteratorProvider(new ServiceFinder.ServiceReflectionIteratorProvider());
+        }
+
+        @AfterAll
+        public static void afterClass() {
+            // Restore the default
+            ServiceFinder.setIteratorProvider(null);
+        }
+
         @Override
         protected Application configure() {
             return new ResourceConfig(MetaInfServicesResource.class)
@@ -140,6 +165,7 @@ public class MetaInfServicesTest {
 
         @Test
         public void testDisableServer() throws Exception {
+            ServiceFinder.setIteratorProvider(new ServiceFinder.ServiceReflectionIteratorProvider());
             final Response response = target("resource").request().post(Entity.text(new MetaInf("foo")));
 
             assertThat(response.getStatus(), is(200));
@@ -149,6 +175,17 @@ public class MetaInfServicesTest {
     }
 
     public static class DisableClient extends JerseyTest {
+
+        @BeforeAll
+        public static void beforeClass() {
+            ServiceFinder.setIteratorProvider(new ServiceFinder.ServiceReflectionIteratorProvider());
+        }
+
+        @AfterAll
+        public static void afterClass() {
+            // Restore the default
+            ServiceFinder.setIteratorProvider(null);
+        }
 
         @Override
         protected Application configure() {
@@ -162,6 +199,7 @@ public class MetaInfServicesTest {
 
         @Test
         public void testDisableServer() throws Exception {
+            ServiceFinder.setIteratorProvider(new ServiceFinder.ServiceReflectionIteratorProvider());
             final Response response = target("resource").request().post(Entity.text(new MetaInf("foo")));
 
             assertThat(response.getStatus(), is(200));

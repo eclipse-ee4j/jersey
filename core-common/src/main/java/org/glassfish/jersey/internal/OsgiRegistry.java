@@ -114,7 +114,7 @@ public final class OsgiRegistry implements SynchronousBundleListener {
 
     private final class OsgiServiceFinder extends ServiceFinder.ServiceIteratorProvider {
 
-        final ServiceFinder.ServiceIteratorProvider defaultIterator = new ServiceFinder.DefaultServiceIteratorProvider();
+        final ServiceFinder.ServiceIteratorProvider defaultIterator = new ServiceFinder.ServiceReflectionIteratorProvider();
 
         @Override
         public <T> Iterator<T> createIterator(
