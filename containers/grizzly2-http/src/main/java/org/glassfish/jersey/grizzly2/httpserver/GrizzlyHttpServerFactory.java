@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.grizzly2.httpserver;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadFactory;
 
 import jakarta.ws.rs.ProcessingException;
@@ -39,7 +40,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.ServerConfiguration;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
-import org.glassfish.grizzly.utils.Charsets;
 
 /**
  * Factory for creating Grizzly Http Server.
@@ -321,7 +321,7 @@ public final class GrizzlyHttpServerFactory {
         }
 
         config.setPassTraceRequest(true);
-        config.setDefaultQueryEncoding(Charsets.UTF8_CHARSET);
+        config.setDefaultQueryEncoding(StandardCharsets.UTF_8);
 
         if (start) {
             try {

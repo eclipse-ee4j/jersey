@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,14 +40,6 @@ import jakarta.ws.rs.ext.MessageBodyWriter;
 public abstract class AbstractMessageReaderWriterProvider<T> implements MessageBodyReader<T>, MessageBodyWriter<T> {
 
     // TODO: refactor away all constants & static wrappers of ReaderWriter methods and constants - those can be used directly.
-
-    /**
-     * The UTF-8 Charset.
-     *
-     * @deprecated use {@code StandardCharsets.UTF_8} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
      * Reader bytes from an input stream and write then to an output stream.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,13 +52,7 @@ import org.glassfish.jersey.message.MessageProperties;
 public final class ReaderWriter {
 
     private static final Logger LOGGER = Logger.getLogger(ReaderWriter.class.getName());
-    /**
-     * The UTF-8 Charset.
-     *
-     * @deprecated use {@code StandardCharsets.UTF_8} instead
-     */
-    @Deprecated(forRemoval = true)
-    public static final Charset UTF8 = StandardCharsets.UTF_8;
+
     /**
      * The buffer size for arrays of byte and character.
      */
