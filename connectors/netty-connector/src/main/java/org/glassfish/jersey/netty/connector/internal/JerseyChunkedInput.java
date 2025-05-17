@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,7 +68,8 @@ public class JerseyChunkedInput extends OutputStream implements ChunkedInput<Byt
         ByteBuffer peek = queue.peek();
 
         if ((peek != null && peek == VOID)) {
-            queue.remove(); // VOID from the top.
+            //required for JDK 11 and netty.version = 4.1.121.Final
+            queue.poll(); // VOID from the top.
             open = false;
             removeCloseListener();
             return true;

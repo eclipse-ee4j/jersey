@@ -2168,16 +2168,16 @@
 
         <!-- Versions of Maven plugins -->
         <antrun.mvn.plugin.version>3.1.0</antrun.mvn.plugin.version>
-        <mvn.ant.version>1.10.14</mvn.ant.version>
+        <mvn.ant.version>1.10.15</mvn.ant.version>
         <assembly.mvn.plugin.version>3.7.1</assembly.mvn.plugin.version>
-        <clean.mvn.plugin.version>3.4.0</clean.mvn.plugin.version>
+        <clean.mvn.plugin.version>3.4.1</clean.mvn.plugin.version>
         <enforcer.mvn.plugin.version>3.5.0</enforcer.mvn.plugin.version>
-        <exec.mvn.plugin.version>3.4.1</exec.mvn.plugin.version>
+        <exec.mvn.plugin.version>3.5.0</exec.mvn.plugin.version>
         <buildhelper.mvn.plugin.version>3.6.0</buildhelper.mvn.plugin.version>
-        <buildnumber.mvn.plugin.version>3.2.0</buildnumber.mvn.plugin.version>
-        <checkstyle.mvn.plugin.version>3.4.0</checkstyle.mvn.plugin.version>
-        <checkstyle.version>10.17.0</checkstyle.version>
-        <compiler.mvn.plugin.version>3.13.0</compiler.mvn.plugin.version>
+        <buildnumber.mvn.plugin.version>3.2.1</buildnumber.mvn.plugin.version>
+        <checkstyle.mvn.plugin.version>3.6.0</checkstyle.mvn.plugin.version>
+        <checkstyle.version>10.23.1</checkstyle.version>
+        <compiler.mvn.plugin.version>3.14.0</compiler.mvn.plugin.version>
         <!--
         Special version of the compiler plugin just for the jersey-common. All versions above
         generate too much for OSGi manifest.mf imports (awt etc). The version 3.11.0 however
@@ -2186,24 +2186,24 @@
          -->
         <compiler.common.mvn.plugin.version>3.9.0</compiler.common.mvn.plugin.version>
         <cyclonedx.mvn.plugin.version>2.8.1</cyclonedx.mvn.plugin.version>
-        <dependency.mvn.plugin.version>3.7.1</dependency.mvn.plugin.version>
-        <deploy.mvn.plugin.version>3.1.2</deploy.mvn.plugin.version>
+        <dependency.mvn.plugin.version>3.8.1</dependency.mvn.plugin.version>
+        <deploy.mvn.plugin.version>3.1.4</deploy.mvn.plugin.version>
         <ear.mvn.plugin.version>3.3.0</ear.mvn.plugin.version>
-        <failsafe.mvn.plugin.version>3.3.1</failsafe.mvn.plugin.version>
+        <failsafe.mvn.plugin.version>3.5.3</failsafe.mvn.plugin.version>
         <felix.mvn.plugin.version>5.1.9</felix.mvn.plugin.version>
         <findbugs.mvn.plugin.version>3.0.5</findbugs.mvn.plugin.version>
         <gfembedded.mvn.plugin.version>5.1</gfembedded.mvn.plugin.version>
-        <install.mvn.plugin.version>3.1.2</install.mvn.plugin.version>
+        <install.mvn.plugin.version>3.1.4</install.mvn.plugin.version>
         <istack.mvn.plugin.version>4.2.0</istack.mvn.plugin.version>
         <jar.mvn.plugin.version>3.4.2</jar.mvn.plugin.version>
-        <javadoc.mvn.plugin.version>3.8.0</javadoc.mvn.plugin.version>
-        <jxr.mvn.plugin.version>3.4.0</jxr.mvn.plugin.version>
+        <javadoc.mvn.plugin.version>3.11.2</javadoc.mvn.plugin.version>
+        <jxr.mvn.plugin.version>3.6.0</jxr.mvn.plugin.version>
         <paxexam.mvn.plugin.version>1.2.4</paxexam.mvn.plugin.version>
-        <project.info.reports.mvn.plugin.version>3.6.2</project.info.reports.mvn.plugin.version>
+        <project.info.reports.mvn.plugin.version>3.9.0</project.info.reports.mvn.plugin.version>
         <resources.mvn.plugin.version>3.3.1</resources.mvn.plugin.version>
         <shade.mvn.plugin.version>3.6.0</shade.mvn.plugin.version>
         <source.mvn.plugin.version>3.3.1</source.mvn.plugin.version>
-        <surefire.mvn.plugin.version>3.5.2</surefire.mvn.plugin.version>
+        <surefire.mvn.plugin.version>3.5.3</surefire.mvn.plugin.version>
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
         <wiremock.mvn.plugin.version>2.11.0</wiremock.mvn.plugin.version>
         <xml.mvn.plugin.version>1.1.0</xml.mvn.plugin.version>
@@ -2221,20 +2221,20 @@
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <commons.io.version>2.19.0</commons.io.version>
 <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
-        <commons.logging.version>1.3.3</commons.logging.version>
+        <commons.logging.version>1.3.5</commons.logging.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
         <felix.framework.security.version>2.8.4</felix.framework.security.version>
         <felix.framework.version>7.0.5</felix.framework.version>
         <findbugs.glassfish.version>1.7</findbugs.glassfish.version>
         <freemarker.version>2.3.33</freemarker.version>
-        <gae.version>2.0.29</gae.version>
-        <groovy.version>5.0.0-alpha-11</groovy.version>
-        <gson.version>2.11.0</gson.version>
-        <guava.version>33.3.0-jre</guava.version>
+        <gae.version>2.0.36</gae.version>
+        <groovy.version>5.0.0-alpha-12</groovy.version>
+        <gson.version>2.13.1</gson.version>
+        <guava.version>33.4.8-jre</guava.version>
         <hamcrest.version>3.0</hamcrest.version>
-        <helidon.version>1.4.14</helidon.version>
-        <helidon.connector.version>2.2.1</helidon.connector.version>
+        <helidon.version>1.4.15</helidon.version>
+        <helidon.connector.version>2.6.11</helidon.connector.version>
         <xmlunit.version>2.10.0</xmlunit.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.3.1</httpclient5.version>
@@ -2246,17 +2246,17 @@
         <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
         <jboss.vfs.version>3.3.2.Final</jboss.vfs.version>
         <jboss.vfs.jdk8.version>3.2.17.Final</jboss.vfs.jdk8.version>
-        <jboss.logging.version>3.6.0.Final</jboss.logging.version>
+        <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <jmh.version>1.37</jmh.version>
         <jmockit.version>1.49</jmockit.version>
         <junit4.version>4.13.2</junit4.version>
-        <junit5.version>5.11.0</junit5.version>
+        <junit5.version>5.12.2</junit5.version>
         <junit5.jdk8.version>5.10.3</junit5.jdk8.version>
-        <junit-platform-suite.version>1.11.0</junit-platform-suite.version>
+        <junit-platform-suite.version>1.12.2</junit-platform-suite.version>
         <kryo.version>4.0.3</kryo.version>
         <mockito.version>4.11.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.14</mustache.version>
-        <netty.version>4.1.117.Final</netty.version>
+        <netty.version>4.1.121.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
@@ -2267,11 +2267,11 @@
         <rxjava.version>1.3.8</rxjava.version>
         <rxjava2.version>2.2.21</rxjava2.version>
         <simple.version>6.0.1</simple.version>
-        <slf4j.version>2.0.16</slf4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
         <smallrye.config.version>1.3.11</smallrye.config.version>
         <spring4.version>4.3.30.RELEASE</spring4.version>
-        <spring5.version>5.3.34</spring5.version>
-        <testng.version>7.10.2</testng.version>
+        <spring5.version>5.3.39</spring5.version>
+        <testng.version>7.11.0</testng.version>
         <testng6.version>6.14.3</testng6.version>
         <validation.impl.version>6.2.5.Final</validation.impl.version>
         <!--<weld.version>2.2.14.Final</weld.version>--> <!-- 2.4.1 doesn't work - bv tests -->
@@ -2309,7 +2309,7 @@
         <jaxrs.api.impl.version>2.1.6</jaxrs.api.impl.version>
         <jetty.plugin.version>6.1.26</jetty.plugin.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[9.4,11)"</jetty.osgi.version>
-        <jetty.version>9.4.55.v20240627</jetty.version>
+        <jetty.version>9.4.57.v20241219</jetty.version>
         <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
         <jsonb.api.version>1.0.2</jsonb.api.version>
         <jsonp.ri.version>1.1.6</jsonp.ri.version>
@@ -2317,12 +2317,12 @@
         <jsp.version>2.3.6</jsp.version>
         <jstl.version>1.2.7</jstl.version>
         <jta.api.version>1.3.3</jta.api.version>
-        <micrometer.version>1.12.5</micrometer.version>
+        <micrometer.version>1.15.0</micrometer.version>
         <micrometer-tracing.version>1.0.12</micrometer-tracing.version>
         <microprofile.config.version>2.0.1</microprofile.config.version>
         <microprofile.rest.client.version>2.0</microprofile.rest.client.version>
         <mimepull.version>1.9.15</mimepull.version>
-        <moxy.version>2.7.14</moxy.version>
+        <moxy.version>2.7.15</moxy.version>
         <osgi.service.cm.version>1.6.1</osgi.service.cm.version>
         <servlet2.version>2.5</servlet2.version>
         <servlet3.version>3.1.0</servlet3.version>

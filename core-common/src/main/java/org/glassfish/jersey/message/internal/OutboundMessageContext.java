@@ -134,7 +134,7 @@ public class OutboundMessageContext extends MessageHeaderMethods implements Safe
      */
     @Deprecated
     public OutboundMessageContext() {
-        this ((Configuration) null);
+        this((Configuration) null);
     }
 
     /**
