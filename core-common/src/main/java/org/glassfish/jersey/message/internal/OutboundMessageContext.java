@@ -563,8 +563,12 @@ public class OutboundMessageContext extends MessageHeaderMethods implements Safe
         if (hasEntity()) {
             try {
                 final OutputStream es = getEntityStream();
-                if (!FlushedCloseable.class.isInstance(es)) {
-                    es.flush();
+                if (!FlushedCloseable.flushOnClose(es)) {
+                    if (CommittingOutputStream.class.isInstance(es)) {
+                        ((CommittingOutputStream) es).flushOnClose();
+                    } else {
+                        es.flush();
+                    }
                 }
                 es.close();
             } catch (IOException e) {

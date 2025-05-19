@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.innate.VirtualThreadSupport;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.Preconditions;
+import org.glassfish.jersey.io.spi.FlushedCloseable;
 
 /**
  * A committing output stream with optional serialized entity buffering functionality
@@ -126,6 +127,12 @@ public final class CommittingOutputStream extends OutputStream {
             LOGGER.log(Level.WARNING, LocalizationMessages.COMMITTING_STREAM_ALREADY_INITIALIZED());
         }
         this.streamProvider = streamProvider;
+    }
+
+    /* package */ void flushOnClose() throws IOException {
+        if (!FlushedCloseable.flushOnClose(adaptedOutput)) {
+            flush();
+        }
     }
 
     /**

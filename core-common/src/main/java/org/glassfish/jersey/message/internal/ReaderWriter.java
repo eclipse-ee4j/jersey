@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +65,7 @@ public final class ReaderWriter {
     public static final int BUFFER_SIZE = getBufferSize();
 
     /**
-     * Whether {@linkplain BUFFER_SIZE} is to be ignored in favor of JRE's own decision.
+     * Whether {@linkplain #BUFFER_SIZE} is to be ignored in favor of JRE's own decision.
      */
     public static final boolean AUTOSIZE_BUFFER = getAutosizeBuffer();
 
@@ -269,9 +269,7 @@ public final class ReaderWriter {
      * @throws IOException in case of a write failure.
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
-        Writer osw = new OutputStreamWriter(out, getCharset(type));
-        osw.write(s);
-        osw.flush();
+        out.write(s.getBytes(getCharset(type)));
     }
 
     /**

@@ -17,6 +17,7 @@
 package org.glassfish.jersey.io.spi;
 
 import java.io.Closeable;
+import java.io.FilterOutputStream;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,8 +28,8 @@ import java.io.OutputStream;
  * That way, {@link #flush()} method is not called twice.
  *
  * <p>
- *     Usable by {@link javax.ws.rs.client.ClientRequestContext#setEntityStream(OutputStream)}.
- *     Usable by {@link javax.ws.rs.container.ContainerResponseContext#setEntityStream(OutputStream)}.
+ *     Usable by {@link jakarta.ws.rs.client.ClientRequestContext#setEntityStream(OutputStream)}.
+ *     Usable by {@link jakarta.ws.rs.container.ContainerResponseContext#setEntityStream(OutputStream)}.
  * </p>
  *
  * <p>
@@ -52,4 +53,13 @@ public interface FlushedCloseable extends Flushable, Closeable {
      * @throws IOException if an I/O error occurs
      */
     public void close() throws IOException;
+
+    /**
+     * Determine if the stream {@link OutputStream#flush() flushes} on {@link OutputStream#close()}.
+     * @param stream the provided {@link OutputStream}
+     * @return {@code true} if the stream ensures to call {@link OutputStream#flush()} on {@link OutputStream#close()}.
+     */
+    public static boolean flushOnClose(OutputStream stream) {
+        return FilterOutputStream.class.isInstance(stream) || FlushedCloseable.class.isInstance(stream);
+    }
 }
