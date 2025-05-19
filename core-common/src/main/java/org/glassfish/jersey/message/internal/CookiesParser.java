@@ -87,14 +87,14 @@ public class CookiesParser {
 
     /**
      * Check if a cookie with identical name had been parsed.
-     * If yes, the one with the longest string will be kept
+     * If yes, the one with the longest path will be kept
      * @param cookies : Map of cookies
      * @param cookie : Cookie to be checked
      */
     private static void checkSimilarCookieName(Map<String, Cookie> cookies, MutableCookie cookie) {
         if (cookie != null) {
             if (cookies.containsKey(cookie.name)){
-                if (cookie.value.length() > cookies.get(cookie.name).getValue().length()){
+                if (cookie.path.length() > cookies.get(cookie.name).getPath().length()){
                     cookies.put(cookie.name, cookie.getImmutableCookie());
                 }
             } else {
