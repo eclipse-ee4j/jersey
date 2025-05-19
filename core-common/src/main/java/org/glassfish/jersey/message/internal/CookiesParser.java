@@ -94,7 +94,9 @@ public class CookiesParser {
     private static void checkSimilarCookieName(Map<String, Cookie> cookies, MutableCookie cookie) {
         if (cookie != null) {
             if (cookies.containsKey(cookie.name)){
-                if (cookie.path.length() >= cookies.get(cookie.name).getPath().length()){
+                int pathLen = cookie.path == null ? 0 : cookie.path.length();
+                int oldPathLen = cookies.get(cookie.name).getPath() == null ? 0 : cookies.get(cookie.name).getPath().length();
+                if (pathLen >= oldPathLen) {
                     cookies.put(cookie.name, cookie.getImmutableCookie());
                 }
             } else {
