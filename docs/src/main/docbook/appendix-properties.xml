@@ -1022,6 +1022,25 @@
                             </para>
                         </entry>
                     </row>
+                    <row>
+                        <entry>&jersey.servlet.ServletProperties.WAIT_FOR_INPUT;</entry>
+                        <entry><literal>jersey.config.servlet.expect.input</literal></entry>
+                        <entry>
+                            <para>
+                                If <literal>true</literal> then Jersey will wait for input when the request is a POST or PUT.
+                            </para>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>&jersey.servlet.ServletProperties.WAIT_FOR_INPUT_TIMEOUT;</entry>
+                        <entry><literal>jersey.config.servlet.expect.input</literal></entry>
+                        <entry>
+                            <para>
+                                The timeout in milliseconds for waiting for input when the request is a POST or PUT.
+                                Default value is  <literal>100</literal> milliseconds.
+                            </para>
+                        </entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>

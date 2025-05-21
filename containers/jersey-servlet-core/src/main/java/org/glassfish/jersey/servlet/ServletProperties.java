@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -137,6 +137,30 @@ public final class ServletProperties {
      * @since 2.16
      */
     public static final String QUERY_PARAMS_AS_FORM_PARAMS_DISABLED = "jersey.config.servlet.form.queryParams.disabled";
+
+    /**
+     * Indicates if any input stream is expected and shall be waited while using POST method. It can happen that a delay
+     * appear between the time the request is received and the time the input stream is available. In this case, the
+     * server will wait for the input stream to be available before processing the request.
+     *
+     * @since 3.1.11
+     */
+    public static final String WAIT_FOR_INPUT = "jersey.config.servlet.expect.input";
+
+    /**
+     * Timeout which shall be respected while waiting for the input stream to be available.
+     * The timeout is in milliseconds.
+     *
+     * @since 3.1.11
+     */
+    public static final String WAIT_FOR_INPUT_TIMEOUT = "jersey.config.servlet.input.timeout";
+
+    /**
+     * Default timeout which shall be respected while waiting for the input stream to be available.
+     *
+     * @since 3.1.11
+     */
+    public static final Long WAIT_FOR_INPUT_DEFAULT_TIMEOUT = 100L;
 
     /**
      * Identifies the object that will be used as a parent {@code HK2 ServiceLocator} in the Jersey

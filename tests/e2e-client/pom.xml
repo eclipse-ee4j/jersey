@@ -112,6 +112,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-entity-filtering</artifactId>
             <scope>test</scope>
@@ -240,6 +245,12 @@
                     <groupId>org.glassfish.jersey.test-framework.providers</groupId>
                     <artifactId>jersey-test-framework-provider-jetty</artifactId>
                 </dependency>
+                <dependency>
+                    <groupId>org.eclipse.jetty.ee10</groupId>
+                    <artifactId>jetty-ee10-servlet</artifactId>
+                    <version>${jetty.version}</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
         </profile>
         <profile>
@@ -332,6 +343,7 @@
                                         <testExclude>org/glassfish/jersey/tests/e2e/client/connector/proxy/Proxy*Test.java</testExclude>
                                         <testExclude>org/glassfish/jersey/tests/e2e/client/connector/NoContentLengthTest.java</testExclude>
                                         <testExclude>org/glassfish/jersey/tests/e2e/client/nettyconnector/Expect100ContinueTest.java</testExclude>
+                                        <testExclude>org/glassfish/jersey/tests/e2e/client/ResponseReadEntityStreamTest.java</testExclude>
                                     </testExcludes>
                                 </configuration>
                                 <goals>
