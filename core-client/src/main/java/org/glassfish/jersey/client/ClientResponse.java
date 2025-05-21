@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
@@ -77,18 +78,19 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         OutputStream stream = null;
                         try {
-                            try {
-                                stream = requestContext.getWorkers().writeTo(
-                                        entity, entity.getClass(), null, null, response.getMediaType(),
-                                        response.getMetadata(), requestContext.getPropertiesDelegate(), baos,
-                                        Collections.<WriterInterceptor>emptyList());
-                            } finally {
-                                if (stream != null) {
-                                    stream.close();
-                                }
-                            }
+                            final Type t = response instanceof OutboundJaxrsResponse
+                                    ? ((OutboundJaxrsResponse) response).getContext().getEntityType()
+                                    : null;
+                            stream = requestContext.getWorkers().writeTo(
+                                    entity, entity.getClass(), t, null, response.getMediaType(),
+                                    response.getMetadata(), requestContext.getPropertiesDelegate(), baos,
+                                    Collections.<WriterInterceptor>emptyList());
                         } catch (IOException e) {
                             // ignore
+                        } finally {
+                            if (stream != null) {
+                                stream.close();
+                            }
                         }
 
                         byteArrayInputStream = new ByteArrayInputStream(baos.toByteArray());
