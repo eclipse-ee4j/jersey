@@ -19,6 +19,7 @@ package org.glassfish.jersey.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.security.AccessController;
@@ -425,21 +426,25 @@ public class WebComponent {
             final ResponseWriter responseWriter) throws IOException {
 
         try {
-            requestContext.setEntityStream(new InputStreamWrapper() {
+            if (isListenerPresent()) {
+                wrapInputStream(servletRequest, requestContext);
+            } else {
+                requestContext.setEntityStream(new InputStreamWrapper() {
 
-                private ServletInputStream wrappedStream;
-                @Override
-                protected InputStream getWrapped() {
-                    if (wrappedStream == null) {
-                        try {
-                            wrappedStream = servletRequest.getInputStream();
-                        } catch (IOException e) {
-                            throw new UncheckedIOException(e);
+                    private ServletInputStream wrappedStream;
+                    @Override
+                    protected InputStream getWrapped() {
+                        if (wrappedStream == null) {
+                            try {
+                                wrappedStream = servletRequest.getInputStream();
+                            } catch (IOException e) {
+                                throw new UncheckedIOException(e);
+                            }
                         }
+                        return wrappedStream;
                     }
-                    return wrappedStream;
-                }
-            });
+                });
+            }
         } catch (UncheckedIOException e) {
             throw e.getCause();
         }
@@ -461,6 +466,44 @@ public class WebComponent {
         // of the media type application/x-www-form-urlencoded
         // This can happen if a filter calls request.getParameter(...)
         filterFormParameters(servletRequest, requestContext);
+    }
+
+    /**
+     * There is no listener before Servlet 3.1
+     *
+     * @return true if the listener is present
+     */
+    private boolean isListenerPresent() {
+        final Method[] methods = ServletInputStream.class.getMethods();
+        for (final Method method : methods) {
+            if ("setReadListener".equals(method.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void wrapInputStream(final HttpServletRequest servletRequest, final ContainerRequest requestContext) {
+        boolean waitForInputEnable = requestContext.resolveProperty(ServletProperties.WAIT_FOR_INPUT, Boolean.TRUE);
+        long waitForInputTimeOut = requestContext.resolveProperty(ServletProperties.WAIT_FOR_INPUT_TIMEOUT,
+                ServletProperties.WAIT_FOR_INPUT_DEFAULT_TIMEOUT);
+
+        requestContext.wrapEntityInputStream(new ServletEntityInputStream(waitForInputEnable,
+                waitForInputTimeOut) {
+
+            private ServletInputStream wrappedStream;
+            @Override
+            protected ServletInputStream getWrappedStream() {
+                if (wrappedStream == null) {
+                    try {
+                        wrappedStream = servletRequest.getInputStream();
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+                return wrappedStream;
+            }
+        });
     }
 
     /**
