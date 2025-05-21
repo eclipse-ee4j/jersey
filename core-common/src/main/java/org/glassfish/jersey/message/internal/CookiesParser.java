@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -86,20 +86,29 @@ public class CookiesParser {
     }
 
     /**
-     * Check if a cookie with identical name had been parsed.
-     * If yes, the one with the longest string will be kept
+     * Check if a cookie with similar names had been parsed.
+     * If yes, the one with the longest path will be kept
+     * For similar paths the newest is stored
      * @param cookies : Map of cookies
      * @param cookie : Cookie to be checked
      */
     private static void checkSimilarCookieName(Map<String, Cookie> cookies, MutableCookie cookie) {
-        if (cookie != null) {
-            if (cookies.containsKey(cookie.name)){
-                if (cookie.value.length() > cookies.get(cookie.name).getValue().length()){
-                    cookies.put(cookie.name, cookie.getImmutableCookie());
-                }
-            } else {
-                cookies.put(cookie.name, cookie.getImmutableCookie());
-            }
+        if (cookie == null) {
+            return;
+        }
+
+        boolean alreadyPresent = cookies.containsKey(cookie.name);
+        boolean recordCookie = !alreadyPresent;
+
+        if (alreadyPresent) {
+            final String newPath = cookie.path == null ? "" : cookie.path;
+            final String existingPath = cookies.get(cookie.name).getPath() == null ? ""
+                    : cookies.get(cookie.name).getPath();
+            recordCookie = (newPath.length() >= existingPath.length());
+        }
+
+        if (recordCookie) {
+            cookies.put(cookie.name, cookie.getImmutableCookie());
         }
     }
 

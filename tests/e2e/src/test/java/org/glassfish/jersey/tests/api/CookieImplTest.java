@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -151,26 +151,45 @@ public class CookieImplTest {
     @Test
     public void testMultipleCookiesWithSameName(){
 
-        String cookieHeader = "kobe=longeststring; kobe=shortstring";
+        String cookieHeader = "kobe=oldeststring; kobe=neweststring";
         Map<String, Cookie> cookies = HttpHeaderReader.readCookies(cookieHeader);
         assertEquals(cookies.size(), 1);
         Cookie c = cookies.get("kobe");
         assertEquals(c.getVersion(), 0);
         assertEquals("kobe", c.getName());
-        assertEquals("longeststring", c.getValue());
+        assertEquals("neweststring", c.getValue());
 
-        cookieHeader = "bryant=longeststring; bryant=shortstring; fred=shortstring ;fred=longeststring;$Path=/path";
+        cookieHeader = "bryant=longeststring; bryant=neweststring; fred=oldeststring ;fred=neweststring;$Path=/path";
         cookies = HttpHeaderReader.readCookies(cookieHeader);
         assertEquals(cookies.size(), 2);
         c = cookies.get("bryant");
         assertEquals(c.getVersion(), 0);
         assertEquals("bryant", c.getName());
-        assertEquals("longeststring", c.getValue());
+        assertEquals("neweststring", c.getValue());
         c = cookies.get("fred");
         assertEquals(c.getVersion(), 0);
         assertEquals("fred", c.getName());
-        assertEquals("longeststring", c.getValue());
+        assertEquals("neweststring", c.getValue());
         assertEquals("/path", c.getPath());
+
+        cookieHeader = "cookiewithpath=longeststring;$Path=/path; cookiewithpath=string1;$Path=/path;"
+                + " cookiewithpath=string2;$Path=/path ;cookiewithpath=string3;$Path=/path";
+        cookies = HttpHeaderReader.readCookies(cookieHeader);
+        assertEquals(cookies.size(), 1);
+        c = cookies.get("cookiewithpath");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("cookiewithpath", c.getName());
+        assertEquals("string3", c.getValue());
+
+        cookieHeader = "cookiewithpath=longeststring;$Path=/path/added/path; cookiewithpath=string1;$Path=/path;"
+                + " cookiewithpath=string2;$Path=/path ;cookiewithpath=string3;$Path=/path";
+        cookies = HttpHeaderReader.readCookies(cookieHeader);
+        assertEquals(cookies.size(), 1);
+        c = cookies.get("cookiewithpath");
+        assertEquals(c.getVersion(), 0);
+        assertEquals("cookiewithpath", c.getName());
+        assertEquals("longeststring", c.getValue());
+        assertEquals("/path/added/path", c.getPath());
 
     }
 
