@@ -63,8 +63,12 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      * @param response       JAX-RS response to be used to initialize the response context.
      */
     public ClientResponse(final ClientRequest requestContext, final Response response) {
-        this(response.getStatusInfo(), requestContext);
-        this.headers(OutboundJaxrsResponse.from(response, requestContext.getConfiguration()).getContext().getStringHeaders());
+        super(requestContext.getConfiguration(),
+                OutboundJaxrsResponse.from(response, requestContext.getConfiguration()).getContext().getStringHeaders(),
+                false
+        );
+        this.requestContext = requestContext;
+        init(response.getStatusInfo(), requestContext, requestContext.getUri());
 
         final Object entity = response.getEntity();
         if (entity != null) {
@@ -122,10 +126,13 @@ public class ClientResponse extends InboundMessageContext implements ClientRespo
      */
     public ClientResponse(Response.StatusType status, ClientRequest requestContext, URI resolvedRequestUri) {
         super(requestContext.getConfiguration());
+        this.requestContext = requestContext;
+        init(status, requestContext, resolvedRequestUri);
+    }
+
+    private void init(Response.StatusType status, ClientRequest requestContext, URI resolvedRequestUri) {
         this.status = status;
         this.resolvedUri = resolvedRequestUri;
-        this.requestContext = requestContext;
-
         setWorkers(requestContext.getWorkers());
     }
 

@@ -16,8 +16,10 @@
 
 package org.glassfish.jersey.client;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.ws.rs.Priorities;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -44,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AbortTest {
     private static final String TEXT_CSV = "text/csv";
+    private static final String TEXT_HEADER = "text/header";
     private static final String EXPECTED_CSV = "hello;goodbye\nsalutations;farewell";
     private static final List<List<String>> CSV_LIST = Arrays.asList(
             Arrays.asList("hello", "goodbye"),
@@ -77,7 +80,6 @@ public class AbortTest {
 
         @Override
         public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-            System.out.println(genericType.getTypeName());
             return List.class.isAssignableFrom(type) && genericType instanceof ParameterizedType
                     && ((ParameterizedType) genericType).getActualTypeArguments()[0] instanceof ParameterizedType
                     && String.class.equals(((ParameterizedType) ((ParameterizedType) genericType).getActualTypeArguments()[0])
@@ -96,6 +98,35 @@ public class AbortTest {
 
             entityStream.write(csv.getBytes(StandardCharsets.UTF_8));
             entityStream.flush();
+        }
+    }
+
+    @Test
+    void testAbortWithMBWWritingHeaders() {
+        final String entity = "HI";
+        final String header = "CUSTOM_HEADER";
+        try (Response response = ClientBuilder.newClient().register(new ClientRequestFilter() {
+            @Override
+            public void filter(ClientRequestContext requestContext) throws IOException {
+                requestContext.abortWith(Response.ok(entity, TEXT_HEADER).build());
+            }
+        }).register(new MessageBodyWriter<String>() {
+
+            @Override
+            public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+                return mediaType.toString().equals(TEXT_HEADER);
+            }
+
+            @Override
+            public void writeTo(String s, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+                                MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException,
+                    WebApplicationException {
+                httpHeaders.add(header, entity);
+                entityStream.write(s.getBytes());
+            }
+        }, Priorities.USER - 1).target("http://localhost:8080").request().get()) {
+            Assertions.assertEquals(entity, response.readEntity(String.class));
+            Assertions.assertEquals(entity, response.getHeaderString(header));
         }
     }
 
