@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,17 +17,19 @@
 package org.glassfish.jersey.test.maven.rule;
 
 import java.io.File;
-import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.maven.enforcer.rule.api.EnforcerRuleException;
 import org.apache.maven.enforcer.rules.AbstractStandardEnforcerRule;
 
 /**
- * Maven enforcer rule to enforce that given set of files does not exist.<br/>
+ * Maven enforcer rule to enforce that a given set of files does not exist.<br/>
  * This rule is similar to apache {@code requireFilesDontExist} with a support for wildcards.
  *
  * @author Stepan Vavra
@@ -55,8 +57,13 @@ public class FilePatternDoesNotExistRule extends AbstractStandardEnforcerRule {
             }
 
             final Set<File> matchedFiles = new TreeSet<>();
-            for (File matchedFile : dir.listFiles((FileFilter) new WildcardFileFilter(fileItselfPattern))) {
-                matchedFiles.add(matchedFile);
+            try {
+                final DirectoryStream<Path> directoryStream
+                        = Files.newDirectoryStream(dir.toPath(), fileItselfPattern);
+                directoryStream.forEach(path -> matchedFiles.add(path.toFile()));
+                directoryStream.close();
+            } catch (IOException e) {
+                throw new EnforcerRuleException(e);
             }
 
             if (!matchedFiles.isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package org.glassfish.jersey.tests.e2e.client.connector.ssl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLContext;
@@ -31,10 +30,9 @@ import org.glassfish.jersey.client.spi.ConnectorProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.glassfish.jersey.jetty.connector.JettyConnectorProvider;
 
+import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * SSL connector hostname verification tests.
@@ -92,9 +90,9 @@ public abstract class AbstractConnectorServerTest {
         final InputStream trustStore = SslConnectorConfigurationTest.class.getResourceAsStream(clientTrustStore());
         final InputStream keyStore = SslConnectorConfigurationTest.class.getResourceAsStream(CLIENT_KEY_STORE);
         return SslConfigurator.newInstance()
-                .trustStoreBytes(IOUtils.toByteArray(trustStore))
+                .trustStoreBytes(ReaderWriter.readFromAsBytes(trustStore))
                 .trustStorePassword("asdfgh")
-                .keyStoreBytes(IOUtils.toByteArray(keyStore))
+                .keyStoreBytes(ReaderWriter.readFromAsBytes(keyStore))
                 .keyPassword("asdfgh")
                 .createSSLContext();
     }

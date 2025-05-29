@@ -16,7 +16,6 @@
 
 package org.glassfish.jersey.tests.e2e.server;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -25,6 +24,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.InternalProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.JerseyTest;
@@ -203,7 +203,7 @@ public class SimilarInputStreamTest extends JerseyTest {
 
         private void cacheInputStream() throws IOException {
             // Cache the inputstream in order to read it multiple times.
-            cachedBytes = IOUtils.toByteArray(super.getInputStream());
+            cachedBytes = ReaderWriter.readFromAsBytes(super.getInputStream());
         }
 
 
