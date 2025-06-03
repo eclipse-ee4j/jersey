@@ -316,7 +316,11 @@ public abstract class InboundMessageContext extends MessageHeaderMethods impleme
         }
 
         final Iterator<String> valuesIterator = values.iterator();
-        StringBuilder buffer = new StringBuilder(valuesIterator.next());
+        String next = valuesIterator.next();
+        if (next == null) {
+            next = "";
+        }
+        StringBuilder buffer = new StringBuilder(next);
         while (valuesIterator.hasNext()) {
             buffer.append(',').append(valuesIterator.next());
         }

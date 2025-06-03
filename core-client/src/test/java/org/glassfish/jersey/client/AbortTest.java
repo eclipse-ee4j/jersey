@@ -26,11 +26,20 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.client.ClientResponseContext;
+import javax.ws.rs.client.ClientResponseFilter;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.Variant;
 import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.ReaderInterceptor;
+import javax.ws.rs.ext.ReaderInterceptorContext;
+import javax.ws.rs.ext.RuntimeDelegate;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -39,9 +48,12 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
-//import static java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AbortTest {
@@ -52,6 +64,9 @@ public class AbortTest {
             Arrays.asList("hello", "goodbye"),
             Arrays.asList("salutations", "farewell")
     );
+    private final String entity = "HI";
+    private final String header = "CUSTOM_HEADER";
+
 
     @Test
     void testAbortWithGenericEntity() {
@@ -103,8 +118,6 @@ public class AbortTest {
 
     @Test
     void testAbortWithMBWWritingHeaders() {
-        final String entity = "HI";
-        final String header = "CUSTOM_HEADER";
         try (Response response = ClientBuilder.newClient().register(new ClientRequestFilter() {
             @Override
             public void filter(ClientRequestContext requestContext) throws IOException {
@@ -127,6 +140,147 @@ public class AbortTest {
         }, Priorities.USER - 1).target("http://localhost:8080").request().get()) {
             Assertions.assertEquals(entity, response.readEntity(String.class));
             Assertions.assertEquals(entity, response.getHeaderString(header));
+        }
+    }
+
+    @Test
+    void testInterceptorHeaderAdd() {
+        final String header2 = "CUSTOM_HEADER_2";
+
+        try (Response response = ClientBuilder.newClient().register(new ClientRequestFilter() {
+            @Override
+            public void filter(ClientRequestContext requestContext) throws IOException {
+                requestContext.abortWith(Response.ok().entity(entity).build());
+            }
+        }).register(new ReaderInterceptor() {
+                    @Override
+                    public Object aroundReadFrom(ReaderInterceptorContext context) throws IOException, WebApplicationException {
+                        MultivaluedMap<String, String> headers = context.getHeaders();
+                        headers.put(header, Collections.singletonList(entity));
+                        headers.add(header2, entity);
+                        return context.proceed();
+                    }
+                })
+                .target("http://localhost:8080").request().get()) {
+            Assertions.assertEquals(entity, response.readEntity(String.class));
+            Assertions.assertEquals(entity, response.getHeaderString(header));
+            Assertions.assertEquals(entity, response.getHeaderString(header2));
+        }
+    }
+
+    @Test
+    void testInterceptorHeaderIterate() {
+        final AtomicReference<String> originalHeader = new AtomicReference<>();
+
+        try (Response response = ClientBuilder.newClient().register(new ClientRequestFilter() {
+                    @Override
+                    public void filter(ClientRequestContext requestContext) throws IOException {
+                        requestContext.abortWith(Response.ok().header(header, header).entity(entity).build());
+                    }
+                }).register(new ReaderInterceptor() {
+                    @Override
+                    public Object aroundReadFrom(ReaderInterceptorContext context) throws IOException, WebApplicationException {
+                        MultivaluedMap<String, String> headers = context.getHeaders();
+                        Iterator<Map.Entry<String, List<String>>> it = headers.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry<String, List<String>> next = it.next();
+                            if (header.equals(next.getKey())) {
+                                originalHeader.set(next.setValue(Collections.singletonList(entity)).get(0));
+                            }
+                        }
+                        return context.proceed();
+                    }
+                })
+                .target("http://localhost:8080").request().get()) {
+            Assertions.assertEquals(entity, response.readEntity(String.class));
+            Assertions.assertEquals(entity, response.getHeaderString(header));
+            Assertions.assertEquals(header, originalHeader.get());
+        }
+    }
+
+    @Test
+    void testNullHeader() {
+        final AtomicReference<String> originalHeader = new AtomicReference<>();
+        RuntimeDelegate.setInstance(new StringHeaderRuntimeDelegate(RuntimeDelegate.getInstance()));
+        try (Response response = ClientBuilder.newClient().register(new ClientRequestFilter() {
+                    @Override
+                    public void filter(ClientRequestContext requestContext) throws IOException {
+                        requestContext.abortWith(Response.ok()
+                                .header(header, new StringHeader())
+                                .entity(entity).build());
+                    }
+                }).register(new ClientResponseFilter() {
+                    @Override
+                    public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext)
+                            throws IOException {
+                        originalHeader.set(responseContext.getHeaderString(header));
+                    }
+                })
+                .target("http://localhost:8080").request().get()) {
+            Assertions.assertEquals(entity, response.readEntity(String.class));
+            Assertions.assertEquals("", originalHeader.get());
+        }
+    }
+
+    private static class StringHeader extends AtomicReference<String> {
+
+    }
+
+    private static class StringHeaderDelegate implements RuntimeDelegate.HeaderDelegate<StringHeader> {
+        @Override
+        public StringHeader fromString(String value) {
+            StringHeader stringHeader = new StringHeader();
+            stringHeader.set(value);
+            return stringHeader;
+        }
+
+        @Override
+        public String toString(StringHeader value) {
+            //on purpose
+            return null;
+        }
+    }
+
+    private static class StringHeaderRuntimeDelegate extends RuntimeDelegate {
+        private final RuntimeDelegate original;
+
+        private StringHeaderRuntimeDelegate(RuntimeDelegate original) {
+            this.original = original;
+        }
+
+        @Override
+        public UriBuilder createUriBuilder() {
+            return original.createUriBuilder();
+        }
+
+        @Override
+        public Response.ResponseBuilder createResponseBuilder() {
+            return original.createResponseBuilder();
+        }
+
+        @Override
+        public Variant.VariantListBuilder createVariantListBuilder() {
+            return original.createVariantListBuilder();
+        }
+
+        @Override
+        public <T> T createEndpoint(Application application, Class<T> endpointType)
+                throws IllegalArgumentException, UnsupportedOperationException {
+            return original.createEndpoint(application, endpointType);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> HeaderDelegate<T> createHeaderDelegate(Class<T> type) throws IllegalArgumentException {
+            if (StringHeader.class.equals(type)) {
+                return (HeaderDelegate<T>) new StringHeaderDelegate();
+            }
+            return original.createHeaderDelegate(type);
+        }
+
+        @Override
+        public Link.Builder createLinkBuilder() {
+            return original.createLinkBuilder();
         }
     }
 
