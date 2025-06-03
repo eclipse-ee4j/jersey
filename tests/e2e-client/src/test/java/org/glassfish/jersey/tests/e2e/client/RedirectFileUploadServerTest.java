@@ -19,6 +19,7 @@ package org.glassfish.jersey.tests.e2e.client;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,12 +81,8 @@ class RedirectFileUploadServerTest {
                     return;
                 }
 
-                final BufferedReader reader
-                        = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8));
-                while (reader.readLine() != null) {
-                    //discard payload - required for JDK 1.8
-                }
-                reader.close();
+                //discard payload - required for JDK 1.8
+                ReaderWriter.readFromAsBytes(exchange.getRequestBody());
 
                 // Send a 307 Temporary Redirect to /upload
                 // This preserves the POST method and body in the redirect
