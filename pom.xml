@@ -2205,7 +2205,7 @@
         <aspectj.weaver.version>1.9.22.1</aspectj.weaver.version>
         <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
-        <commons.codec.version>1.16.1</commons.codec.version>
+        <commons.codec.version>1.18.0</commons.codec.version>
 <!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
         <commons.logging.version>1.3.5</commons.logging.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
@@ -2232,7 +2232,7 @@
         <!-- microprofile -->
         <microprofile.config.version>3.0.3</microprofile.config.version>
         <microprofile.rest.client.version>3.0.1</microprofile.rest.client.version>
-        <helidon.config.version>3.2.6</helidon.config.version>
+        <helidon.config.version>3.2.12</helidon.config.version>
         <helidon.connector.version>3.2.12</helidon.connector.version>
         <helidon.config.11.version>1.4.15</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.7.1</smallrye.config.version>
@@ -2262,7 +2262,7 @@
         <kryo.version>4.0.3</kryo.version>
         <mockito.version>4.11.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.14</mustache.version>
-        <netty.version>4.1.121.Final</netty.version>
+        <netty.version>4.1.122.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
@@ -2281,10 +2281,9 @@
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <!-- Jakartified, eligible for CQ -->
         <weld.version>4.0.3.Final</weld.version>
-        <weld3.version>3.1.9.Final</weld3.version>
         <validation.impl.version>7.0.5.Final</validation.impl.version>
         <!-- END of Jakartified, eligible for CQ -->
-        <wiremock.version>3.5.2</wiremock.version>
+        <wiremock.version>3.5.4</wiremock.version>
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
@@ -2323,11 +2322,9 @@
         <jaxrs.api.spec.version>3.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.0.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>11.0.24</jetty.version>
-        <jetty.tracing.version>11.0.15</jetty.tracing.version> <!-- special version for tracing support tests, applied before JDK 21-->
+        <jetty.version>11.0.25</jetty.version>
         <jetty9.version>9.4.57.v20241219</jetty9.version>
-        <jetty.plugin.version>11.0.24</jetty.plugin.version>
-        <jetty.servlet.api.25.version>6.1.14</jetty.servlet.api.25.version>
+        <jetty.plugin.version>11.0.25</jetty.plugin.version>
         <jsonb.api.version>2.0.0</jsonb.api.version>
         <jsonp.ri.version>1.0.5</jsonp.ri.version>
         <jsonp.jaxrs.version>1.0.5</jsonp.jaxrs.version>
