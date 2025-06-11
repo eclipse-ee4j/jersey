@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 
 /**
- * Helper class to implement support for {@code javax.mvc.validation.ValidationResult}.
+ * Helper class to implement support for {@code jakarta.mvc.validation.ValidationResult}.
  *
  * @author Santiago Pericas-Geertsen
  */
@@ -41,7 +41,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Search for a {@code javax.mvc.validation.ValidationResult} field in the resource's
+     * Search for a {@code jakarta.mvc.validation.ValidationResult} field in the resource's
      * class hierarchy. Field must be annotated with {@link jakarta.inject.Inject}.
      *
      * @param resource resource instance.
@@ -63,7 +63,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Updates a {@code javax.mvc.validation.ValidationResult} field. In pseudo-code:
+     * Updates a {@code jakarta.mvc.validation.ValidationResult} field. In pseudo-code:
      * <p/>
      * resource.field.setViolations(constraints)
      *
@@ -92,7 +92,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Updates a {@code javax.mvc.validation.ValidationResult} property. In pseudo-code:
+     * Updates a {@code jakarta.mvc.validation.ValidationResult} property. In pseudo-code:
      * <p/>
      * obj = getter.invoke(resource);
      * obj.setViolations(constraints);
@@ -125,7 +125,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Determines if a resource has a property of type {@code javax.mvc.validation.ValidationResult}.
+     * Determines if a resource has a property of type {@code jakarta.mvc.validation.ValidationResult}.
      *
      * @param resource resource instance.
      * @return outcome of test.
@@ -135,7 +135,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Returns a getter for {@code javax.mvc.validation.ValidationResult} or {@code null}
+     * Returns a getter for {@code jakarta.mvc.validation.ValidationResult} or {@code null}
      * if one cannot be found.
      *
      * @param resource resource instance.
@@ -155,7 +155,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Determines if a method is a getter for {@code javax.mvc.validation.ValidationResult}.
+     * Determines if a method is a getter for {@code jakarta.mvc.validation.ValidationResult}.
      *
      * @param m method to test.
      * @return outcome of test.
@@ -167,7 +167,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Returns a setter for {@code javax.mvc.validation.ValidationResult} or {@code null}
+     * Returns a setter for {@code jakarta.mvc.validation.ValidationResult} or {@code null}
      * if one cannot be found.
      *
      * @param resource resource instance.
@@ -191,7 +191,7 @@ public final class ValidationResultUtil {
     }
 
     /**
-     * Determines if a method is a setter for {@code javax.mvc.validation.ValidationResult}.
+     * Determines if a method is a setter for {@code jakarta.mvc.validation.ValidationResult}.
      * As a CDI initializer method, it must be annotated with {@link jakarta.inject.Inject}.
      *
      * @param m method to test.

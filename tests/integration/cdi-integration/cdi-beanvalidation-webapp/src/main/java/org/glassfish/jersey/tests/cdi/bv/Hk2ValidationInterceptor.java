@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -115,7 +115,7 @@ public class Hk2ValidationInterceptor implements ValidationInterceptor {
     }
 
     /**
-     * Determines if a resource has a property of type {@code javax.mvc.validation.ValidationResult}.
+     * Determines if a resource has a property of type {@code jakarta.mvc.validation.ValidationResult}.
      *
      * @param resource resource instance.
      * @return outcome of test.
@@ -125,7 +125,7 @@ public class Hk2ValidationInterceptor implements ValidationInterceptor {
     }
 
     /**
-     * Returns a getter for {@code javax.mvc.validation.ValidationResult} or {@code null}
+     * Returns a getter for {@code jakarta.mvc.validation.ValidationResult} or {@code null}
      * if one cannot be found.
      *
      * @param resource resource instance.
@@ -145,7 +145,7 @@ public class Hk2ValidationInterceptor implements ValidationInterceptor {
     }
 
     /**
-     * Determines if a method is a getter for {@code javax.mvc.validation.ValidationResult}.
+     * Determines if a method is a getter for {@code jakarta.mvc.validation.ValidationResult}.
      *
      * @param m method to test.
      * @return outcome of test.
@@ -157,7 +157,7 @@ public class Hk2ValidationInterceptor implements ValidationInterceptor {
     }
 
     /**
-     * Returns a setter for {@code javax.mvc.validation.ValidationResult} or {@code null}
+     * Returns a setter for {@code jakarta.mvc.validation.ValidationResult} or {@code null}
      * if one cannot be found.
      *
      * @param resource resource instance.
@@ -177,7 +177,7 @@ public class Hk2ValidationInterceptor implements ValidationInterceptor {
     }
 
     /**
-     * Determines if a method is a setter for {@code javax.mvc.validation.ValidationResult}.
+     * Determines if a method is a setter for {@code jakarta.mvc.validation.ValidationResult}.
      * As a CDI initializer method, it must be annotated with {@link jakarta.inject.Inject}.
      *
      * @param m method to test.

@@ -166,8 +166,8 @@ public abstract class InboundMessageContext extends MessageHeaderMethods impleme
      * @param configuration the related client/server side {@link Configuration}. If {@code null},
      *                      the default behaviour is expected.
      * @param httpHeaders   the http headers map.
-     * @param translateNce  if {@code true}, the {@link javax.ws.rs.core.NoContentException} thrown by a
-     *                      selected message body reader will be translated into a {@link javax.ws.rs.BadRequestException}
+     * @param translateNce  if {@code true}, the {@link jakarta.ws.rs.core.NoContentException} thrown by a
+     *                      selected message body reader will be translated into a {@link jakarta.ws.rs.BadRequestException}
      *                      as required by JAX-RS specification on the server side.
      */
     public InboundMessageContext(Configuration configuration, MultivaluedMap<String, String> httpHeaders, boolean translateNce) {

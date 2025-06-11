@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2014, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,6 +65,11 @@
             <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -95,22 +100,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>jdk11+</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-              <dependency>
-                  <groupId>jakarta.jws</groupId>
-                  <artifactId>jakarta.jws-api</artifactId>
-                  <version>1.1.1</version>
-              </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <properties>
         <failOnMissingWebXml>false</failOnMissingWebXml>

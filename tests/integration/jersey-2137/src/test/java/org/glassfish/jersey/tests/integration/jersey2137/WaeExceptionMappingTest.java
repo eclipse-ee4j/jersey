@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@ public class WaeExceptionMappingTest extends JerseyTest {
     }
 
     /**
-     * Test all {@javax.transaction.Transactional}
+     * Test all {@jakarta.transaction.Transactional}
      * annotated CDI beans. The test scenario is as follows.
      * Set two accounts via the CDI bean that avoids rollback.
      * Should any rollback happen there, we would not be able
