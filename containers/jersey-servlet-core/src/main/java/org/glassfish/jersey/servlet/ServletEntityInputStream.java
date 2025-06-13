@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class ServletEntityInputStream implements StreamListenerCouple {
 
-    private boolean waitForInputEnable;
-    private long waitForInputTimeOut;
+    private final boolean waitForInputEnable;
+    private final long waitForInputTimeOut;
 
     private final StreamListener listener = new StreamListener() {
 
