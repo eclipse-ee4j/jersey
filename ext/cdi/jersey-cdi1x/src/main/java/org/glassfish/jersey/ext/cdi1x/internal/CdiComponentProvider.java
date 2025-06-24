@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -726,7 +726,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
             return Collections.emptySet();
         }
 
-        @Override
+        // @Override - Removed in CDI 4
         public boolean isNullable() {
             return true;
         }

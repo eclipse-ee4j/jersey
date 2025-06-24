@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -140,9 +140,10 @@ public class BeanHelper {
     public static <T> void registerSupplier(SupplierClassBinding<T> binding, AfterBeanDiscovery abd,
             Collection<InjectionResolver> resolvers, BeanManager beanManager) {
 
-        Class<Supplier<T>> supplierClass = (Class<Supplier<T>>) binding.getSupplierClass();
-        AnnotatedType<Supplier<T>> annotatedType = beanManager.createAnnotatedType(supplierClass);
-        InjectionTarget<Supplier<T>> injectionTarget = beanManager.createInjectionTarget(annotatedType);
+        final Class<Supplier<T>> supplierClass = (Class<Supplier<T>>) binding.getSupplierClass();
+        final AnnotatedType<Supplier<T>> annotatedType = beanManager.createAnnotatedType(supplierClass);
+        final InjectionTargetFactory<Supplier<T>> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        final InjectionTarget<Supplier<T>> injectionTarget = injectionTargetFactory.createInjectionTarget(null);
 
         SupplierClassBean<T> supplierBean = new SupplierClassBean<>(binding);
         InjectionTarget<Supplier<T>> jit = getJerseyInjectionTarget(supplierClass, injectionTarget, supplierBean, resolvers);

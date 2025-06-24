@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -14,6 +14,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package org.glassfish.jersey.ext.cdi1x.servlet.internal;
 
 import java.lang.annotation.Annotation;
@@ -124,7 +125,7 @@ public class CdiExternalRequestScopeExtension implements Extension {
                 return false;
             }
 
-            @Override
+            // @Override - Removed in CDI 4
             public boolean isNullable() {
                 return false;
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,7 +54,7 @@ public class RequestScopeBean implements Bean<CdiRequestScope> {
         this.injectionTarget = injectionTargetFactory.createInjectionTarget(null);
     }
 
-    @Override
+    // @Override - Removed in CDI 4
     public boolean isNullable() {
         return false;
     }
