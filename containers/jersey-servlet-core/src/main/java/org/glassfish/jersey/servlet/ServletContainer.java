@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriBuilderException;
@@ -134,6 +133,10 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
     private static final long serialVersionUID = 3932047066686065219L;
     private static final ExtendedLogger LOGGER =
             new ExtendedLogger(Logger.getLogger(ServletContainer.class.getName()), Level.FINEST);
+    /**
+     * setStatus with reason-phrase was removed in Servlet 6.0
+     */
+    private static final boolean IS_SET_STATUS_WITH_REASON_PHRASE_AVAILABLE;
 
     private transient FilterConfig filterConfig;
     private transient WebComponent webComponent;
@@ -143,6 +146,17 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
     private transient List<String> filterUrlMappings;
 
     private transient volatile ContainerLifecycleListener containerListener;
+
+    static {
+        boolean isSetStatusWithReasonPhraseAvailable;
+        try {
+            HttpServletResponse.class.getMethod("setStatus", int.class, String.class);
+            isSetStatusWithReasonPhraseAvailable = true;
+        } catch (NoSuchMethodException e) {
+            isSetStatusWithReasonPhraseAvailable = false;
+        }
+        IS_SET_STATUS_WITH_REASON_PHRASE_AVAILABLE = isSetStatusWithReasonPhraseAvailable;
+    }
 
     /**
      * Initiate the Web component.
@@ -337,10 +351,10 @@ public class ServletContainer extends HttpServlet implements Filter, Container {
      * @param reasonPhrase the reason phrase
      */
     public static void setStatus(HttpServletResponse response, int statusCode, String reasonPhrase) {
-        try {
+        if (IS_SET_STATUS_WITH_REASON_PHRASE_AVAILABLE) {
             // noinspection deprecation
             response.setStatus(statusCode, reasonPhrase);
-        } catch (NoSuchMethodError noSuchMethodError) {
+        } else {
             response.setStatus(statusCode);
         }
     }
