@@ -59,7 +59,7 @@ public final class ReaderWriter {
     public static final int BUFFER_SIZE = getBufferSize();
 
     /**
-     * Whether {@linkplain BUFFER_SIZE} is to be ignored in favor of JRE's own decision.
+     * Whether {@linkplain #BUFFER_SIZE} is to be ignored in favor of JRE's own decision.
      */
     public static final boolean AUTOSIZE_BUFFER = getAutosizeBuffer();
 
@@ -263,9 +263,7 @@ public final class ReaderWriter {
      * @throws IOException in case of a write failure.
      */
     public static void writeToAsString(String s, OutputStream out, MediaType type) throws IOException {
-        Writer osw = new OutputStreamWriter(out, getCharset(type));
-        osw.write(s);
-        osw.flush();
+        out.write(s.getBytes(getCharset(type)));
     }
 
     /**

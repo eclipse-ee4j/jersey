@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -129,6 +129,8 @@ public class StreamingTest extends JerseyTest {
         inputStream.close();
         // trigger sending another 'A' to the stream; it should fail
         // (indicating that the streaming has been terminated on the server)
+        // But only the second flush causes the Exception
+        assertEquals("OK", sendTarget.request().get().readEntity(String.class));
         assertEquals("NOK", sendTarget.request().get().readEntity(String.class));
         assertEquals(0, counter.get());
     }

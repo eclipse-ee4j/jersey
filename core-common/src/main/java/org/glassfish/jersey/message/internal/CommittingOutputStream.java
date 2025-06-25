@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.innate.VirtualThreadSupport;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.guava.Preconditions;
+import org.glassfish.jersey.io.spi.FlushedCloseable;
 
 /**
  * A committing output stream with optional serialized entity buffering functionality
@@ -153,6 +154,12 @@ public final class CommittingOutputStream extends OutputStream {
      */
     void enableBuffering() {
         enableBuffering(DEFAULT_BUFFER_SIZE);
+    }
+
+    /* package */ void flushOnClose() throws IOException {
+        if (!FlushedCloseable.flushOnClose(adaptedOutput)) {
+            flush();
+        }
     }
 
     /**
