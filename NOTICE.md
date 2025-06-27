@@ -47,7 +47,7 @@ Bean Validation API 3.0.2
 * Copyright: 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
-Hibernate Validator CDI, 8.0.1.Final
+Hibernate Validator CDI, 8.0.2.Final
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/
 * Repackaged in org.glassfish.jersey.server.validation.internal.hibernate

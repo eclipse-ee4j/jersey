@@ -77,6 +77,12 @@
             <version>${micrometer-tracing.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.opentelemetry.semconv</groupId>
+            <artifactId>opentelemetry-semconv</artifactId>
+            <version>${micrometer-semconv.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
     <build>

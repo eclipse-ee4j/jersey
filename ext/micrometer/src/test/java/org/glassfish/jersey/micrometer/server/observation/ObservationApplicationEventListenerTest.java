@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +55,7 @@ import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.SdkTracerProviderBuilder;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
-import io.opentelemetry.semconv.resource.attributes.ResourceAttributes;
+import io.opentelemetry.semconv.ServiceAttributes;
 import org.glassfish.jersey.micrometer.server.ObservationApplicationEventListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -151,7 +151,7 @@ class ObservationApplicationEventListenerTest {
             SdkTracerProviderBuilder builder = SdkTracerProvider.builder()
                     .setSampler(alwaysOn())
                     .addSpanProcessor(processor)
-                    .setResource(Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "otel-test")));
+                    .setResource(Resource.create(Attributes.of(ServiceAttributes.SERVICE_NAME, "otel-test")));
 
             if (isZipkinAvailable()) {
                 builder.addSpanProcessor(SimpleSpanProcessor.create(spanExporter));

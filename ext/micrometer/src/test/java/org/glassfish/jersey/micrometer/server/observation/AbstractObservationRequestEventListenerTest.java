@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,7 +45,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.Test;
 import zipkin2.CheckResult;
-import zipkin2.reporter.Sender;
+import zipkin2.reporter.BytesMessageSender;
 import zipkin2.reporter.urlconnection.URLConnectionSender;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +69,7 @@ abstract class AbstractObservationRequestEventListenerTest extends JerseyTest {
 
     Boolean zipkinAvailable;
 
-    Sender sender;
+    BytesMessageSender sender;
 
     @Override
     protected Application configure() {
@@ -98,7 +98,7 @@ abstract class AbstractObservationRequestEventListenerTest extends JerseyTest {
 
     boolean isZipkinAvailable() {
         if (zipkinAvailable == null) {
-            CheckResult checkResult = sender.check();
+            CheckResult checkResult = CheckResult.OK;
             zipkinAvailable = checkResult.ok();
         }
         return zipkinAvailable;
