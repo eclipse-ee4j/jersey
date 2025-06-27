@@ -26,16 +26,16 @@ public class ConnectorConfigTest {
     @Test
     public void testPrecedence() {
 
-        NettyConnectorProvider.Config builderLower = NettyConnectorProvider.config();
+        NettyConnectorProvider.Config.RW builderLower = NettyConnectorProvider.config().rw();
         builderLower.maxTotalConnection(55);
 
-        NettyConnectorProvider.Config builderUpper = builderLower.copy();
+        NettyConnectorProvider.Config.RW builderUpper = builderLower.copy();
         builderUpper.maxTotalConnection(56);
         Assertions.assertEquals(56, builderUpper.maxPoolSizeTotal.get());
 
         Client client = ClientBuilder.newClient();
         client.property(NettyClientProperties.MAX_CONNECTIONS_TOTAL, 57);
-        NettyConnectorProvider.Config result = builderUpper.fromClient(client);
+        NettyConnectorProvider.Config.RW result = builderUpper.fromClient(client);
         Assertions.assertEquals(57, result.maxPoolSizeTotal.get());
         Assertions.assertEquals(60, result.maxPoolIdle.get());
     }

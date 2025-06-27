@@ -24,8 +24,9 @@ import io.netty.handler.proxy.ProxyHandler;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.internal.util.collection.Ref;
+import org.glassfish.jersey.netty.connector.internal.ConnectorConfiguration;
 
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import java.net.InetSocketAddress;
@@ -36,7 +37,7 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
 
     /* package */ NullableRef<NettyConnectionController> connectionController = NullableRef.empty();
     /* package */ NullableRef<Boolean> enableHostnameVerification = NullableRef.of(Boolean.TRUE);
-    /* package */ NullableRef<Integer> expect100ContTimeout = NullableRef.of(
+    /* package */ Ref<Integer> expect100ContTimeout = NullableRef.of(
                                                                 NettyClientProperties.DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE);
     /* package */ NullableRef<Boolean> filterHeadersForProxy = NullableRef.of(Boolean.TRUE);
     /* package */ NullableRef<Integer> firstHttpHeaderLineLength = NullableRef.of(
@@ -45,16 +46,14 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
     /* package */ NullableRef<Integer> maxChunkSize = NullableRef.of(NettyClientProperties.DEFAULT_CHUNK_SIZE);
     /* package */ NullableRef<Integer> maxHeaderSize = NullableRef.of(NettyClientProperties.DEFAULT_HEADER_SIZE);
     // either from Jersey config, or default
-    /* package */ NullableRef<Integer> maxPoolSizeTotal = NullableRef.of(DEFAULT_MAX_POOL_SIZE_TOTAL);
+    /* package */ Ref<Integer> maxPoolSizeTotal = NullableRef.of(DEFAULT_MAX_POOL_SIZE_TOTAL);
     // either from Jersey config, or default
-    /* package */ NullableRef<Integer> maxPoolIdle = NullableRef.of(DEFAULT_MAX_POOL_IDLE);
+    /* package */ Ref<Integer> maxPoolIdle = NullableRef.of(DEFAULT_MAX_POOL_IDLE);
     // either from system property, or from Jersey config, or default
-    /* package */ NullableRef<Integer> maxPoolSize = NullableRef.of(HTTP_KEEPALIVE ? MAX_POOL_SIZE : DEFAULT_MAX_POOL_SIZE);
-    /* package */ NullableRef<Integer> maxRedirects = NullableRef.of(DEFAULT_MAX_REDIRECTS);
+    /* package */ Ref<Integer> maxPoolSize = NullableRef.of(HTTP_KEEPALIVE ? MAX_POOL_SIZE : DEFAULT_MAX_POOL_SIZE);
+    /* package */ Ref<Integer> maxRedirects = NullableRef.of(DEFAULT_MAX_REDIRECTS);
     /* package */ NullableRef<Boolean> preserveMethodOnRedirect = NullableRef.of(Boolean.TRUE);
     /* package */ NullableRef<NettyHttpRedirectController> redirectController = NullableRef.empty();
-
-
 
     // If HTTP keepalive is enabled the value of "http.maxConnections" determines the maximum number
     // of idle connections that will be simultaneously kept alive, per destination.
@@ -72,20 +71,23 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
     private static final int DEFAULT_MAX_REDIRECTS = 5;
 
     @Override
-    protected void setNonEmpty(N other) {
+    protected <X extends ConnectorConfiguration<?>> void setNonEmpty(X otherCC) {
+        NettyConnectorConfiguration<?> other = (NettyConnectorConfiguration<?>) otherCC;
         super.setNonEmpty(other);
         this.connectionController.setNonEmpty(other.connectionController);
+        this.redirectController.setNonEmpty(other.redirectController);
+        this.connectionController.setNonEmpty(other.connectionController);
         this.enableHostnameVerification.setNonEmpty(other.enableHostnameVerification);
-        this.expect100ContTimeout.setNonEmpty(other.expect100ContTimeout);
+        ((NullableRef<Integer>) this.expect100ContTimeout).setNonEmpty((NullableRef<Integer>) other.expect100ContTimeout);
         this.filterHeadersForProxy.setNonEmpty(other.filterHeadersForProxy);
         this.firstHttpHeaderLineLength.setNonEmpty(other.firstHttpHeaderLineLength);
         this.idleConnections.setNonEmpty(other.idleConnections);
         this.maxChunkSize.setNonEmpty(other.maxChunkSize);
         this.maxHeaderSize.setNonEmpty(other.maxHeaderSize);
-        this.maxPoolIdle.setNonEmpty(other.maxPoolIdle);
-        this.maxPoolSize.setNonEmpty(other.maxPoolSize);
-        this.maxPoolSizeTotal.setNonEmpty(other.maxPoolSizeTotal);
-        this.maxRedirects.setNonEmpty(other.maxRedirects);
+        ((NullableRef<Integer>) this.maxPoolIdle).setNonEmpty((NullableRef<Integer>) other.maxPoolIdle);
+        ((NullableRef<Integer>) this.maxPoolSize).setNonEmpty((NullableRef<Integer>) other.maxPoolSize);
+        ((NullableRef<Integer>) this.maxPoolSizeTotal).setNonEmpty((NullableRef<Integer>) other.maxPoolSizeTotal);
+        ((NullableRef<Integer>) this.maxRedirects).setNonEmpty((NullableRef<Integer>) other.maxRedirects);
         this.preserveMethodOnRedirect.setNonEmpty(other.preserveMethodOnRedirect);
         this.redirectController.setNonEmpty(other.redirectController);
     }
@@ -101,10 +103,6 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
         return self();
     }
 
-    /* package */ NettyConnectionController connectionController() {
-        return connectionController.isPresent() ? connectionController.get() : new NettyConnectionController();
-    }
-
     /**
      * This setting determines waiting time in milliseconds for 100-Continue response when 100-Continue is sent by the client.
      * The property {@link NettyClientProperties#EXPECT_100_CONTINUE_TIMEOUT} has precedence over this setting.
@@ -118,19 +116,6 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
     }
 
     /**
-     * Update {@link #expect100ContinueTimeout(int) expect 100-Continue timeout} based on current http request properties.
-     *
-     * @param clientRequest the current http client request.
-     * @return updated configuration.
-     */
-    public N expect100ContinueTimeout(ClientRequest clientRequest) {
-        expect100ContTimeout.set(clientRequest.resolveProperty(
-                NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT,
-                expect100ContTimeout.get()));
-        return self();
-    }
-
-    /**
      * Enable or disable the endpoint identification algorithm to HTTPS. The property
      * {@link NettyClientProperties#ENABLE_SSL_HOSTNAME_VERIFICATION} has  over this setting.
      *
@@ -139,6 +124,19 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
      */
     public N enableSslHostnameVerification(boolean enable) {
         enableHostnameVerification.set(enable);
+        return self();
+    }
+
+    /**
+     * Filter the HTTP headers for requests (CONNECT) towards the proxy except for PROXY-prefixed
+     * and HOST headers when {@code true}.
+     * The property {@link NettyClientProperties#FILTER_HEADERS_FOR_PROXY} has precedence over this setting.
+     *
+     * @param filter to filter or not. The default is {@code true}.
+     * @return updated configuration.
+     */
+    public N filterHeadersForProxy(boolean filter) {
+        filterHeadersForProxy.set(filter);
         return self();
     }
 
@@ -216,14 +214,15 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
     }
 
     /**
-     * Update {@link #maxRedirects(int)} value from the HTTP Client request.
-     * @param request the HTTP Client request.
-     * @return maximum redirects value.
+     * Set the maximum number of idle connections that will be simultaneously kept alive. The property
+     * {@link NettyClientProperties#MAX_CONNECTIONS_TOTAL} has precedence over this setting.
+     *
+     * @param max the maximum number of idle connections.
+     * @return updated configuration.
      */
-    /* package */ int maxRedirects(ClientRequest request) {
-//        maxRedirects.ifEmptySet(DEFAULT_MAX_REDIRECTS);
-        maxRedirects.set(request.resolveProperty(NettyClientProperties.MAX_REDIRECTS, maxRedirects.get()));
-        return maxRedirects.get();
+    public N maxTotalConnection(int max) {
+        maxPoolSizeTotal.set(max);
+        return self();
     }
 
     /**
@@ -240,19 +239,6 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
     }
 
     /**
-     * Update the {@link #preserveMethodOnRedirect(boolean) preservation} of HTTP method during HTTP redirect
-     * by HTTP client request properties.
-     *
-     * @param request HTTP client request.
-     * @return the value of preservation.
-     */
-    /* package */ boolean preserveMethodOnRedirect(ClientRequest request) {
-        preserveMethodOnRedirect.set(
-                request.resolveProperty(NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT, preserveMethodOnRedirect.get()));
-        return preserveMethodOnRedirect.get();
-    }
-
-    /**
      * Set the Netty Connector HTTP redirect controller.
      * The property {@link NettyClientProperties#HTTP_REDIRECT_CONTROLLER} has precedence over this setting.
      *
@@ -264,126 +250,187 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
         return self();
     }
 
-    /* package */ NettyHttpRedirectController redirectController(ClientRequest request) {
-        NettyHttpRedirectController customRedirectController =
-                request.resolveProperty(NettyClientProperties.HTTP_REDIRECT_CONTROLLER, NettyHttpRedirectController.class);
-        if (customRedirectController == null) {
-            customRedirectController = redirectController.get();
-        }
-        if (customRedirectController == null) {
-            customRedirectController = new NettyHttpRedirectController();
-        }
-
-        return customRedirectController;
-    }
-
-    /**
-     * Set the maximum number of idle connections that will be simultaneously kept alive. The property
-     * {@link NettyClientProperties#MAX_CONNECTIONS_TOTAL} has precedence over this setting.
-     *
-     * @param max the maximum number of idle connections.
-     * @return updated configuration.
-     */
-    public N maxTotalConnection(int max) {
-        maxPoolSizeTotal.set(max);
-        return self();
-    }
-
-
-    /**
-     * <p>
-     *  Return a new instance of configuration updated by the merged settings from this and client properties.
-     *  Only properties unresolved during the request are update.
-     * </p><p>
-     *  {@code This} is meant to be settings from the connector.
-     *  The priorities should go DEFAULTS -> SYSTEM -> CONNECTOR -> CLIENT -> REQUEST
-     * </p>
-     *
-     * @param client the REST client.
-     * @return a new instance of configuration.
-     */
-    /* package */ N fromClient(Client client) {
-        final Map<String, Object> properties = client.getConfiguration().getProperties();
-        final N clientConfiguration = copy();
-
-        final Object threadPoolSize = properties.get(ClientProperties.ASYNC_THREADPOOL_SIZE);
-        if (threadPoolSize instanceof Integer && (Integer) threadPoolSize > 0) {
-            clientConfiguration.asyncThreadPoolSize((Integer) threadPoolSize);
-        }
-
-        final Object maxPoolSizeTotalProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS_TOTAL);
-        final Object maxPoolIdleProperty = properties.get(NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT);
-        final Object maxPoolSizeProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS);
-
-        if (maxPoolSizeTotalProperty != null) {
-            clientConfiguration.maxPoolSizeTotal.set((Integer) maxPoolSizeTotalProperty);
-        }
-
-        if (maxPoolIdleProperty != null) {
-            clientConfiguration.maxPoolIdle.set((Integer) maxPoolIdleProperty);
-        }
-
-        if (maxPoolSizeProperty != null) {
-            clientConfiguration.maxPoolSize.set((Integer) maxPoolSizeProperty);
-        }
-
-        if (clientConfiguration.maxPoolSizeTotal.get() < 0) {
-            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_TOTAL(maxPoolSizeTotal.get()));
-        }
-
-        if (clientConfiguration.maxPoolSize.get() < 0) {
-            throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_SIZE(maxPoolSize.get()));
-        }
-
-        return clientConfiguration;
-    }
-
-    /* package */ HttpClientCodec createHttpClientCodec(Map<String, Object> properties) {
-        firstHttpHeaderLineLength.set(ClientProperties.getValue(properties,
-                NettyClientProperties.MAX_INITIAL_LINE_LENGTH, firstHttpHeaderLineLength.get()));
-        maxHeaderSize.set(ClientProperties.getValue(properties, NettyClientProperties.MAX_HEADER_SIZE, maxHeaderSize.get()));
-        maxChunkSize.set(ClientProperties.getValue(properties, NettyClientProperties.MAX_CHUNK_SIZE, maxChunkSize.get()));
-
-        return new HttpClientCodec(firstHttpHeaderLineLength.get(), maxHeaderSize.get(), maxChunkSize.get());
-    }
-
-    /* package */ ProxyHandler createProxyHandler(ClientProxy clientProxy, ClientRequest jerseyRequest) {
-        final URI u = clientProxy.uri();
-        InetSocketAddress proxyAddr = new InetSocketAddress(u.getHost(), u.getPort() == -1 ? 8080 : u.getPort());
-
-        final Boolean filter = jerseyRequest
-                .resolveProperty(NettyClientProperties.FILTER_HEADERS_FOR_PROXY, filterHeadersForProxy.get());
-        HttpHeaders httpHeaders = NettyConnector.setHeaders(jerseyRequest, new DefaultHttpHeaders(), Boolean.TRUE.equals(filter));
-
-        ProxyHandler proxy = clientProxy.userName() == null ? new HttpProxyHandler(proxyAddr, httpHeaders)
-                : new HttpProxyHandler(proxyAddr, clientProxy.userName(), clientProxy.password(), httpHeaders);
-        if (connectTimeout.get() > 0) {
-            proxy.setConnectTimeoutMillis(connectTimeout.get());
-        }
-
-        return proxy;
-    }
-
-    /* package */ boolean isSslHostnameVerificationEnabled(Map<String, Object> properties) {
-        return ClientProperties.getValue(properties,
-                NettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION,
-                enableHostnameVerification.get());
-    }
-
-    /* package */ SSLContext getSslContext(Client client, ClientRequest request) {
-        return super.sslContext(client, request);
-    }
-
-
-    @Override
     @SuppressWarnings("unchecked")
     protected N self() {
         return (N) this;
     }
 
-    @Override
-    protected N instance() {
-        return new NettyConnectorConfiguration<N>().self();
+    abstract static class ReadWrite<N extends ReadWrite<N>>
+            extends NettyConnectorConfiguration<N>
+            implements ConnectorConfiguration.ReadWrite<N> {
+
+        /**
+         * Get the preset {@link NettyConnectionController} or create an instance of the default one, if not preset.
+         * @return the {@link NettyConnectionController} instance.
+         */
+        /* package */ NettyConnectionController connectionController() {
+            return connectionController.isPresent() ? connectionController.get() : new NettyConnectionController();
+        }
+
+        /**
+         * Update {@link #expect100ContinueTimeout(int) expect 100-Continue timeout} based on current http request properties.
+         *
+         * @param clientRequest the current http client request.
+         * @return updated configuration.
+         */
+        /* package */ N expect100ContinueTimeout(ClientRequest clientRequest) {
+            expect100ContTimeout.set(clientRequest.resolveProperty(
+                    NettyClientProperties.EXPECT_100_CONTINUE_TIMEOUT,
+                    expect100ContTimeout.get()));
+            return this.self();
+        }
+
+        /**
+         * Return value of {@link #enableSslHostnameVerification(boolean)} setting either from the configuration of from the
+         * HTTP client request properties. The default is {@code true}.
+         *
+         * @param properties the HTTP client request properties.
+         * @return the value of SSL hostname verification setting.
+         */
+        /* package */ boolean isSslHostnameVerificationEnabled(Map<String, Object> properties) {
+            return ClientProperties.getValue(properties,
+                    NettyClientProperties.ENABLE_SSL_HOSTNAME_VERIFICATION,
+                    enableHostnameVerification.get());
+        }
+
+        /**
+         * Update {@link #maxRedirects(int)} value from the HTTP Client request.
+         * @param request the HTTP Client request.
+         * @return maximum redirects value.
+         */
+        /* package */ int maxRedirects(ClientRequest request) {
+            maxRedirects.set(request.resolveProperty(NettyClientProperties.MAX_REDIRECTS, maxRedirects.get()));
+            return maxRedirects.get();
+        }
+
+        /**
+         * Update the {@link #preserveMethodOnRedirect(boolean) preservation} of HTTP method during HTTP redirect
+         * by HTTP client request properties.
+         *
+         * @param request HTTP client request.
+         * @return the value of preservation.
+         */
+        /* package */ boolean preserveMethodOnRedirect(ClientRequest request) {
+            preserveMethodOnRedirect.set(
+                    request.resolveProperty(NettyClientProperties.PRESERVE_METHOD_ON_REDIRECT, preserveMethodOnRedirect.get()));
+            return preserveMethodOnRedirect.get();
+        }
+
+        /**
+         * Get the instance of preset {@link NettyHttpRedirectController} either from configuration,
+         * or from the HTTP client request, or the default if non set.
+         * @param request the HTTP client request.
+         * @return an instance of {@link NettyHttpRedirectController}.
+         */
+        /* package */ NettyHttpRedirectController redirectController(ClientRequest request) {
+            NettyHttpRedirectController customRedirectController =
+                    request.resolveProperty(NettyClientProperties.HTTP_REDIRECT_CONTROLLER, NettyHttpRedirectController.class);
+            if (customRedirectController == null) {
+                customRedirectController = redirectController.get();
+            }
+            if (customRedirectController == null) {
+                customRedirectController = new NettyHttpRedirectController();
+            }
+
+            return customRedirectController;
+        }
+
+        /**
+         * <p>
+         *  Return a new instance of configuration updated by the merged settings from this and client properties.
+         *  Only properties unresolved during the request are update.
+         * </p><p>
+         *  {@code This} is meant to be settings from the connector.
+         *  The priorities should go DEFAULTS -> SYSTEM -> CONNECTOR -> CLIENT -> REQUEST
+         * </p>
+         *
+         * @param client the REST client.
+         * @return a new instance of configuration.
+         */
+        /* package */ N fromClient(Client client) {
+            final Map<String, Object> properties = client.getConfiguration().getProperties();
+            final N clientConfiguration = copy();
+
+            final Object threadPoolSize = properties.get(ClientProperties.ASYNC_THREADPOOL_SIZE);
+            if (threadPoolSize instanceof Integer && (Integer) threadPoolSize > 0) {
+                clientConfiguration.asyncThreadPoolSize((Integer) threadPoolSize);
+            }
+
+            final Object maxPoolSizeTotalProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS_TOTAL);
+            final Object maxPoolIdleProperty = properties.get(NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT);
+            final Object maxPoolSizeProperty = properties.get(NettyClientProperties.MAX_CONNECTIONS);
+
+            if (maxPoolSizeTotalProperty != null) {
+                clientConfiguration.maxPoolSizeTotal.set((Integer) maxPoolSizeTotalProperty);
+            }
+
+            if (maxPoolIdleProperty != null) {
+                clientConfiguration.maxPoolIdle.set((Integer) maxPoolIdleProperty);
+            }
+
+            if (maxPoolSizeProperty != null) {
+                clientConfiguration.maxPoolSize.set((Integer) maxPoolSizeProperty);
+            }
+
+            if (clientConfiguration.maxPoolSizeTotal.get() < 0) {
+                throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_TOTAL(maxPoolSizeTotal.get()));
+            }
+
+            if (clientConfiguration.maxPoolSize.get() < 0) {
+                throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_SIZE(maxPoolSize.get()));
+            }
+
+            return clientConfiguration;
+        }
+
+        /**
+         * Create an instance of {@link HttpClientCodec} based on preset settings {@link #initialHttpHeaderLineLength(int)},
+         * {@link #maxHeaderSize} and {@link #maxChunkSize}. The settings can be preset in the configuration or
+         * on the HTTP client request.
+         *
+         * @param properties The HTTP client request properties.
+         * @return the {@link HttpClientCodec} instance.
+         */
+        /* package */ HttpClientCodec createHttpClientCodec(Map<String, Object> properties) {
+            firstHttpHeaderLineLength.set(ClientProperties.getValue(properties,
+                    NettyClientProperties.MAX_INITIAL_LINE_LENGTH, firstHttpHeaderLineLength.get()));
+            maxHeaderSize.set(ClientProperties.getValue(properties, NettyClientProperties.MAX_HEADER_SIZE, maxHeaderSize.get()));
+            maxChunkSize.set(ClientProperties.getValue(properties, NettyClientProperties.MAX_CHUNK_SIZE, maxChunkSize.get()));
+
+            return new HttpClientCodec(firstHttpHeaderLineLength.get(), maxHeaderSize.get(), maxChunkSize.get());
+        }
+
+        /**
+         * Create an instance of {@link ProxyHandler} based on HTTP request URI's port and address,
+         * the preset proxy {@link #proxyUri(URI) uri}, {@link #proxyUserName(String) username},
+         * and {@link #proxyPassword(String) password}.
+         *
+         * Can filter headers {@link #filterHeadersForProxy(boolean)}.
+         *
+         * @param clientProxy the Jersey {@link ClientProxy} instance.
+         * @param jerseyRequest the HTTP client request containing HTTP headers to be filtered.
+         * @return a Netty {@link ProxyHandler} instance.
+         */
+        /* package */ ProxyHandler createProxyHandler(ClientProxy clientProxy, ClientRequest jerseyRequest) {
+            final URI u = clientProxy.uri();
+            InetSocketAddress proxyAddr = new InetSocketAddress(u.getHost(), u.getPort() == -1 ? 8080 : u.getPort());
+
+            final Boolean filter = jerseyRequest
+                    .resolveProperty(NettyClientProperties.FILTER_HEADERS_FOR_PROXY, filterHeadersForProxy.get());
+            HttpHeaders httpHeaders = NettyConnector.setHeaders(
+                    jerseyRequest, new DefaultHttpHeaders(), Boolean.TRUE.equals(filter));
+
+            ProxyHandler proxy = clientProxy.userName() == null ? new HttpProxyHandler(proxyAddr, httpHeaders)
+                    : new HttpProxyHandler(proxyAddr, clientProxy.userName(), clientProxy.password(), httpHeaders);
+            if (connectTimeout.get() > 0) {
+                proxy.setConnectTimeoutMillis(connectTimeout.get());
+            }
+
+            return proxy;
+        }
+
+        @Override
+        public abstract N self();
     }
 
 }

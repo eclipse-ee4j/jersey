@@ -16,11 +16,11 @@
 
 package org.glassfish.jersey.netty.connector.internal;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.handler.stream.ChunkedInput;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.RequestEntityProcessing;
-import org.glassfish.jersey.netty.connector.ConfigurationExposer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -60,7 +60,7 @@ public interface NettyEntityWriter {
 
     /**
      * Flushes the writen objects. Can throw IOException.
-     * @throws IOException
+     * @throws IOException exception.
      */
     void flush() throws IOException;
 
@@ -68,7 +68,7 @@ public interface NettyEntityWriter {
      * Get the netty Chunked Input to be written.
      * @return The Chunked input instance
      */
-    ChunkedInput getChunkedInput();
+    ChunkedInput<ByteBuf> getChunkedInput();
 
     /**
      * Get the {@link OutputStream} used to write an entity
@@ -78,17 +78,18 @@ public interface NettyEntityWriter {
 
     /**
      * Get the length of the entity written to the {@link OutputStream}
-     * @return
+     * @return length of the entity.
      */
     long getLength();
 
     /**
-     * Return Type of
-     * @return
+     * Return Type of the {@link NettyEntityWriter}.
+     * @return type of the writer.
      */
     Type getType();
 
-    static NettyEntityWriter getInstance(ClientRequest clientRequest, Channel channel, ConfigurationExposer config) {
+    static NettyEntityWriter getInstance(
+            ClientRequest clientRequest, Channel channel, ConnectorConfiguration.ReadWrite<?> config) {
         final long lengthLong = clientRequest.getLengthLong();
         final RequestEntityProcessing entityProcessing = config.requestEntityProcessing(clientRequest);
 
@@ -128,7 +129,7 @@ public interface NettyEntityWriter {
         }
 
         @Override
-        public ChunkedInput getChunkedInput() {
+        public ChunkedInput<ByteBuf> getChunkedInput() {
             return stream;
         }
 
@@ -202,7 +203,7 @@ public interface NettyEntityWriter {
         }
 
         @Override
-        public ChunkedInput getChunkedInput() {
+        public ChunkedInput<ByteBuf> getChunkedInput() {
             return writer.getChunkedInput();
         }
 
@@ -225,7 +226,7 @@ public interface NettyEntityWriter {
         private class DelayedOutputStream extends OutputStream {
             private final List<WriteAction> actions = new ArrayList<>();
             private int writeLen = 0;
-            private AtomicBoolean streamFlushed = new AtomicBoolean(false);
+            private final AtomicBoolean streamFlushed = new AtomicBoolean(false);
 
             @Override
             public void write(int b) throws IOException {

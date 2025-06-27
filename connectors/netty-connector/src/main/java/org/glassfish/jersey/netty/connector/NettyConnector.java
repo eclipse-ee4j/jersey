@@ -96,7 +96,7 @@ class NettyConnector implements Connector {
     final EventLoopGroup group;
     final Client client;
     final HashMap<String, ArrayList<Channel>> connections = new HashMap<>();
-    final NettyConnectorProvider.Config connectorConfiguration;
+    final NettyConnectorProvider.Config.RW connectorConfiguration;
 
     private static final LazyValue<String> NETTY_VERSION = Values.lazy(
         (Value<String>) () -> {
@@ -116,15 +116,15 @@ class NettyConnector implements Connector {
     private static final String EXPECT_100_CONTINUE_HANDLER = "expect_100_continue_handler";
 
     NettyConnector(Client client) { // TODO drop
-        this(client, NettyConnectorProvider.config());
+        this(client, NettyConnectorProvider.config().rw());
     }
 
-    NettyConnector(Client client, NettyConnectorProvider.Config connectorConfiguration) {
+    NettyConnector(Client client, NettyConnectorProvider.Config.RW connectorConfiguration) {
         this.client = client;
         this.connectorConfiguration = connectorConfiguration.fromClient(client);
 
         final Configuration configuration = client.getConfiguration();
-        final Integer threadPoolSize = this.connectorConfiguration.threadPoolSize.get();
+        final Integer threadPoolSize = this.connectorConfiguration.asyncThreadPoolSize();
         if (threadPoolSize != null && threadPoolSize > 0) {
             executorService = VirtualThreadUtil.withConfig(configuration).newFixedThreadPool(threadPoolSize);
             this.group = new NioEventLoopGroup(threadPoolSize);
@@ -164,13 +164,14 @@ class NettyConnector implements Connector {
 
     protected void execute(final ClientRequest jerseyRequest, final Set<URI> redirectUriHistory,
             final CompletableFuture<ClientResponse> responseAvailable) {
-        final NettyConnectorProvider.Config requestConfiguration =
+        final NettyConnectorProvider.Config.RW requestConfiguration =
                 connectorConfiguration
-                    .copy()
-                    .readTimeout(jerseyRequest)
-                    .expect100ContinueTimeout(jerseyRequest);
-        if (requestConfiguration.readTimeout.get() < 0) {
-            throw new ProcessingException(LocalizationMessages.WRONG_READ_TIMEOUT(requestConfiguration.readTimeout.get()));
+                        .copy()
+                        .readTimeout(jerseyRequest)
+                        .expect100ContinueTimeout(jerseyRequest);
+        final int readTimeout = requestConfiguration.readTimeout();
+        if (readTimeout < 0) {
+            throw new ProcessingException(LocalizationMessages.WRONG_READ_TIMEOUT(readTimeout));
         }
 
         final CompletableFuture<?> responseDone = new CompletableFuture<>();
@@ -247,7 +248,7 @@ class NettyConnector implements Connector {
                      if ("https".equals(requestUri.getScheme())) {
                          // making client authentication optional for now; it could be extracted to configurable property
                          JdkSslContext jdkSslContext = new JdkSslContext(
-                                 requestConfiguration.getSslContext(client, jerseyRequest),
+                                 requestConfiguration.sslContext(client, jerseyRequest),
                                  true,
                                  (Iterable) null,
                                  IdentityCipherSuiteFilter.INSTANCE,
@@ -279,8 +280,8 @@ class NettyConnector implements Connector {
                 });
 
                // connect timeout
-               if (requestConfiguration.connectTimeout.get() > 0) {
-                   b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, requestConfiguration.connectTimeout.get());
+               if (requestConfiguration.connectTimeout() > 0) {
+                   b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, requestConfiguration.connectTimeout());
                }
 
                // Make the connection attempt.
@@ -304,7 +305,7 @@ class NettyConnector implements Connector {
 
             // read timeout makes sense really as an inactivity timeout
             ch.pipeline().addLast(READ_TIMEOUT_HANDLER,
-                                  new IdleStateHandler(0, 0, requestConfiguration.readTimeout.get(), TimeUnit.MILLISECONDS));
+                                  new IdleStateHandler(0, 0, requestConfiguration.readTimeout(), TimeUnit.MILLISECONDS));
             ch.pipeline().addLast(REQUEST_HANDLER, clientHandler);
 
             responseDone.whenComplete((_r, th) -> {
@@ -489,8 +490,8 @@ class NettyConnector implements Connector {
     }
 
     /* package */ NettyEntityWriter nettyEntityWriter(
-            ClientRequest clientRequest, Channel channel, NettyConnectorProvider.Config requestConfiguration) {
-        return NettyEntityWriter.getInstance(clientRequest, channel, new ConfigurationExposer(requestConfiguration));
+            ClientRequest clientRequest, Channel channel, NettyConnectorProvider.Config.RW requestConfiguration) {
+        return NettyEntityWriter.getInstance(clientRequest, channel, requestConfiguration);
     }
 
     private String buildPathWithQueryParameters(URI requestUri) {

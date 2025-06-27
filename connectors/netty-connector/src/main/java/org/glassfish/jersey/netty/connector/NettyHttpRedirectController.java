@@ -34,9 +34,9 @@ import java.util.Map;
  */
 public class NettyHttpRedirectController {
 
-    private NettyConnectorProvider.Config configuration;
+    private NettyConnectorProvider.Config.RW configuration;
 
-    /* package */ void init(NettyConnectorProvider.Config configuration) {
+    /* package */ void init(NettyConnectorProvider.Config.RW configuration) {
         this.configuration = configuration;
     }
 

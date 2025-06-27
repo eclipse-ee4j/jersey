@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.netty.connector;
+package org.glassfish.jersey.netty.connector.internal;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
@@ -36,28 +36,42 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-// TODO move to client/common
-public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
-    /* package */ NullableRef<Integer> connectTimeout = NullableRef.of(0);
-    /* package */ NullableRef<Boolean> expect100Continue = NullableRef.empty();
-    /* package */ NullableRef<Long> expect100continueThreshold = NullableRef.of(
-                                                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
-    /* package */ NullableRef<Boolean> followRedirects = NullableRef.of(Boolean.TRUE);
-    /* package */ NullableRef<Object> proxyUri = NullableRef.empty();
-    /* package */ NullableRef<String> proxyUserName = NullableRef.empty();
-    /* package */ NullableRef<String> proxyPassword = NullableRef.empty();
-    /* package */ NullableRef<Integer> readTimeout = NullableRef.of(0);
-    /* package */ NullableRef<RequestEntityProcessing> requestEntityProcessing = NullableRef.empty();
-    /* package */ NullableRef<Supplier<SSLContext>> sslContextSupplier = NullableRef.empty();
-    /* package */ NullableRef<Integer> threadPoolSize = NullableRef.empty();
+// TODO move to client
 
-    protected E copy() {
-        E config = instance();
-        config.setNonEmpty(self());
-        return config;
+/**
+ * Configuration object to use for configuring the client connectors and HTTP request processing.
+ * This configuration provides settings to be handled by the connectors, mainly declared by {@link ClientProperties}.
+ *
+ * @param <E> the connector configuration subtype.
+ */
+public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
+    protected NullableRef<Integer> connectTimeout = NullableRef.of(0);
+    protected NullableRef<Boolean> expect100Continue = NullableRef.empty();
+    protected NullableRef<Long> expect100continueThreshold = NullableRef.of(
+                                                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
+    protected NullableRef<Boolean> followRedirects = NullableRef.of(Boolean.TRUE);
+    protected NullableRef<Object> proxyUri = NullableRef.empty();
+    protected NullableRef<String> proxyUserName = NullableRef.empty();
+    protected NullableRef<String> proxyPassword = NullableRef.empty();
+    protected NullableRef<Integer> readTimeout = NullableRef.of(0);
+    protected NullableRef<RequestEntityProcessing> requestEntityProcessing = NullableRef.empty();
+    protected NullableRef<Supplier<SSLContext>> sslContextSupplier = NullableRef.empty();
+    protected NullableRef<Integer> threadPoolSize = NullableRef.empty();
+
+    /**
+     * Use factory methods provided by each connector supporting this configuration object and its subclass instead.
+     */
+    protected ConnectorConfiguration() {
+
     }
 
-    protected void setNonEmpty(E other) {
+    /**
+     * Set and replace the values of current configuration by values of other configuration
+     * if and only if the values of other configuration are set.
+     *
+     * @param other another configuration instance.
+     */
+    protected <X extends ConnectorConfiguration<?>> void setNonEmpty(X other) {
         this.connectTimeout.setNonEmpty(other.connectTimeout);
         this.expect100Continue.setNonEmpty(other.expect100Continue);
         this.expect100continueThreshold.setNonEmpty(other.expect100continueThreshold);
@@ -96,17 +110,6 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
     }
 
     /**
-     * Update connect timeout value based on request properties settings.
-     *
-     * @param request the current HTTP client request.
-     * @return the connect timeout.
-     */
-    protected int connectTimeout(ClientRequest request) {
-        connectTimeout.set(request.resolveProperty(ClientProperties.CONNECT_TIMEOUT, connectTimeout.get()));
-        return connectTimeout.get();
-    }
-
-    /**
      * Allows for HTTP Expect:100-Continue.
      * The property {@link ClientProperties#EXPECT_100_CONTINUE} has precedence over this setting.
      *
@@ -116,20 +119,6 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
     public E expect100Continue(boolean enable) {
         expect100Continue.set(enable);
         return self();
-    }
-
-    /**
-     * Update the {@link #expect100Continue(boolean)} from the HTTP client request.
-     *
-     * @param request the HTTP client request.
-     * @return the Expect: 100-Continue support value.
-     */
-    protected Boolean expect100Continue(ClientRequest request) {
-        final Boolean expectContinueActivated = request.resolveProperty(ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
-        if (expectContinueActivated != null) {
-            expect100Continue.set(expectContinueActivated);
-        }
-        return expect100Continue.get();
     }
 
     /**
@@ -145,19 +134,6 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
     }
 
     /**
-     * Update the {@link #expect100ContinueThreshold(long)} from the HTTP client request.
-     *
-     * @param request the HTTP client request.
-     * @return the content length threshold size.
-     */
-    protected long expect100ContinueThreshold(ClientRequest request) {
-        expect100continueThreshold.set(request.resolveProperty(
-                ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
-                expect100continueThreshold.get()));
-        return expect100continueThreshold.get();
-    }
-
-    /**
      * Set to follow redirects. The property {@link ClientProperties#FOLLOW_REDIRECTS} has precedence over this setting.
      *
      * @param follow to follow or not to follow.
@@ -166,17 +142,6 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
     public E followRedirects(boolean follow) {
         followRedirects.set(follow);
         return self();
-    }
-
-    /**
-     * Update the {@link #followRedirects(boolean)} setting from the HTTP client request. The default is {@code true}.
-     *
-     * @param request the HTTP client request.
-     * @return updated configuration.
-     */
-    protected boolean followRedirects(ClientRequest request) {
-        followRedirects.set(request.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, followRedirects.get()));
-        return followRedirects.get();
     }
 
     /**
@@ -239,33 +204,6 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         return self();
     }
 
-    protected Optional<ClientProxy> proxy(ClientRequest request, URI requestUri) {
-        Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
-        if (!proxy.isPresent() && proxyUri.isPresent()) {
-            // TODO support in ClientProxy
-            Map<String, Object> properties = new HashMap<>();
-            properties.put(ClientProperties.PROXY_URI, proxyUri.get());
-            properties.put(ClientProperties.PROXY_USERNAME, proxyUserName.get());
-            properties.put(ClientProperties.PROXY_PASSWORD, proxyPassword.get());
-            Configuration configuration = (Configuration) java.lang.reflect.Proxy.newProxyInstance(getClass().getClassLoader(),
-                    new Class[]{Configuration.class}, new InvocationHandler() {
-                        @Override
-                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                            switch (method.getName()) {
-                                case "getProperties":
-                                    return properties;
-                            }
-                            return null;
-                        }
-                    });
-            proxy = ClientProxy.proxyFromConfiguration(configuration);
-        }
-        if (!proxy.isPresent()) {
-            proxy = ClientProxy.proxyFromProperties(requestUri);
-        }
-        return proxy;
-    }
-
     /**
      * Set read timeout. The property {@link ClientProperties#READ_TIMEOUT}
      * has precedence over this setting.
@@ -279,50 +217,14 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
     }
 
     /**
-     * Update {@link #readTimeout(int) read timeout} based on the HTTP request properties.
+     * Set the request entity processing type.
      *
-     * @param request the current HTTP client request.
-     * @return updated configuration.
+     * @param requestEntityProcessing the request entity processing type.
+     * @return the updated configuration.
      */
-    protected E readTimeout(ClientRequest request) {
-        readTimeout.set(request.resolveProperty(ClientProperties.READ_TIMEOUT, readTimeout.get()));
-        return self();
-    }
-
     public E requestEntityProcessing(RequestEntityProcessing requestEntityProcessing) {
         this.requestEntityProcessing.set(requestEntityProcessing);
         return self();
-    }
-
-    /**
-     * Get the {@link RequestEntityProcessing} updated by the HTTP client request.
-     *
-     * @param request the HTTP client request.
-     * @return the RequestEntityProcessing type.
-     */
-    protected RequestEntityProcessing requestEntityProcessing(ClientRequest request) {
-        RequestEntityProcessing entityProcessing = request.resolveProperty(
-                ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
-        if (entityProcessing == null) {
-            entityProcessing = requestEntityProcessing.get();
-        }
-        return entityProcessing;
-    }
-
-    /**
-     * Get {@link SSLContext} either from the {@link ClientProperties#SSL_CONTEXT_SUPPLIER}, or from this configuration,
-     * or from the {@link Client#getSslContext()} in this order.
-     *
-     * @param client the client used to get the {@link SSLContext}.
-     * @param request the request used to get the {@link SSLContext}.
-     * @return the {@link SSLContext}.
-     */
-    protected SSLContext sslContext(Client client, ClientRequest request) {
-        Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
-        if (supplier == null) {
-            supplier = sslContextSupplier.get();
-        }
-        return supplier == null ? client.getSslContext() : supplier.get();
     }
 
     /**
@@ -337,10 +239,10 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         return self();
     }
 
-    protected E instance() {
-        return new ConnectorConfiguration<E>().self();
-    }
-
+    /**
+     * Return type-cast self.
+     * @return self.
+     */
     @SuppressWarnings("unchecked")
     protected E self() {
         return (E) this;
@@ -363,10 +265,23 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             // use factory methods;
         }
 
+        /**
+         * Return a new empty reference.
+         *
+         * @return an empty reference.
+         * @param <T> The type of the empty value.
+         */
         public static <T> NullableRef<T> empty() {
             return new NullableRef<>();
         }
 
+        /**
+         * Return a reference of a given value.
+         *
+         * @param value the value this reference refers to.*
+         * @return a new reference to a given value.
+         * @param <T> type of the value.
+         */
         public static <T> NullableRef<T> of(T value) {
             NullableRef<T> ref = new NullableRef<>();
             ref.set(value);
@@ -382,7 +297,11 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             ref = value;
         }
 
-        void setNonEmpty(NullableRef<T> other) {
+        /**
+         * Set or replace the value if other value is set.
+         * @param other a reference to another value.
+         */
+        public void setNonEmpty(NullableRef<T> other) {
             other.ifPresent(this::set);
         }
 
@@ -490,5 +409,196 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         public String toString() {
             return empty ? "<empty>" : ref == null ? "<null>" : ref.toString();
         }
+    }
+
+    protected interface ReadWrite<CC extends ConnectorConfiguration<CC>> {
+        /**
+         * Return the thread-pool size setting.
+         *
+         * @return the thread pool size setting.
+         */
+        public default Integer asyncThreadPoolSize() {
+            return self().threadPoolSize.get();
+        }
+
+        /**
+         * Update connect timeout value based on request properties settings.
+         *
+         * @param request the current HTTP client request.
+         * @return the updated configuration.
+         */
+        public default CC connectTimeout(ClientRequest request) {
+            self().connectTimeout.set(request.resolveProperty(ClientProperties.CONNECT_TIMEOUT, self().connectTimeout.get()));
+            return self();
+        }
+
+        /**
+         * Get the value of connect timeout setting.
+         *
+         * @return connect timeout value.
+         */
+        public default int connectTimeout() {
+            return self().connectTimeout.get();
+        }
+
+        /**
+         * Utility method to create a new instance of configuration to preserve the settings of previous configuration.
+         *
+         * @return a new instance of the configuration.
+         */
+        public default CC copy() {
+            CC config = instance();
+            config.setNonEmpty(self());
+            return config;
+        }
+
+        /**
+         * Update the {@link #expect100Continue(boolean)} from the HTTP client request.
+         *
+         * @param request the HTTP client request.
+         * @return the Expect: 100-Continue support value.
+         */
+        public default Boolean expect100Continue(ClientRequest request) {
+            final Boolean expectContinueActivated = request.resolveProperty(ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
+            if (expectContinueActivated != null) {
+                self().expect100Continue.set(expectContinueActivated);
+            }
+            return self().expect100Continue.get();
+        }
+
+        /**
+         * Update the {@link #expect100ContinueThreshold(long)} from the HTTP client request.
+         *
+         * @param request the HTTP client request.
+         * @return the content length threshold size.
+         */
+        public default long expect100ContinueThreshold(ClientRequest request) {
+            self().expect100continueThreshold.set(request.resolveProperty(
+                    ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
+                    self().expect100continueThreshold.get()));
+            return self().expect100continueThreshold.get();
+        }
+
+        /**
+         * Update the {@link #followRedirects(boolean)} setting from the HTTP client request. The default is {@code true}.
+         *
+         * @param request the HTTP client request.
+         * @return follow redirects setting.
+         */
+        public default boolean followRedirects(ClientRequest request) {
+            self().followRedirects.set(request.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, self().followRedirects.get()));
+            return self().followRedirects.get();
+        }
+
+        /**
+         * Get the value of the follow redirects setting.
+         *
+         * @return whether to follow redirects or not.
+         */
+        public default boolean followRedirects() {
+            return self().followRedirects.get();
+        }
+
+        /**
+         * Create optional client proxy information based on the proxy information set in the configuration
+         * or the HTTP client request. The used settings are {@link #proxy(Proxy)},
+         * {@link #proxyUri(URI)}, {@link #proxyUri(String)}, {@link #proxyUserName(String)},
+         * and {@link #proxyPassword(String)}.
+         *
+         * @param request the HTTP client request,
+         * @param requestUri the HTTP request URI. It can differ from the URI used in the request, based on other
+         *                   information set by the HTTP client request.
+         * @return the optional client proxy.
+         */
+        public default Optional<ClientProxy> proxy(ClientRequest request, URI requestUri) {
+            Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
+            if (!proxy.isPresent() && self().proxyUri.isPresent()) {
+                // TODO support in ClientProxy
+                Map<String, Object> properties = new HashMap<>();
+                properties.put(ClientProperties.PROXY_URI, self().proxyUri.get());
+                properties.put(ClientProperties.PROXY_USERNAME, self().proxyUserName.get());
+                properties.put(ClientProperties.PROXY_PASSWORD, self().proxyPassword.get());
+                Configuration configuration = (Configuration) java.lang.reflect.Proxy.newProxyInstance(
+                        getClass().getClassLoader(),
+                        new Class[]{Configuration.class}, new InvocationHandler() {
+                            @Override
+                            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                                switch (method.getName()) {
+                                    case "getProperties":
+                                        return properties;
+                                }
+                                return null;
+                            }
+                        });
+                proxy = ClientProxy.proxyFromConfiguration(configuration);
+            }
+            if (!proxy.isPresent()) {
+                proxy = ClientProxy.proxyFromProperties(requestUri);
+            }
+            return proxy;
+        }
+
+        /**
+         * Update {@link #readTimeout(int) read timeout} based on the HTTP request properties.
+         *
+         * @param request the current HTTP client request.
+         * @return updated configuration.
+         */
+        public default CC readTimeout(ClientRequest request) {
+            self().readTimeout.set(request.resolveProperty(ClientProperties.READ_TIMEOUT, self().readTimeout.get()));
+            return self();
+        }
+
+        /**
+         * Get the value of preset {@link #readTimeout(int)}.
+         *
+         * @return the read timeout milliseconds.
+         */
+        public default int readTimeout() {
+            return self().readTimeout.get();
+        }
+
+        /**
+         * Get the {@link RequestEntityProcessing} updated by the HTTP client request.
+         *
+         * @param request the HTTP client request.
+         * @return the RequestEntityProcessing type.
+         */
+        public default RequestEntityProcessing requestEntityProcessing(ClientRequest request) {
+            RequestEntityProcessing entityProcessing = request.resolveProperty(
+                    ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
+            if (entityProcessing == null) {
+                entityProcessing = self().requestEntityProcessing.get();
+            }
+            return entityProcessing;
+        }
+
+        /**
+         * Get {@link SSLContext} either from the {@link ClientProperties#SSL_CONTEXT_SUPPLIER}, or from this configuration,
+         * or from the {@link Client#getSslContext()} in this order.
+         *
+         * @param client the client used to get the {@link SSLContext}.
+         * @param request the request used to get the {@link SSLContext}.
+         * @return the {@link SSLContext}.
+         */
+        public default SSLContext sslContext(Client client, ClientRequest request) {
+            Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
+            if (supplier == null) {
+                supplier = self().sslContextSupplier.get();
+            }
+            return supplier == null ? client.getSslContext() : supplier.get();
+        }
+
+        /**
+         * Return a new instance of configuration.
+         * @return a new instance of configuration.
+         */
+        public CC instance();
+
+        /**
+         * Return typed-cast self.
+         * @return self.
+         */
+        public CC self();
     }
 }

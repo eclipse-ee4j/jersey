@@ -63,7 +63,7 @@ public class NettyConnectorProvider implements ConnectorProvider {
 
     @Override
     public Connector getConnector(Client client, Configuration runtimeConfig) {
-        return new NettyConnector(client, config);
+        return new NettyConnector(client, config.rw());
     }
 
     /**
@@ -80,18 +80,30 @@ public class NettyConnectorProvider implements ConnectorProvider {
         }
 
         @Override
-        protected Config instance() {
-            return new Config();
-        }
-
-        @Override
         protected Config self() {
             return this;
+        }
+
+        /* package */ RW rw() {
+            RW rw = new RW();
+            rw.setNonEmpty(this);
+            return rw;
         }
 
         public NettyConnectorProvider build() {
             return new NettyConnectorProvider(this);
         }
 
+        static class RW extends ReadWrite<RW> {
+            @Override
+            public RW instance() {
+                return new RW();
+            }
+
+            @Override
+            public RW self() {
+                return this;
+            }
+        }
     }
 }

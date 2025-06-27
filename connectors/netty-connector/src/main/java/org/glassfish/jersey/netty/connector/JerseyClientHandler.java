@@ -59,7 +59,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
     private final CompletableFuture<?> responseDone;
     private final NettyConnector connector;
     private final NettyHttpRedirectController redirectController;
-    private final NettyConnectorProvider.Config requestConfiguration;
+    private final NettyConnectorProvider.Config.RW requestConfiguration;
 
     private NettyInputStream nis;
     private ClientResponse jerseyResponse;
@@ -68,7 +68,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     JerseyClientHandler(ClientRequest request, CompletableFuture<ClientResponse> responseAvailable,
                         CompletableFuture<?> responseDone, Set<URI> redirectUriHistory, NettyConnector connector,
-                        NettyConnectorProvider.Config requestConfiguration) {
+                        NettyConnectorProvider.Config.RW requestConfiguration) {
         this.redirectUriHistory = redirectUriHistory;
         this.jerseyRequest = request;
         this.responseAvailable = responseAvailable;
@@ -106,7 +106,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
           ClientResponse cr = jerseyResponse;
           jerseyResponse = null;
           int responseStatus = cr.getStatus();
-          if (Boolean.TRUE.equals(requestConfiguration.followRedirects.get())
+          if (Boolean.TRUE.equals(requestConfiguration.followRedirects())
                   && (responseStatus == ResponseStatus.Redirect3xx.MOVED_PERMANENTLY_301.getStatusCode()
                           || responseStatus == ResponseStatus.Redirect3xx.FOUND_302.getStatusCode()
                           || responseStatus == ResponseStatus.Redirect3xx.SEE_OTHER_303.getStatusCode()

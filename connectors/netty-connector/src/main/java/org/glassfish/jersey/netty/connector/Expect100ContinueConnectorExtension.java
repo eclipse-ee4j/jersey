@@ -31,9 +31,9 @@ import java.net.ProtocolException;
 class Expect100ContinueConnectorExtension
         implements ConnectorExtension<HttpRequest, IOException> {
 
-    private final NettyConnectorProvider.Config requestConfiguration;
+    private final NettyConnectorProvider.Config.RW requestConfiguration;
 
-    Expect100ContinueConnectorExtension(NettyConnectorProvider.Config requestConfiguration) {
+    Expect100ContinueConnectorExtension(NettyConnectorProvider.Config.RW requestConfiguration) {
         this.requestConfiguration = requestConfiguration;
     }
 

@@ -226,9 +226,9 @@ public class ChunkedInputWriteErrorSimulationTest extends JerseyTest {
                 return new NettyConnector(client) {
                     @Override
                     NettyEntityWriter nettyEntityWriter(
-                            ClientRequest clientRequest, Channel channel, NettyConnectorProvider.Config config) {
+                            ClientRequest clientRequest, Channel channel, NettyConnectorProvider.Config.RW config) {
                         NettyEntityWriter wrapped = NettyEntityWriter.getInstance(
-                                clientRequest, channel, new ConfigurationExposer(config));
+                                clientRequest, channel, config);
 
                         JerseyChunkedInput chunkedInput = (JerseyChunkedInput) wrapped.getChunkedInput();
                         try {
