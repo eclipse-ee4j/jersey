@@ -302,6 +302,7 @@
                             javax.xml.transform.stream;resolution:=optional,
                             org.w3c.dom;resolution:=optional,
                             org.xml.sax;resolution:=optional,
+                            org.glassfish.hk2.osgiresourcelocator;version="[1.0,2)",
                             ${hk2.osgi.version},
                             *
                         ]]></Import-Package>
