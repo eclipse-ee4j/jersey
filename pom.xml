@@ -2237,7 +2237,7 @@
         <xmlunit.version>2.10.0</xmlunit.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.3.1</httpclient5.version>
-        <jackson.version>2.18.0</jackson.version>
+        <jackson.version>2.19.1</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <jersey1.version>1.19.3</jersey1.version>

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.util.VersionUtil;
  */
 public final class PackageVersion implements Versioned {
     public final static Version VERSION = VersionUtil.parseVersion(
-        "2.18.0", "com.fasterxml.jackson.jaxrs", "jackson-jaxrs-json-provider");
+        "2.19.1", "com.fasterxml.jackson.jaxrs", "jackson-jaxrs-json-provider");
 
     @Override
     public Version version() {

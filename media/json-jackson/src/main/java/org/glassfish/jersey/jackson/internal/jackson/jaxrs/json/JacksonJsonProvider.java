@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 /**
  * Basic implementation of JAX-RS abstractions ({@link MessageBodyReader},
@@ -202,21 +203,12 @@ public class JacksonJsonProvider
     @Override
     protected ObjectMapper _locateMapperViaProvider(Class<?> type, MediaType mediaType)
     {
-        if (_providers != null) {
-            ContextResolver<ObjectMapper> resolver = _providers.getContextResolver(ObjectMapper.class, mediaType);
-            /* Above should work as is, but due to this bug
-             *   [https://jersey.dev.java.net/issues/show_bug.cgi?id=288]
-             * in Jersey, it doesn't. But this works until resolution of
-             * the issue:
-             */
-            if (resolver == null) {
-                resolver = _providers.getContextResolver(ObjectMapper.class, null);
-            }
-            if (resolver != null) {
-                return resolver.getContext(type);
-            }
+        // 26-Nov-2024, tatu: [jakarta-rs#36] Look for JsonMapper primarily
+        ObjectMapper m =_locateMapperViaProvider(type, mediaType, JsonMapper.class, _providers);
+        if (m == null) {
+            m = _locateMapperViaProvider(type, mediaType, ObjectMapper.class, _providers);
         }
-        return null;
+        return m;
     }
 
     @Override
