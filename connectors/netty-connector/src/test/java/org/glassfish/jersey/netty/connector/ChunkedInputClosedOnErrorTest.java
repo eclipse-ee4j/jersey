@@ -83,7 +83,7 @@ public class ChunkedInputClosedOnErrorTest extends JerseyTest {
         ConnectorProvider provider = new ConnectorProvider() {
             @Override
             public Connector getConnector(Client client, Configuration runtimeConfig) {
-                return new NettyConnector(client) {
+                return new NettyConnector(client, NettyConnectorProvider.config().rw()) {
                     @Override
                     NettyEntityWriter nettyEntityWriter(ClientRequest clientRequest, Channel channel,
                                                         NettyConnectorProvider.Config.RW config) {

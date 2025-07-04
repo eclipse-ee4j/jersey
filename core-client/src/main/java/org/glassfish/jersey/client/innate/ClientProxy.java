@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +16,8 @@
 package org.glassfish.jersey.client.innate;
 
 import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.PropertiesResolver;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Configuration;
@@ -31,6 +31,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -42,16 +43,20 @@ public abstract class ClientProxy {
       // do not instantiate
     };
 
-    public static Optional<ClientProxy> proxyFromRequest(ClientRequest request) {
+    public static Optional<ClientProxy> proxyFromRequest(PropertiesResolver request) {
         return getProxy(request);
     }
 
-    public static Optional<ClientProxy> proxyFromProperties(URI requestUri) {
+    public static Optional<ClientProxy> proxyFromUri(URI requestUri) {
         return getSystemPropertiesProxy(requestUri);
     }
 
+    public static Optional<ClientProxy> proxyFromProperties(Map<String, Object> properties) {
+        return getProxy(properties);
+    }
+
     public static Optional<ClientProxy> proxyFromConfiguration(Configuration configuration) {
-        return getProxy(configuration);
+        return getProxy(configuration.getProperties());
     }
 
     public static ClientProxy proxy(Proxy proxy) {
@@ -103,7 +108,7 @@ public abstract class ClientProxy {
         return userName;
     };
 
-    private static Optional<ClientProxy> getProxy(ClientRequest request) {
+    private static Optional<ClientProxy> getProxy(PropertiesResolver request) {
         Object proxyUri = request.resolveProperty(ClientProperties.PROXY_URI, Object.class);
         if (proxyUri != null) {
             ClientProxy proxy = toProxy(proxyUri);
@@ -118,13 +123,13 @@ public abstract class ClientProxy {
         return Optional.empty();
     }
 
-    private static Optional<ClientProxy> getProxy(Configuration config) {
-        Object proxyUri = config.getProperties().get(ClientProperties.PROXY_URI);
+    private static Optional<ClientProxy> getProxy(Map<String, Object> properties) {
+        Object proxyUri = properties.get(ClientProperties.PROXY_URI);
         if (proxyUri != null) {
             ClientProxy proxy = toProxy(proxyUri);
             if (proxy != null) {
-                proxy.userName = ClientProperties.getValue(config.getProperties(), ClientProperties.PROXY_USERNAME, String.class);
-                proxy.password = ClientProperties.getValue(config.getProperties(), ClientProperties.PROXY_PASSWORD, String.class);
+                proxy.userName = ClientProperties.getValue(properties, ClientProperties.PROXY_USERNAME, String.class);
+                proxy.password = ClientProperties.getValue(properties, ClientProperties.PROXY_PASSWORD, String.class);
                 return Optional.of(proxy);
             } else {
                 return Optional.empty();

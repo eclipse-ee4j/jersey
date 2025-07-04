@@ -94,7 +94,7 @@ public class NettyConnectorProvider implements ConnectorProvider {
             return new NettyConnectorProvider(this);
         }
 
-        static class RW extends ReadWrite<RW> {
+        /* package */ static class RW extends ReadWrite<RW> {
             @Override
             public RW instance() {
                 return new RW();

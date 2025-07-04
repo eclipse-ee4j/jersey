@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 /**
  * The Entity Writer is used to write entity in Netty. One implementation is delayed,
@@ -89,9 +90,9 @@ public interface NettyEntityWriter {
     Type getType();
 
     static NettyEntityWriter getInstance(
-            ClientRequest clientRequest, Channel channel, ConnectorConfiguration.ReadWrite<?> config) {
+            ClientRequest clientRequest, Channel channel, Supplier<RequestEntityProcessing> requestEntityProcessingSupplier) {
         final long lengthLong = clientRequest.getLengthLong();
-        final RequestEntityProcessing entityProcessing = config.requestEntityProcessing(clientRequest);
+        final RequestEntityProcessing entityProcessing = requestEntityProcessingSupplier.get();
 
         if ((entityProcessing == null && lengthLong == -1) || entityProcessing == RequestEntityProcessing.CHUNKED) {
             return new DirectEntityWriter(channel, Type.CHUNKED);

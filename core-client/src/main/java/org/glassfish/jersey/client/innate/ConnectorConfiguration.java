@@ -14,29 +14,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.netty.connector.internal;
+package org.glassfish.jersey.client.innate;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.RequestEntityProcessing;
-import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.internal.PropertiesResolver;
 
 import javax.net.ssl.SSLContext;
+import javax.ws.rs.RuntimeType;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
+import javax.ws.rs.core.Feature;
 import java.net.Proxy;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-// TODO move to client
 
 /**
  * Configuration object to use for configuring the client connectors and HTTP request processing.
@@ -45,24 +45,24 @@ import java.util.function.Supplier;
  * @param <E> the connector configuration subtype.
  */
 public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
-    protected NullableRef<Integer> connectTimeout = NullableRef.of(0);
-    protected NullableRef<Boolean> expect100Continue = NullableRef.empty();
-    protected NullableRef<Long> expect100continueThreshold = NullableRef.of(
+    protected final NullableRef<Integer> connectTimeout = NullableRef.of(0);
+    protected final NullableRef<Boolean> expect100Continue = NullableRef.empty();
+    protected final NullableRef<Long> expect100continueThreshold = NullableRef.of(
                                                 ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
-    protected NullableRef<Boolean> followRedirects = NullableRef.of(Boolean.TRUE);
-    protected NullableRef<Object> proxyUri = NullableRef.empty();
-    protected NullableRef<String> proxyUserName = NullableRef.empty();
-    protected NullableRef<String> proxyPassword = NullableRef.empty();
-    protected NullableRef<Integer> readTimeout = NullableRef.of(0);
-    protected NullableRef<RequestEntityProcessing> requestEntityProcessing = NullableRef.empty();
-    protected NullableRef<Supplier<SSLContext>> sslContextSupplier = NullableRef.empty();
-    protected NullableRef<Integer> threadPoolSize = NullableRef.empty();
+    protected final NullableRef<Boolean> followRedirects = NullableRef.of(Boolean.TRUE);
+    protected final NullableRef<String> prefix = NullableRef.of("");
+    protected final NullableRef<Object> proxyUri = NullableRef.empty();
+    protected final NullableRef<String> proxyUserName = NullableRef.empty();
+    protected final NullableRef<String> proxyPassword = NullableRef.empty();
+    protected final NullableRef<Integer> readTimeout = NullableRef.of(0);
+    protected final NullableRef<RequestEntityProcessing> requestEntityProcessing = NullableRef.empty();
+    protected final NullableRef<Supplier<SSLContext>> sslContextSupplier = NullableRef.empty();
+    protected final NullableRef<Integer> threadPoolSize = NullableRef.empty();
 
     /**
      * Use factory methods provided by each connector supporting this configuration object and its subclass instead.
      */
     protected ConnectorConfiguration() {
-
     }
 
     /**
@@ -129,7 +129,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
      * @return updated configuration.
      */
     public E expect100ContinueThreshold(long size) {
-        expect100ContinueThreshold(size);
+        expect100continueThreshold.set(size);
         return self();
     }
 
@@ -141,6 +141,32 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
      */
     public E followRedirects(boolean follow) {
         followRedirects.set(follow);
+        return self();
+    }
+
+    /**
+     * <p>
+     * Set the prefix for the configuration properties used by Client/Request to configure and override the settings.
+     * For instance, if the prefix would be {@code com.example.MyProject.}, the property {@link #connectTimeout(int)}
+     * is overridden only by properties with key starting by the prefix,
+     * i.e. for {@link ClientProperties#CONNECT_TIMEOUT},
+     * the property key {@code com.example.MyProject.jersey.config.client.connectTimeout} would override the setting.
+     * </p>
+     * <p>
+     *     The prefix can be used to override the settings by the System property set specifically for the
+     *     prefixed connector. See {@link org.glassfish.jersey.CommonProperties#ALLOW_SYSTEM_PROPERTIES_PROVIDER}
+     *     for enabling System properties usage.
+     * </p>
+     * <p>
+     * The default configuration prefix is empty.
+     * </p>
+     *
+     * @param prefix the non-null prefix.
+     * @throws NullPointerException if the prefix is null.
+     * @return updated configuration.
+     */
+    public E prefix(String prefix) {
+        this.prefix.set(Objects.requireNonNull(prefix));
         return self();
     }
 
@@ -411,7 +437,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         }
     }
 
-    protected interface ReadWrite<CC extends ConnectorConfiguration<CC>> {
+    protected interface Read<CC extends ConnectorConfiguration<CC>> {
         /**
          * Return the thread-pool size setting.
          *
@@ -428,7 +454,9 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the updated configuration.
          */
         public default CC connectTimeout(ClientRequest request) {
-            self().connectTimeout.set(request.resolveProperty(ClientProperties.CONNECT_TIMEOUT, self().connectTimeout.get()));
+            self().connectTimeout.set(
+                    request.resolveProperty(prefixed(ClientProperties.CONNECT_TIMEOUT), self().connectTimeout.get())
+            );
             return self();
         }
 
@@ -449,6 +477,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         public default CC copy() {
             CC config = instance();
             config.setNonEmpty(self());
+            config.prefix.set(self().prefix.get());
             return config;
         }
 
@@ -459,7 +488,8 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the Expect: 100-Continue support value.
          */
         public default Boolean expect100Continue(ClientRequest request) {
-            final Boolean expectContinueActivated = request.resolveProperty(ClientProperties.EXPECT_100_CONTINUE, Boolean.class);
+            final Boolean expectContinueActivated =
+                    request.resolveProperty(prefixed(ClientProperties.EXPECT_100_CONTINUE), Boolean.class);
             if (expectContinueActivated != null) {
                 self().expect100Continue.set(expectContinueActivated);
             }
@@ -473,9 +503,10 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the content length threshold size.
          */
         public default long expect100ContinueThreshold(ClientRequest request) {
-            self().expect100continueThreshold.set(request.resolveProperty(
-                    ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE,
-                    self().expect100continueThreshold.get()));
+            self().expect100continueThreshold.set(
+                    request.resolveProperty(prefixed(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE),
+                            self().expect100continueThreshold.get())
+            );
             return self().expect100continueThreshold.get();
         }
 
@@ -486,7 +517,9 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return follow redirects setting.
          */
         public default boolean followRedirects(ClientRequest request) {
-            self().followRedirects.set(request.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, self().followRedirects.get()));
+            self().followRedirects.set(
+                    request.resolveProperty(prefixed(ClientProperties.FOLLOW_REDIRECTS), self().followRedirects.get())
+            );
             return self().followRedirects.get();
         }
 
@@ -497,6 +530,10 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          */
         public default boolean followRedirects() {
             return self().followRedirects.get();
+        }
+
+        public default Configuration prefixedConfiguration(Configuration configuration) {
+            return self().prefix.get().isEmpty() ? configuration : new PrefixedConfiguration(self().prefix.get(), configuration);
         }
 
         /**
@@ -511,29 +548,23 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the optional client proxy.
          */
         public default Optional<ClientProxy> proxy(ClientRequest request, URI requestUri) {
-            Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
+            Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(
+                    self().prefix.get().isEmpty()
+                        ? request
+                        : new PrefixedPropertiesResolver(self().prefix.get(), request)
+            );
             if (!proxy.isPresent() && self().proxyUri.isPresent()) {
-                // TODO support in ClientProxy
-                Map<String, Object> properties = new HashMap<>();
-                properties.put(ClientProperties.PROXY_URI, self().proxyUri.get());
-                properties.put(ClientProperties.PROXY_USERNAME, self().proxyUserName.get());
-                properties.put(ClientProperties.PROXY_PASSWORD, self().proxyPassword.get());
-                Configuration configuration = (Configuration) java.lang.reflect.Proxy.newProxyInstance(
-                        getClass().getClassLoader(),
-                        new Class[]{Configuration.class}, new InvocationHandler() {
-                            @Override
-                            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                                switch (method.getName()) {
-                                    case "getProperties":
-                                        return properties;
-                                }
-                                return null;
-                            }
-                        });
-                proxy = ClientProxy.proxyFromConfiguration(configuration);
+                final Map<String, Object> properties = self().prefix.get().isEmpty()
+                        ? new HashMap<>()
+                        : new PrefixedMap<>(self().prefix.get(), new HashMap<>());
+                properties.put(self().prefix.get() + ClientProperties.PROXY_URI, self().proxyUri.get());
+                properties.put(self().prefix.get() + ClientProperties.PROXY_USERNAME, self().proxyUserName.get());
+                properties.put(self().prefix.get() + ClientProperties.PROXY_PASSWORD, self().proxyPassword.get());
+                request.getPropertyNames().forEach(k -> properties.put(k, request.getProperty(k)));
+                proxy = ClientProxy.proxyFromProperties(properties);
             }
             if (!proxy.isPresent()) {
-                proxy = ClientProxy.proxyFromProperties(requestUri);
+                proxy = ClientProxy.proxyFromUri(requestUri);
             }
             return proxy;
         }
@@ -545,7 +576,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return updated configuration.
          */
         public default CC readTimeout(ClientRequest request) {
-            self().readTimeout.set(request.resolveProperty(ClientProperties.READ_TIMEOUT, self().readTimeout.get()));
+            self().readTimeout.set(request.resolveProperty(prefixed(ClientProperties.READ_TIMEOUT), self().readTimeout.get()));
             return self();
         }
 
@@ -565,8 +596,8 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the RequestEntityProcessing type.
          */
         public default RequestEntityProcessing requestEntityProcessing(ClientRequest request) {
-            RequestEntityProcessing entityProcessing = request.resolveProperty(
-                    ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
+            RequestEntityProcessing entityProcessing =
+                    request.resolveProperty(prefixed(ClientProperties.REQUEST_ENTITY_PROCESSING), RequestEntityProcessing.class);
             if (entityProcessing == null) {
                 entityProcessing = self().requestEntityProcessing.get();
             }
@@ -582,11 +613,17 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the {@link SSLContext}.
          */
         public default SSLContext sslContext(Client client, ClientRequest request) {
-            Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
+            @SuppressWarnings("unchecked")
+            Supplier<SSLContext> supplier =
+                    request.resolveProperty(prefixed(ClientProperties.SSL_CONTEXT_SUPPLIER), Supplier.class);
             if (supplier == null) {
                 supplier = self().sslContextSupplier.get();
             }
             return supplier == null ? client.getSslContext() : supplier.get();
+        }
+
+        public default String prefixed(String propertyName) {
+            return self().prefix.get() + propertyName;
         }
 
         /**
@@ -600,5 +637,169 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return self.
          */
         public CC self();
+    }
+
+
+    /**
+     * A properties map that works with prefixed properties.
+     *
+     * @param <V> Object type.
+     */
+    private static class PrefixedMap<V> implements Map<String, V> {
+        private final Map<String, V> inner;
+        private final String prefix;
+
+        private PrefixedMap(String prefix, Map<String, V> inner) {
+            this.inner = inner;
+            this.prefix = prefix;
+        }
+
+        @Override
+        public int size() {
+            return inner.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return inner.isEmpty();
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            return inner.containsKey(prefix + key);
+        }
+
+        @Override
+        public boolean containsValue(Object value) {
+            return inner.containsValue(value);
+        }
+
+        @Override
+        public V get(Object key) {
+            return inner.get(prefix + key);
+        }
+
+        @Override
+        public V put(String key, V value) {
+            return inner.put(key, value);
+        }
+
+        @Override
+        public V remove(Object key) {
+            return inner.remove(prefix + key);
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends V> m) {
+            inner.putAll(m);
+        }
+
+        @Override
+        public void clear() {
+            inner.clear();
+        }
+
+        @Override
+        public Set<String> keySet() {
+            return inner.keySet();
+        }
+
+        @Override
+        public Collection<V> values() {
+            return inner.values();
+        }
+
+        @Override
+        public Set<Entry<String, V>> entrySet() {
+            return inner.entrySet();
+        }
+    }
+
+    /**
+     * Properties resolver that resolves prefixed properties.
+     */
+    private static class PrefixedPropertiesResolver implements PropertiesResolver {
+        private final String prefix;
+        private final PropertiesResolver resolver;
+
+        private PrefixedPropertiesResolver(String prefix, PropertiesResolver resolver) {
+            this.prefix = prefix;
+            this.resolver = resolver;
+        }
+
+        @Override
+        public <T> T resolveProperty(String name, Class<T> type) {
+            return resolver.resolveProperty(prefix + name, type);
+        }
+
+        @Override
+        public <T> T resolveProperty(String name, T defaultValue) {
+            return resolver.resolveProperty(prefix + name, defaultValue);
+        }
+    }
+
+    protected static class PrefixedConfiguration implements Configuration {
+        private final String prefix;
+        private final Configuration inner;
+
+        private PrefixedConfiguration(String prefix, Configuration inner) {
+            this.prefix = prefix;
+            this.inner = inner;
+        }
+
+        @Override
+        public RuntimeType getRuntimeType() {
+            return inner.getRuntimeType();
+        }
+
+        @Override
+        public Map<String, Object> getProperties() {
+            return new PrefixedMap<>(prefix, inner.getProperties());
+        }
+
+        @Override
+        public Object getProperty(String name) {
+            return inner.getProperty(prefix + name);
+        }
+
+        @Override
+        public Collection<String> getPropertyNames() {
+            return inner.getPropertyNames();
+        }
+
+        @Override
+        public boolean isEnabled(Feature feature) {
+            return inner.isEnabled(feature);
+        }
+
+        @Override
+        public boolean isEnabled(Class<? extends Feature> featureClass) {
+            return inner.isEnabled(featureClass);
+        }
+
+        @Override
+        public boolean isRegistered(Object component) {
+            return inner.isRegistered(component);
+        }
+
+        @Override
+        public boolean isRegistered(Class<?> componentClass) {
+            return inner.isRegistered(componentClass);
+        }
+
+        @Override
+        public Map<Class<?>, Integer> getContracts(Class<?> componentClass) {
+            return inner.getContracts(componentClass);
+        }
+
+        @Override
+        public Set<Class<?>> getClasses() {
+            return inner.getClasses();
+        }
+
+        @Override
+        public Set<Object> getInstances() {
+            return inner.getInstances();
+        }
     }
 }

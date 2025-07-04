@@ -223,12 +223,12 @@ public class ChunkedInputWriteErrorSimulationTest extends JerseyTest {
         return new ConnectorProvider() {
             @Override
             public Connector getConnector(Client client, Configuration runtimeConfig) {
-                return new NettyConnector(client) {
+                return new NettyConnector(client, NettyConnectorProvider.config().rw()) {
                     @Override
                     NettyEntityWriter nettyEntityWriter(
                             ClientRequest clientRequest, Channel channel, NettyConnectorProvider.Config.RW config) {
                         NettyEntityWriter wrapped = NettyEntityWriter.getInstance(
-                                clientRequest, channel, config);
+                                clientRequest, channel, () -> config.requestEntityProcessing(clientRequest));
 
                         JerseyChunkedInput chunkedInput = (JerseyChunkedInput) wrapped.getChunkedInput();
                         try {

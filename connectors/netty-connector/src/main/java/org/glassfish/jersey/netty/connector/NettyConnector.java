@@ -115,10 +115,6 @@ class NettyConnector implements Connector {
     private static final String REQUEST_HANDLER = "request_handler";
     private static final String EXPECT_100_CONTINUE_HANDLER = "expect_100_continue_handler";
 
-    NettyConnector(Client client) { // TODO drop
-        this(client, NettyConnectorProvider.config().rw());
-    }
-
     NettyConnector(Client client, NettyConnectorProvider.Config.RW connectorConfiguration) {
         this.client = client;
         this.connectorConfiguration = connectorConfiguration.fromClient(client);
@@ -126,10 +122,14 @@ class NettyConnector implements Connector {
         final Configuration configuration = client.getConfiguration();
         final Integer threadPoolSize = this.connectorConfiguration.asyncThreadPoolSize();
         if (threadPoolSize != null && threadPoolSize > 0) {
-            executorService = VirtualThreadUtil.withConfig(configuration).newFixedThreadPool(threadPoolSize);
+            executorService = VirtualThreadUtil
+                                .withConfig(connectorConfiguration.prefixedConfiguration(configuration))
+                                .newFixedThreadPool(threadPoolSize);
             this.group = new NioEventLoopGroup(threadPoolSize);
         } else {
-            executorService = VirtualThreadUtil.withConfig(configuration).newCachedThreadPool();
+            executorService = VirtualThreadUtil
+                                .withConfig(connectorConfiguration.prefixedConfiguration(configuration))
+                                .newCachedThreadPool();
             this.group = new NioEventLoopGroup();
         }
     }
@@ -166,7 +166,7 @@ class NettyConnector implements Connector {
             final CompletableFuture<ClientResponse> responseAvailable) {
         final NettyConnectorProvider.Config.RW requestConfiguration =
                 connectorConfiguration
-                        .copy()
+                        .fromRequest(jerseyRequest)
                         .readTimeout(jerseyRequest)
                         .expect100ContinueTimeout(jerseyRequest);
         final int readTimeout = requestConfiguration.readTimeout();
@@ -491,7 +491,8 @@ class NettyConnector implements Connector {
 
     /* package */ NettyEntityWriter nettyEntityWriter(
             ClientRequest clientRequest, Channel channel, NettyConnectorProvider.Config.RW requestConfiguration) {
-        return NettyEntityWriter.getInstance(clientRequest, channel, requestConfiguration);
+        return NettyEntityWriter
+                .getInstance(clientRequest, channel, () -> requestConfiguration.requestEntityProcessing(clientRequest));
     }
 
     private String buildPathWithQueryParameters(URI requestUri) {

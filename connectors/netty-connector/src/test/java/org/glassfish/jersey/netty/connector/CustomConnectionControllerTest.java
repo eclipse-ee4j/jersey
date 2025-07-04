@@ -48,7 +48,7 @@ public class CustomConnectionControllerTest extends JerseyTest {
 
     @Override
     protected void configureClient(ClientConfig config) {
-        NettyConnectorProvider provider = NettyConnectorProvider.config().connectorController(new NettyConnectionController() {
+        NettyConnectorProvider provider = NettyConnectorProvider.config().connectionController(new NettyConnectionController() {
             @Override
             public String getConnectionGroup(ClientRequest clientRequest, URI uri, String hostName, int port) {
                 hit.set(true);
