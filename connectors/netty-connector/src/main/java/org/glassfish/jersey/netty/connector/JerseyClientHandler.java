@@ -143,7 +143,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
                           ctx.close();
                           if (redirectController.prepareRedirect(newReq, cr)) {
                               final NettyConnector newConnector =
-                                      new NettyConnector(newReq.getClient(), connector.connectorConfiguration);
+                                      new NettyConnector(newReq.getClient(), connector.clientConfiguration);
                               newConnector.execute(newReq, redirectUriHistory, new CompletableFuture<ClientResponse>() {
                                   @Override
                                   public boolean complete(ClientResponse value) {

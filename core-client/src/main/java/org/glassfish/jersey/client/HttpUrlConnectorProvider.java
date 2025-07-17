@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,14 +20,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
 
 import org.glassfish.jersey.client.internal.HttpUrlConnector;
-import org.glassfish.jersey.client.internal.LocalizationMessages;
+import org.glassfish.jersey.client.internal.HttpUrlConnectorConfiguration;
 import org.glassfish.jersey.client.spi.Connector;
 import org.glassfish.jersey.client.spi.ConnectorProvider;
 
@@ -110,26 +108,22 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      */
     public static final String SET_METHOD_WORKAROUND =
             "jersey.config.client.httpUrlConnection.setMethodWorkaround";
-    /**
-     * Default connection factory to be used.
-     */
-    private static final ConnectionFactory DEFAULT_CONNECTION_FACTORY = new DefaultConnectionFactory();
 
-    private static final Logger LOGGER = Logger.getLogger(HttpUrlConnectorProvider.class.getName());
-
-    private ConnectionFactory connectionFactory;
-    private int chunkSize;
-    private boolean useFixedLengthStreaming;
-    private boolean useSetMethodWorkaround;
+    protected final Config config;
 
     /**
      * Create new {@link java.net.HttpURLConnection}-based Jersey client connector provider.
      */
     public HttpUrlConnectorProvider() {
-        this.connectionFactory = DEFAULT_CONNECTION_FACTORY;
-        this.chunkSize = ClientProperties.DEFAULT_CHUNK_SIZE;
-        this.useFixedLengthStreaming = false;
-        this.useSetMethodWorkaround = false;
+        this.config = new Config();
+    }
+
+    private HttpUrlConnectorProvider(Config config) {
+        this.config = config;
+    }
+
+    public static Config config() {
+        return new Config();
     }
 
     /**
@@ -140,11 +134,7 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      * @throws java.lang.NullPointerException in case the supplied connectionFactory is {@code null}.
      */
     public HttpUrlConnectorProvider connectionFactory(final ConnectionFactory connectionFactory) {
-        if (connectionFactory == null) {
-            throw new NullPointerException(LocalizationMessages.NULL_INPUT_PARAMETER("connectionFactory"));
-        }
-
-        this.connectionFactory = connectionFactory;
+        config.connectionFactory(connectionFactory);
         return this;
     }
 
@@ -164,10 +154,7 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      * @throws java.lang.IllegalArgumentException in case the specified chunk size is negative.
      */
     public HttpUrlConnectorProvider chunkSize(final int chunkSize) {
-        if (chunkSize < 0) {
-            throw new IllegalArgumentException(LocalizationMessages.NEGATIVE_INPUT_PARAMETER("chunkSize"));
-        }
-        this.chunkSize = chunkSize;
+        config.chunkSize(chunkSize);
         return this;
     }
 
@@ -183,7 +170,7 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      * @return updated connector provider instance.
      */
     public HttpUrlConnectorProvider useFixedLengthStreaming() {
-        this.useFixedLengthStreaming = true;
+        config.useFixedLengthStreaming(true);
         return this;
     }
 
@@ -199,28 +186,18 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      * @return updated connector provider instance.
      */
     public HttpUrlConnectorProvider useSetMethodWorkaround() {
-        this.useSetMethodWorkaround = true;
+        config.useSetMethodWorkaround(true);
         return this;
     }
 
     @Override
-    public Connector getConnector(final Client client, final Configuration config) {
-        final Map<String, Object> properties = config.getProperties();
-
-        int computedChunkSize = ClientProperties.getValue(properties,
-                ClientProperties.CHUNKED_ENCODING_SIZE, chunkSize, Integer.class);
-        if (computedChunkSize < 0) {
-            LOGGER.warning(LocalizationMessages.NEGATIVE_CHUNK_SIZE(computedChunkSize, chunkSize));
-            computedChunkSize = chunkSize;
-        }
-
-        final boolean computedUseFixedLengthStreaming = ClientProperties.getValue(properties,
-                USE_FIXED_LENGTH_STREAMING, useFixedLengthStreaming, Boolean.class);
-        final boolean computedUseSetMethodWorkaround = ClientProperties.getValue(properties,
-                SET_METHOD_WORKAROUND, useSetMethodWorkaround, Boolean.class);
-
-        return createHttpUrlConnector(client, connectionFactory, computedChunkSize, computedUseFixedLengthStreaming,
-                                      computedUseSetMethodWorkaround);
+    public Connector getConnector(final Client client, final Configuration configuration) {
+        this.config.preInit(configuration);
+        return createHttpUrlConnector(client,
+                this.config.connectionFactory(),
+                this.config.chunkSize(),
+                this.config.fixLengthStreaming(),
+                this.config.setMethodWorkaround());
     }
 
     /**
@@ -230,7 +207,7 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
      * @param connectionFactory   {@link javax.net.ssl.HttpsURLConnection} factory to be used when creating
      *                            connections.
      * @param chunkSize           chunk size to use when using HTTP chunked transfer coding.
-     * @param fixLengthStreaming  specify if the the {@link java.net.HttpURLConnection#setFixedLengthStreamingMode(int)
+     * @param fixLengthStreaming  specify if the {@link java.net.HttpURLConnection#setFixedLengthStreamingMode(int)
      *                            fixed-length streaming mode} on the underlying HTTP URL connection instances should
      *                            be used when sending requests.
      * @param setMethodWorkaround specify if the reflection workaround should be used to set HTTP URL connection method
@@ -240,12 +217,33 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
     protected Connector createHttpUrlConnector(Client client, ConnectionFactory connectionFactory,
                                                int chunkSize, boolean fixLengthStreaming,
                                                boolean setMethodWorkaround) {
-        return new HttpUrlConnector(
-                client,
-                connectionFactory,
-                chunkSize,
-                fixLengthStreaming,
-                setMethodWorkaround);
+        return new HttpUrlConnector(client, client.getConfiguration(), config);
+    }
+
+    public static final class Config extends HttpUrlConnectorConfiguration<Config> {
+        public HttpUrlConnectorProvider build() {
+            return new HttpUrlConnectorProvider(this);
+        }
+
+        /* package */ ConnectionFactory connectionFactory() {
+            return connectionFactory.get();
+        }
+
+        /* package */ int chunkSize() {
+            return chunkSize.get();
+        }
+
+        /* package */ boolean fixLengthStreaming() {
+            return useFixedLengthStreaming.get();
+        }
+
+        /* package */ boolean setMethodWorkaround() {
+            return useSetMethodWorkaround.get();
+        }
+
+        /* package */ void preInit(Configuration configuration) {
+            super.preInit(configuration.getProperties());
+        }
     }
 
     /**
@@ -291,23 +289,6 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
         }
     }
 
-    private static class DefaultConnectionFactory implements ConnectionFactory {
-
-        @Override
-        public HttpURLConnection getConnection(final URL url) throws IOException {
-            return connect(url, null);
-        }
-
-        @Override
-        public HttpURLConnection getConnection(URL url, Proxy proxy) throws IOException {
-            return connect(url, proxy);
-        }
-
-        private HttpURLConnection connect(URL url, Proxy proxy) throws IOException {
-            return (proxy == null) ? (HttpURLConnection) url.openConnection() : (HttpURLConnection) url.openConnection(proxy);
-        }
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -318,22 +299,11 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
         }
 
         final HttpUrlConnectorProvider that = (HttpUrlConnectorProvider) o;
-
-        if (chunkSize != that.chunkSize) {
-            return false;
-        }
-        if (useFixedLengthStreaming != that.useFixedLengthStreaming) {
-            return false;
-        }
-
-        return connectionFactory.equals(that.connectionFactory);
+        return config.equals(that.config);
     }
 
     @Override
     public int hashCode() {
-        int result = connectionFactory.hashCode();
-        result = 31 * result + chunkSize;
-        result = 31 * result + (useFixedLengthStreaming ? 1 : 0);
-        return result;
+        return config.hashCode();
     }
 }

@@ -61,6 +61,8 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.ApplicationProtocolConfig;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.IdentityCipherSuiteFilter;
@@ -96,7 +98,7 @@ class NettyConnector implements Connector {
     final EventLoopGroup group;
     final Client client;
     final HashMap<String, ArrayList<Channel>> connections = new HashMap<>();
-    final NettyConnectorProvider.Config.RW connectorConfiguration;
+    final NettyConnectorProvider.Config.RW clientConfiguration;
 
     private static final LazyValue<String> NETTY_VERSION = Values.lazy(
         (Value<String>) () -> {
@@ -117,18 +119,18 @@ class NettyConnector implements Connector {
 
     NettyConnector(Client client, NettyConnectorProvider.Config.RW connectorConfiguration) {
         this.client = client;
-        this.connectorConfiguration = connectorConfiguration.fromClient(client);
+        this.clientConfiguration = connectorConfiguration.fromClient(client);
 
         final Configuration configuration = client.getConfiguration();
-        final Integer threadPoolSize = this.connectorConfiguration.asyncThreadPoolSize();
+        final Integer threadPoolSize = this.clientConfiguration.asyncThreadPoolSize();
         if (threadPoolSize != null && threadPoolSize > 0) {
             executorService = VirtualThreadUtil
-                                .withConfig(connectorConfiguration.prefixedConfiguration(configuration))
+                                .withConfig(clientConfiguration.prefixedConfiguration(configuration))
                                 .newFixedThreadPool(threadPoolSize);
             this.group = new NioEventLoopGroup(threadPoolSize);
         } else {
             executorService = VirtualThreadUtil
-                                .withConfig(connectorConfiguration.prefixedConfiguration(configuration))
+                                .withConfig(clientConfiguration.prefixedConfiguration(configuration))
                                 .newCachedThreadPool();
             this.group = new NioEventLoopGroup();
         }
@@ -165,7 +167,7 @@ class NettyConnector implements Connector {
     protected void execute(final ClientRequest jerseyRequest, final Set<URI> redirectUriHistory,
             final CompletableFuture<ClientResponse> responseAvailable) {
         final NettyConnectorProvider.Config.RW requestConfiguration =
-                connectorConfiguration
+                clientConfiguration
                         .fromRequest(jerseyRequest)
                         .readTimeout(jerseyRequest)
                         .expect100ContinueTimeout(jerseyRequest);
@@ -183,7 +185,7 @@ class NettyConnector implements Connector {
                 : "https".equalsIgnoreCase(requestUri.getScheme()) ? 443 : 80;
 
         try {
-            final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder()
+            final SSLParamConfigurator sslConfig = SSLParamConfigurator.builder(requestConfiguration)
                     .request(jerseyRequest).setSNIAlways(true).setSNIHostName(jerseyRequest).build();
 
             final String key = requestConfiguration
@@ -272,6 +274,9 @@ class NettyConnector implements Connector {
                          p.addLast(sslHandler);
                      }
 
+                     if (requestConfiguration.loggingEnabled.get()) {
+                         p.addLast(new LoggingHandler(LogLevel.INFO));
+                     }
                      p.addLast(requestConfiguration.createHttpClientCodec(config.getProperties()));
                      p.addLast(EXPECT_100_CONTINUE_HANDLER, expect100ContinueHandler);
                      p.addLast(new ChunkedWriteHandler());

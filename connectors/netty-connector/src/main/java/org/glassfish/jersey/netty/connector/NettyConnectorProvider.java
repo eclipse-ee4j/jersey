@@ -79,11 +79,6 @@ public class NettyConnectorProvider implements ConnectorProvider {
         private Config() {
         }
 
-        @Override
-        protected Config self() {
-            return this;
-        }
-
         /* package */ RW rw() {
             RW rw = new RW();
             rw.setNonEmpty(this);
@@ -100,8 +95,7 @@ public class NettyConnectorProvider implements ConnectorProvider {
                 return new RW();
             }
 
-            @Override
-            public RW self() {
+            public RW me() {
                 return this;
             }
         }

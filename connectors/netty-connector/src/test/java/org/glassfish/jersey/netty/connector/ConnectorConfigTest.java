@@ -24,6 +24,7 @@ import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.innate.ClientProxy;
+import org.glassfish.jersey.http.HttpHeaders;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
 import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.client.innate.ConnectorConfiguration;
@@ -181,7 +182,7 @@ public class ConnectorConfigTest {
         Assertions.assertEquals(5000, result.get());
 
         result.set(0);
-        new TestClient(new RWConnect()).rw(rw -> rw.connectTimeout(1000).prefix(PREFIX))
+        new TestClient(new RWConnect().prefix(PREFIX)).rw(rw -> rw.connectTimeout(1000))
                 .client(c -> c.property(ClientProperties.CONNECTOR_CONFIGURATION,
                         new RWConnect().connectTimeout(2000).prefix(PREFIX)))
                 .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
@@ -479,11 +480,12 @@ public class ConnectorConfigTest {
             }
         }
 
-        Request req = new TestClient(new RWFollow()).request().apply();
+        Request req;
+        req = new TestClient(new RWFollow()).request().apply();
         new JerseyClientHandler(req.request, new CompletableFuture<ClientResponse>(),
                 new CompletableFuture<Object>(), new HashSet<>(), req.connector, config.get());
         config.get().followRedirects();
-        Assertions.assertEquals(new RWFollow().followRedirects(), result.get());
+        Assertions.assertEquals(new RWFollow().copy().followRedirects(), result.get());
 
         result.set(null);
         req = new TestClient(new RWFollow().followRedirects(false)).request().apply();
@@ -717,6 +719,64 @@ public class ConnectorConfigTest {
     }
 
     @Test
+    public void testSniHostName() {
+        final String sniHost = "sun.oracle.com";
+        final AtomicReference<String> sniRef = new AtomicReference<>();
+        final NettyConnectionController controller = new NettyConnectionController() {
+            @Override
+            public String getConnectionGroup(ClientRequest clientRequest, URI uri, String hostName, int port) {
+                sniRef.set(hostName);
+                return super.getConnectionGroup(clientRequest, uri, hostName, port);
+            }
+        };
+
+        final class RWSni extends RW {
+            @Override
+            public RWSni instance() {
+                return new RWSni();
+            }
+        }
+
+        new TestClient(new RWSni().connectionController(controller))
+                .request(r -> r.getRequestHeaders().add(HttpHeaders.HOST, sniHost))
+                .apply();
+        Assertions.assertEquals(sniHost, sniRef.get());
+
+        new TestClient(new RWSni().connectionController(controller).sniHostName(sniHost))
+                .request(r -> r.getRequestHeaders().add(HttpHeaders.HOST, "moon.oracle.com"))
+                .apply();
+        Assertions.assertEquals(sniHost, sniRef.get());
+
+        new TestClient(new RWSni().connectionController(controller).prefix(PREFIX))
+                .client(c -> c.property(ClientProperties.CONNECTOR_CONFIGURATION,
+                        NettyConnectorProvider.config().sniHostName("moon.oracle.com")))
+                .request(r -> r.getRequestHeaders().add(HttpHeaders.HOST, sniHost))
+                .apply();
+        Assertions.assertEquals(sniHost, sniRef.get());
+
+        new TestClient(new RWSni().connectionController(controller).prefix(PREFIX))
+                .client(c -> c.property(ClientProperties.CONNECTOR_CONFIGURATION,
+                        NettyConnectorProvider.config().sniHostName(sniHost).prefix(PREFIX)))
+                .request(r -> r.getRequestHeaders().add(HttpHeaders.HOST, "moon.oracle.com"))
+                .apply();
+        Assertions.assertEquals(sniHost, sniRef.get());
+
+        new TestClient(new RWSni().connectionController(controller).prefix(PREFIX))
+                .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
+                        NettyConnectorProvider.config().sniHostName("moon.oracle.com")))
+                .request(r -> r.getRequestHeaders().add(HttpHeaders.HOST, sniHost))
+                .apply();
+        Assertions.assertEquals(sniHost, sniRef.get());
+
+        new TestClient(new RWSni().connectionController(controller).prefix(PREFIX))
+                .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
+                        NettyConnectorProvider.config().sniHostName(sniHost).prefix(PREFIX)))
+                .request(r -> r.getRequestHeaders().add(HttpHeaders.HOST, "moon.oracle.com"))
+                .apply();
+        Assertions.assertEquals(sniHost, sniRef.get());
+    }
+
+    @Test
     public void testSslContext() {
         final SSLContext testContext = new SSLContext(null, null, null){};
         final AtomicReference<SSLContext> result = new AtomicReference<>();
@@ -809,7 +869,7 @@ public class ConnectorConfigTest {
         Request req;
         req = new TestClient(new RWEnabled()).request().apply();
         config.get().isSslHostnameVerificationEnabled(req.request.getConfiguration().getProperties());
-        Assertions.assertEquals(new RWEnabled().followRedirects(), result.get());
+        Assertions.assertEquals(new RWEnabled().copy().followRedirects(), result.get());
 
         result.set(null);
         req = new TestClient(new RWEnabled().enableSslHostnameVerification(false)).request().apply();
@@ -875,7 +935,7 @@ public class ConnectorConfigTest {
         Request req = new TestClient(new RWMaxRed()).request().apply();
         new JerseyClientHandler(req.request, new CompletableFuture<ClientResponse>(),
                 new CompletableFuture<Object>(), new HashSet<>(), req.connector, config.get());
-        Assertions.assertEquals(new RWMaxRed().maxRedirects(req.request), result.get());
+        Assertions.assertEquals(new RWMaxRed().copy().maxRedirects(req.request), result.get());
 
         result.set(null);
         req = new TestClient(new RWMaxRed().maxRedirects(2)).request().apply();
@@ -1029,7 +1089,7 @@ public class ConnectorConfigTest {
             controller.get().prepareRedirect(req.request, null);
         } catch (NullPointerException expected) {
         }
-        Assertions.assertEquals(new RWController().preserveMethodOnRedirect(req.request), result.get());
+        Assertions.assertEquals(new RWController().copy().preserveMethodOnRedirect(req.request), result.get());
 
         result.set(null);
         req = new TestClient(new RWController().preserveMethodOnRedirect(false)).request().apply();
@@ -1122,7 +1182,7 @@ public class ConnectorConfigTest {
         Request req;
         req = new TestClient(new RWProxy().proxyUri(proxyUri).proxyUserName(userName).proxyPassword(password)).request().apply();
         config.get().createProxyHandler(proxy.get(), req.request);
-        Assertions.assertEquals(((Ref<Boolean>) new RWProxy().filterHeadersForProxy).get(),
+        Assertions.assertEquals(((Ref<Boolean>) new RWProxy().copy().filterHeadersForProxy).get(),
                 ((Ref<Boolean>) config.get().filterHeadersForProxy).get());
 
         config.set(null);
@@ -1219,6 +1279,54 @@ public class ConnectorConfigTest {
                 .apply();
         config.get().createHttpClientCodec(req.request.getConfiguration().getProperties());
         Assertions.assertEquals(5555, result.get());
+    }
+
+    @Test
+    public void testLoggingHandler() {
+        final AtomicReference<NettyConnectorProvider.Config.RW> config = new AtomicReference<>();
+        class RWLog extends RW {
+            @Override
+            public RWLog instance() {
+                RWLog rw = new RWLog();
+                config.set(rw);
+                return rw;
+            }
+        }
+
+        new TestClient(new RWLog()).request().apply();
+        Assertions.assertFalse(config.get().loggingEnabled.get());
+
+        new TestClient(new RWLog().enableLoggingHandler(true)).request().apply();
+        Assertions.assertTrue(config.get().loggingEnabled.get());
+
+        new TestClient(new RWLog().enableLoggingHandler(false).prefix(PREFIX))
+                .request(r -> r.setProperty(NettyClientProperties.LOGGING_ENABLED, true))
+                .apply();
+        Assertions.assertFalse(config.get().loggingEnabled.get());
+
+        new TestClient(new RWLog().enableLoggingHandler(false).prefix(PREFIX))
+                .client(c -> c.property(PREFIX + NettyClientProperties.LOGGING_ENABLED, true))
+                .request()
+                .apply();
+        Assertions.assertTrue(config.get().loggingEnabled.get());
+
+        new TestClient(new RWLog().enableLoggingHandler(false).prefix(PREFIX))
+                .request(r -> r.setProperty(PREFIX + NettyClientProperties.LOGGING_ENABLED, true))
+                .apply();
+        Assertions.assertTrue(config.get().loggingEnabled.get());
+
+        new TestClient(new RWLog().enableLoggingHandler(false).prefix(PREFIX))
+                .client(c -> c.property(PREFIX + ClientProperties.CONNECTOR_CONFIGURATION,
+                        new RWLog().enableLoggingHandler(true)))
+                .request()
+                .apply();
+        Assertions.assertTrue(config.get().loggingEnabled.get());
+
+        new TestClient(new RWLog().enableLoggingHandler(false).prefix(PREFIX))
+                .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
+                        new RWLog().enableLoggingHandler(true).prefix(PREFIX)))
+                .apply();
+        Assertions.assertTrue(config.get().loggingEnabled.get());
     }
 
     @Test
@@ -1371,7 +1479,7 @@ public class ConnectorConfigTest {
                 .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
                         NettyConnectorProvider.config().prefix(PREFIX).maxTotalConnections(55)))
                 .apply();
-        Assertions.assertEquals(new RWConn().maxPoolSizeTotal.get(), result.get());
+        Assertions.assertEquals(new RWConn().copy().maxPoolSizeTotal.get(), result.get());
     }
 
     @Test
@@ -1414,7 +1522,7 @@ public class ConnectorConfigTest {
                 .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
                         NettyConnectorProvider.config().prefix(PREFIX).maxConnectionsPerDestination(15)))
                 .apply();
-        Assertions.assertEquals(new RWConn().maxPoolSize.get(), result.get());
+        Assertions.assertEquals(new RWConn().copy().maxPoolSize.get(), result.get());
     }
 
     @Test
@@ -1457,7 +1565,7 @@ public class ConnectorConfigTest {
                 .request(r -> r.setProperty(ClientProperties.CONNECTOR_CONFIGURATION,
                         NettyConnectorProvider.config().prefix(PREFIX).idleConnectionPruneTimeout(15)))
                 .apply();
-        Assertions.assertEquals(new RWConn().maxPoolIdle.get(), result.get());
+        Assertions.assertEquals(new RWConn().copy().maxPoolIdle.get(), result.get());
     }
 
     @Test
@@ -1484,7 +1592,7 @@ public class ConnectorConfigTest {
             }
 
             @Override
-            public RW self() {
+            public RW me() {
                 return this;
             }
 
@@ -1524,7 +1632,7 @@ public class ConnectorConfigTest {
 
         private TestClient(NettyConnectorProvider.Config.RW rw) {
             this.rw = rw;
-            this.client = ClientBuilder.newClient();
+            this.client = ClientBuilder.newClient(new ClientConfig().connectorProvider(new NettyConnectorProvider()));
         }
 
         public TestClient client(Consumer<Client> consumer) {

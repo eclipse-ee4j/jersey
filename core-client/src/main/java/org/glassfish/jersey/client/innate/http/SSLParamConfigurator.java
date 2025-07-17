@@ -20,7 +20,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.http.HttpHeaders;
 import org.glassfish.jersey.internal.PropertiesResolver;
-import org.glassfish.jersey.internal.guava.InetAddresses;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
@@ -52,6 +51,11 @@ public final class SSLParamConfigurator {
         private String sniHostNameHeader = null;
         private String sniHostPrecedence = null;
         private boolean setAlways = false;
+        private final SSLParamConfiguratorConfiguration configConfiguration;
+
+        public Builder(SSLParamConfiguratorConfiguration configuration) {
+            this.configConfiguration = configuration;
+        }
 
 
         /**
@@ -61,7 +65,7 @@ public final class SSLParamConfigurator {
          */
         public Builder request(ClientRequest clientRequest) {
             this.sniHostNameHeader = getSniHostNameHeader(clientRequest.getHeaders());
-            this.sniHostPrecedence = resolveSniHostNameProperty(clientRequest);
+            this.sniHostPrecedence = configConfiguration.resolveSniHostNameProperty(clientRequest);
             this.uri = clientRequest.getUri();
             return this;
         }
@@ -72,7 +76,7 @@ public final class SSLParamConfigurator {
          * @return the builder instance
          */
         public Builder configuration(Configuration configuration) {
-            this.sniHostPrecedence = getSniHostNameProperty(configuration);
+            this.sniHostPrecedence = this.configConfiguration.getSniHostNameProperty(configuration);
             return this;
         }
 
@@ -141,7 +145,7 @@ public final class SSLParamConfigurator {
          * @return the builder instance.
          */
         public Builder setSNIHostName(Configuration configuration) {
-            return setSNIHostName(getSniHostNameProperty(configuration));
+            return setSNIHostName(this.configConfiguration.getSniHostNameProperty(configuration));
         }
 
         /**
@@ -160,7 +164,7 @@ public final class SSLParamConfigurator {
          * @return the builder instance.
          */
         public Builder setSNIHostName(PropertiesResolver resolver) {
-            return setSNIHostName(resolveSniHostNameProperty(resolver));
+            return setSNIHostName(configConfiguration.resolveSniHostNameProperty(resolver));
         }
 
         /**
@@ -180,22 +184,6 @@ public final class SSLParamConfigurator {
             final String hostHeader = hostHeaders.get(0).toString();
             return hostHeader;
         }
-
-        private static String resolveSniHostNameProperty(PropertiesResolver resolver) {
-            String property = resolver.resolveProperty(ClientProperties.SNI_HOST_NAME, String.class);
-            if (property == null) {
-                property = resolver.resolveProperty(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT), String.class);
-            }
-            return property;
-        }
-
-        private static String getSniHostNameProperty(Configuration configuration) {
-            Object property = configuration.getProperty(ClientProperties.SNI_HOST_NAME);
-            if (property == null) {
-                property = configuration.getProperty(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT));
-            }
-            return (String) property;
-        }
     }
 
     private SSLParamConfigurator(SSLParamConfigurator.Builder builder) {
@@ -212,7 +200,14 @@ public final class SSLParamConfigurator {
      * Create a new instance of TlsSupport class
      **/
     public static SSLParamConfigurator.Builder builder() {
-        return new SSLParamConfigurator.Builder();
+        return new SSLParamConfigurator.Builder(DEFAULT_CONFIGURATION);
+    }
+
+    /**
+     * Create a new instance of TlsSupport class
+     **/
+    public static SSLParamConfigurator.Builder builder(SSLParamConfiguratorConfiguration configuration) {
+        return new SSLParamConfigurator.Builder(configuration);
     }
 
     /**
@@ -290,4 +285,25 @@ public final class SSLParamConfigurator {
         sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
         sslEngine.setSSLParameters(sslParameters);
     }
+
+    public static interface SSLParamConfiguratorConfiguration {
+        public default String getSniHostNameProperty(Configuration configuration) {
+            Object property = configuration.getProperty(ClientProperties.SNI_HOST_NAME);
+            if (property == null) {
+                property = configuration.getProperty(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT));
+            }
+            return (String) property;
+        }
+
+        public default String resolveSniHostNameProperty(PropertiesResolver resolver) {
+            String property = resolver.resolveProperty(ClientProperties.SNI_HOST_NAME, String.class);
+            if (property == null) {
+                property = resolver.resolveProperty(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT), String.class);
+            }
+            return property;
+        }
+    }
+
+    private static final SSLParamConfiguratorConfiguration DEFAULT_CONFIGURATION = new SSLParamConfiguratorConfiguration() {
+    };
 }

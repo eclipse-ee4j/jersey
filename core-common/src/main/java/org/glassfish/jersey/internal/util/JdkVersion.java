@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -116,6 +116,19 @@ public class JdkVersion implements Comparable<JdkVersion> {
     @SuppressWarnings("UnusedDeclaration")
     public int getUpdate() {
         return update;
+    }
+
+    /**
+     * <p>
+     *     Returns <tt>true</tt> if the reflective access to JDK classes is supported. It was disabled by JDK 16+.
+     * </p>
+     * <p>
+     *     This can be used to verify the property <tt>HttpUrlConnectorProvider#SET_METHOD_WORKAROUND</tt> still works,
+     *     for instance.
+     * </p>
+     */
+    public boolean isReflectiveAccessToJdkSupported() {
+        return getMajor() < 16;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,6 +52,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -81,7 +82,6 @@ import org.glassfish.jersey.message.internal.Statuses;
 public class HttpUrlConnector implements Connector {
 
     private static final Logger LOGGER = Logger.getLogger(HttpUrlConnector.class.getName());
-    private static final String ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY = "sun.net.http.allowRestrictedHeaders";
     // Avoid multi-thread uses of HttpsURLConnection.getDefaultSSLSocketFactory() because it does not implement a
     // proper lazy-initialization. See https://github.com/jersey/jersey/issues/3293
     private static final LazyValue<SSLSocketFactory> DEFAULT_SSL_SOCKET_FACTORY =
@@ -110,11 +110,7 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
-    private final HttpUrlConnectorProvider.ConnectionFactory connectionFactory;
-    private final int chunkSize;
-    private final boolean fixLengthStreaming;
-    private final boolean setMethodWorkaround;
-    private final boolean isRestrictedHeaderPropertySet;
+    private final HttpUrlConnectorConfiguration.ReadWrite clientConfig;
     private Value<SSLSocketFactory> sslSocketFactory;
 
     // SSLContext#getSocketFactory not idempotent
@@ -131,7 +127,7 @@ public class HttpUrlConnector implements Connector {
      * @param client              JAX-RS client instance for which the connector is being created.
      * @param connectionFactory   {@link javax.net.ssl.HttpsURLConnection} factory to be used when creating connections.
      * @param chunkSize           chunk size to use when using HTTP chunked transfer coding.
-     * @param fixLengthStreaming  specify if the the {@link java.net.HttpURLConnection#setFixedLengthStreamingMode(int)
+     * @param fixLengthStreaming  specify if the {@link java.net.HttpURLConnection#setFixedLengthStreamingMode(int)
      *                            fixed-length streaming mode} on the underlying HTTP URL connection instances should be
      *                            used when sending requests.
      * @param setMethodWorkaround specify if the reflection workaround should be used to set HTTP URL connection method
@@ -144,29 +140,23 @@ public class HttpUrlConnector implements Connector {
             final boolean fixLengthStreaming,
             final boolean setMethodWorkaround) {
 
-        this.connectionFactory = connectionFactory;
-        this.chunkSize = chunkSize;
-        this.fixLengthStreaming = fixLengthStreaming;
-        this.setMethodWorkaround = setMethodWorkaround;
+        this(client, client.getConfiguration(),
+                HttpUrlConnectorProvider.config()
+                    .connectionFactory(connectionFactory)
+                    .chunkSize(chunkSize)
+                    .useFixedLengthStreaming(fixLengthStreaming)
+                    .useSetMethodWorkaround(setMethodWorkaround)
+        );
+    }
 
+    public HttpUrlConnector(Client client, Configuration configuration, HttpUrlConnectorConfiguration<?> config) {
+        this.clientConfig = config.rw().fromClient(configuration);
         this.sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() {
             @Override
             public SSLSocketFactory get() {
                 return client.getSslContext().getSocketFactory();
             }
         });
-
-        // check if sun.net.http.allowRestrictedHeaders system property has been set and log the result
-        // the property is being cached in the HttpURLConnection, so this is only informative - there might
-        // already be some connection(s), that existed before the property was set/changed.
-        isRestrictedHeaderPropertySet = Boolean.valueOf(AccessController.doPrivileged(
-                PropertiesHelper.getSystemProperty(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY, "false")
-        ));
-
-        LOGGER.config(isRestrictedHeaderPropertySet
-                        ? LocalizationMessages.RESTRICTED_HEADER_PROPERTY_SETTING_TRUE(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY)
-                        : LocalizationMessages.RESTRICTED_HEADER_PROPERTY_SETTING_FALSE(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY)
-        );
     }
 
     private static InputStream getInputStream(final HttpURLConnection uc, final ClientRequest clientRequest) throws IOException {
@@ -342,9 +332,15 @@ public class HttpUrlConnector implements Connector {
      * @param clientRequest the actual client request.
      * @param uc     http connection to be secured.
      */
-    private void secureConnection(
-            final ClientRequest clientRequest, final HttpURLConnection uc, final SSLParamConfigurator sniConfig) {
-        setSslContextFactory(clientRequest.getClient(), clientRequest);
+    private void secureConnection(final ClientRequest clientRequest,
+                                  final HttpURLConnection uc,
+                                  final SSLParamConfigurator sniConfig,
+                                  final HttpUrlConnectorConfiguration.ReadWrite config) {
+        if (config.isSslContextSupplier() || config.isPrefixed()) {
+            setSslContextFactory(clientRequest.getClient(), clientRequest, config.sslContext(clientRequest));
+        } else {
+            setSslContextFactory(clientRequest.getClient(), clientRequest);
+        }
         secureConnection(clientRequest.getClient(), uc); // keep this for compatibility
 
         if (sniConfig.isSNIRequired() && uc instanceof HttpsURLConnection) { // set SNI
@@ -355,9 +351,17 @@ public class HttpUrlConnector implements Connector {
         }
     }
 
+    @Deprecated
     protected void setSslContextFactory(Client client, ClientRequest request) {
-        final Supplier<SSLContext> supplier = request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class);
+        setSslContextFactory(client, request, request.resolveProperty(ClientProperties.SSL_CONTEXT_SUPPLIER, Supplier.class));
+    }
 
+    protected void setSslContextFactory(Client client, ClientRequest request,
+                                        HttpUrlConnectorConfiguration.ReadWrite requestConfig) {
+        setSslContextFactory(client, request, requestConfig.sslContext(request));
+    }
+
+    private void setSslContextFactory(Client client, ClientRequest request, Supplier<SSLContext> supplier) {
         if (supplier != null) {
             sslSocketFactory = Values.lazy(new Value<SSLSocketFactory>() { // lazy for double-check locking if multiple requests
                 @Override
@@ -375,9 +379,10 @@ public class HttpUrlConnector implements Connector {
     }
 
     private ClientResponse _apply(final ClientRequest request) throws IOException {
+        HttpUrlConnectorConfiguration.ReadWrite requestConfiguration = clientConfig.fromRequest(request);
+
         final HttpURLConnection uc;
-        final Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(request);
-        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder().request(request)
+        final SSLParamConfigurator sniConfig = SSLParamConfigurator.builder(requestConfiguration).request(request)
                 .setSNIHostName(request).build();
         final URI sniUri;
         if (sniConfig.isSNIRequired()) {
@@ -391,39 +396,45 @@ public class HttpUrlConnector implements Connector {
             DEFAULT_SSL_SOCKET_FACTORY.get();
         }
 
+        final Optional<ClientProxy> proxy = requestConfiguration.proxy(request, sniUri);
         proxy.ifPresent(clientProxy -> ClientProxy.setBasicAuthorizationHeader(request.getHeaders(), proxy.get()));
-        uc = this.connectionFactory.getConnection(sniUri.toURL(), proxy.isPresent() ? proxy.get().proxy() : null);
+        uc = ((Supplier<HttpUrlConnectorProvider.ConnectionFactory>) requestConfiguration.connectionFactory)
+                .get().getConnection(sniUri.toURL(), proxy.isPresent() ? proxy.get().proxy() : null);
         uc.setDoInput(true);
 
         final String httpMethod = request.getMethod();
-        if (request.resolveProperty(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, setMethodWorkaround)) {
+        if (requestConfiguration.isMethodWorkaround(request)) {
             setRequestMethodViaJreBugWorkaround(uc, httpMethod);
         } else {
             uc.setRequestMethod(httpMethod);
         }
 
-        uc.setInstanceFollowRedirects(request.resolveProperty(ClientProperties.FOLLOW_REDIRECTS, true));
+        uc.setInstanceFollowRedirects(requestConfiguration.followRedirects(request));
 
-        uc.setConnectTimeout(request.resolveProperty(ClientProperties.CONNECT_TIMEOUT, uc.getConnectTimeout()));
+        if (requestConfiguration.connectTimeout() == 0) {
+            requestConfiguration.connectTimeout(uc.getConnectTimeout());
+        }
+        uc.setConnectTimeout(requestConfiguration.connectTimeout(request));
 
-        uc.setReadTimeout(request.resolveProperty(ClientProperties.READ_TIMEOUT, uc.getReadTimeout()));
+        if (requestConfiguration.readTimeout() == 0) {
+            requestConfiguration.readTimeout(uc.getReadTimeout());
+        }
+        uc.setReadTimeout(requestConfiguration.readTimeout(request).readTimeout());
 
-        secureConnection(request, uc, sniConfig);
+        secureConnection(request, uc, sniConfig, requestConfiguration);
 
         final Object entity = request.getEntity();
         Exception storedException = null;
         try {
             if (entity != null) {
-                RequestEntityProcessing entityProcessing = request.resolveProperty(
-                        ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.class);
-
+                RequestEntityProcessing entityProcessing = requestConfiguration.requestEntityProcessing(request);
                 final long length = request.getLengthLong();
 
-                if (entityProcessing == null || entityProcessing != RequestEntityProcessing.BUFFERED) {
-                    if (fixLengthStreaming && length > 0) {
+                if (entityProcessing != RequestEntityProcessing.BUFFERED) {
+                    if (requestConfiguration.useFixedLengthStreaming.get() && length > 0) {
                         uc.setFixedLengthStreamingMode(length);
                     } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
-                        uc.setChunkedStreamingMode(chunkSize);
+                        uc.setChunkedStreamingMode(requestConfiguration.chunkSize.get());
                     }
                 }
                 uc.setDoOutput(true);
@@ -438,13 +449,13 @@ public class HttpUrlConnector implements Connector {
                 processExtensions(request, uc);
 
                 request.setStreamProvider(contentLength -> {
-                    setOutboundHeaders(request.getStringHeaders(), uc);
+                    setOutboundHeaders(request.getStringHeaders(), uc, requestConfiguration);
                     return uc.getOutputStream();
                 });
                 request.writeEntity();
 
             } else {
-                setOutboundHeaders(request.getStringHeaders(), uc);
+                setOutboundHeaders(request.getStringHeaders(), uc, requestConfiguration);
             }
         } catch (IOException ioe) {
             storedException = handleException(request, ioe, uc);
@@ -496,7 +507,9 @@ public class HttpUrlConnector implements Connector {
         return responseContext;
     }
 
-    private void setOutboundHeaders(MultivaluedMap<String, String> headers, HttpURLConnection uc) {
+    private void setOutboundHeaders(MultivaluedMap<String, String> headers,
+                                    HttpURLConnection uc,
+                                    HttpUrlConnectorConfiguration.ReadWrite requestConfiguration) {
         boolean restrictedSent = false;
         for (Map.Entry<String, List<String>> header : headers.entrySet()) {
             String headerName = header.getKey();
@@ -520,14 +533,15 @@ public class HttpUrlConnector implements Connector {
                 uc.setRequestProperty(headerName, headerValue);
             }
             // if (at least one) restricted header was added and the allowRestrictedHeaders
-            if (!isRestrictedHeaderPropertySet && !restrictedSent) {
+            if (!requestConfiguration.isRestrictedHeaderPropertySet.get() && !restrictedSent) {
                 if (isHeaderRestricted(headerName, headerValue)) {
                     restrictedSent = true;
                 }
             }
         }
         if (restrictedSent) {
-            LOGGER.warning(LocalizationMessages.RESTRICTED_HEADER_POSSIBLY_IGNORED(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY));
+            LOGGER.warning(LocalizationMessages.RESTRICTED_HEADER_POSSIBLY_IGNORED(
+                    HttpUrlConnectorConfiguration.ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY));
         }
     }
 
@@ -635,7 +649,7 @@ public class HttpUrlConnector implements Connector {
 
     private static class SniSSLSocketFactory extends SSLSocketFactory {
         private final SSLSocketFactory socketFactory;
-        private ThreadLocal<SSLParamConfigurator> sniConfigs = new ThreadLocal<>();
+        private final ThreadLocal<SSLParamConfigurator> sniConfigs = new ThreadLocal<>();
 
         public void setSniConfig(SSLParamConfigurator sniConfigs) {
             this.sniConfigs.set(sniConfigs);

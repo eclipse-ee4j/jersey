@@ -73,6 +73,11 @@ public class NettyClientProperties {
     public static final String IDLE_CONNECTION_PRUNE_TIMEOUT = "jersey.config.client.idleConnectionPruneTimeout";
 
     /**
+     * Enable or disable the Netty logging by {@code LoggingHandler(Level.DEBUG)}. Disabled by default.
+     */
+    public static final String LOGGING_ENABLED = "jersey.config.client.netty.loggingEnabled";
+
+    /**
      *  <p>
      *    This property determines the maximum number of idle connections that will be simultaneously kept alive, per destination.
      *    The default is 5.

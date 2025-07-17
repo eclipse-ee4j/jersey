@@ -19,6 +19,7 @@ package org.glassfish.jersey.client.innate;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
 import org.glassfish.jersey.internal.PropertiesResolver;
 
 import javax.net.ssl.SSLContext;
@@ -30,6 +31,7 @@ import java.net.Proxy;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,17 +47,17 @@ import java.util.function.Supplier;
  * @param <E> the connector configuration subtype.
  */
 public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
-    protected final NullableRef<Integer> connectTimeout = NullableRef.of(0);
+    protected final NullableRef<Integer> connectTimeout = NullableRef.empty();
     protected final NullableRef<Boolean> expect100Continue = NullableRef.empty();
-    protected final NullableRef<Long> expect100continueThreshold = NullableRef.of(
-                                                ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE);
-    protected final NullableRef<Boolean> followRedirects = NullableRef.of(Boolean.TRUE);
-    protected final NullableRef<String> prefix = NullableRef.of("");
+    protected final NullableRef<Long> expect100continueThreshold = NullableRef.empty();
+    protected final NullableRef<Boolean> followRedirects = NullableRef.empty();
+    protected final NullableRef<String> prefix = NullableRef.empty();
     protected final NullableRef<Object> proxyUri = NullableRef.empty();
     protected final NullableRef<String> proxyUserName = NullableRef.empty();
     protected final NullableRef<String> proxyPassword = NullableRef.empty();
-    protected final NullableRef<Integer> readTimeout = NullableRef.of(0);
+    protected final NullableRef<Integer> readTimeout = NullableRef.empty();
     protected final NullableRef<RequestEntityProcessing> requestEntityProcessing = NullableRef.empty();
+    protected final NullableRef<String> sniHostname = NullableRef.empty();
     protected final NullableRef<Supplier<SSLContext>> sslContextSupplier = NullableRef.empty();
     protected final NullableRef<Integer> threadPoolSize = NullableRef.empty();
 
@@ -63,26 +65,6 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
      * Use factory methods provided by each connector supporting this configuration object and its subclass instead.
      */
     protected ConnectorConfiguration() {
-    }
-
-    /**
-     * Set and replace the values of current configuration by values of other configuration
-     * if and only if the values of other configuration are set.
-     *
-     * @param other another configuration instance.
-     */
-    protected <X extends ConnectorConfiguration<?>> void setNonEmpty(X other) {
-        this.connectTimeout.setNonEmpty(other.connectTimeout);
-        this.expect100Continue.setNonEmpty(other.expect100Continue);
-        this.expect100continueThreshold.setNonEmpty(other.expect100continueThreshold);
-        this.followRedirects.setNonEmpty(other.followRedirects);
-        this.proxyUri.setNonEmpty(other.proxyUri);
-        this.proxyUserName.setNonEmpty(other.proxyUserName);
-        this.proxyPassword.setNonEmpty(other.proxyPassword);
-        this.readTimeout.setNonEmpty(other.readTimeout);
-        this.requestEntityProcessing.setNonEmpty(other.requestEntityProcessing);
-        this.sslContextSupplier.setNonEmpty(other.sslContextSupplier);
-        this.threadPoolSize.setNonEmpty(other.threadPoolSize);
     }
 
     /**
@@ -253,6 +235,11 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         return self();
     }
 
+    public E sniHostName(String sniHostname) {
+        this.sniHostname.set(sniHostname);
+        return self();
+    }
+
     /**
      * Set the {@link SSLContext} supplier. The property {@link ClientProperties#SSL_CONTEXT_SUPPLIER} has precedence over
      * this setting.
@@ -393,6 +380,16 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         }
 
         /**
+         * Return the value if present, the {@code other} otherwise.
+         *
+         * @param other the value if not present
+         * @return inner value if present or the other otherwise.
+         */
+        public T ifPresentOrElse(T other) {
+            return empty ? other : ref;
+        }
+
+        /**
          * If a value is  not present, returns {@code true}, otherwise
          * {@code false}.
          *
@@ -437,14 +434,38 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         }
     }
 
-    protected interface Read<CC extends ConnectorConfiguration<CC>> {
+    protected interface Read<CC extends ConnectorConfiguration<CC> & Read<CC>>
+            extends SSLParamConfigurator.SSLParamConfiguratorConfiguration {
+
+        /**
+         * Set and replace the values of current configuration by values of other configuration
+         * if and only if the values of other configuration are set.
+         *
+         * @param other another configuration instance.
+         */
+        public default <X extends ConnectorConfiguration<?>> void setNonEmpty(X other) {
+            me().connectTimeout.setNonEmpty(other.connectTimeout);
+            me().expect100Continue.setNonEmpty(other.expect100Continue);
+            me().expect100continueThreshold.setNonEmpty(other.expect100continueThreshold);
+            me().followRedirects.setNonEmpty(other.followRedirects);
+            me().prefix.setNonEmpty(other.prefix);
+            me().proxyUri.setNonEmpty(other.proxyUri);
+            me().proxyUserName.setNonEmpty(other.proxyUserName);
+            me().proxyPassword.setNonEmpty(other.proxyPassword);
+            me().readTimeout.setNonEmpty(other.readTimeout);
+            me().requestEntityProcessing.setNonEmpty(other.requestEntityProcessing);
+            me().sniHostname.setNonEmpty(other.sniHostname);
+            me().sslContextSupplier.setNonEmpty(other.sslContextSupplier);
+            me().threadPoolSize.setNonEmpty(other.threadPoolSize);
+        }
+
         /**
          * Return the thread-pool size setting.
          *
          * @return the thread pool size setting.
          */
         public default Integer asyncThreadPoolSize() {
-            return self().threadPoolSize.get();
+            return me().threadPoolSize.get();
         }
 
         /**
@@ -453,11 +474,11 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @param request the current HTTP client request.
          * @return the updated configuration.
          */
-        public default CC connectTimeout(ClientRequest request) {
-            self().connectTimeout.set(
-                    request.resolveProperty(prefixed(ClientProperties.CONNECT_TIMEOUT), self().connectTimeout.get())
+        public default int connectTimeout(ClientRequest request) {
+            me().connectTimeout.set(
+                    request.resolveProperty(prefixed(ClientProperties.CONNECT_TIMEOUT), me().connectTimeout.get())
             );
-            return self();
+            return me().connectTimeout.get();
         }
 
         /**
@@ -466,7 +487,22 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return connect timeout value.
          */
         public default int connectTimeout() {
-            return self().connectTimeout.get();
+            return me().connectTimeout.get();
+        }
+
+        /**
+         * Sets the default value. The default methods cannot be set on instances passed by the customers using
+         * {@link ClientProperties#CONNECTOR_CONFIGURATION} since they would override the values previously set
+         * by the connector configuration object.
+         * @return the initialized configuration object.
+         */
+        public default CC init() {
+            me().connectTimeout(0)
+                    .expect100ContinueThreshold(ClientProperties.DEFAULT_EXPECT_100_CONTINUE_THRESHOLD_SIZE)
+                    .followRedirects(Boolean.TRUE)
+                    .prefix("")
+                    .readTimeout(0);
+            return me();
         }
 
         /**
@@ -476,9 +512,53 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          */
         public default CC copy() {
             CC config = instance();
-            config.setNonEmpty(self());
-            config.prefix.set(self().prefix.get());
+            config.init();
+            config.setNonEmpty(me());
             return config;
+        }
+
+        public default CC copyFromClient(Configuration configuration) {
+            CC clientConfiguration = copy();
+            final Map<String, Object> properties = configuration.getProperties();
+            Object configProp = properties.get(clientConfiguration.prefixed(ClientProperties.CONNECTOR_CONFIGURATION));
+            if (configProp != null) {
+                ConnectorConfiguration<?> clientCfg = (ConnectorConfiguration<?>) configProp;
+                if (me().prefix.equals(clientCfg.prefix) || clientCfg.prefix.get() == null) {
+                    clientConfiguration.setNonEmpty(clientCfg);
+                }
+            } else {
+                configProp = properties.get(ClientProperties.CONNECTOR_CONFIGURATION);
+                if (configProp != null && me().prefix.equals(((ConnectorConfiguration<?>) configProp).prefix)) {
+                    clientConfiguration.setNonEmpty((ConnectorConfiguration<?>) configProp);
+                }
+            }
+            return clientConfiguration;
+        }
+
+        public default CC copyFromRequest(ClientRequest request) {
+            CC requestConfiguration = copy();
+            Object configProp = request.getProperty(prefixed(ClientProperties.CONNECTOR_CONFIGURATION));
+            if (configProp != null) {
+                ConnectorConfiguration<?> requestCfg = (ConnectorConfiguration<?>) configProp;
+                if (me().prefix.equals(requestCfg.prefix) || requestCfg.prefix.get() == null) {
+                    requestConfiguration.setNonEmpty(requestCfg);
+                }
+            } else {
+                configProp = request.getProperty(ClientProperties.CONNECTOR_CONFIGURATION);
+                if (configProp != null && me().prefix.equals(((ConnectorConfiguration<?>) configProp).prefix)) {
+                    requestConfiguration.setNonEmpty((ConnectorConfiguration<?>) configProp);
+                }
+            }
+            return requestConfiguration;
+        }
+
+        @Override
+        default String getSniHostNameProperty(Configuration configuration) {
+            Object property = configuration.getProperty(prefixed(ClientProperties.SNI_HOST_NAME));
+            if (property == null) {
+                property = configuration.getProperty(prefixed(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT)));
+            }
+            return property == null ? me().sniHostname.get() : (String) property;
         }
 
         /**
@@ -491,9 +571,9 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             final Boolean expectContinueActivated =
                     request.resolveProperty(prefixed(ClientProperties.EXPECT_100_CONTINUE), Boolean.class);
             if (expectContinueActivated != null) {
-                self().expect100Continue.set(expectContinueActivated);
+                me().expect100Continue.set(expectContinueActivated);
             }
-            return self().expect100Continue.get();
+            return me().expect100Continue.get();
         }
 
         /**
@@ -503,11 +583,11 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the content length threshold size.
          */
         public default long expect100ContinueThreshold(ClientRequest request) {
-            self().expect100continueThreshold.set(
+            me().expect100continueThreshold.set(
                     request.resolveProperty(prefixed(ClientProperties.EXPECT_100_CONTINUE_THRESHOLD_SIZE),
-                            self().expect100continueThreshold.get())
+                            me().expect100continueThreshold.get())
             );
-            return self().expect100continueThreshold.get();
+            return me().expect100continueThreshold.get();
         }
 
         /**
@@ -517,23 +597,23 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return follow redirects setting.
          */
         public default boolean followRedirects(ClientRequest request) {
-            self().followRedirects.set(
-                    request.resolveProperty(prefixed(ClientProperties.FOLLOW_REDIRECTS), self().followRedirects.get())
+            me().followRedirects.set(
+                    request.resolveProperty(prefixed(ClientProperties.FOLLOW_REDIRECTS), me().followRedirects.get())
             );
-            return self().followRedirects.get();
+            return me().followRedirects.get();
         }
 
         /**
-         * Get the value of the follow redirects setting.
+         * Get the value of the follow redirects setting. The default is {@code true}.
          *
          * @return whether to follow redirects or not.
          */
         public default boolean followRedirects() {
-            return self().followRedirects.get();
+            return me().followRedirects.get();
         }
 
         public default Configuration prefixedConfiguration(Configuration configuration) {
-            return self().prefix.get().isEmpty() ? configuration : new PrefixedConfiguration(self().prefix.get(), configuration);
+            return me().prefix.get().isEmpty() ? configuration : new PrefixedConfiguration(me().prefix.get(), configuration);
         }
 
         /**
@@ -549,17 +629,17 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          */
         public default Optional<ClientProxy> proxy(ClientRequest request, URI requestUri) {
             Optional<ClientProxy> proxy = ClientProxy.proxyFromRequest(
-                    self().prefix.get().isEmpty()
+                    me().prefix.get().isEmpty()
                         ? request
-                        : new PrefixedPropertiesResolver(self().prefix.get(), request)
+                        : new PrefixedPropertiesResolver(me().prefix.get(), request)
             );
-            if (!proxy.isPresent() && self().proxyUri.isPresent()) {
-                final Map<String, Object> properties = self().prefix.get().isEmpty()
+            if (!proxy.isPresent() && me().proxyUri.isPresent()) {
+                final Map<String, Object> properties = me().prefix.get().isEmpty()
                         ? new HashMap<>()
-                        : new PrefixedMap<>(self().prefix.get(), new HashMap<>());
-                properties.put(self().prefix.get() + ClientProperties.PROXY_URI, self().proxyUri.get());
-                properties.put(self().prefix.get() + ClientProperties.PROXY_USERNAME, self().proxyUserName.get());
-                properties.put(self().prefix.get() + ClientProperties.PROXY_PASSWORD, self().proxyPassword.get());
+                        : new PrefixedMap<>(me().prefix.get(), new HashMap<>());
+                properties.put(me().prefix.get() + ClientProperties.PROXY_URI, me().proxyUri.get());
+                properties.put(me().prefix.get() + ClientProperties.PROXY_USERNAME, me().proxyUserName.get());
+                properties.put(me().prefix.get() + ClientProperties.PROXY_PASSWORD, me().proxyPassword.get());
                 request.getPropertyNames().forEach(k -> properties.put(k, request.getProperty(k)));
                 proxy = ClientProxy.proxyFromProperties(properties);
             }
@@ -576,8 +656,8 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return updated configuration.
          */
         public default CC readTimeout(ClientRequest request) {
-            self().readTimeout.set(request.resolveProperty(prefixed(ClientProperties.READ_TIMEOUT), self().readTimeout.get()));
-            return self();
+            me().readTimeout.set(request.resolveProperty(prefixed(ClientProperties.READ_TIMEOUT), me().readTimeout.get()));
+            return me();
         }
 
         /**
@@ -586,7 +666,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * @return the read timeout milliseconds.
          */
         public default int readTimeout() {
-            return self().readTimeout.get();
+            return me().readTimeout.get();
         }
 
         /**
@@ -599,9 +679,19 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             RequestEntityProcessing entityProcessing =
                     request.resolveProperty(prefixed(ClientProperties.REQUEST_ENTITY_PROCESSING), RequestEntityProcessing.class);
             if (entityProcessing == null) {
-                entityProcessing = self().requestEntityProcessing.get();
+                entityProcessing = me().requestEntityProcessing.get();
             }
             return entityProcessing;
+        }
+
+        @Override
+        default String resolveSniHostNameProperty(PropertiesResolver resolver) {
+            String property = resolver.resolveProperty(prefixed(ClientProperties.SNI_HOST_NAME), String.class);
+            if (property == null) {
+                property = resolver.resolveProperty(
+                        prefixed(ClientProperties.SNI_HOST_NAME.toLowerCase(Locale.ROOT)), String.class);
+            }
+            return property == null ? me().sniHostname.get() : property;
         }
 
         /**
@@ -617,13 +707,13 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             Supplier<SSLContext> supplier =
                     request.resolveProperty(prefixed(ClientProperties.SSL_CONTEXT_SUPPLIER), Supplier.class);
             if (supplier == null) {
-                supplier = self().sslContextSupplier.get();
+                supplier = me().sslContextSupplier.get();
             }
             return supplier == null ? client.getSslContext() : supplier.get();
         }
 
         public default String prefixed(String propertyName) {
-            return self().prefix.get() + propertyName;
+            return me().prefix.get() + propertyName;
         }
 
         /**
@@ -636,7 +726,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          * Return typed-cast self.
          * @return self.
          */
-        public CC self();
+        public CC me();
     }
 
 

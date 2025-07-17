@@ -36,22 +36,21 @@ import java.util.Map;
 class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> extends ConnectorConfiguration<N> {
 
     /* package */ final NullableRef<NettyConnectionController> connectionController = NullableRef.empty();
-    /* package */ final NullableRef<Boolean> enableHostnameVerification = NullableRef.of(Boolean.TRUE);
-    /* package */ final Ref<Integer> expect100ContTimeout = NullableRef.of(
-                                                                NettyClientProperties.DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE);
-    /* package */ final NullableRef<Boolean> filterHeadersForProxy = NullableRef.of(Boolean.TRUE);
-    /* package */ final NullableRef<Integer> firstHttpHeaderLineLength = NullableRef.of(
-                                                                NettyClientProperties.DEFAULT_INITIAL_LINE_LENGTH);
-    /* package */ final NullableRef<Integer> maxChunkSize = NullableRef.of(NettyClientProperties.DEFAULT_CHUNK_SIZE);
-    /* package */ final NullableRef<Integer> maxHeaderSize = NullableRef.of(NettyClientProperties.DEFAULT_HEADER_SIZE);
+    /* package */ final NullableRef<Boolean> enableHostnameVerification = NullableRef.empty();
+    /* package */ final Ref<Integer> expect100ContTimeout = NullableRef.empty();
+    /* package */ final NullableRef<Boolean> filterHeadersForProxy = NullableRef.empty();
+    /* package */ final NullableRef<Integer> firstHttpHeaderLineLength = NullableRef.empty();
+    /* package */ final Ref<Boolean> loggingEnabled = NullableRef.empty();
+    /* package */ final NullableRef<Integer> maxChunkSize = NullableRef.empty();
+    /* package */ final NullableRef<Integer> maxHeaderSize = NullableRef.empty();
     // either from Jersey config, or default
-    /* package */ final Ref<Integer> maxPoolSizeTotal = NullableRef.of(DEFAULT_MAX_POOL_SIZE_TOTAL);
+    /* package */ final Ref<Integer> maxPoolSizeTotal = NullableRef.empty();
     // either from Jersey config, or default
-    /* package */ final Ref<Integer> maxPoolIdle = NullableRef.of(DEFAULT_MAX_POOL_IDLE);
+    /* package */ final Ref<Integer> maxPoolIdle = NullableRef.empty();
     // either from system property, or from Jersey config, or default
-    /* package */ final Ref<Integer> maxPoolSize = NullableRef.of(HTTP_KEEPALIVE ? MAX_POOL_SIZE : DEFAULT_MAX_POOL_SIZE);
-    /* package */ final Ref<Integer> maxRedirects = NullableRef.of(DEFAULT_MAX_REDIRECTS);
-    /* package */ final NullableRef<Boolean> preserveMethodOnRedirect = NullableRef.of(Boolean.TRUE);
+    /* package */ final Ref<Integer> maxPoolSize = NullableRef.empty();
+    /* package */ final Ref<Integer> maxRedirects = NullableRef.empty();
+    /* package */ final NullableRef<Boolean> preserveMethodOnRedirect = NullableRef.empty();
     /* package */ final NullableRef<NettyHttpRedirectController> redirectController = NullableRef.empty();
 
     // If HTTP keepalive is enabled the value of "http.maxConnections" determines the maximum number
@@ -68,27 +67,6 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
     private static final int DEFAULT_MAX_POOL_SIZE_TOTAL = 60; // connections
 
     private static final int DEFAULT_MAX_REDIRECTS = 5;
-
-    @Override
-    protected <X extends ConnectorConfiguration<?>> void setNonEmpty(X otherCC) {
-        NettyConnectorConfiguration<?> other = (NettyConnectorConfiguration<?>) otherCC;
-        super.setNonEmpty(other);
-        this.connectionController.setNonEmpty(other.connectionController);
-        this.redirectController.setNonEmpty(other.redirectController);
-        this.connectionController.setNonEmpty(other.connectionController);
-        this.enableHostnameVerification.setNonEmpty(other.enableHostnameVerification);
-        ((NullableRef<Integer>) this.expect100ContTimeout).setNonEmpty((NullableRef<Integer>) other.expect100ContTimeout);
-        this.filterHeadersForProxy.setNonEmpty(other.filterHeadersForProxy);
-        this.firstHttpHeaderLineLength.setNonEmpty(other.firstHttpHeaderLineLength);
-        this.maxChunkSize.setNonEmpty(other.maxChunkSize);
-        this.maxHeaderSize.setNonEmpty(other.maxHeaderSize);
-        ((NullableRef<Integer>) this.maxPoolIdle).setNonEmpty((NullableRef<Integer>) other.maxPoolIdle);
-        ((NullableRef<Integer>) this.maxPoolSize).setNonEmpty((NullableRef<Integer>) other.maxPoolSize);
-        ((NullableRef<Integer>) this.maxPoolSizeTotal).setNonEmpty((NullableRef<Integer>) other.maxPoolSizeTotal);
-        ((NullableRef<Integer>) this.maxRedirects).setNonEmpty((NullableRef<Integer>) other.maxRedirects);
-        this.preserveMethodOnRedirect.setNonEmpty(other.preserveMethodOnRedirect);
-        this.redirectController.setNonEmpty(other.redirectController);
-    }
 
     /**
      * Set the connection pooling controller for the Netty Connector.
@@ -115,13 +93,25 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
 
     /**
      * Enable or disable the endpoint identification algorithm to HTTPS. The property
-     * {@link NettyClientProperties#ENABLE_SSL_HOSTNAME_VERIFICATION} has  over this setting.
+     * {@link NettyClientProperties#ENABLE_SSL_HOSTNAME_VERIFICATION} takes precedence over this setting.
      *
      * @param enable enable or disable the hostname verification.
      * @return updated configuration.
      */
     public N enableSslHostnameVerification(boolean enable) {
         enableHostnameVerification.set(enable);
+        return self();
+    }
+
+    /**
+     * Enable or disable the Netty logging by {@code LoggingHandler(Level.DEBUG)}. Disabled by default.
+     * The property {@link NettyClientProperties#LOGGING_ENABLED} takes precedence over this setting.
+     *
+     * @param enable to enable or disable.
+     * @return updated configuration.
+     */
+    public N enableLoggingHandler(boolean enable) {
+        loggingEnabled.set(enable);
         return self();
     }
 
@@ -257,6 +247,49 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
             extends NettyConnectorConfiguration<N>
             implements ConnectorConfiguration.Read<N> {
 
+        @Override
+        public <X extends ConnectorConfiguration<?>> void setNonEmpty(X otherCC) {
+            NettyConnectorConfiguration<?> other = (NettyConnectorConfiguration<?>) otherCC;
+            ConnectorConfiguration.Read.super.setNonEmpty(other);
+            this.connectionController.setNonEmpty(other.connectionController);
+            this.redirectController.setNonEmpty(other.redirectController);
+            this.connectionController.setNonEmpty(other.connectionController);
+            this.enableHostnameVerification.setNonEmpty(other.enableHostnameVerification);
+            ((NullableRef<Integer>) this.expect100ContTimeout).setNonEmpty((NullableRef<Integer>) other.expect100ContTimeout);
+            this.filterHeadersForProxy.setNonEmpty(other.filterHeadersForProxy);
+            this.firstHttpHeaderLineLength.setNonEmpty(other.firstHttpHeaderLineLength);
+            ((NullableRef<Boolean>) this.loggingEnabled).setNonEmpty((NullableRef<Boolean>) other.loggingEnabled);
+            this.maxChunkSize.setNonEmpty(other.maxChunkSize);
+            this.maxHeaderSize.setNonEmpty(other.maxHeaderSize);
+            ((NullableRef<Integer>) this.maxPoolIdle).setNonEmpty((NullableRef<Integer>) other.maxPoolIdle);
+            ((NullableRef<Integer>) this.maxPoolSize).setNonEmpty((NullableRef<Integer>) other.maxPoolSize);
+            ((NullableRef<Integer>) this.maxPoolSizeTotal).setNonEmpty((NullableRef<Integer>) other.maxPoolSizeTotal);
+            ((NullableRef<Integer>) this.maxRedirects).setNonEmpty((NullableRef<Integer>) other.maxRedirects);
+            this.preserveMethodOnRedirect.setNonEmpty(other.preserveMethodOnRedirect);
+            this.redirectController.setNonEmpty(other.redirectController);
+        }
+
+        @Override
+        public N init() {
+            Read.super.init();
+            enableSslHostnameVerification(Boolean.TRUE);
+            expect100ContinueTimeout(NettyClientProperties.DEFAULT_EXPECT_100_CONTINUE_TIMEOUT_VALUE);
+            filterHeadersForProxy(Boolean.TRUE);
+            initialHttpHeaderLineLength(NettyClientProperties.DEFAULT_INITIAL_LINE_LENGTH);
+            enableLoggingHandler(Boolean.FALSE);
+            maxChunkSize(NettyClientProperties.DEFAULT_CHUNK_SIZE);
+            maxHeaderSize(NettyClientProperties.DEFAULT_HEADER_SIZE);
+            // either from Jersey config, or default
+            maxTotalConnections(DEFAULT_MAX_POOL_SIZE_TOTAL);
+            // either from Jersey config, or default
+            maxPoolIdle.set(DEFAULT_MAX_POOL_IDLE);
+            // either from system property, or from Jersey config, or default
+            maxPoolSize.set(HTTP_KEEPALIVE ? MAX_POOL_SIZE : DEFAULT_MAX_POOL_SIZE);
+            maxRedirects(DEFAULT_MAX_REDIRECTS);
+            preserveMethodOnRedirect(Boolean.TRUE);
+            return self();
+        }
+
         /**
          * Get the preset {@link NettyConnectionController} or create an instance of the default one, if not preset.
          * @return the {@link NettyConnectionController} instance.
@@ -350,29 +383,19 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
          */
         /* package */ N fromClient(Client client) {
             final Map<String, Object> properties = client.getConfiguration().getProperties();
-            final N clientConfiguration = copy();
-            Object configProp = properties.get(prefixed(ClientProperties.CONNECTOR_CONFIGURATION));
-            if (configProp != null) {
-                NettyConnectorConfiguration<?> nettyCfg = (NettyConnectorConfiguration<?>) configProp;
-                if (prefix.equals(nettyCfg.prefix) || "".equals(nettyCfg.prefix.get())) {
-                    clientConfiguration.setNonEmpty(nettyCfg);
-                    clientConfiguration.prefix(prefix.get());
-                }
-            } else {
-                configProp = properties.get(ClientProperties.CONNECTOR_CONFIGURATION);
-                if (configProp != null && prefix.equals(((NettyConnectorConfiguration<?>) configProp).prefix)) {
-                    clientConfiguration.setNonEmpty((NettyConnectorConfiguration<?>) configProp);
-                }
-            }
+            final N clientConfiguration = copyFromClient(client.getConfiguration());
 
-            final Object threadPoolSize = properties.get(prefixed(ClientProperties.ASYNC_THREADPOOL_SIZE));
+            final Object threadPoolSize = properties.get(clientConfiguration.prefixed(ClientProperties.ASYNC_THREADPOOL_SIZE));
             if (threadPoolSize instanceof Integer && (Integer) threadPoolSize > 0) {
                 clientConfiguration.asyncThreadPoolSize((Integer) threadPoolSize);
             }
 
-            final Object maxPoolSizeTotalProperty = properties.get(prefixed(NettyClientProperties.MAX_CONNECTIONS_TOTAL));
-            final Object maxPoolIdleProperty = properties.get(prefixed(NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT));
-            final Object maxPoolSizeProperty = properties.get(prefixed(NettyClientProperties.MAX_CONNECTIONS));
+            final Object maxPoolSizeTotalProperty = properties.get(
+                    clientConfiguration.prefixed(NettyClientProperties.MAX_CONNECTIONS_TOTAL));
+            final Object maxPoolIdleProperty = properties.get(
+                    clientConfiguration.prefixed(NettyClientProperties.IDLE_CONNECTION_PRUNE_TIMEOUT));
+            final Object maxPoolSizeProperty = properties.get(
+                    clientConfiguration.prefixed(NettyClientProperties.MAX_CONNECTIONS));
 
             if (maxPoolSizeTotalProperty != null) {
                 clientConfiguration.maxPoolSizeTotal.set((Integer) maxPoolSizeTotalProperty);
@@ -394,6 +417,13 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
                 throw new ProcessingException(LocalizationMessages.WRONG_MAX_POOL_SIZE(maxPoolSize.get()));
             }
 
+            final Object logging = properties.get(clientConfiguration.prefixed(NettyClientProperties.LOGGING_ENABLED));
+            if (logging instanceof Boolean) {
+                clientConfiguration.loggingEnabled.set((Boolean) logging);
+            } else if (logging instanceof String) {
+                clientConfiguration.loggingEnabled.set(Boolean.valueOf((String) logging));
+            }
+
             return clientConfiguration;
         }
 
@@ -410,19 +440,11 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
          * @return a new instance of configuration.
          */
         /* package */ N fromRequest(ClientRequest request) {
-            final N requestConfiguration = copy();
-            Object configProp = request.getProperty(prefixed(ClientProperties.CONNECTOR_CONFIGURATION));
-            if (configProp != null) {
-                NettyConnectorConfiguration<?> nettyCfg = (NettyConnectorConfiguration<?>) configProp;
-                if (prefix.equals(nettyCfg.prefix) || "".equals(nettyCfg.prefix.get())) {
-                    requestConfiguration.setNonEmpty(nettyCfg);
-                    requestConfiguration.prefix(prefix.get());
-                }
-            } else {
-                configProp = request.getProperty(ClientProperties.CONNECTOR_CONFIGURATION);
-                if (configProp != null && prefix.equals(((NettyConnectorConfiguration<?>) configProp).prefix)) {
-                    requestConfiguration.setNonEmpty((NettyConnectorConfiguration<?>) configProp);
-                }
+            final N requestConfiguration = copyFromRequest(request);
+
+            final Boolean logging = request.resolveProperty(prefixed(NettyClientProperties.LOGGING_ENABLED), Boolean.class);
+            if (logging != null) {
+                requestConfiguration.loggingEnabled.set(logging);
             }
 
             return requestConfiguration;
@@ -476,9 +498,6 @@ class NettyConnectorConfiguration<N extends NettyConnectorConfiguration<N>> exte
 
             return proxy;
         }
-
-        @Override
-        public abstract N self();
     }
 
 }
