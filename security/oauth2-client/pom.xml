@@ -26,6 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>oauth2-client</artifactId>
+    <name>jersey-oauth2-client</name>
 
     <description>
         Module that adds an OAuth 2 support to Jersey client

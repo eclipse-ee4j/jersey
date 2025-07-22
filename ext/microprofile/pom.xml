@@ -29,6 +29,7 @@
 
     <groupId>org.glassfish.jersey.ext.microprofile</groupId>
     <artifactId>project</artifactId>
+    <name>jersey-ext-microprofile-project</name>
     <packaging>pom</packaging>
 
     <modules>

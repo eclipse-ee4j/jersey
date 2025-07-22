@@ -26,6 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>oauth1-signature</artifactId>
+    <name>jersey-oauth1-signature</name>
     <packaging>jar</packaging>
 
     <description>OAuth1 signature module</description>

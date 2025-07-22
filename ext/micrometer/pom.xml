@@ -28,6 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jersey-micrometer</artifactId>
+    <name>jersey-ext-micrometer-integration</name>
 
     <dependencies>
 
