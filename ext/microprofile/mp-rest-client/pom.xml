@@ -27,6 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jersey-mp-rest-client</artifactId>
+    <name>jersey-ext-mp-rest-client</name>
 
     <dependencies>
         <dependency>

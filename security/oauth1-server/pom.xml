@@ -27,6 +27,7 @@
 
     <artifactId>oauth1-server</artifactId>
     <packaging>jar</packaging>
+    <name>jersey-oauth1-server</name>
 
     <description>
         Module that adds an OAuth 1 support to Jersey server
