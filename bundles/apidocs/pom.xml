@@ -106,11 +106,6 @@
             <artifactId>jersey-container-servlet</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <!-- need to explicitly include the servlet dependency here
               as it is scoped as provided in the jersey-servet modules -->
         <dependency>

@@ -39,17 +39,15 @@
             <version>${servlet6.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jakarta.servlet</groupId>
-                    <artifactId>jakarta.servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -74,11 +72,13 @@
                     <instructions>
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
                         <Import-Package>
+                            jakarta.persistence.*;resolution:=optional,
                             jakarta.servlet.*;version="[6.0,7.0)",
                             ${jakarta.annotation.osgi.version},
                             ${jakarta.rest.osgi.version},
                             *
                         </Import-Package>
+                        <Export-Package>org.glassfish.jersey.servlet.*</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

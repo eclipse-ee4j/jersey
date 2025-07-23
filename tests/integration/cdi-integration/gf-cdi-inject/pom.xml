@@ -31,7 +31,7 @@
     <description>Embedded GF tests @Inject</description>
 
     <properties>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <modules.dir>${glassfish.home}/glassfish/modules</modules.dir>
         <glassfish.container.version>${gf.impl.version}</glassfish.container.version>
     </properties>
@@ -201,7 +201,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.glassfish.jersey.containers</groupId>
-                                    <artifactId>jersey-container-servlet-core</artifactId>
+                                    <artifactId>jersey-container-servlet</artifactId>
                                     <version>${jersey.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,13 +46,13 @@ public class HelloWorldResourceITCase extends JerseyTest {
 
     @Test
     public void testHelloWorld() throws Exception {
-        String s = target().path("filter_path/helloworld").request().get(String.class);
+        String s = target().path("filter_path/resource_path/helloworld").request().get(String.class);
         assertEquals("Hello World! " + this.getClass().getPackage().getName(), s);
     }
 
     @Test
     public void testHelloWorldAtWrongPath() {
-        Response r = target().path("application_path/filter_path/helloworld").request().get();
+        Response r = target().path("application_path/resource_path/helloworld").request().get();
         assertTrue(r.getStatus() >= 400,
                 "Request to application_path/helloworld should have failed, but did not. That means two applications are "
                         + "registered.");
@@ -61,13 +61,13 @@ public class HelloWorldResourceITCase extends JerseyTest {
     @Test
     @Disabled
     public void testUnreachableResource() {
-        Response r = target().path("filter_path/unreachable").request().get();
+        Response r = target().path("filter_path/resource_path/unreachable").request().get();
         assertTrue(r.getStatus() >= 400, "Managed to reach a resource that is not registered in the application.");
     }
 
     @Test
     public void testUnreachableResourceAtWrongPath() {
-        Response r = target().path("application_path/filter_path/unreachable").request().get();
+        Response r = target().path("application_path/resource_path/unreachable").request().get();
         assertTrue(r.getStatus() >= 400, "Managed to reach a resource that is not registered in the application.");
     }
 }

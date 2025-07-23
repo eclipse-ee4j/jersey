@@ -51,7 +51,7 @@
         </dependency>
         <dependency> <!-- this is to avoid Jersey jars to be bundled with the WAR -->
            <groupId>org.glassfish.jersey.containers</groupId>
-           <artifactId>jersey-container-servlet-core</artifactId>
+           <artifactId>jersey-container-servlet</artifactId>
            <scope>provided</scope>
         </dependency>
         <dependency>
@@ -150,11 +150,6 @@
                 <dependency>
                     <groupId>jakarta.ws.rs</groupId>
                     <artifactId>jakarta.ws.rs-api</artifactId>
-                    <scope>compile</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.jersey.containers</groupId>
-                    <artifactId>jersey-container-servlet-core</artifactId>
                     <scope>compile</scope>
                 </dependency>
                 <dependency>

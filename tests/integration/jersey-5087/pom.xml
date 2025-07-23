@@ -111,10 +111,6 @@
             <artifactId>jersey-container-servlet</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.jersey.containers.glassfish</groupId>
             <artifactId>jersey-gf-ejb</artifactId>
         </dependency>

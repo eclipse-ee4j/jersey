@@ -250,7 +250,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.glassfish.jersey.containers</groupId>
-                                    <artifactId>jersey-container-servlet-core</artifactId>
+                                    <artifactId>jersey-container-servlet</artifactId>
                                     <version>${jersey.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>

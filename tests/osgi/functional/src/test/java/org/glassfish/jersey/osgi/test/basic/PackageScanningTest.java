@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -73,7 +73,7 @@ public class PackageScanningTest {
 
                 mavenBundle().groupId("jakarta.servlet").artifactId("jakarta.servlet-api").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.grizzly").artifactId("grizzly-http-servlet").versionAsInProject(),
-                mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet-core")
+                mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-servlet")
                         .versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.jersey.containers").artifactId("jersey-container-grizzly2-servlet")
                         .versionAsInProject(),

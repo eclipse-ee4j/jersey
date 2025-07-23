@@ -1,0 +1,672 @@
+/*
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package org.glassfish.jersey.servlet;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilderException;
+import org.glassfish.jersey.internal.inject.Providers;
+import org.glassfish.jersey.internal.util.ExtendedLogger;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.server.ApplicationHandler;
+import org.glassfish.jersey.server.ContainerException;
+import org.glassfish.jersey.server.ContainerResponse;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.internal.ContainerUtils;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
+import org.glassfish.jersey.servlet.internal.LocalizationMessages;
+import org.glassfish.jersey.servlet.internal.ResponseWriter;
+import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
+import org.glassfish.jersey.uri.UriComponent;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+/**
+ * A {@link jakarta.servlet.Servlet} or {@link Filter} for deploying root resource classes.
+ * <p />
+ * The following sections make reference to initialization parameters. Unless
+ * otherwise specified the initialization parameters apply to both server
+ * and filter initialization parameters.
+ * <p />
+ * The servlet or filter may be configured to have an initialization
+ * parameter {@value ServletProperties#JAXRS_APPLICATION_CLASS}
+ * (see {@link ServletProperties#JAXRS_APPLICATION_CLASS}) and whose value is a
+ * fully qualified name of a class that implements {@link jakarta.ws.rs.core.Application}.
+ * The class is instantiated as a singleton component
+ * managed by the runtime, and injection may be performed (the artifacts that
+ * may be injected are limited to injectable providers registered when
+ * the servlet or filter is configured).
+ * <p />
+ * If the initialization parameter {@value ServletProperties#JAXRS_APPLICATION_CLASS}
+ * is not present and a initialization parameter {@value ServerProperties#PROVIDER_PACKAGES}
+ * is present (see {@link ServerProperties#PROVIDER_PACKAGES}) a new instance of
+ * {@link ResourceConfig} with this configuration is created. The initialization parameter
+ * {@value ServerProperties#PROVIDER_PACKAGES} MUST be set to provide one or
+ * more package names. Each package name MUST be separated by ';'.
+ * <p />
+ * If none of the above resource configuration related initialization parameters
+ * are present a new instance of {@link ResourceConfig} with {@link WebAppResourcesScanner}
+ * is created. The initialization parameter {@value ServerProperties#PROVIDER_CLASSPATH}
+ * is present (see {@link ServerProperties#PROVIDER_CLASSPATH}) MAY be
+ * set to provide one or more resource paths. Each path MUST be separated by ';'.
+ * If the initialization parameter is not present then the following resource
+ * paths are utilized: {@code "/WEB-INF/lib"} and {@code "/WEB-INF/classes"}.
+ * <p />
+ * All initialization parameters are added as properties of the created
+ * {@link ResourceConfig}.
+ * <p />
+ * A new {@link ApplicationHandler} instance will be created and configured such
+ * that the following classes may be injected onto a root resource, provider
+ * and {@link jakarta.ws.rs.core.Application} classes using {@link jakarta.ws.rs.core.Context
+ * &#64;Context} annotation:
+ * {@link HttpServletRequest}, {@link HttpServletResponse},
+ * {@link ServletContext}, {@link jakarta.servlet.ServletConfig} and {@link WebConfig}.
+ * If this class is used as a Servlet then the {@link jakarta.servlet.ServletConfig} class may
+ * be injected. If this class is used as a servlet filter then the {@link FilterConfig}
+ * class may be injected. {@link WebConfig} may be injected to abstract
+ * servlet or filter deployment.
+ * <p />
+ * Persistence units that may be injected must be configured in web.xml
+ * in the normal way plus an additional servlet parameter to enable the
+ * Jersey servlet to locate them in JNDI. E.g. with the following
+ * persistence unit configuration:
+ * <pre>{@code
+ * <persistence-unit-ref>
+ *     <persistence-unit-ref-name>persistence/widget</persistence-unit-ref-name>
+ *     <persistence-unit-name>WidgetPU</persistence-unit-name>
+ * </persistence-unit-ref>
+ * }</pre>
+ * the Jersey servlet requires an additional servlet parameter as
+ * follows:
+ * <pre>{@code
+ * <init-param>
+ *     <param-name>unit:WidgetPU</param-name>
+ *     <param-value>persistence/widget</param-value>
+ * </init-param>
+ * }</pre>
+ * Given the above, Jersey will inject the {@link jakarta.persistence.EntityManagerFactory EntityManagerFactory} found
+ * at {@code java:comp/env/persistence/widget} in JNDI when encountering a
+ * field or parameter annotated with {@code @PersistenceUnit(unitName="WidgetPU")}.
+ *
+ * @author Paul Sandoz
+ * @author Pavel Bucek
+ * @author Michal Gajdos
+ * @author Libor Kramolis
+ */
+public class ServletContainer extends HttpServlet implements Filter, Container {
+
+    private static final long serialVersionUID = 3932047066686065219L;
+    private static final ExtendedLogger LOGGER =
+            new ExtendedLogger(Logger.getLogger(ServletContainer.class.getName()), Level.FINEST);
+
+    private transient FilterConfig filterConfig;
+    private transient WebComponent webComponent;
+    private transient ResourceConfig resourceConfig;
+    private transient Pattern staticContentPattern;
+    private transient String filterContextPath;
+    private transient List<String> filterUrlMappings;
+
+    private transient volatile ContainerLifecycleListener containerListener;
+
+    /**
+     * Initiate the Web component.
+     *
+     * @param webConfig the Web configuration.
+     * @throws ServletException in case of an initialization failure
+     */
+    protected void init(final WebConfig webConfig) throws ServletException {
+        webComponent = new WebComponent(webConfig, resourceConfig);
+        containerListener = webComponent.appHandler;
+        containerListener.onStartup(this);
+    }
+
+    /**
+     * Create Jersey Servlet container.
+     */
+    public ServletContainer() {
+    }
+
+    /**
+     * Create Jersey Servlet container.
+     *
+     * @param resourceConfig container configuration.
+     */
+    public ServletContainer(final ResourceConfig resourceConfig) {
+        this.resourceConfig = resourceConfig;
+    }
+
+    /**
+     * Dispatches client requests to the protected
+     * {@code service} method. There's no need to
+     * override this method.
+     *
+     * @param req the {@link HttpServletRequest} object that
+     *            contains the request the client made of
+     *            the servlet
+     * @param res the {@link HttpServletResponse} object that
+     *            contains the response the servlet returns
+     *            to the client
+     * @throws IOException      if an input or output error occurs
+     *                          while the servlet is handling the
+     *                          HTTP request
+     * @throws ServletException if the HTTP request cannot
+     *                          be handled
+     * @see jakarta.servlet.Servlet#service
+     */
+    @Override
+    public void service(final ServletRequest req, final ServletResponse res)
+            throws ServletException, IOException {
+        final HttpServletRequest request;
+        final HttpServletResponse response;
+
+        if (!(req instanceof HttpServletRequest && res instanceof HttpServletResponse)) {
+            throw new ServletException("non-HTTP request or response");
+        }
+
+        request = (HttpServletRequest) req;
+        response = (HttpServletResponse) res;
+
+        service(request, response);
+    }
+
+    /**
+     * Receives standard HTTP requests from the public {@code service} method and dispatches
+     * them to the {@code do}<i>XXX</i> methods defined in
+     * this class. This method is an HTTP-specific version of the
+     * {@link jakarta.servlet.Servlet#service} method. There's no
+     * need to override this method.
+     *
+     * @param request  the {@link HttpServletRequest} object that
+     *                 contains the request the client made of
+     *                 the servlet
+     * @param response the {@link HttpServletResponse} object that
+     *                 contains the response the servlet returns
+     *                 to the client
+     * @throws IOException      if an input or output error occurs
+     *                          while the servlet is handling the
+     *                          HTTP request
+     * @throws ServletException if the HTTP request
+     *                          cannot be handled
+     * @see jakarta.servlet.Servlet#service
+     */
+    @Override
+    protected void service(final HttpServletRequest request, final HttpServletResponse response)
+            throws ServletException, IOException {
+        /**
+         * There is an annoying edge case where the service method is
+         * invoked for the case when the URI is equal to the deployment URL
+         * minus the '/', for example http://locahost:8080/HelloWorldWebApp
+         */
+        final String servletPath = request.getServletPath();
+        final StringBuffer requestUrl = request.getRequestURL();
+        final String requestURI = request.getRequestURI();
+
+        //        final String pathInfo = request.getPathInfo();
+        //        final boolean checkPathInfo = pathInfo == null || pathInfo.isEmpty() || pathInfo.equals("/");
+        //        if (checkPathInfo && !request.getRequestURI().endsWith("/")) {
+        // Only do this if the last segment of the servlet path does not contain '.'
+        // This handles the case when the extension mapping is used with the servlet
+        // see issue 506
+        // This solution does not require parsing the deployment descriptor,
+        // however still leaves it broken for the very rare case if a standard path
+        // servlet mapping would include dot in the last segment (e.g. /.webresources/*)
+        // and somebody would want to hit the root resource without the trailing slash
+        //            final int i = servletPath.lastIndexOf('/');
+        //            if (servletPath.substring(i + 1).indexOf('.') < 0) {
+        // TODO (+ handle request URL with invalid characters - see the creation of absoluteUriBuilder below)
+        //                if (webComponent.getResourceConfig().getFeature(ResourceConfig.FEATURE_REDIRECT)) {
+        //                    URI l = UriBuilder.fromUri(request.getRequestURL().toString()).
+        //                            path("/").
+        //                            replaceQuery(request.getQueryString()).build();
+        //
+        //                    response.setStatus(307);
+        //                    response.setHeader("Location", l.toASCIIString());
+        //                    return;
+        //                } else {
+        //                pathInfo = "/";
+        //                requestURL.append("/");
+        //                requestURI += "/";
+        //                }
+        //            }
+        //        }
+
+        /**
+         * The HttpServletRequest.getRequestURL() contains the complete URI
+         * minus the query and fragment components.
+         */
+        final UriBuilder absoluteUriBuilder;
+        try {
+            absoluteUriBuilder = UriBuilder.fromUri(requestUrl.toString());
+        } catch (final IllegalArgumentException iae) {
+            setResponseForInvalidUri(response, iae);
+            return;
+        }
+
+        /**
+         * The HttpServletRequest.getPathInfo() and
+         * HttpServletRequest.getServletPath() are in decoded form.
+         *
+         * On some servlet implementations the getPathInfo() removed
+         * contiguous '/' characters. This is problematic if URIs
+         * are embedded, for example as the last path segment.
+         * We need to work around this and not use getPathInfo
+         * for the decodedPath.
+         */
+        final String encodedBasePath = UriComponent.contextualEncode(
+                request.getContextPath() + servletPath, UriComponent.Type.PATH) + "/";
+
+        final URI baseUri;
+        final URI requestUri;
+        try {
+            LOGGER.debugLog("ServletContainer.service(...) started");
+            baseUri = absoluteUriBuilder.replacePath(encodedBasePath).build();
+            String queryParameters = ContainerUtils.encodeUnsafeCharacters(request.getQueryString());
+            if (queryParameters == null) {
+                queryParameters = "";
+            }
+
+            requestUri = absoluteUriBuilder.replacePath(requestURI)
+                    .replaceQuery(queryParameters)
+                    .build();
+        } catch (final UriBuilderException | IllegalArgumentException ex) {
+            setResponseForInvalidUri(response, ex);
+            return;
+        }
+
+        service(baseUri, requestUri, request, response);
+    }
+
+    private void setResponseForInvalidUri(final HttpServletResponse response, final Throwable throwable) throws IOException {
+        LOGGER.log(Level.FINER, "Error while processing request.", throwable);
+
+        final Response.Status badRequest = Response.Status.BAD_REQUEST;
+        if (webComponent.configSetStatusOverSendError) {
+            response.reset();
+            response.setStatus(badRequest.getStatusCode());
+        } else {
+            response.sendError(badRequest.getStatusCode(), badRequest.getReasonPhrase());
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        final ContainerLifecycleListener listener = containerListener;
+        if (listener != null) {
+            listener.onShutdown(this);
+        }
+    }
+
+    @Override
+    public void init() throws ServletException {
+        init(new WebServletConfig(this));
+    }
+
+    /**
+     * Dispatch client requests to a resource class.
+     *
+     * @param baseUri    the base URI of the request.
+     * @param requestUri the URI of the request.
+     * @param request    the {@link HttpServletRequest} object that contains the request the client made to
+     *                   the Web component.
+     * @param response   the {@link HttpServletResponse} object that contains the response the Web component
+     *                   returns to the client.
+     * @return lazily initialized response status code {@link Value value provider}. If not resolved in the moment of call to
+     * {@link Value#get()}, {@code -1} is returned.
+     * @throws IOException      if an input or output error occurs while the Web component is handling the HTTP request.
+     * @throws ServletException if the HTTP request cannot be handled.
+     */
+    public Value<Integer> service(final URI baseUri, final URI requestUri, final HttpServletRequest request,
+                                  final HttpServletResponse response) throws ServletException, IOException {
+        return webComponent.service(baseUri, requestUri, request, response);
+    }
+
+    /**
+     * Dispatch client requests to a resource class and returns {@link ResponseWriter},
+     * Servlet's {@link org.glassfish.jersey.server.spi.ContainerResponseWriter} implementation.
+     *
+     * @param baseUri    the base URI of the request.
+     * @param requestUri the URI of the request.
+     * @param request    the {@link HttpServletRequest} object that contains the request the client made to
+     *                   the Web component.
+     * @param response   the {@link HttpServletResponse} object that contains the response the Web component
+     *                   returns to the client.
+     * @return returns {@link ResponseWriter}, Servlet's {@link org.glassfish.jersey.server.spi.ContainerResponseWriter}
+     *         implementation, into which processed request response was written to.
+     * @throws IOException      if an input or output error occurs while the Web component is handling the HTTP request.
+     * @throws ServletException if the HTTP request cannot be handled.
+     */
+    private ResponseWriter serviceImpl(final URI baseUri, final URI requestUri, final HttpServletRequest request,
+                                       final HttpServletResponse response) throws ServletException, IOException {
+        return webComponent.serviceImpl(baseUri, requestUri, request, response);
+    }
+
+    // Filter
+    @Override
+    public void init(final FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+        init(new WebFilterConfig(filterConfig));
+
+        final String regex = (String) getConfiguration().getProperty(ServletProperties.FILTER_STATIC_CONTENT_REGEX);
+        if (regex != null && !regex.isEmpty()) {
+            try {
+                staticContentPattern = Pattern.compile(regex);
+            } catch (final PatternSyntaxException ex) {
+                throw new ContainerException(LocalizationMessages.INIT_PARAM_REGEX_SYNTAX_INVALID(
+                        regex, ServletProperties.FILTER_STATIC_CONTENT_REGEX), ex);
+            }
+        }
+
+        this.filterContextPath = filterConfig.getInitParameter(ServletProperties.FILTER_CONTEXT_PATH);
+        if (filterContextPath != null) {
+            if (filterContextPath.isEmpty()) {
+                filterContextPath = null;
+            } else {
+                if (!filterContextPath.startsWith("/")) {
+                    filterContextPath = '/' + filterContextPath;
+                }
+                if (filterContextPath.endsWith("/")) {
+                    filterContextPath = filterContextPath.substring(0, filterContextPath.length() - 1);
+                }
+            }
+        }
+
+        // get the url-pattern defined (e.g.) in the filter-mapping section of web.xml
+        final FilterUrlMappingsProvider filterUrlMappingsProvider = getFilterUrlMappingsProvider();
+        if (filterUrlMappingsProvider != null) {
+            filterUrlMappings = filterUrlMappingsProvider.getFilterUrlMappings(filterConfig);
+        }
+
+        // we need either the url-pattern from the filter mapping (in case of Servlet 3) or specific init-param to
+        // determine the baseUri and request relative URI. If we do not have either one, the app will most likely
+        // not work (won't be accessible)
+        if (filterUrlMappings == null && filterContextPath == null) {
+            LOGGER.warning(LocalizationMessages.FILTER_CONTEXT_PATH_MISSING());
+        }
+    }
+
+    @Override
+    public void doFilter(final ServletRequest servletRequest,
+                         final ServletResponse servletResponse,
+                         final FilterChain filterChain)
+            throws IOException, ServletException {
+        try {
+            doFilter((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, filterChain);
+        } catch (final ClassCastException e) {
+            throw new ServletException("non-HTTP request or response", e);
+        }
+    }
+
+    /**
+     * Get the servlet context for the servlet or filter, depending on
+     * how this class is registered.
+     *
+     * @return the servlet context for the servlet or filter.
+     */
+    @Override
+    public ServletContext getServletContext() {
+        if (filterConfig != null) {
+            return filterConfig.getServletContext();
+        }
+
+        return super.getServletContext();
+    }
+
+    /**
+     * Dispatches client requests to the
+     * {@link #service(URI, URI, HttpServletRequest, HttpServletResponse)} method.
+     * <p />
+     * If the servlet path matches the regular expression declared by the
+     * property {@link ServletProperties#FILTER_STATIC_CONTENT_REGEX} then the
+     * request is forwarded to the next filter in the filter chain so that the
+     * underlying servlet engine can process the request otherwise Jersey
+     * will process the request.
+     *
+     * @param request  the {@link HttpServletRequest} object that
+     *                 contains the request the client made to
+     *                 the servlet.
+     * @param response the {@link HttpServletResponse} object that
+     *                 contains the response the servlet returns
+     *                 to the client.
+     * @param chain    the chain of filters from which the next filter can be invoked.
+     * @throws IOException            in case of an I/O error.
+     * @throws ServletException in case of an error while executing the
+     *                                        filter chain.
+     */
+    public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
+            throws IOException, ServletException {
+        if (request.getAttribute("jakarta.servlet.include.request_uri") != null) {
+            final String includeRequestURI = (String) request.getAttribute("jakarta.servlet.include.request_uri");
+
+            if (!includeRequestURI.equals(request.getRequestURI())) {
+                doFilter(request, response, chain,
+                        includeRequestURI,
+                        (String) request.getAttribute("jakarta.servlet.include.servlet_path"),
+                        (String) request.getAttribute("jakarta.servlet.include.query_string"));
+                return;
+            }
+        }
+
+        /**
+         * JERSEY-880 - WAS interprets HttpServletRequest#getServletPath() and HttpServletRequest#getPathInfo()
+         * differently when accessing a static resource.
+         */
+        final String servletPath = request.getServletPath()
+                + (request.getPathInfo() == null ? "" : request.getPathInfo());
+
+        doFilter(request, response, chain,
+                request.getRequestURI(),
+                servletPath,
+                request.getQueryString());
+    }
+
+    private void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain,
+                          final String requestURI, final String servletPath, final String queryString)
+            throws IOException, ServletException {
+        // if we match the static content regular expression lets delegate to
+        // the filter chain to use the default container servlets & handlers
+        final Pattern p = getStaticContentPattern();
+        if (p != null && p.matcher(servletPath).matches()) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (filterContextPath != null) {
+            if (!servletPath.startsWith(filterContextPath)) {
+                throw new ContainerException(LocalizationMessages.SERVLET_PATH_MISMATCH(servletPath, filterContextPath));
+                //TODO:
+                //            } else if (servletPath.length() == filterContextPath.length()) {
+                //                // Path does not end in a slash, may need to redirect
+                //                if (webComponent.getResourceConfig().getFeature(ResourceConfig.FEATURE_REDIRECT)) {
+                //                    URI l = UriBuilder.fromUri(request.getRequestURL().toString()).
+                //                            path("/").
+                //                            replaceQuery(queryString).build();
+                //
+                //                    response.setStatus(307);
+                //                    response.setHeader("Location", l.toASCIIString());
+                //                    return;
+                //                } else {
+                //                    requestURI += "/";
+                //                }
+            }
+        }
+
+        final URI baseUri;
+        final URI requestUri;
+        try {
+            LOGGER.debugLog("ServletContainer.doFilter(...) started");
+            final UriBuilder absoluteUriBuilder = UriBuilder.fromUri(request.getRequestURL().toString());
+
+            // depending on circumstances, use the correct path to replace in the absolute request URI
+            final String pickedUrlMapping = pickUrlMapping(request.getRequestURL().toString(), filterUrlMappings);
+            final String replacingPath = pickedUrlMapping != null
+                    ? pickedUrlMapping
+                    : (filterContextPath != null ? filterContextPath : "");
+
+            baseUri = absoluteUriBuilder.replacePath(request.getContextPath()).path(replacingPath).path("/").build();
+
+
+            requestUri = absoluteUriBuilder.replacePath(requestURI)
+                    .replaceQuery(ContainerUtils.encodeUnsafeCharacters(queryString))
+                    .build();
+        } catch (final IllegalArgumentException iae) {
+            setResponseForInvalidUri(response, iae);
+            return;
+        }
+
+        final ResponseWriter responseWriter = serviceImpl(baseUri, requestUri, request, response);
+
+        // If forwarding is configured and response is a 404 with no entity
+        // body then call the next filter in the chain
+
+        if (webComponent.forwardOn404 && !response.isCommitted()) {
+            boolean hasEntity = false;
+            Response.StatusType status = null;
+            if (responseWriter.responseContextResolved()) {
+                final ContainerResponse responseContext = responseWriter.getResponseContext();
+                hasEntity = responseContext.hasEntity();
+                status = responseContext.getStatusInfo();
+            }
+            if (!hasEntity && status == Response.Status.NOT_FOUND) {
+                // lets clear the response to OK before we forward to the next in the chain
+                // as OK is the default set by servlet containers before filters/servlets do any work
+                // so lets hide our footsteps and pretend we were never in the chain at all and let the
+                // next filter or servlet return the 404 if they can't find anything to return
+                //
+                // We could add an optional flag to disable this step if anyone can ever find a case where
+                // this causes a problem, though I suspect any problems will really be with downstream
+                // servlets not correctly setting an error status if they cannot find something to return
+                response.setStatus(HttpServletResponse.SC_OK);
+                chain.doFilter(request, response);
+            }
+        }
+    }
+
+    /**
+     * Picks the most suitable url mapping (in case more than one is defined) based on the request URI.
+     *
+     * @param requestUri String representation of the request URI
+     * @param filterUrlMappings set of configured filter url-patterns
+     * @return the most suitable context path, or {@code null} if empty
+     */
+    private String pickUrlMapping(final String requestUri, final List<String> filterUrlMappings) {
+        if (filterUrlMappings == null || filterUrlMappings.isEmpty()) {
+            return null;
+        }
+
+        if (filterUrlMappings.size() == 1) {
+            return filterUrlMappings.get(0);
+        }
+
+        for (final String pattern : filterUrlMappings) {
+            if (requestUri.contains(pattern)) {
+                return pattern;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolve the {@link FilterUrlMappingsProvider} service via hk2.
+     *
+     * Will only work in Servlet 3 container, as the older API version
+     * does not provide access to the filter mapping structure.
+     *
+     * @return {@code FilterContextPath} instance, if available, {@code null} otherwise.
+     */
+    private FilterUrlMappingsProvider getFilterUrlMappingsProvider() {
+        FilterUrlMappingsProvider filterUrlMappingsProvider = null;
+        final Iterator<FilterUrlMappingsProvider> providers = Providers.getAllProviders(
+                getApplicationHandler().getInjectionManager(), FilterUrlMappingsProvider.class).iterator();
+        if (providers.hasNext()) {
+             filterUrlMappingsProvider = providers.next();
+        }
+        return filterUrlMappingsProvider;
+    }
+
+    /**
+     * Get the static content path pattern.
+     *
+     * @return the {@link Pattern} compiled from a regular expression that is
+     *         the property value of {@link ServletProperties#FILTER_STATIC_CONTENT_REGEX}.
+     *         A {@code null} value will be returned if the property is not set or is
+     *         an empty String.
+     */
+    protected Pattern getStaticContentPattern() {
+        return staticContentPattern;
+    }
+
+    @Override
+    public ResourceConfig getConfiguration() {
+        return webComponent.appHandler.getConfiguration();
+    }
+
+    @Override
+    public void reload() {
+        reload(new ResourceConfig(getConfiguration()));
+    }
+
+    @Override
+    public void reload(final ResourceConfig configuration) {
+        try {
+            containerListener.onShutdown(this);
+
+            webComponent = new WebComponent(webComponent.webConfig, configuration);
+            containerListener = webComponent.appHandler;
+            containerListener.onReload(this);
+            containerListener.onStartup(this);
+        } catch (final ServletException ex) {
+            LOGGER.log(Level.SEVERE, "Reload failed", ex);
+        }
+    }
+
+    @Override
+    public ApplicationHandler getApplicationHandler() {
+        return webComponent.appHandler;
+    }
+
+    /**
+     * Get {@link WebComponent} used by this servlet container.
+     *
+     * @return The web component.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public WebComponent getWebComponent() {
+        return webComponent;
+    }
+}
