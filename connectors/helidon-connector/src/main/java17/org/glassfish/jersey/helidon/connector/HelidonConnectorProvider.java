@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +16,19 @@
 
 package org.glassfish.jersey.helidon.connector;
 
-import org.glassfish.jersey.Beta;
-import org.glassfish.jersey.client.spi.Connector;
-import org.glassfish.jersey.internal.util.JdkVersion;
-
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.Configuration;
+
 import java.io.OutputStream;
+
+import org.glassfish.jersey.Beta;
+import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.internal.util.JdkVersion;
+import org.glassfish.jersey.internal.util.collection.LazyValue;
+import org.glassfish.jersey.internal.util.collection.Value;
+import org.glassfish.jersey.internal.util.collection.Values;
 
 /**
  * Provider for Helidon WebClient {@link Connector} that utilizes the Helidon HTTP Client to send and receive
@@ -65,12 +70,20 @@ import java.io.OutputStream;
  * @since 2.31
  */
 @Beta
-public class HelidonConnectorProvider extends io.helidon.jersey.connector.HelidonConnectorProvider {
+public class HelidonConnectorProvider implements ConnectorProvider {
+    private static final LazyValue<Helidon3ConnectorProvider> helidon3ConnectorProvider =
+            Values.lazy((Value<Helidon3ConnectorProvider>) Helidon3ConnectorProvider::new);
+
+    public HelidonConnectorProvider() {
+    }
+
     @Override
     public Connector getConnector(Client client, Configuration runtimeConfig) {
-        if (JdkVersion.getJdkVersion().getMajor() < 17) {
-            throw new ProcessingException(LocalizationMessages.NOT_SUPPORTED());
+        if (HelidonVersionChecker.VERSION.get() == HelidonVersionChecker.Version.VERSION_3) {
+            return helidon3ConnectorProvider.get().getConnector(client, runtimeConfig);
+        } else if (JdkVersion.getJdkVersion().getMajor() < 21) {
+            throw new ProcessingException(LocalizationMessages.HELIDON_4_NOT_SUPPORTED());
         }
-        return super.getConnector(client, runtimeConfig);
+        return new HelidonConnector(client, runtimeConfig);
     }
 }

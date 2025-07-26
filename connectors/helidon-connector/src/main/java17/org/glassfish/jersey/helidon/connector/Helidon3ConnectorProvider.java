@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,26 +16,15 @@
 
 package org.glassfish.jersey.helidon.connector;
 
-import org.glassfish.jersey.client.spi.Connector;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
-import org.glassfish.jersey.internal.util.JdkVersion;
-
-import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.Configuration;
+import org.glassfish.jersey.Beta;
+import org.glassfish.jersey.client.spi.Connector;
 
-/**
- * Helidon Connector stub which only throws exception when running on JDK prior to 17.
- * New Helidon 3 does not support JDKs prior to 17.
- *
- * @since 3.0.5
- */
-public class HelidonConnectorProvider implements ConnectorProvider {
+@Beta
+class Helidon3ConnectorProvider extends io.helidon.jersey.connector.HelidonConnectorProvider {
     @Override
     public Connector getConnector(Client client, Configuration runtimeConfig) {
-        if (JdkVersion.getJdkVersion().getMajor() < 17) {
-            throw new ProcessingException(LocalizationMessages.HELIDON_3_NOT_SUPPORTED());
-        }
-        return null;
+        return super.getConnector(client, runtimeConfig);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.innate;
 
 import org.glassfish.jersey.innate.virtual.LoomishExecutors;
+import org.glassfish.jersey.innate.virtual.ThreadFactoryBuilder;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,11 +58,31 @@ public final class VirtualThreadSupport {
     /**
      * Return an instance of {@link LoomishExecutors} based on a permission to use virtual threads.
      * @param allow whether to allow virtual threads.
-     * @param threadFactory the thread factory to be used by a the {@link ExecutorService}.
+     * @param threadFactory the thread factory to be used by the {@link ExecutorService}.
      * @return the {@link LoomishExecutors} instance.
      */
     public static LoomishExecutors allowVirtual(boolean allow, ThreadFactory threadFactory) {
         return allow ? new Java21LoomishExecutors(threadFactory) : new NonLoomishExecutors(threadFactory);
+    }
+
+    /**
+     * Return an instance of {@link LoomishExecutors} based on a permission to use virtual threads.
+     * @param allow whether to allow virtual threads.
+     * @param threadFactoryBuilder the builder used to build thread factory to be used by the {@link ExecutorService}.
+     * @return the {@link LoomishExecutors} instance.
+     */
+    public static LoomishExecutors allowVirtual(boolean allow, ThreadFactoryBuilder threadFactoryBuilder) {
+        return allow ? loomish(threadFactoryBuilder) : nonLoomish(threadFactoryBuilder);
+    }
+
+    private static LoomishExecutors nonLoomish(ThreadFactoryBuilder threadFactoryBuilder) {
+        return new NonLoomishExecutors(
+                Thread.ofPlatform().name(threadFactoryBuilder.prefix(), threadFactoryBuilder.start()).factory());
+    }
+
+    private static LoomishExecutors loomish(ThreadFactoryBuilder threadFactoryBuilder) {
+        return new Java21LoomishExecutors(
+                Thread.ofVirtual().name(threadFactoryBuilder.prefix(), threadFactoryBuilder.start()).factory());
     }
 
     private static class NonLoomishExecutors implements LoomishExecutors {

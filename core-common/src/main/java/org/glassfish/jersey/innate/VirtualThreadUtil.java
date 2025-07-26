@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.innate;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.innate.virtual.LoomishExecutors;
+import org.glassfish.jersey.innate.virtual.ThreadFactoryBuilder;
 
 import jakarta.ws.rs.core.Configuration;
 import java.util.concurrent.ThreadFactory;
@@ -26,6 +27,9 @@ import java.util.concurrent.ThreadFactory;
  * Factory class to provide JDK specific implementation of bits related to the virtual thread support.
  */
 public final class VirtualThreadUtil {
+    public static ThreadFactoryBuilder threadFactoryBuilder(String prefix, long start) {
+        return new ThreadFactoryBuilder().prefix(prefix).start(start);
+    }
 
     private static final boolean USE_VIRTUAL_THREADS_BY_DEFAULT = false;
 
@@ -48,10 +52,23 @@ public final class VirtualThreadUtil {
     /**
      * Return an instance of {@link LoomishExecutors} based on a configuration property.
      * @param config the {@link Configuration}
-     * @param useVirtualByDefault the default use if not said otherwise by property
+     * @param useVirtualByDefault the default use if not said otherwise by property.
      * @return the {@link LoomishExecutors} instance.
      */
     public static LoomishExecutors withConfig(Configuration config, boolean useVirtualByDefault) {
+        return withConfig(config, null, useVirtualByDefault);
+    }
+
+    /**
+     * Return an instance of {@link LoomishExecutors} based on a configuration property.
+     * @param config the {@link Configuration}
+     * @param threadFactoryBuilder the information for the thread factory.
+     * @param useVirtualByDefault the default use if not said otherwise by property.
+     * @return the {@link LoomishExecutors} instance.
+     */
+    public static LoomishExecutors withConfig(Configuration config,
+                                              ThreadFactoryBuilder threadFactoryBuilder,
+                                              boolean useVirtualByDefault) {
         ThreadFactory tfThreadFactory = null;
         boolean useVirtualThreads = useVirtualThreads(config, useVirtualByDefault);
 
@@ -59,6 +76,8 @@ public final class VirtualThreadUtil {
             Object threadFactory = config.getProperty(CommonProperties.THREAD_FACTORY);
             if (threadFactory != null && ThreadFactory.class.isInstance(threadFactory)) {
                 tfThreadFactory = (ThreadFactory) threadFactory;
+            } else if (threadFactoryBuilder != null) {
+                return VirtualThreadSupport.allowVirtual(useVirtualThreads, threadFactoryBuilder);
             }
         }
 

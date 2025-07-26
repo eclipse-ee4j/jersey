@@ -128,6 +128,7 @@
             <modules>
                 <module>async-jersey-filter</module>
                 <module>externalproperties</module>
+                <module>helidon3-client</module>
                 <module>jaxrs-component-inject</module>
                 <module>jersey-780</module>
                 <module>jersey-1107</module>

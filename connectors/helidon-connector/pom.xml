@@ -91,7 +91,7 @@
         <profile>
             <id>HelidonExclude</id>
             <activation>
-                <jdk>[1.8,17)</jdk>
+                <jdk>[1.8,21)</jdk>
             </activation>
             <build>
                 <directory>${java8.build.outputDirectory}</directory>
@@ -129,9 +129,11 @@
         <profile>
             <id>HelidonInclude</id>
             <activation>
-                <jdk>[17,)</jdk>
+                <jdk>[21,)</jdk>
             </activation>
             <build>
+                <!-- 17 is correct, the module works with Helidon 3 supporting JDK 17, too -->
+                <!-- The build is against Helidon 4, which requires JDK 21 for the build, though -->
                 <directory>${java17.build.outputDirectory}</directory>
                 <plugins>
                     <plugin>
