@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,15 @@
 
 package org.glassfish.jersey.server.validation;
 
+import jakarta.validation.ClockProvider;
 import jakarta.validation.ConstraintValidatorFactory;
 import jakarta.validation.MessageInterpolator;
 import jakarta.validation.ParameterNameProvider;
 import jakarta.validation.TraversableResolver;
+import jakarta.validation.valueextraction.ValueExtractor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Configuration class for Bean Validation provider.
@@ -32,6 +37,8 @@ public final class ValidationConfig {
     private TraversableResolver traversableResolver;
     private ConstraintValidatorFactory constraintValidatorFactory;
     private ParameterNameProvider parameterNameProvider;
+    private List<ValueExtractor<?>> valueExtractors;
+    private ClockProvider clockProvider;
 
     /**
      * Return {@code MessageInterpolator} implementation used for configuration.
@@ -67,6 +74,24 @@ public final class ValidationConfig {
      */
     public ParameterNameProvider getParameterNameProvider() {
         return parameterNameProvider;
+    }
+
+    /**
+     * Return {@code ClockProvider} implementation used for configuration.
+     *
+     * @return instance of {@code ClockProvider} or {@code null} if not defined.
+     */
+    public ClockProvider getClockProvider() {
+        return clockProvider;
+    }
+
+    /**
+     * Return {@code ValueExtractor} implementations used for configuration.
+     *
+     * @return instances of {@code ValueExtractor} or {@code null} if not defined.
+     */
+    public List<ValueExtractor<?>> getValueExtractors() {
+        return valueExtractors;
     }
 
     /**
@@ -112,4 +137,30 @@ public final class ValidationConfig {
         this.parameterNameProvider = parameterNameProvider;
         return this;
     }
+
+    /**
+     * Defines the clock provider.
+     * If {@code null} is passed, the default clock provider is used.
+     *
+     * @param clockProvider clock provider implementation.
+     */
+    public ValidationConfig setClockProvider(ClockProvider clockProvider) {
+        this.clockProvider = clockProvider;
+        return this;
+    }
+
+    /**
+     * Defines the value extractor.
+     * If {@code null} is passed, the default value extractor is used.
+     *
+     * @param valueExtractors value extractor implementations.
+     */
+    public ValidationConfig addValueExtractor(ValueExtractor<?> valueExtractors) {
+        if (this.valueExtractors == null) {
+            this.valueExtractors = new ArrayList<>();
+        }
+        this.valueExtractors.add(valueExtractors);
+        return this;
+    }
+
 }

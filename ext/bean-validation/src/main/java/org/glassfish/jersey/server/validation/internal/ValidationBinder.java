@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.validation.valueextraction.ValueExtractor;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -212,6 +213,18 @@ public final class ValidationBinder extends AbstractBinder {
                         // ParameterNameProvider
                         if (config.getParameterNameProvider() != null) {
                             context.parameterNameProvider(config.getParameterNameProvider());
+                        }
+
+                        // ValueExtractor
+                        if (config.getValueExtractors() != null) {
+                            for (ValueExtractor<?> valueExtractor : config.getValueExtractors()) {
+                                context.addValueExtractor(valueExtractor);
+                            }
+                        }
+
+                        // ClockProvider
+                        if (config.getClockProvider() != null) {
+                            context.clockProvider(config.getClockProvider());
                         }
                     }
 
