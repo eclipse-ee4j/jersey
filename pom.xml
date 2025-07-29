@@ -2191,6 +2191,7 @@
         <microprofile.rest.client3.version>3.0.1</microprofile.rest.client3.version>
         <microprofile.rest.client.version>4.0</microprofile.rest.client.version>
         <helidon.config.version>3.2.12</helidon.config.version>
+        <helidon.container.version>4.2.4</helidon.container.version>
         <helidon.connector.version>3.2.12</helidon.connector.version>
         <helidon.config.11.version>1.4.15</helidon.config.11.version> <!-- JDK 11- support -->
         <smallrye.config.version>3.7.1</smallrye.config.version>

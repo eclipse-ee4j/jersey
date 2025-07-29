@@ -36,7 +36,7 @@ pipeline {
                     steps {
                         sh '''
                                 bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
-                                export EXCLUDE_ARGS=' -pl !:jersey-container-jetty11-http,!:jersey-jetty11-connector '
+                                export EXCLUDE_ARGS=' -pl !:jersey-container-jetty11-http,!:jersey-jetty11-connector,!:configured-client '
                                 bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
                             '''
                     }

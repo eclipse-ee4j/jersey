@@ -84,4 +84,16 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>helidon-container</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <modules>
+                <module>helidon</module>
+            </modules>
+        </profile>
+    </profiles>
+
 </project>
