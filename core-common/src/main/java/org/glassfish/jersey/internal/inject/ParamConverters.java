@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -326,7 +326,8 @@ public class ParamConverters {
                         final List<ClassTypePair> ctps = ReflectionHelper.getTypeArgumentAndClass(genericType);
                         final ClassTypePair ctp = (ctps.size() == 1) ? ctps.get(0) : null;
                         final boolean empty = value.isEmpty();
-                        for (ParamConverterProvider provider : Providers.getProviders(manager, ParamConverterProvider.class)) {
+                        for (final ParamConverterProvider provider
+                                : Providers.getAllProviders(manager, ParamConverterProvider.class)) {
                             final ParamConverter<?> converter = provider.getConverter(ctp.rawClass(), ctp.type(), annotations);
                             if (converter != null) {
                                 if (empty) {

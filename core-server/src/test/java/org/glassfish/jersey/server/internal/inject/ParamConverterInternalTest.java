@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -27,8 +27,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
+import javax.inject.Singleton;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -102,6 +105,15 @@ public class ParamConverterInternalTest extends AbstractTest {
                 .queryParam("d", "123").build().toString());
 
         assertEquals(404, responseContext.getStatus());
+    }
+
+    @Test
+    public void testCustomEnumResource() throws ExecutionException, InterruptedException {
+        initiateWebApplication(BadEnumResource.class, EnumParamConverterProvider.class);
+        final ContainerResponse responseContext = getResponseContext(UriBuilder.fromPath("/")
+                .queryParam("d", "A").build().toString());
+        assertEquals(1, counter.get());
+        assertEquals(200, responseContext.getStatus());
     }
 
     public static class URIStringReaderProvider implements ParamConverterProvider {
@@ -185,6 +197,40 @@ public class ParamConverterInternalTest extends AbstractTest {
                 }
             };
 
+        }
+    }
+
+    static final AtomicInteger counter = new AtomicInteger(0);
+    @Singleton
+    @Priority(1)
+    public static class EnumParamConverterProvider implements ParamConverterProvider {
+
+        @Override
+        public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+            if (Enum.class.isAssignableFrom(rawType)) {
+                return new ParamConverter<T>() {
+                    @Override
+                    public T fromString(final String value) {
+                        counter.addAndGet(1);
+                        if (value == null) {
+                            return null;
+                        }
+                        Class<? extends Enum> enumClass = null;
+                        try {
+                            enumClass = (Class<Enum>) Class.forName(genericType.getTypeName());
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return (T) Enum.valueOf(enumClass, value.toUpperCase());
+                    }
+
+                    @Override
+                    public String toString(final T value) {
+                        return String.valueOf(value);
+                    }
+                };
+            }
+            return null;
         }
     }
 
