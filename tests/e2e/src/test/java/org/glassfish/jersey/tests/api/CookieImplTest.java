@@ -46,8 +46,8 @@ public class CookieImplTest {
         expResult = "$Version=1;fred=flintstone;$Domain=.sun.com;$Path=/path";
         assertEquals(expResult, cookie.toString());
 
-        cookie = new Cookie("fred", "flintstone", "/path", ".sun.com", 2);
-        expResult = "$Version=2;fred=flintstone;$Domain=.sun.com;$Path=/path";
+        cookie = new Cookie("fred", "flintstone", "/path", ".sun.com", 0);
+        expResult = "$Version=0;fred=flintstone;$Domain=.sun.com;$Path=/path";
         assertEquals(expResult, cookie.toString());
     }
 

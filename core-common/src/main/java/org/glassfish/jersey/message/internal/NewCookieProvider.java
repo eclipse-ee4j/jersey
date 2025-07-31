@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +16,13 @@
 
 package org.glassfish.jersey.message.internal;
 
+import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.NewCookie;
 
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.http.VersionOptional;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;
 
 import java.util.Locale;
@@ -51,7 +53,15 @@ public class NewCookieProvider implements HeaderDelegateProvider<NewCookie> {
         b.append(cookie.getName()).append('=');
         StringBuilderUtils.appendQuotedIfWhitespace(b, cookie.getValue());
 
-        b.append(";").append("Version=").append(cookie.getVersion());
+        boolean printVersion = false;
+        if (cookie instanceof VersionOptional) {
+            printVersion = ((VersionOptional) cookie).hasVersion();
+        } else if (cookie.getVersion() == Cookie.DEFAULT_VERSION) {
+            printVersion = true;
+        }
+        if (printVersion) {
+            b.append(";").append("Version=").append(cookie.getVersion());
+        }
 
         if (cookie.getComment() != null) {
             b.append(";Comment=");
