@@ -144,7 +144,7 @@ public final class ValidationConfig {
      *
      * @param clockProvider clock provider implementation.
      */
-    public ValidationConfig setClockProvider(ClockProvider clockProvider) {
+    public ValidationConfig clockProvider(ClockProvider clockProvider) {
         this.clockProvider = clockProvider;
         return this;
     }

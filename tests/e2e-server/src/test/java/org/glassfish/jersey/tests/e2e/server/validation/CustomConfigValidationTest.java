@@ -254,7 +254,7 @@ public class CustomConfigValidationTest extends JerseyTest {
             config.messageInterpolator(new CustomMessageInterpolator());
             config.parameterNameProvider(new CustomParameterNameProvider());
             config.traversableResolver(new CustomTraversableResolver());
-            config.setClockProvider(new CustomClockProvider());
+            config.clockProvider(new CustomClockProvider());
             config.addValueExtractor(new LikeStringExtractor());
         }
 
