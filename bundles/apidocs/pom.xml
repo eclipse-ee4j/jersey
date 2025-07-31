@@ -29,6 +29,134 @@
     <name>jersey-bundles-apidocs</name>
     <packaging>jar</packaging>
 
+    <description>
+        Eclipse Jersey API Documentation Bundle.
+    </description>
+    <url>https://projects.eclipse.org/projects/ee4j.jersey</url>
+    <licenses>
+        <license>
+            <name>EPL 2.0</name>
+            <url>http://www.eclipse.org/legal/epl-2.0</url>
+            <distribution>repo</distribution>
+            <comments>Except for 3rd content and examples.
+                See also https://github.com/eclipse-ee4j/jersey/blob/master/NOTICE.md</comments>
+        </license>
+        <license>
+            <name>GPL2 w/ CPE</name>
+            <url>https://www.gnu.org/software/classpath/license.html</url>
+            <distribution>repo</distribution>
+            <comments>Except for 3rd content and examples.
+                See also https://github.com/eclipse-ee4j/jersey/blob/master/NOTICE.md</comments>
+        </license>
+        <license>
+            <name>EDL 1.0</name>
+            <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+            <distribution>repo</distribution>
+            <comments>The examples except bookstore-webapp example</comments>
+        </license>
+        <license>
+            <name>BSD 2-Clause</name>
+            <url>https://opensource.org/licenses/BSD-2-Clause</url>
+            <distribution>repo</distribution>
+            <comments>The bookstore-webapp example</comments>
+        </license>
+        <license>
+            <name>Apache License, 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+            <comments>Google Guava @ org.glassfish.jersey.internal.guava,
+                Dropwizard Monitoring inspired classes @ org.glassfish.jersey.server.internal.monitoring.core,
+                Hibernate Validation classes @ org.glassfish.jersey.server.validation.internal.hibernate, and
+                Jackson JAX-RS Providers @ org.glassfish.jersey.jackson.internal.jackson.jaxrs</comments>
+        </license>
+        <license>
+            <name>Public Domain</name>
+            <url>https://creativecommons.org/publicdomain/zero/1.0/</url>
+            <distribution>repo</distribution>
+            <comments>JSR-166 Extension to JEP 266 @ org.glassfish.jersey.internal.jsr166</comments>
+        </license>
+        <license>
+            <name>Modified BSD</name>
+            <url>https://asm.ow2.io/license.html</url>
+            <distribution>repo</distribution>
+            <comments>ASM @ jersey.repackaged.org.objectweb.asm</comments>
+        </license>
+        <license>
+            <name>jQuery license</name>
+            <url>jquery.org/license</url>
+            <distribution>repo</distribution>
+            <comments>jQuery v1.12.4</comments>
+        </license>
+        <license>
+            <name>MIT license</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+            <comments>AngularJS, Bootstrap v3.3.7,
+                jQuery Barcode plugin 0.3, KineticJS v4.7.1</comments>
+        </license>
+        <license>
+            <name>W3C license</name>
+            <url>https://www.w3.org/Consortium/Legal/copyright-documents-19990405</url>
+            <distribution>repo</distribution>
+            <comments>Content of core-server/etc</comments>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:jersey/jersey.git</connection>
+        <developerConnection>scm:git:git@github.com:eclipse-ee4j/jersey.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/jersey</url>
+        <tag>HEAD</tag>
+    </scm>
+    <developers>
+        <developer>
+            <name>Jorge Bescos Gascon</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Lukas Jungmann</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Dmitry Kornilov</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+            <url>https://dmitrykornilov.net</url>
+        </developer>
+        <developer>
+            <name>David Kral</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Tomas Kraus</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Tomas Langer</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Maxim Nesen</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Santiago Pericas-Geertsen</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Jan Supol</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+            <url>http://blog.supol.info</url>
+        </developer>
+    </developers>
+
     <dependencies>
         <!-- CORE -->
         <dependency>
@@ -57,6 +185,7 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
+            <version>${osgi.version}</version>
         </dependency>
         <!-- CONNECTORS -->
         <dependency>
@@ -121,6 +250,7 @@
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
+            <version>${jakarta.persistence.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -171,6 +301,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <version>${jackson.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>jakarta.xml.bind</groupId>
