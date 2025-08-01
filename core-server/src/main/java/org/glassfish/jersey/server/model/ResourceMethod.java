@@ -393,12 +393,7 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
          * @return updated builder object.
          */
         public Builder handledBy(Class<?> handlerClass, Method method) {
-            this.handlerInstance = null;
-
-            this.handlerClass = handlerClass;
-            this.definitionMethod = method;
-
-            return this;
+            return handledBy(handlerClass, null, method);
         }
 
         /**
@@ -409,11 +404,20 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
          * @return updated builder object.
          */
         public Builder handledBy(Object handlerInstance, Method method) {
-            this.handlerClass = null;
+            return handledBy(null, handlerInstance, method);
+        }
 
+        /**
+         * Define a resource method handler binding.
+         *
+         * @param handlerInstance concrete resource method handler instance.
+         * @param method          handling method.
+         * @return updated builder object.
+         */
+        public Builder handledBy(Class<?> handlerClass, Object handlerInstance, Method method) {
+            this.handlerClass = handlerClass;
             this.handlerInstance = handlerInstance;
             this.definitionMethod = method;
-
             return this;
         }
 
@@ -532,10 +536,10 @@ public final class ResourceMethod implements ResourceModelComponent, Producing, 
             assert handlerClass != null || handlerInstance != null;
 
             final MethodHandler handler;
-            if (handlerClass != null) {
-                handler = MethodHandler.create(handlerClass, encodedParams, handlerParameters);
-            } else { // instance based
+            if (handlerInstance != null) {// instance based
                 handler = MethodHandler.create(handlerInstance, handlerParameters);
+            } else {
+                handler = MethodHandler.create(handlerClass, encodedParams, handlerParameters);
             }
 
             return Invocable.create(handler, definitionMethod, handlingMethod, encodedParams, routingResponseType);
