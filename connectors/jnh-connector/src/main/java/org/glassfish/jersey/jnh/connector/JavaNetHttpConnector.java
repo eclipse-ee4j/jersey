@@ -91,6 +91,11 @@ public class JavaNetHttpConnector implements Connector {
         if (sslContext != null) {
             httpClientBuilder.sslContext(sslContext);
         }
+        final Integer connectTimeout =
+                getPropertyOrNull(configuration, ClientProperties.CONNECT_TIMEOUT, Integer.class);
+        if (connectTimeout != null) {
+            httpClientBuilder.connectTimeout(Duration.ofMillis(connectTimeout));
+        }
         final CookieHandler cookieHandler =
                 getPropertyOrNull(configuration, JavaNetHttpClientProperties.COOKIE_HANDLER, CookieHandler.class);
         if (cookieHandler != null) {
@@ -205,9 +210,9 @@ public class JavaNetHttpConnector implements Connector {
                 builder.header(headerName, headerValue);
             }
         }
-        final Integer connectTimeout = request.resolveProperty(ClientProperties.READ_TIMEOUT, Integer.class);
-        if (connectTimeout != null) {
-            builder.timeout(Duration.ofMillis(connectTimeout));
+        final Integer readTimeout = request.resolveProperty(ClientProperties.READ_TIMEOUT, Integer.class);
+        if (readTimeout != null) {
+            builder.timeout(Duration.ofMillis(readTimeout));
         }
         processExtensions(builder, request);
         return builder.build();
