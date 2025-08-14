@@ -19,6 +19,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>helloworld-spring-annotations</artifactId>
+    <name>jersey-example-helloworld-spring-annotations</name>
     <description>Spring 6 Integration Jersey Example</description>
 
     <repositories>
