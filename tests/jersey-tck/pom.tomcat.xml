@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-    Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2024, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,7 +32,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <jersey.version>4.0.99-SNAPSHOT</jersey.version> <!-- the public version that pass the tck -->
-        <tomcat.container.version>11.0.0-M18</tomcat.container.version>
+        <tomcat.container.version>11.0.10</tomcat.container.version>
         <tomcat.home>${project.build.directory}/apache-tomcat-${tomcat.container.version}</tomcat.home>
         <tomcat.modules>${tomcat.home}/lib</tomcat.modules>
         <jakarta.platform.version>10.0.0</jakarta.platform.version>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-tomcat-managed-10</artifactId>
-            <version>1.2.1-SNAPSHOT</version>
+            <version>1.2.4.Final-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -484,15 +484,6 @@
                                 <overWrite>true</overWrite>
                                 <outputDirectory>${tomcat.modules}</outputDirectory>
                                 <destFileName>jersey-container-grizzly2-servlet.jar</destFileName>
-                            </artifactItem>
-                            <artifactItem>
-                                <groupId>org.glassfish.jersey.containers</groupId>
-                                <artifactId>jersey-container-servlet-core</artifactId>
-                                <version>${jersey.version}</version>
-                                <type>jar</type>
-                                <overWrite>true</overWrite>
-                                <outputDirectory>${tomcat.modules}</outputDirectory>
-                                <destFileName>jersey-container-servlet-core.jar</destFileName>
                             </artifactItem>
                             <artifactItem>
                                 <groupId>org.glassfish.jersey.containers</groupId>
