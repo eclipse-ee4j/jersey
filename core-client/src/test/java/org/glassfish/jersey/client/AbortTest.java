@@ -19,6 +19,7 @@ package org.glassfish.jersey.client;
 import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.EntityPart;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import jakarta.ws.rs.Priorities;
@@ -120,6 +121,7 @@ public class AbortTest {
     }
 
     @Test
+    @Disabled //contradicts TCK
     void testAbortWithMBWWritingHeaders() {
         try (Response response = ClientBuilder.newClient().register(new ClientRequestFilter() {
             @Override
