@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,6 +81,12 @@ public class ManifestTest {
                 }
             }
 
+            String importPackage = jarFile.getManifest().getMainAttributes().getValue("Import-Package");
+            if (importPackage == null) {
+                testResult.exception().append("No Import-Package in module ").println(jar.getName());
+            } else if (importPackage.contains("java.lang") || importPackage.contains("java.io")) {
+                testResult.exception().append("Import-Package contains java.* packages in ").println(jar.getName());
+            }
         }
 
         //Assertions.assertTrue(testResult.result(), "Some error occurred, see previous messages");

@@ -695,6 +695,7 @@
                         <instructions>
                             <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
                             <_nodefaultversion>false</_nodefaultversion>
+                            <_noimportjava>true</_noimportjava>
                             <Include-Resource>{maven-resources},${project.build.directory}/legal</Include-Resource>
                         </instructions>
                     </configuration>
