@@ -720,7 +720,7 @@ public class ServerRuntime {
                             // output streams writes out bytes only on close (for example GZipOutputStream).
                             response.close();
                         } catch (final Exception e) {
-                            LOGGER.log(Level.WARNING, LocalizationMessages.ERROR_CLOSING_COMMIT_OUTPUT_STREAM(), e);
+                            LOGGER.log(Level.FINER, LocalizationMessages.ERROR_CLOSING_COMMIT_OUTPUT_STREAM(), e);
                         }
                     }
                 }
