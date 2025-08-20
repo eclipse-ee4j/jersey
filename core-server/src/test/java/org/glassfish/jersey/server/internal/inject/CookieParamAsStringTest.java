@@ -22,11 +22,14 @@ import java.util.concurrent.ExecutionException;
 import jakarta.ws.rs.CookieParam;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Cookie;
 
+import jakarta.ws.rs.core.MediaType;
+import org.glassfish.jersey.http.JerseyCookie;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.RequestContextBuilder;
 
@@ -101,6 +104,19 @@ public class CookieParamAsStringTest extends AbstractTest {
             assertEquals(String.class, args.get(0).getClass());
             assertEquals("a", args.get(0));
             return "content";
+        }
+
+        @GET
+        @Path("headerparam/list")
+        public String list(@HeaderParam("Cookie") List<String> cookies) {
+            StringBuilder sb = new StringBuilder();
+            for (String c : cookies) {
+                if (sb.length() != 0) {
+                    sb.append(',');
+                }
+                sb.append(c);
+            }
+            return sb.toString();
         }
     }
 
@@ -263,6 +279,22 @@ public class CookieParamAsStringTest extends AbstractTest {
         initiateWebApplication(ResourceStringList.class);
 
         _test("/", "application/stringlist", new Cookie("args", "a"));
+    }
+
+    @Test
+    public void testStringListHeaderParam() throws ExecutionException, InterruptedException {
+        String cookieName1 = "COOKIE_1";
+        String cookieValue1 = "VALUE_1";
+        String cookieName2 = "COOKIE_2";
+        String cookieValue2 = "VALUE_2";
+
+        initiateWebApplication(ResourceStringList.class);
+
+        Cookie one = new Cookie.Builder(cookieName1).version(-1).value(cookieValue1).build();
+        Cookie two = new JerseyCookie.Builder(cookieName2).value(cookieValue2).build();
+
+        assertEquals(cookieName1 + '=' + cookieValue1 + "," + cookieName2 + '=' + cookieValue2,
+                getResponseContext("/headerparam/list", MediaType.MEDIA_TYPE_WILDCARD, one, two).getEntity());
     }
 
     @Test

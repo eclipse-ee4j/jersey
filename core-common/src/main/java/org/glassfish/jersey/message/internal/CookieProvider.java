@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Cookie;
 import jakarta.inject.Singleton;
 
 import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.http.VersionOptional;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;
 
 import static org.glassfish.jersey.message.internal.Utils.throwIllegalArgumentExceptionIfNull;
@@ -46,7 +47,15 @@ public class CookieProvider implements HeaderDelegateProvider<Cookie> {
 
         StringBuilder b = new StringBuilder();
 
-        b.append("$Version=").append(cookie.getVersion()).append(';');
+        boolean printVersion = false;
+        if (cookie instanceof VersionOptional) {
+            printVersion = ((VersionOptional) cookie).hasVersion();
+        } else if (cookie.getVersion() == Cookie.DEFAULT_VERSION || cookie.getVersion() == VersionOptional.NETSCAPE_VERSION) {
+            printVersion = true;
+        }
+        if (printVersion) {
+            b.append("$Version=").append(cookie.getVersion()).append(';');
+        }
 
         b.append(cookie.getName()).append('=');
         StringBuilderUtils.appendQuotedIfWhitespace(b, cookie.getValue());

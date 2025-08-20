@@ -16,13 +16,17 @@
 
 package org.glassfish.jersey.tests.api;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.NewCookie;
 
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.message.internal.HttpHeaderReader;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,8 +50,8 @@ public class CookieImplTest {
         expResult = "$Version=1;fred=flintstone;$Domain=.sun.com;$Path=/path";
         assertEquals(expResult, cookie.toString());
 
-        cookie = new Cookie("fred", "flintstone", "/path", ".sun.com", 2);
-        expResult = "$Version=2;fred=flintstone;$Domain=.sun.com;$Path=/path";
+        cookie = new Cookie("fred", "flintstone", "/path", ".sun.com", 0);
+        expResult = "$Version=0;fred=flintstone;$Domain=.sun.com;$Path=/path";
         assertEquals(expResult, cookie.toString());
     }
 
@@ -149,7 +153,7 @@ public class CookieImplTest {
     }
 
     @Test
-    public void testMultipleCookiesWithSameName(){
+    public void testMultipleCookiesWithSameName() {
 
         String cookieHeader = "kobe=oldeststring; kobe=neweststring";
         Map<String, Cookie> cookies = HttpHeaderReader.readCookies(cookieHeader);
@@ -246,4 +250,26 @@ public class CookieImplTest {
         assertEquals(NewCookie.SameSite.NONE, cookie.getSameSite());
     }
 
+    @Test
+    public void parseCookieTckTest() {
+        String NewCookie_toParse = "NAME_1=Value_1;";
+        int version = 1;
+        NewCookie nck26 = jakarta.ws.rs.core.NewCookie.valueOf(NewCookie_toParse);
+        Assertions.assertEquals(version, nck26.getVersion());
+    }
+
+    @Test
+    public void getCookiesTckTest() {
+        NewCookie cookie1 = new NewCookie("c1", "v1");
+        NewCookie cookie2 = new NewCookie("c2", "v2");
+        Response response = Response.ok().cookie(cookie1).cookie(cookie2).build();
+        Map<String, NewCookie> map = response.getCookies();
+        for (Map.Entry<String, NewCookie> entry : map.entrySet()) {
+            if (entry.getKey().equals("c1")) {
+                Assertions.assertTrue(entry.getValue().equals(cookie1));
+            } else if (entry.getKey().equals("c2")) {
+                Assertions.assertTrue(entry.getValue().equals(cookie2));
+            }
+        }
+    }
 }
