@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -280,13 +279,8 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
                                 model.getPriority(ContainerResponseFilter.class)));
             }
         }
-
-        _readerInterceptors.addAll(
-                StreamSupport.stream(processingProviders.getGlobalReaderInterceptors().spliterator(), false)
-                             .collect(Collectors.toList()));
-        _writerInterceptors.addAll(
-                StreamSupport.stream(processingProviders.getGlobalWriterInterceptors().spliterator(), false)
-                             .collect(Collectors.toList()));
+        processingProviders.getGlobalReaderInterceptors().forEach(_readerInterceptors::add);
+        processingProviders.getGlobalWriterInterceptors().forEach(_writerInterceptors::add);
 
         if (resourceMethod != null) {
             addNameBoundFiltersAndInterceptors(
@@ -458,9 +452,7 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
                 if (entityAnn.length == 0) {
                     response.setEntityAnnotations(methodAnnotations);
                 } else {
-                    final Annotation[] mergedAnn = Arrays.copyOf(methodAnnotations,
-                            methodAnnotations.length + entityAnn.length);
-                    System.arraycopy(entityAnn, 0, mergedAnn, methodAnnotations.length, entityAnn.length);
+                    final Annotation[] mergedAnn = mergeDistinctAnnotations(methodAnnotations, entityAnn);
                     response.setEntityAnnotations(mergedAnn);
                 }
             }
@@ -485,6 +477,22 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
         }
 
         return jaxrsResponse;
+    }
+
+    private static Annotation[] mergeDistinctAnnotations(Annotation[] existing, Annotation[] newOnes) {
+        List<Annotation> merged = new ArrayList<>(existing.length + newOnes.length);
+        Collections.addAll(merged, existing);
+
+        newOnesLoop:
+        for (Annotation n : newOnes) {
+            for (Annotation ex : existing) {
+                if (ex == n) {
+                    continue newOnesLoop;
+                }
+            }
+            merged.add(n);
+        }
+        return merged.toArray(new Annotation[0]);
     }
 
     private Type unwrapInvocableResponseType(ContainerRequest request, Type entityType) {
