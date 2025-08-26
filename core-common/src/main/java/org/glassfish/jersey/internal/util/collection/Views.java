@@ -230,6 +230,76 @@ public class Views {
             final List<Object> old = originalMap.put(key, (List<Object>) (List<?>) value);
             return valuesTransformer.apply(old);
         }
+
+        @Override
+        public boolean containsKey(Object key) {
+            Iterator<Entry<String, List<String>>> i = entrySet().iterator();
+            if (key == null) {
+                while (i.hasNext()) {
+                    Entry<String, List<String>> e = i.next();
+                    if (e.getKey() == null) {
+                        return true;
+                    }
+                }
+            } else {
+                while (i.hasNext()) {
+                    Entry<String, List<String>> e = i.next();
+                    if (((String) key).equalsIgnoreCase(e.getKey())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public List<String> get(Object key) {
+            Iterator<Entry<String, List<String>>> i = entrySet().iterator();
+            if (key == null) {
+                while (i.hasNext()) {
+                    Entry<String, List<String>> e = i.next();
+                    if (e.getKey() == null) {
+                        return e.getValue();
+                    }
+                }
+            } else {
+                while (i.hasNext()) {
+                    Entry<String, List<String>> e = i.next();
+                    if (((String) key).equalsIgnoreCase(e.getKey())) {
+                        return e.getValue();
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public List<String> remove(Object key) {
+            Iterator<Entry<String, List<String>>> i = entrySet().iterator();
+            Entry<String, List<String>> correctEntry = null;
+            if (key == null) {
+                while (correctEntry == null && i.hasNext()) {
+                    Entry<String, List<String>> e = i.next();
+                    if (e.getKey() == null) {
+                        correctEntry = e;
+                    }
+                }
+            } else {
+                while (correctEntry == null && i.hasNext()) {
+                    Entry<String, List<String>> e = i.next();
+                    if (((String) key).equalsIgnoreCase(e.getKey())) {
+                        correctEntry = e;
+                    }
+                }
+            }
+
+            List<String> oldValue = null;
+            if (correctEntry != null) {
+                oldValue = correctEntry.getValue();
+                i.remove();
+            }
+            return oldValue;
+        }
     }
 
     /**

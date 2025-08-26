@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicReference;
@@ -222,6 +223,43 @@ public class AbortTest {
                 .target("http://localhost:8080").request().get()) {
             Assertions.assertEquals(entity, response.readEntity(String.class));
             Assertions.assertEquals("", originalHeader.get());
+        }
+    }
+
+    @Test
+    public void testResponseContextCaseInsensitiveKeys() {
+        try (Response response = ClientBuilder.newClient()
+                .register(new ClientRequestFilter() {
+                    @Override
+                    public void filter(ClientRequestContext requestContext) throws IOException {
+                        requestContext.abortWith(Response.ok()
+                                .header("header1", "value")
+                                .header("header1", "value1 , value2")
+                                .header("header1", "Value3,white space ")
+                                .header("header2", "Value4;;Value5")
+                                .build());
+                    }
+                })
+                .register(new ClientResponseFilter() {
+                    @Override
+                    public void filter(ClientRequestContext requestContext, ClientResponseContext context) {
+                        Assertions.assertTrue(context.getHeaderString("header1").contains("value"));
+                        Assertions.assertTrue(context.getHeaderString("HEADER1").contains("value2"));
+                        //White space in value not trimmed
+                        Assertions.assertFalse(context.getHeaderString("header1").contains("whitespace"));
+                        //Multiple character separator
+                        Assertions.assertTrue(context.getHeaderString("header2").contains("Value5"));
+
+                        Assertions.assertTrue(context.getHeaders().containsKey("HEADer1"));
+                        Assertions.assertFalse(context.getHeaders().get("HEADer1").isEmpty());
+                        Assertions.assertFalse(context.getHeaders().remove("HeAdEr1").isEmpty());
+                        Assertions.assertFalse(context.getHeaders().containsKey("header1"));
+                    }
+                })
+                .target("http://localhost:8080")
+                .request()
+                .get()) {
+            Assertions.assertEquals(200, response.getStatus());
         }
     }
 
