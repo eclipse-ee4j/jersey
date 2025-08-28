@@ -172,8 +172,7 @@ public abstract class InboundMessageContext extends MessageHeaderMethods impleme
      */
     public InboundMessageContext(Configuration configuration, MultivaluedMap<String, String> httpHeaders, boolean translateNce) {
         super(configuration);
-        this.headers = new GuardianStringKeyMultivaluedMap<>(HeaderUtils.createInbound());
-        this.headers(httpHeaders);
+        this.headers = new GuardianStringKeyMultivaluedMap<>(httpHeaders);
         this.entityContent = new EntityContent();
         this.translateNce = translateNce;
         this.configuration = configuration;
