@@ -231,34 +231,6 @@
 
     <profiles>
         <profile>
-            <id>JettyTestExclude</id>
-            <activation>
-                <jdk>[11,17)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-testCompile</id>
-                                <phase>test-compile</phase>
-                                <configuration>
-                                    <testExcludes>
-                                        <testExclude>org/glassfish/jersey/tests/e2e/server/SimilarInputStreamTest.java</testExclude>
-                                    </testExcludes>
-                                </configuration>
-                                <goals>
-                                    <goal>testCompile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>xdk</id>
             <properties>
                 <!-- do not use security manager for xdk -->

@@ -32,6 +32,10 @@
 
     <description>Jersey E2E tests for testing JDK 17+ specifics</description>
 
+    <properties>
+        <http.patch.addopens>--add-opens java.base/java.net=ALL-UNNAMED</http.patch.addopens>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -73,26 +77,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>jdk15-</id>
-            <activation>
-                <jdk>[8, 16)</jdk>
-            </activation>
-            <properties>
-                <http.patch.addopens> </http.patch.addopens>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdk16+</id>
-            <activation>
-                <jdk>[16, )</jdk>
-            </activation>
-            <properties>
-                <http.patch.addopens>--add-opens java.base/java.net=ALL-UNNAMED</http.patch.addopens>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

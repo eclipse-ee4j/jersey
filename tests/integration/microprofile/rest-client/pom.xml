@@ -67,46 +67,15 @@
             <artifactId>jersey-weld2-se</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.smallrye.config</groupId>
+            <artifactId>smallrye-config</artifactId>
+            <version>${smallrye.config.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
-        <profile>
-            <id>TestExclude</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <testExcludes>
-                                <testExclude>org/glassfish/jersey/test/microprofile/restclient/ConsumesAndProducesTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/test/microprofile/restclient/ConnectorTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/test/microprofile/restclient/InboundHeadersProviderTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/test/microprofile/restclient/RestClientModelTest.java</testExclude>
-                                <testExclude>org/glassfish/jersey/restclient/PathParamTest.java</testExclude>
-                            </testExcludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>smallrye-dependency</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>io.smallrye.config</groupId>
-                    <artifactId>smallrye-config</artifactId>
-                    <version>${smallrye.config.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>securityOff</id>
             <activation>

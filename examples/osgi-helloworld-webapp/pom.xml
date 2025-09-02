@@ -25,20 +25,15 @@
     <name>jersey-examples-osgi-helloworld-webapp</name>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>war-bundle</module>
+        <module>functional-test</module>
+        <module>lib-bundle</module>
+        <module>additional-bundle</module>
+        <module>alternate-version-bundle</module>
+    </modules>
+
     <profiles>
-        <profile>
-            <id>securityOn</id>
-            <activation>
-                <jdk>[11,24)</jdk>
-            </activation>
-            <modules>
-                <module>war-bundle</module>
-                <module>functional-test</module>
-                <module>lib-bundle</module>
-                <module>additional-bundle</module>
-                <module>alternate-version-bundle</module>
-            </modules>
-        </profile>
         <profile>
             <id>pre-release</id>
             <build>

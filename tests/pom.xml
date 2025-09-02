@@ -117,15 +117,6 @@
             </build>
         </profile>
         <profile>
-            <id>JDK17+</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-            <modules>
-                <module>version-agnostic</module>
-            </modules>
-        </profile>
-        <profile>
             <id>JMOCKIT-MODULE-FOR-PRE-JDK24</id>
             <activation>
                 <jdk>[11,24)</jdk>

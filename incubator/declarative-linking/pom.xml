@@ -35,6 +35,13 @@
         Jersey support for declarative hyperlinking.
     </description>
 
+    <properties>
+        <surefire.coverage.argline>
+            --add-opens java.base/java.util.zip=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+        </surefire.coverage.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -122,24 +129,6 @@
                     <version>${project.version}</version>
                 </dependency>
             </dependencies>
-        </profile>
-        <profile>
-            <id>InaccessibleObjectException</id>
-            <activation><jdk>[16,)</jdk></activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <argLine>
-                                --add-opens java.base/java.util.zip=ALL-UNNAMED
-                                --add-opens java.base/java.util=ALL-UNNAMED
-                            </argLine>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
