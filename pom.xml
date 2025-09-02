@@ -1567,7 +1567,7 @@
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
-                <version>1.0.3</version> <!-- JDK 17 needed for 1.0.4 -->
+                <version>3.0.0</version> <!-- JDK 17 needed for 1.0.4 -->
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
