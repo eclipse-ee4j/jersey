@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -96,7 +96,7 @@ public class EmptyRequestWithJaxbTest {
     }
 
     @Nested
-    public static class EmptyRequestTest extends JerseyTest {
+    class EmptyRequestTest extends JerseyTest {
 
         @Override
         protected Application configure() {
@@ -162,7 +162,7 @@ public class EmptyRequestWithJaxbTest {
     }
 
     @Nested
-    public static class MappedJettisonCRTest extends JerseyTest {
+    class MappedJettisonCRTest extends JerseyTest {
 
         @Override
         protected Application configure() {
@@ -174,7 +174,7 @@ public class EmptyRequestWithJaxbTest {
             config.register(JettisonFeature.class);
         }
 
-        public static class MappedJettisonCR extends CR {
+        class MappedJettisonCR extends CR {
 
             protected JAXBContext configure(Class[] classes) throws JAXBException {
                 return new JettisonJaxbContext(JettisonConfig.mappedJettison().build(), classes);
@@ -188,7 +188,7 @@ public class EmptyRequestWithJaxbTest {
     }
 
     @Nested
-    public static class BadgerFishCRTest extends JerseyTest {
+    class BadgerFishCRTest extends JerseyTest {
 
         @Override
         protected Application configure() {
@@ -200,7 +200,7 @@ public class EmptyRequestWithJaxbTest {
             config.register(JettisonFeature.class);
         }
 
-        public static class BadgerFishCR extends CR {
+        class BadgerFishCR extends CR {
 
             protected JAXBContext configure(Class[] classes) throws JAXBException {
                 return new JettisonJaxbContext(JettisonConfig.badgerFish().build(), classes);

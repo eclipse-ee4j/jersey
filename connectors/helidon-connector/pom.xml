@@ -72,14 +72,6 @@
                     <target>11</target>
                 </configuration>
             </plugin>
-            <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-javadoc-plugin</artifactId>
-               <configuration>
-                    <source>8</source>
-                   <detectJavaApiLink>false</detectJavaApiLink>
-               </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -134,7 +134,7 @@ public class ContextResolverMediaTypeTest {
     }
 
     @Nested
-    public static class ProduceTest extends JerseyTest {
+    class ProduceTest extends JerseyTest {
 
         @Override
         protected Application configure() {
@@ -161,7 +161,7 @@ public class ContextResolverMediaTypeTest {
     }
 
     @Nested
-    public static class ProducesTest extends JerseyTest {
+    class ProducesTest extends JerseyTest {
 
         @Override
         protected Application configure() {
@@ -188,7 +188,7 @@ public class ContextResolverMediaTypeTest {
     }
 
     @Nested
-    public static class ProducesSeparateTest extends JerseyTest {
+    class ProducesSeparateTest extends JerseyTest {
 
         @Override
         protected Application configure() {
@@ -216,7 +216,7 @@ public class ContextResolverMediaTypeTest {
     }
 
     @Nested
-    public static class ProducesXXXTest extends JerseyTest {
+    class ProducesXXXTest extends JerseyTest {
 
         @Override
         protected Application configure() {

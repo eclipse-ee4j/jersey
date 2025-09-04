@@ -86,6 +86,12 @@
             <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency> <!--added due to an issue in JUnit 5 dependencies for junit-vintage-engine -->
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform-suite.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
