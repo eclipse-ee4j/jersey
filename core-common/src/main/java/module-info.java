@@ -27,38 +27,42 @@ module org.glassfish.jersey.core.common {
     requires static org.osgi.core;
     requires static osgi.resource.locator;
 
-    // Exports rather all, which corresponds to previous state without module-info
     exports org.glassfish.jersey;
     exports org.glassfish.jersey.http;
     exports org.glassfish.jersey.internal;
-    exports org.glassfish.jersey.internal.config;
+    exports org.glassfish.jersey.internal.config to
+            org.glassfish.jersey.core.client,
+            org.glassfish.jersey.core.server,
+            org.glassfish.jersey.ext.mp.config;
     exports org.glassfish.jersey.internal.guava;
     exports org.glassfish.jersey.internal.inject;
     exports org.glassfish.jersey.internal.l10n;
     exports org.glassfish.jersey.internal.sonar;
     exports org.glassfish.jersey.internal.spi;
-    exports org.glassfish.jersey.internal.routing;
+    exports org.glassfish.jersey.internal.routing; //
     exports org.glassfish.jersey.internal.util;
     exports org.glassfish.jersey.internal.util.collection;
     exports org.glassfish.jersey.logging;
     exports org.glassfish.jersey.message;
-    exports org.glassfish.jersey.message.internal;
+    exports org.glassfish.jersey.message.internal; // Providers
     exports org.glassfish.jersey.model;
     exports org.glassfish.jersey.model.internal;
     exports org.glassfish.jersey.model.internal.spi;
     exports org.glassfish.jersey.process;
-    exports org.glassfish.jersey.process.internal;
+    exports org.glassfish.jersey.process.internal; // @RequestScoped
     exports org.glassfish.jersey.spi;
     exports org.glassfish.jersey.uri;
-    exports org.glassfish.jersey.uri.internal;
+    exports org.glassfish.jersey.uri.internal; // JerseyUriBuilder
 
 
-    exports org.glassfish.jersey.innate to org.glassfish.jersey.core.client,org.glassfish.jersey.core.server,
+    exports org.glassfish.jersey.innate to org.glassfish.jersey.core.client,
+                                           org.glassfish.jersey.core.server,
                                            org.glassfish.jersey.container.grizzly2.http,
                                            org.glassfish.jersey.container.servlet,
                                            org.glassfish.jersey.container.jetty.http,
                                            org.glassfish.jersey.netty.connector,
                                            org.glassfish.jersey.ext.mp.rest.client;
+
     exports org.glassfish.jersey.innate.inject to org.glassfish.jersey.inject.hk2,
                                                   org.glassfish.jersey.inject.cdi2.se,
                                                   org.glassfish.jersey.core.client,
@@ -74,6 +78,7 @@ module org.glassfish.jersey.core.common {
                                                   org.glassfish.jersey.ext.cdi1x,
                                                   org.glassfish.jersey.ext.cdi1x.transaction,
                                                   org.glassfish.jersey.ext.entity.filtering,
+                                                  org.glassfish.jersey.ext.metainf.services,
                                                   org.glassfish.jersey.ext.mvc,
                                                   org.glassfish.jersey.gf.ejb,
                                                   org.glassfish.jersey.security.oauth1.signature;
@@ -89,8 +94,7 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.innate.io to org.glassfish.jersey.core.server,
                                               org.glassfish.jersey.core.client,
                                               org.glassfish.jersey.container.servlet,
-                                              org.glassfish.jersey.apache5.connector,
-                                              org.glassfish.jersey.apache.connector;
+                                              org.glassfish.jersey.apache5.connector;
     exports org.glassfish.jersey.innate.spi to org.glassfish.jersey.core.client,
                                                org.glassfish.jersey.core.server,
                                                org.glassfish.jersey.media.multipart;
@@ -107,6 +111,7 @@ module org.glassfish.jersey.core.common {
     uses jakarta.ws.rs.container.DynamicFeature;
     uses jakarta.ws.rs.ext.RuntimeDelegate;
 
+    uses org.glassfish.jersey.innate.BootstrapPreinitialization;
     uses org.glassfish.jersey.innate.spi.EntityPartBuilderProvider;
     uses org.glassfish.jersey.internal.ServiceFinder;
     uses org.glassfish.jersey.internal.inject.InjectionManagerFactory;

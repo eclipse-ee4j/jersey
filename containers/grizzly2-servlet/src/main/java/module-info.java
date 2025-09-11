@@ -27,4 +27,5 @@ module org.glassfish.jersey.container.grizzly2.servlet {
     requires org.glassfish.jersey.container.grizzly2.http;
 
     exports org.glassfish.jersey.grizzly2.servlet;
+    opens org.glassfish.jersey.grizzly2.servlet;
 }

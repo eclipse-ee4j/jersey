@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +25,15 @@ module org.glassfish.jersey.ext.weld2.se {
     requires org.glassfish.jersey.ext.cdi1x;
     requires org.glassfish.jersey.inject.hk2;
 
-    exports org.glassfish.jersey.weld.se;
-    opens org.glassfish.jersey.weld.se;
+    exports org.glassfish.jersey.weld.se to
+                                            org.glassfish.jersey.core.common,
+                                            weld.core.impl;
+    opens org.glassfish.jersey.weld.se to
+                                            org.glassfish.jersey.core.common,
+                                            weld.core.impl;
+
+    provides org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore with
+            org.glassfish.jersey.weld.se.WeldInjectionManagerStore;
+    provides org.glassfish.jersey.server.spi.ExternalRequestScope with
+            org.glassfish.jersey.weld.se.WeldRequestScope;
 }

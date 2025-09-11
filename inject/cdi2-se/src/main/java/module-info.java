@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,4 +36,7 @@ module org.glassfish.jersey.inject.cdi2.se {
     exports org.glassfish.jersey.inject.cdi.se.bean;
 
     opens org.glassfish.jersey.inject.cdi.se;
+
+    provides org.glassfish.jersey.internal.inject.InjectionManagerFactory with
+            org.glassfish.jersey.inject.cdi.se.CdiSeInjectionManagerFactory;
 }

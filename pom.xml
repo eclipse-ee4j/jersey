@@ -2270,7 +2270,7 @@
         <jmockit.version>1.49</jmockit.version>
         <junit4.version>4.13.2</junit4.version>
         <junit5.version>5.12.2</junit5.version>
-        <junit-platform-suite.version>1.12.2</junit-platform-suite.version>
+        <junit-platform-suite.version>1.13.4</junit-platform-suite.version>
         <junit-platform-suite.legacy.version>1.10.0</junit-platform-suite.legacy.version>
         <kryo.version>4.0.3</kryo.version>
         <mockito.version>4.11.0</mockito.version> <!-- CQ 17673 -->

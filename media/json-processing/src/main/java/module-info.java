@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,5 +23,14 @@ module org.glassfish.jersey.media.json.processing {
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.jsonp;
-    exports org.glassfish.jersey.jsonp.internal;
+    exports org.glassfish.jersey.jsonp.internal to
+                org.glassfish.hk2.locator,
+                org.glassfish.hk2.utilities;
+
+    opens org.glassfish.jersey.jsonp.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
+
+    provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with
+            org.glassfish.jersey.jsonp.internal.JsonProcessingAutoDiscoverable;
 }

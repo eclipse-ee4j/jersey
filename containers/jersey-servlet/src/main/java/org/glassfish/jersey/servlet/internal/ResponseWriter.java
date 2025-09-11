@@ -37,6 +37,7 @@ import org.glassfish.jersey.server.ContainerException;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.internal.JerseyRequestTimeoutHandler;
 import org.glassfish.jersey.server.spi.ContainerResponseWriter;
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
 
 /**

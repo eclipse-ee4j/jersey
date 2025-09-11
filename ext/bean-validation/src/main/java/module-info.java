@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,9 +31,24 @@ module org.glassfish.jersey.ext.bean.validation {
     requires static jakarta.cdi;
 
     exports org.glassfish.jersey.server.validation;
-    exports org.glassfish.jersey.server.validation.internal;
-    exports org.glassfish.jersey.server.validation.internal.hibernate;
+    exports org.glassfish.jersey.server.validation.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.ext.mvc.bean.validation;
+    exports org.glassfish.jersey.server.validation.internal.l10n;
+    exports org.glassfish.jersey.server.validation.internal.hibernate to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
     opens org.glassfish.jersey.server.validation;
-    opens org.glassfish.jersey.server.validation.internal;
-    opens org.glassfish.jersey.server.validation.internal.hibernate;
+    opens org.glassfish.jersey.server.validation.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.ext.mvc.bean.validation;
+    opens org.glassfish.jersey.server.validation.internal.hibernate to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
+    opens org.glassfish.jersey.server.validation.internal.l10n;
+
+    provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with
+            org.glassfish.jersey.server.validation.internal.ValidationAutoDiscoverable;
 }

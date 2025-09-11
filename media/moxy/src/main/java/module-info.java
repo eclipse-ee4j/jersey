@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +31,11 @@ module org.glassfish.jersey.media.moxy {
 
     exports org.glassfish.jersey.moxy.xml;
     exports org.glassfish.jersey.moxy.json;
-    exports org.glassfish.jersey.moxy.json.internal;
 
-    opens org.glassfish.jersey.moxy.json.internal;
+    opens org.glassfish.jersey.moxy.json.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
+
+    provides org.glassfish.jersey.internal.spi.AutoDiscoverable with
+            org.glassfish.jersey.moxy.json.internal.MoxyJsonAutoDiscoverable;
 }

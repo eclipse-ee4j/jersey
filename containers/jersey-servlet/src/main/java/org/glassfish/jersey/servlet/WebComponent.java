@@ -54,7 +54,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.InternalServerProperties;
 import org.glassfish.jersey.server.spi.RequestScopedInitializer;
-import org.glassfish.jersey.servlet.internal.LocalizationMessages;
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.servlet.internal.PersistenceUnitBinder;
 import org.glassfish.jersey.servlet.internal.ResponseWriter;
 import org.glassfish.jersey.servlet.internal.ServletContainerProviderFactory;

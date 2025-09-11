@@ -16,6 +16,8 @@
 
 package org.glassfish.jersey.servlet.internal;
 
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

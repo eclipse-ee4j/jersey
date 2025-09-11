@@ -28,8 +28,23 @@ module org.glassfish.jersey.media.multipart {
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.media.multipart;
-    exports org.glassfish.jersey.media.multipart.internal;
+    exports org.glassfish.jersey.media.multipart.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.core.server,
+            org.glassfish.jersey.core.client;
+    exports org.glassfish.jersey.media.multipart.internal.l10n;
 
     opens org.glassfish.jersey.media.multipart;
-    opens org.glassfish.jersey.media.multipart.internal;
+    opens org.glassfish.jersey.media.multipart.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.core.server,
+            org.glassfish.jersey.core.client;
+    opens org.glassfish.jersey.media.multipart.internal.l10n;
+
+    provides org.glassfish.jersey.innate.spi.EntityPartBuilderProvider with
+            org.glassfish.jersey.media.multipart.JerseyEntityPartBuilderProvider;
+    provides org.glassfish.jersey.internal.spi.AutoDiscoverable with
+            org.glassfish.jersey.media.multipart.MultiPartFeatureAutodiscoverable;
 }

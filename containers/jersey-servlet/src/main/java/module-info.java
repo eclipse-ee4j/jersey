@@ -28,9 +28,20 @@ module org.glassfish.jersey.container.servlet {
 
     exports org.glassfish.jersey.servlet.async;
     exports org.glassfish.jersey.servlet.init;
-//    exports org.glassfish.jersey.servlet.internal;
+    exports org.glassfish.jersey.servlet.internal.l10n;
+    exports org.glassfish.jersey.servlet.internal.spi; //
     exports org.glassfish.jersey.servlet.spi;
     exports org.glassfish.jersey.servlet;
 
     opens org.glassfish.jersey.servlet;
+    opens org.glassfish.jersey.servlet.internal.l10n;
+
+    uses org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
+    uses org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
+    uses org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
+
+    provides org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider with
+            org.glassfish.jersey.servlet.async.AsyncContextDelegateProviderImpl;
+    provides org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider with
+            org.glassfish.jersey.servlet.init.FilterUrlMappingsProviderImpl;
 }

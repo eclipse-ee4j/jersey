@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -710,7 +710,8 @@ public class LoggingFeatureTest {
             // client added header before request has sent (and logged)
             Iterator<LogRecord> it = getLoggedRecords().iterator();
             LogRecord logRecord = it.next();
-            while (logRecord.getLevel() == Level.WARNING) { // Skip any warning at the beginning
+            while (logRecord.getLevel() == Level.WARNING || logRecord.getSourceMethodName().equals("start")) {
+                // Skip any warning at the beginning
                 logRecord = it.next();
             }
             assertThat(logRecord.getMessage(),

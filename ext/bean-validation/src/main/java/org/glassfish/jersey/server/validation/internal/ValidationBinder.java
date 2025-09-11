@@ -57,6 +57,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.inject.ConfiguredValidator;
 import org.glassfish.jersey.server.spi.ValidationInterceptor;
 import org.glassfish.jersey.server.validation.ValidationConfig;
+import org.glassfish.jersey.server.validation.internal.l10n.LocalizationMessages;
 
 /**
  * Bean Validation provider injection binder.

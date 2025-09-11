@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +22,7 @@ import java.nio.Buffer;
 import java.util.List;
 
 import jakarta.ws.rs.core.HttpHeaders;
+import org.glassfish.jersey.jdk.connector.internal.l10n.LocalizationMessages;
 
 /**
  * @author Alexey Stashok

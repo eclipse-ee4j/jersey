@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,5 +26,11 @@ module org.glassfish.jersey.jdk.connector {
     requires org.glassfish.jersey.core.client;
 
     exports org.glassfish.jersey.jdk.connector;
-    exports org.glassfish.jersey.jdk.connector.internal;
+    exports org.glassfish.jersey.jdk.connector.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
+    exports org.glassfish.jersey.jdk.connector.internal.l10n;
+
+    opens org.glassfish.jersey.jdk.connector;
+    opens org.glassfish.jersey.jdk.connector.internal.l10n;
 }

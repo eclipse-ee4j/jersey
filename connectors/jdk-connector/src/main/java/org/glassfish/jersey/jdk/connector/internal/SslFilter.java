@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.jdk.connector.internal;
 
 import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
+import org.glassfish.jersey.jdk.connector.internal.l10n.LocalizationMessages;
 
 import java.nio.ByteBuffer;
 import java.nio.Buffer;
@@ -40,7 +41,7 @@ class SslFilter extends Filter<ByteBuffer, ByteBuffer, ByteBuffer, ByteBuffer> {
 
     Method doHandshakeStep must be synchronized, because it might be entered both by writing and reading thread
     during re-handshake. Write, close and re-handshake cannot be done concurrently, because all those operations might
-    do SSLEngine#wrap. Read can be be done concurrently with any other operation, because even thought re-handshake
+    do SSLEngine#wrap. Read can be done concurrently with any other operation, because even thought re-handshake
     can do SSLEngine#unwrap, it won't do so if it was entered from write operation.
 
     Operations upstreamFilter#onRead cannot be done while holding a lock of this class. Doing so might lead to a deadlock. An

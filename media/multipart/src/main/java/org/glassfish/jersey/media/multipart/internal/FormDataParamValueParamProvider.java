@@ -50,6 +50,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.media.multipart.FormDataParamException;
+import org.glassfish.jersey.media.multipart.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.MessageUtils;
 import org.glassfish.jersey.message.internal.Utils;

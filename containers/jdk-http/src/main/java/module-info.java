@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,12 @@ module org.glassfish.jersey.container.jdk.http {
     requires org.glassfish.jersey.core.server;
 
     exports org.glassfish.jersey.jdkhttp;
+    exports org.glassfish.jersey.jdkhttp.internal; // localization
     opens org.glassfish.jersey.jdkhttp;
     opens org.glassfish.jersey.jdkhttp.internal;
+
+    provides org.glassfish.jersey.server.spi.ContainerProvider with
+            org.glassfish.jersey.jdkhttp.JdkHttpHandlerContainerProvider;
+    provides org.glassfish.jersey.server.spi.WebServerProvider with
+            org.glassfish.jersey.jdkhttp.JdkHttpServerProvider;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,6 +30,14 @@ module org.glassfish.jersey.container.grizzly2.http {
     requires org.glassfish.jersey.core.server;
 
     exports org.glassfish.jersey.grizzly2.httpserver;
+    exports org.glassfish.jersey.grizzly2.httpserver.internal; // localization
     opens org.glassfish.jersey.grizzly2.httpserver;
+    opens org.glassfish.jersey.grizzly2.httpserver.internal;
 
+    provides org.glassfish.jersey.innate.BootstrapPreinitialization with
+            org.glassfish.jersey.grizzly2.httpserver.GrizzlyBootstrapPreinitialization;
+    provides org.glassfish.jersey.server.spi.ContainerProvider with
+            org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainerProvider;
+    provides org.glassfish.jersey.server.spi.WebServerProvider with
+            org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerProvider;
 }

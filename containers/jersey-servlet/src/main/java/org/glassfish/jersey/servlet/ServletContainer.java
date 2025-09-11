@@ -40,7 +40,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.internal.ContainerUtils;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
-import org.glassfish.jersey.servlet.internal.LocalizationMessages;
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.servlet.internal.ResponseWriter;
 import org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
 import org.glassfish.jersey.uri.UriComponent;

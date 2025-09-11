@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,4 +34,16 @@ module org.glassfish.jersey.ext.mp.rest.client {
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.inject.hk2;
     requires org.glassfish.jersey.media.sse;
+
+    exports org.glassfish.jersey.microprofile.restclient;
+    exports org.glassfish.jersey.microprofile.restclient.internal; // localization
+
+    opens org.glassfish.jersey.microprofile.restclient.internal;
+
+    provides jakarta.enterprise.inject.spi.Extension with
+            org.glassfish.jersey.microprofile.restclient.RestClientExtension;
+    provides org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver with
+            org.glassfish.jersey.microprofile.restclient.JerseyRestClientBuilderResolver;
+    provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with
+            org.glassfish.jersey.microprofile.restclient.RequestHeaderAutoDiscoverable;
 }

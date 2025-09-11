@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.ParseException;
-import java.util.Arrays;
 
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.core.GenericType;
@@ -33,7 +32,7 @@ import jakarta.ws.rs.ext.Providers;
 
 import org.glassfish.jersey.innate.spi.MessageBodyWorkersSettable;
 import org.glassfish.jersey.internal.util.collection.ImmutableMultivaluedMap;
-import org.glassfish.jersey.media.multipart.internal.LocalizationMessages;
+import org.glassfish.jersey.media.multipart.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.ParameterizedHeader;

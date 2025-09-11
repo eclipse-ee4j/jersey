@@ -37,7 +37,9 @@ module org.glassfish.jersey.gf.ejb {
     requires org.glassfish.jersey.ext.cdi1x;
     requires org.glassfish.jersey.inject.hk2;
 
-
     exports org.glassfish.jersey.gf.ejb.internal;
     opens org.glassfish.jersey.gf.ejb.internal;
+
+    provides org.glassfish.jersey.server.spi.ComponentProvider with
+            org.glassfish.jersey.gf.ejb.internal.EjbComponentProvider;
 }

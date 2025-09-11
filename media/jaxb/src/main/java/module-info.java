@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,10 +23,17 @@ module org.glassfish.jersey.media.jaxb {
 
     requires org.glassfish.jersey.core.common;
 
-    opens org.glassfish.jersey.jaxb.internal;
-
     exports org.glassfish.jersey.jaxb;
-    exports org.glassfish.jersey.jaxb.internal;
+    exports org.glassfish.jersey.jaxb.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.media.json.jettison;
+    exports org.glassfish.jersey.jaxb.internal.l10n;
+
+    opens org.glassfish.jersey.jaxb.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
+    opens org.glassfish.jersey.jaxb.internal.l10n;
 
     provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable
             with org.glassfish.jersey.jaxb.internal.JaxbAutoDiscoverable;

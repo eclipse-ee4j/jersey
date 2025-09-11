@@ -42,7 +42,7 @@ import jakarta.servlet.annotation.HandlesTypes;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
-import org.glassfish.jersey.servlet.internal.LocalizationMessages;
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.servlet.internal.ServletContainerProviderFactory;
 import org.glassfish.jersey.servlet.internal.Utils;
 import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;

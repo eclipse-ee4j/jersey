@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.server.mvc.internal;
 import jakarta.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.glassfish.jersey.server.mvc.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.server.mvc.spi.ResolvedViewable;
 import org.glassfish.jersey.server.mvc.spi.TemplateProcessor;
 import org.glassfish.jersey.server.mvc.spi.ViewableContext;

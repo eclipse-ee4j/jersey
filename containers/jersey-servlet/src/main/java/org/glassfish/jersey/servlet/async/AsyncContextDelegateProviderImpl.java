@@ -28,7 +28,7 @@ import jakarta.servlet.AsyncListener;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.glassfish.jersey.servlet.internal.LocalizationMessages;
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
 

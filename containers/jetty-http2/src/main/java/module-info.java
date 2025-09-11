@@ -27,4 +27,7 @@ module org.glassfish.jersey.container.jetty.http2 {
 
     exports org.glassfish.jersey.jetty.http2;
     opens org.glassfish.jersey.jetty.http2;
+
+    provides org.glassfish.jersey.server.spi.ContainerProvider with
+            org.glassfish.jersey.jetty.http2.JettyHttp2ContainerProvider;
 }

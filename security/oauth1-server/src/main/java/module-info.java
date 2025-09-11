@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,7 +26,12 @@ module org.glassfish.jersey.security.oauth1.server {
     requires org.glassfish.jersey.security.oauth1.signature;
 
     exports org.glassfish.jersey.server.oauth1;
-    exports org.glassfish.jersey.server.oauth1.internal;
+    exports org.glassfish.jersey.server.oauth1.internal to
+                org.glassfish.hk2.locator,
+                org.glassfish.hk2.utilities;
 
     opens org.glassfish.jersey.server.oauth1;
+    opens org.glassfish.jersey.server.oauth1.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities;
 }

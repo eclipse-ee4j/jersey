@@ -51,6 +51,17 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
+            <exclusions>
+                <!-- package conflict -->
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-xml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-handler-ssl-ocsp</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

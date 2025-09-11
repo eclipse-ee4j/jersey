@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,6 +56,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.glassfish.jersey.jaxb.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.message.internal.EntityInputStream;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 

@@ -32,7 +32,7 @@
 
     <properties>
         <surefire.security.argline>
-            --add-reads org.glassfish.jersey.media.jaxb=org.glassfish.jersey.inject.hk2
+            --add-reads org.glassfish.jersey.media.jaxb=org.glassfish.jersey.inject.hk2 --add-opens org.glassfish.jersey.media.jaxb/org.glassfish.jersey.jaxb.internal=jakarta.xml.bind
         </surefire.security.argline>
     </properties>
 

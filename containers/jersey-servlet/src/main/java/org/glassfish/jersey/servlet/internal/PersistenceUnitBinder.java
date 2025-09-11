@@ -26,6 +26,7 @@ import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.server.ContainerException;
+import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 
 import java.lang.reflect.Proxy;
 import java.util.Enumeration;
