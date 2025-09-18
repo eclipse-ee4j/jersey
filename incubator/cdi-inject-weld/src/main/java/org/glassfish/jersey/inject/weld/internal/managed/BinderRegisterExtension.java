@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import jakarta.annotation.Priority;
@@ -105,7 +106,9 @@ import org.jboss.weld.injection.producer.BeanInjectionTarget;
  * CDI extension that handles CDI bootstrap events and registers Jersey's internally used components and components registered
  * using {@link Application}.
  */
-class BinderRegisterExtension implements Extension {
+public class BinderRegisterExtension implements Extension {
+
+    private static final Logger LOGGER = Logger.getLogger(BinderRegisterExtension.class.getName());
 
     private final AtomicBoolean registrationDone = new AtomicBoolean(false);
     private Supplier<BeanManager> beanManagerSupplier;
@@ -679,6 +682,7 @@ class BinderRegisterExtension implements Extension {
                 Constructor<T> constructor = createMe.getConstructor();
                 return constructor.newInstance();
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                LOGGER.warning(e.getMessage());
                 return null;
             }
         }

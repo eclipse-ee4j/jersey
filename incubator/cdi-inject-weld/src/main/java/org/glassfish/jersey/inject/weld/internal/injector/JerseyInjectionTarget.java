@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,8 +19,10 @@ package org.glassfish.jersey.inject.weld.internal.injector;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.ws.rs.WebApplicationException;
 
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -32,9 +34,9 @@ import jakarta.enterprise.inject.spi.Interceptor;
 
 import org.glassfish.jersey.inject.weld.internal.bean.BeanHelper;
 import org.glassfish.jersey.inject.weld.internal.bean.JerseyBean;
+import org.glassfish.jersey.inject.weld.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.inject.weld.managed.CdiInjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.internal.util.collection.Value;
@@ -56,7 +58,6 @@ import org.jboss.weld.injection.producer.InterceptorApplyingInstantiator;
 import org.jboss.weld.injection.producer.SubclassDecoratorApplyingInstantiator;
 import org.jboss.weld.injection.producer.SubclassedComponentInstantiator;
 import org.jboss.weld.interceptor.spi.model.InterceptionModel;
-import org.jboss.weld.logging.BeanLogger;
 import org.jboss.weld.resources.ClassTransformer;
 import org.jboss.weld.util.reflection.Formats;
 
@@ -70,6 +71,8 @@ import org.jboss.weld.util.reflection.Formats;
  */
 public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
 
+    private static final Logger LOGGER = Logger.getLogger(JerseyInjectionTarget.class.getName());
+
     private final Bean<T> bean;
     private final Class<T> clazz;
     private final LazyValue<JerseyInstanceInjector<T>> injector;
@@ -77,6 +80,7 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
     private Collection<InjectionResolver> resolvers;
     private BasicInjectionTarget delegate; // for managed beans the initializeAfterBeanDiscovery is called for it
     private final Instantiator<T> instantiator;
+
 
     /**
      * Creates a new injection target which is able to delegate an injection to {@code delegate injection target} and inject
@@ -156,8 +160,7 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
         } catch (WebApplicationException wae) {
             throw wae;
         } catch (Throwable cause) {
-            throw new InjectionException(
-                    "Exception occurred during Jersey/JAX-RS annotations processing in the class: " + clazz, cause);
+            throw injectionException(LocalizationMessages.IT_PROCESSING_ANNOTATION_EXCEPTION(clazz.getName()), cause);
         }
 
         /*
@@ -194,7 +197,7 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
 
         if (hasNonConstructorInterceptors || hasDecorators) {
             if (!(getInstantiator() instanceof DefaultInstantiator<?>)) {
-                throw new IllegalStateException("Unexpected instantiator " + getInstantiator());
+                throw illegalStateException(LocalizationMessages.IT_UNEXPECTED_INSTANTIATOR(getInstantiator()));
             }
 
             /*
@@ -232,16 +235,16 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
         }
         EnhancedAnnotatedConstructor<T> constructor = type.getNoArgsEnhancedConstructor();
         if (constructor == null) {
-            throw BeanLogger.LOG.decoratedHasNoNoargsConstructor(this);
+            throw deploymentException(LocalizationMessages.IT_DECORATED_HAS_NO_NOARGS_CONSTRUCTOR(type));
         } else if (constructor.isPrivate()) {
-            throw BeanLogger.LOG
-                    .decoratedNoargsConstructorIsPrivate(this, Formats.formatAsStackTraceElement(constructor.getJavaMember()));
+            String stackTraceElement = Formats.formatAsStackTraceElement(constructor.getJavaMember());
+            throw deploymentException(LocalizationMessages.IT_DECORATED_NOARGS_CONSTRUCTOR_PRIVATE(type, stackTraceElement));
         }
     }
 
     private void checkDecoratedMethods(EnhancedAnnotatedType<T> type, List<Decorator<?>> decorators) {
         if (type.isFinal()) {
-            throw BeanLogger.LOG.finalBeanClassWithDecoratorsNotAllowed(this);
+            throw deploymentException(LocalizationMessages.IT_FINAL_BEAN_CLASS_WITH_DECORATORS_NOT_ALLOWED(type));
         }
         checkNoArgsConstructor(type);
         for (Decorator<?> decorator : decorators) {
@@ -253,13 +256,13 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
             } else if (decorator instanceof CustomDecoratorWrapper<?>) {
                 decoratorClass = ((CustomDecoratorWrapper<?>) decorator).getEnhancedAnnotated();
             } else {
-                throw BeanLogger.LOG.nonContainerDecorator(decorator);
+                throw illegalStateException(LocalizationMessages.IT_NON_CONTAINER_DECORATOR(decorator));
             }
 
             for (EnhancedAnnotatedMethod<?, ?> decoratorMethod : decoratorClass.getEnhancedMethods()) {
                 EnhancedAnnotatedMethod<?, ?> method = type.getEnhancedMethod(decoratorMethod.getSignature());
                 if (method != null && !method.isStatic() && !method.isPrivate() && method.isFinal()) {
-                    throw BeanLogger.LOG.finalBeanClassWithInterceptorsNotAllowed(this);
+                    throw deploymentException(LocalizationMessages.IT_FINAL_BEAN_CLASS_WITH_INTERCEPTORS_NOT_ALLOWED(type));
                 }
             }
         }
@@ -290,6 +293,21 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
 
     private boolean isInterceptionCandidate() {
         return !isInterceptor() && !isDecorator() && !Modifier.isAbstract(getType().getJavaClass().getModifiers());
+    }
+
+    private static IllegalStateException illegalStateException(String message) {
+        LOGGER.warning(message);
+        return new IllegalStateException(message);
+    }
+
+    private static DeploymentException deploymentException(String message) {
+        LOGGER.warning(message);
+        return new DeploymentException(message);
+    }
+
+    private static InjectionException injectionException(String message, Throwable cause) {
+        LOGGER.warning(message);
+        return new InjectionException(message, cause);
     }
 
     @Override

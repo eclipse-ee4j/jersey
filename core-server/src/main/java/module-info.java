@@ -47,7 +47,10 @@ module org.glassfish.jersey.core.server {
     exports org.glassfish.jersey.server.wadl.internal.generators.resourcedoc;
     exports org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model;
     exports org.glassfish.jersey.server.filter;
-    exports org.glassfish.jersey.server.filter.internal to org.glassfish.hk2.locator, org.glassfish.hk2.utilities;
+    exports org.glassfish.jersey.server.filter.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.incubator.cdi.inject.weld;
 
     exports org.glassfish.jersey.server.monitoring;
     exports org.glassfish.jersey.server.internal;
@@ -76,11 +79,18 @@ module org.glassfish.jersey.core.server {
 
     opens org.glassfish.jersey.server;
     opens org.glassfish.jersey.server.filter;
-    opens org.glassfish.jersey.server.internal to org.glassfish.hk2.utilities;
+    opens org.glassfish.jersey.server.filter.internal to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            weld.core.impl;
+    opens org.glassfish.jersey.server.internal to org.glassfish.hk2.utilities, weld.core.impl;
     opens org.glassfish.jersey.server.internal.inject;
     opens org.glassfish.jersey.server.internal.monitoring to org.glassfish.hk2.utilities;
     opens org.glassfish.jersey.server.internal.monitoring.jmx to org.glassfish.hk2.utilities;
-    opens org.glassfish.jersey.server.internal.process to org.glassfish.hk2.locator, org.glassfish.hk2.utilities;
+    opens org.glassfish.jersey.server.internal.process to
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            weld.core.impl;
     opens org.glassfish.jersey.server.internal.routing to org.glassfish.hk2.utilities;
     opens org.glassfish.jersey.server.model;
     opens org.glassfish.jersey.server.wadl.processor;

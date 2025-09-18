@@ -30,6 +30,7 @@ module org.glassfish.jersey.core.client {
     exports org.glassfish.jersey.client.inject;
     exports org.glassfish.jersey.client.spi;
     exports org.glassfish.jersey.client.internal;
+    exports org.glassfish.jersey.client.internal.inject to org.glassfish.jersey.incubator.cdi.inject.weld;
 
     exports org.glassfish.jersey.client.innate to
             org.glassfish.jersey.apache5.connector,

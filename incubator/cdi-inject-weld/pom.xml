@@ -32,6 +32,16 @@
 
     <description>CDI InjectionManager implementation</description>
 
+    <properties>
+        <!-- test packages -->
+        <surefire.security.argline>
+            --add-exports org.glassfish.jersey.incubator.cdi.inject.weld/org.glassfish.jersey.inject.weld.binder.client=org.glassfish.jersey.core.common
+            --add-exports org.glassfish.jersey.incubator.cdi.inject.weld/org.glassfish.jersey.inject.weld.binder.client=weld.core.impl
+            --add-exports org.glassfish.jersey.incubator.cdi.inject.weld/org.glassfish.jersey.inject.weld=weld.core.impl
+            --add-opens org.glassfish.jersey.incubator.cdi.inject.weld/org.glassfish.jersey.inject.weld.binder.client=weld.core.impl
+        </surefire.security.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -73,7 +83,7 @@
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -82,11 +92,27 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se-core</artifactId>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-spi</artifactId>
+            <version>${weld.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-core-impl</artifactId>
+            <version>${weld.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-core</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -140,7 +166,6 @@
                             org.glassfish.jersey.inject.weld.managed.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            jakarta.servlet.*;version="[6.0,7.0)",
                             sun.misc.*;resolution:=optional,
                             ${jakarta.annotation.osgi.version},
                             ${cdi.osgi.version},

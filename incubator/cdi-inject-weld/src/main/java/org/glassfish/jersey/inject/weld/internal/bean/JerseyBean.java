@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,7 +41,7 @@ import org.glassfish.jersey.innate.inject.InternalBinding;
 import org.glassfish.jersey.internal.inject.PerLookup;
 import org.glassfish.jersey.internal.inject.PerThread;
 
-import org.jboss.weld.environment.se.contexts.ThreadScoped;
+//import org.jboss.weld.environment.se.contexts.ThreadScoped;
 
 /**
  * Jersey-specific abstract class which implements {@link Bean} interface. Class particularly contains default implementations
@@ -88,7 +88,7 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
         if (scope == PerLookup.class) {
             return Dependent.class;
         } else if (scope == PerThread.class) {
-            return ThreadScoped.class;
+            return RequestScoped.class; // ThreadScoped.class;
         } else if (scope == org.glassfish.jersey.process.internal.RequestScoped.class) {
             return RequestScoped.class;
         }

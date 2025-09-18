@@ -61,7 +61,8 @@ module org.glassfish.jersey.core.common {
                                            org.glassfish.jersey.container.servlet,
                                            org.glassfish.jersey.container.jetty.http,
                                            org.glassfish.jersey.netty.connector,
-                                           org.glassfish.jersey.ext.mp.rest.client;
+                                           org.glassfish.jersey.ext.mp.rest.client,
+                                           org.glassfish.jersey.incubator.cdi.inject.weld;
 
     exports org.glassfish.jersey.innate.inject to org.glassfish.jersey.inject.hk2,
                                                   org.glassfish.jersey.inject.cdi2.se,
@@ -80,6 +81,7 @@ module org.glassfish.jersey.core.common {
                                                   org.glassfish.jersey.ext.entity.filtering,
                                                   org.glassfish.jersey.ext.metainf.services,
                                                   org.glassfish.jersey.ext.mvc,
+                                                  org.glassfish.jersey.incubator.cdi.inject.weld,
                                                   org.glassfish.jersey.gf.ejb,
                                                   org.glassfish.jersey.security.oauth1.signature;
     exports org.glassfish.jersey.innate.virtual to org.glassfish.jersey.container.grizzly2.http,
@@ -104,6 +106,7 @@ module org.glassfish.jersey.core.common {
 
     opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;
+    opens org.glassfish.jersey.internal.util.collection;
     opens org.glassfish.jersey.message.internal;
     opens org.glassfish.jersey.spi;
 
@@ -111,7 +114,6 @@ module org.glassfish.jersey.core.common {
     uses jakarta.ws.rs.container.DynamicFeature;
     uses jakarta.ws.rs.ext.RuntimeDelegate;
 
-    uses org.glassfish.jersey.innate.BootstrapPreinitialization;
     uses org.glassfish.jersey.innate.spi.EntityPartBuilderProvider;
     uses org.glassfish.jersey.internal.ServiceFinder;
     uses org.glassfish.jersey.internal.inject.InjectionManagerFactory;

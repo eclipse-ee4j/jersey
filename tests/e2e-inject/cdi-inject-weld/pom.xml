@@ -32,10 +32,23 @@
 
     <description>Jersey E2E Inject CDI SE tests</description>
 
+    <properties>
+        <surefire.security.argline>
+            --add-reads org.jboss.logging=weld.core.impl
+            --add-reads org.jboss.logging=weld.se.core
+            --add-reads org.jboss.logging=weld.environment.common
+        </surefire.security.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>

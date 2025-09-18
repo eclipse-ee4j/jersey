@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,18 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-open module org.glassfish.jersey.incubator.cdi.inject.weld {
-    requires jakarta.annotation;
+open module org.glassfish.jersey.tests.e2e.inject.cdi.inject.weld.test {
     requires jakarta.cdi;
-    requires jakarta.inject;
     requires jakarta.ws.rs;
-
     requires java.logging;
-
-    requires junit;
-
     requires org.glassfish.jersey.core.common;
-    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;
-    requires org.hamcrest;
+    requires org.glassfish.jersey.inject.hk2;
+    requires org.glassfish.jersey.tests.e2e.inject.cdi.inject.weld.main;
+    requires org.glassfish.jersey.tests.framework.core;
+    requires org.junit.jupiter.api;
+    requires weld.core.impl;
 }
