@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
         <artifactId>cdi-integration-project</artifactId>
-        <version>4.0.99-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>cdi-with-jersey-injection-custom-hk2-banned-webapp</artifactId>

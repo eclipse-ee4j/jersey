@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>project</artifactId>
-        <version>4.0.99-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.jersey.tests</groupId>
     <artifactId>release-test</artifactId>
-    <version>4.0.99-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
     <name>jersey-release-test</name>
 

@@ -29,7 +29,7 @@
     <groupId>org.glassfish.jersey</groupId>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.99-SNAPSHOT</version>
+    <version>${revision}</version>
     <name>jersey</name>
     <description>
         Eclipse Jersey is the open source (under dual EPL+GPL license) Jakarta RESTful WebServices 3.0
@@ -796,6 +796,31 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.7.2</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.commonjava.maven.plugins</groupId>
                 <artifactId>directory-maven-plugin</artifactId>
@@ -2064,6 +2089,7 @@
     </dependencyManagement>
 
     <properties>
+        <revision>4.0.99-SNAPSHOT</revision>
         <archetype.mvn.plugin.version>3.4.0</archetype.mvn.plugin.version>
 
         <findbugs.skip>false</findbugs.skip>

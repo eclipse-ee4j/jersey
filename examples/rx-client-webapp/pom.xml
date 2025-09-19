@@ -18,7 +18,7 @@
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>webapp-example-parent</artifactId>
         <relativePath>../webapp-example-parent/pom.xml</relativePath>
-        <version>4.0.99-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>rx-client-webapp</artifactId>

@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.glassfish.jersey.examples</groupId>
         <artifactId>osgi-helloworld-webapp</artifactId>
-        <version>4.0.99-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <groupId>org.glassfish.jersey.examples.osgi-helloworld-webapp</groupId>

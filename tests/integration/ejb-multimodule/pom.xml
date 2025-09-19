@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration</groupId>
         <artifactId>project</artifactId>
-        <version>4.0.99-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>ejb-multimodule</artifactId>

@@ -538,7 +538,7 @@
         <profile>
             <id>jersey-tck</id>
             <properties>
-                <jersey.version>4.0.99-SNAPSHOT</jersey.version> <!-- When running the profile, use SNAPSHOT -->
+                <jersey.version>${revision}</jersey.version> <!-- When running the profile, use SNAPSHOT -->
             </properties>
         </profile>
     </profiles>
