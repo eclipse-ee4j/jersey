@@ -160,6 +160,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-constants</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
                 <artifactId>jersey-entity-filtering</artifactId>
                 <version>${project.version}</version>
             </dependency>
