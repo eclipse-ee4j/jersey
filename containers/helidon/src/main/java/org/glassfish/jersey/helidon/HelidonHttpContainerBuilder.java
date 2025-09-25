@@ -44,6 +44,8 @@ public class HelidonHttpContainerBuilder {
 
     private Application application;
 
+    private Class<? extends Application> applicationClass;
+
     private String path;
 
     private Tls tls;
@@ -86,6 +88,11 @@ public class HelidonHttpContainerBuilder {
 
     public Application application() {
         return this.application;
+    }
+
+    public HelidonHttpContainerBuilder applicationClass(Class<? extends Application> applicationClass) {
+        this.applicationClass = applicationClass;
+        return this;
     }
 
     public HelidonHttpContainerBuilder path(String path) {
@@ -136,13 +143,14 @@ public class HelidonHttpContainerBuilder {
 
     public HelidonHttpContainer build() {
         configureBaseUri();
-        webServerBuilder.config(Config.global())
+        webServerBuilder.config(Config.create())
                         .routing(configureRouting());
         this.tls = configureTls();
         if (this.tls != null) {
             webServerBuilder.tls(this.tls);
         }
-        return new HelidonHttpContainer(application, bridge);
+        return (application == null)
+               ? new HelidonHttpContainer(applicationClass, bridge) : new HelidonHttpContainer(application, bridge);
     }
 
     private TlsConfig.Builder addSSLParameterss(TlsConfig.Builder builder) {

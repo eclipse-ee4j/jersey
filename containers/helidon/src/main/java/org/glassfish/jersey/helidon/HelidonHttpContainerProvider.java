@@ -16,17 +16,37 @@
 
 package org.glassfish.jersey.helidon;
 
-import io.helidon.webserver.WebServer;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.SeBootstrap;
 import jakarta.ws.rs.core.Application;
+import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
 import org.glassfish.jersey.server.spi.ContainerProvider;
+import org.glassfish.jersey.server.spi.WebServer;
+import org.glassfish.jersey.server.spi.WebServerProvider;
 
-public class HelidonHttpContainerProvider implements ContainerProvider {
+public class HelidonHttpContainerProvider implements ContainerProvider,
+        WebServerProvider {
     @Override
     public <T> T createContainer(Class<T> type, Application application) throws ProcessingException {
-        if (type != WebServer.class && type != HelidonHttpContainer.class) {
+        if (type != io.helidon.webserver.WebServer.class && type != HelidonHttpContainer.class) {
             return null;
         }
         return type.cast(new HelidonHttpContainer(application, new HelidonJerseyBridge()));
+    }
+
+    @Override
+    public <T extends WebServer> T createServer(Class<T> type, Application application,
+                                                SeBootstrap.Configuration configuration) throws ProcessingException {
+        return WebServerProvider.isSupportedWebServer(HelidonHttpServer.class, type, configuration)
+                ? type.cast(new HelidonHttpServer(application, JerseySeBootstrapConfiguration.from(configuration)))
+                : null;
+    }
+
+    @Override
+    public <T extends WebServer> T createServer(Class<T> type, Class<? extends Application> applicationClass,
+                                                SeBootstrap.Configuration configuration) throws ProcessingException {
+        return WebServerProvider.isSupportedWebServer(HelidonHttpServer.class, type, configuration)
+                ? type.cast(new HelidonHttpServer(applicationClass, JerseySeBootstrapConfiguration.from(configuration)))
+                : null;
     }
 }

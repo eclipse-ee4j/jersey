@@ -36,13 +36,17 @@ public final class HelidonHttpContainer implements Container, WebServer {
 
     private ApplicationHandler applicationHandler;
 
-    private HelidonJerseyBridge bridge;
-
     HelidonHttpContainer(Application application, HelidonJerseyBridge bridge) {
         this.applicationHandler = new ApplicationHandler(application,
                 new HelidonHttpContainerBinder(), bridge.getParentContext());
-        this.bridge = bridge;
-        webServer = bridge.getBuilder().build();
+        this.webServer = bridge.getBuilder().build();
+        bridge.setContainer(this);
+    }
+
+    HelidonHttpContainer(Class<? extends Application> applicationClass, HelidonJerseyBridge bridge) {
+        this.applicationHandler = new ApplicationHandler(applicationClass,
+                new HelidonHttpContainerBinder());
+        this.webServer = bridge.getBuilder().build();
         bridge.setContainer(this);
     }
 
@@ -107,5 +111,9 @@ public final class HelidonHttpContainer implements Container, WebServer {
     @Override
     public WebServerConfig prototype() {
         return webServer.prototype();
+    }
+
+    public io.helidon.webserver.WebServer unwrap() {
+        return webServer;
     }
 }
