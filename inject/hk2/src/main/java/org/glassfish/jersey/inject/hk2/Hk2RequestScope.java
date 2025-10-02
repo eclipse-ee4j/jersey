@@ -139,7 +139,7 @@ public class Hk2RequestScope extends RequestScope {
          */
         @Override
         public void release() {
-            if (referenceCounter.decrementAndGet() < 1) {
+            if (referenceCounter.decrementAndGet() == 0) {
                 try {
                     ArrayList<ForeignDescriptor> reverse = new ArrayList<>(store.keySet());
                     Collections.reverse(reverse);
