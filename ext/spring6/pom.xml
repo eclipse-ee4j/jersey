@@ -220,6 +220,16 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <inherited>true</inherited>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Automatic-Module-Name>org.glassfish.jersey.ext.spring6</Automatic-Module-Name>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

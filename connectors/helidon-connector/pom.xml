@@ -178,6 +178,7 @@
                         <configuration>
                             <instructions>
                                 <Multi-Release>true</Multi-Release>
+                                <Automatic-Module-Name>org.glassfish.jersey.helidon.connector</Automatic-Module-Name>
                             </instructions>
                         </configuration>
                     </plugin>

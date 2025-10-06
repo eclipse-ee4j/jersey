@@ -26,12 +26,8 @@ module org.glassfish.jersey.security.oauth1.server {
     requires org.glassfish.jersey.security.oauth1.signature;
 
     exports org.glassfish.jersey.server.oauth1;
-    exports org.glassfish.jersey.server.oauth1.internal to
-                org.glassfish.hk2.locator,
-                org.glassfish.hk2.utilities;
+    exports org.glassfish.jersey.server.oauth1.internal;
 
     opens org.glassfish.jersey.server.oauth1;
-    opens org.glassfish.jersey.server.oauth1.internal to
-            org.glassfish.hk2.locator,
-            org.glassfish.hk2.utilities;
+    opens org.glassfish.jersey.server.oauth1.internal;
 }

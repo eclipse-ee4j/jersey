@@ -27,7 +27,9 @@ module org.glassfish.jersey.media.jsonb {
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.jsonb;
+    exports org.glassfish.jersey.jsonb.internal;
     opens org.glassfish.jersey.jsonb;
+    opens org.glassfish.jersey.jsonb.internal;
 
     provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with
             org.glassfish.jersey.jsonb.internal.JsonBindingAutoDiscoverable;

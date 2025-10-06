@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,14 +14,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.e2e.inject.cdi.se.subresources;
+package org.glassfish.jersey.tests.e2e.inject.cdi.se.test.subresources;
 
 import java.util.concurrent.ExecutionException;
 
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.tests.e2e.inject.cdi.se.RequestContextBuilder;
+import org.glassfish.jersey.tests.e2e.inject.cdi.se.subresources.ModelProcessorFeature;
+import org.glassfish.jersey.tests.e2e.inject.cdi.se.subresources.RootResource;
+import org.glassfish.jersey.tests.e2e.inject.cdi.se.subresources.RootSingletonResource;
+import org.glassfish.jersey.tests.e2e.inject.cdi.se.test.RequestContextBuilder;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

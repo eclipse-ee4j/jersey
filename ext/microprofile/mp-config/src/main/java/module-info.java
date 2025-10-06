@@ -22,6 +22,7 @@ module org.glassfish.jersey.ext.mp.config {
     requires static org.glassfish.jersey.core.server;
 
     exports org.glassfish.jersey.microprofile.config;
+    opens org.glassfish.jersey.microprofile.config;
 
     provides org.glassfish.jersey.spi.ExternalConfigurationProvider with
             org.glassfish.jersey.microprofile.config.ConfigurationProvider;

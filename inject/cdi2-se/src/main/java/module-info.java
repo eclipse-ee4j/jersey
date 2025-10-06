@@ -36,6 +36,8 @@ module org.glassfish.jersey.inject.cdi2.se {
     exports org.glassfish.jersey.inject.cdi.se.bean;
 
     opens org.glassfish.jersey.inject.cdi.se;
+    opens org.glassfish.jersey.inject.cdi.se.injector;
+    opens org.glassfish.jersey.inject.cdi.se.bean;
 
     provides org.glassfish.jersey.internal.inject.InjectionManagerFactory with
             org.glassfish.jersey.inject.cdi.se.CdiSeInjectionManagerFactory;

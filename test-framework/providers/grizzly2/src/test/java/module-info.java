@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.framework.provider.grizzly {
+open module org.glassfish.jersey.tests.framework.provider.grizzly {
     requires java.logging;
 
     requires jakarta.inject;
@@ -38,9 +38,6 @@ module org.glassfish.jersey.tests.framework.provider.grizzly {
     exports org.glassfish.jersey.test.grizzly.web;
     exports org.glassfish.jersey.test.grizzly.web.context;
     exports org.glassfish.jersey.test.grizzly.web.ssl;
-
-    opens org.glassfish.jersey.test.grizzly.pckg;
-    opens org.glassfish.jersey.test.grizzly.web;
 
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;

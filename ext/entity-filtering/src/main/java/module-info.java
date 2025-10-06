@@ -29,19 +29,7 @@ module org.glassfish.jersey.ext.entity.filtering {
     exports org.glassfish.jersey.message.filtering.internal; // localization
     exports org.glassfish.jersey.message.filtering.spi;
 
+    opens org.glassfish.jersey.message.filtering;
     opens org.glassfish.jersey.message.filtering.internal;
-
-    uses org.glassfish.jersey.message.filtering.spi.AbstractEntityProcessor;
-    uses org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
-    uses org.glassfish.jersey.message.filtering.spi.EntityGraph;
-    uses org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
-    uses org.glassfish.jersey.message.filtering.spi.EntityInspector;
-    uses org.glassfish.jersey.message.filtering.spi.EntityProcessor;
-    uses org.glassfish.jersey.message.filtering.spi.EntityProcessorContext;
-    uses org.glassfish.jersey.message.filtering.spi.ObjectGraph;
-    uses org.glassfish.jersey.message.filtering.spi.ObjectGraphTransformer;
-    uses org.glassfish.jersey.message.filtering.spi.ObjectProvider;
-    uses org.glassfish.jersey.message.filtering.spi.ScopeProvider;
-    uses org.glassfish.jersey.message.filtering.spi.ScopeResolver;
-
+    opens org.glassfish.jersey.message.filtering.spi;
 }

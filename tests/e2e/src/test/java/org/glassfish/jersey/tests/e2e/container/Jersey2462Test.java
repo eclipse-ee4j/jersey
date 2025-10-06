@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,7 +54,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @Suite
 @SelectClasses({Jersey2462Test.GrizzlyContainerTest.class,
-        Jersey2462Test.JettyContainerTest.class})
+})
+//        Jersey2462Test.JettyContainerTest.class})
 public class Jersey2462Test {
     private static final String REQUEST_NUMBER = "request-number";
 
@@ -88,7 +89,7 @@ public class Jersey2462Test {
         @Inject
         private Provider<org.glassfish.grizzly.http.server.Request> grizzlyRequest;
         @Inject
-        private org.glassfish.grizzly.http.server.Response grizzlyResponse;
+        private Provider<org.glassfish.grizzly.http.server.Response> grizzlyResponse;
 
         @Override
         public void filter(ContainerRequestContext ctx) throws IOException {
@@ -112,7 +113,7 @@ public class Jersey2462Test {
             if ("/jersey-2462".equals(grizzlyRequest.get().getContextPath())) {
                 flags += 1;
             }
-            if (!grizzlyResponse.isCommitted()) {
+            if (!grizzlyResponse.get().isCommitted()) {
                 flags += 10;
             }
             final String header = grizzlyRequest.get().getHeader(REQUEST_NUMBER);

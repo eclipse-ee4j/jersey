@@ -27,5 +27,6 @@ module org.glassfish.jersey.security.oauth1.client {
     exports org.glassfish.jersey.client.oauth1;
     exports org.glassfish.jersey.client.oauth1.internal;
 
+    opens org.glassfish.jersey.client.oauth1;
     opens org.glassfish.jersey.client.oauth1.internal;
 }

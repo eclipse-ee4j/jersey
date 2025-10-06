@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,18 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-open module org.glassfish.jersey.incubator.declarative.linking {
-    requires junit;
-
+open module org.glassfish.jersey.test.framework.provider.inmemory {
     requires java.logging;
-    requires java.desktop;
-
-    requires jakarta.xml.bind;
-
-    requires com.fasterxml.jackson.databind;
-
+    requires jakarta.ws.rs;
     requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
-    requires jsonassert;
+    requires org.glassfish.jersey.tests.framework.core;
+
+    requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
+    requires org.hamcrest;
+
+    exports org.glassfish.jersey.test.inmemory;
+    exports org.glassfish.jersey.test.inmemory.internal;
 }

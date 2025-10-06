@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -118,9 +118,11 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
      * Note that since Grizzly {@code Request} class is not proxiable as it does not expose an empty constructor,
      * the injection of Grizzly request instance into singleton JAX-RS and Jersey providers is only supported via
      * {@link jakarta.inject.Provider injection provider}.
+     * <p/>
+     * Note that since Jersey 4, Grizzly {@code Response} is also supported via
+     * {@link jakarta.inject.Provider injection provider} only for the java module reasons.
      */
     static class GrizzlyBinder extends InternalBinder {
-
         @Override
         protected void configure() {
             bindFactory(GrizzlyRequestReferencingFactory.class).to(Request.class)
@@ -131,7 +133,7 @@ public final class GrizzlyHttpContainer extends HttpHandler implements Container
                     .id(InjectionIds.GRIZZLY_REQUEST.id());
 
             bindFactory(GrizzlyResponseReferencingFactory.class).to(Response.class)
-                    .proxy(true).proxyForSameScope(false).in(RequestScoped.class)
+                    .proxy(false).in(RequestScoped.class)
                     .id(InjectionIds.GRIZZLY_RESPONSE_REFERENCING_FACTORY.id());
             bindFactory(ReferencingFactory.<Response>referenceFactory()).to(new GenericType<Ref<Response>>() {})
                     .in(RequestScoped.class)

@@ -27,10 +27,18 @@ module org.glassfish.jersey.jdk.connector {
 
     exports org.glassfish.jersey.jdk.connector;
     exports org.glassfish.jersey.jdk.connector.internal to
+            org.glassfish.jersey.core.client,
             org.glassfish.hk2.locator,
-            org.glassfish.hk2.utilities;
+            org.glassfish.hk2.utilities,
+            weld.core.impl;
     exports org.glassfish.jersey.jdk.connector.internal.l10n;
 
     opens org.glassfish.jersey.jdk.connector;
+    opens org.glassfish.jersey.jdk.connector.internal to
+            org.glassfish.jersey.core.client,
+            org.glassfish.hk2.locator,
+            org.glassfish.hk2.utilities,
+            weld.core.impl;
+
     opens org.glassfish.jersey.jdk.connector.internal.l10n;
 }

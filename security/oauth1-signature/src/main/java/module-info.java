@@ -25,5 +25,6 @@ module org.glassfish.jersey.security.oauth1.signature {
     exports org.glassfish.jersey.oauth1.signature;
     exports org.glassfish.jersey.oauth1.signature.internal; // localization
 
+    opens org.glassfish.jersey.oauth1.signature;
     opens org.glassfish.jersey.oauth1.signature.internal;
 }

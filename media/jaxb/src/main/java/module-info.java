@@ -24,15 +24,11 @@ module org.glassfish.jersey.media.jaxb {
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.jaxb;
-    exports org.glassfish.jersey.jaxb.internal to
-            org.glassfish.hk2.locator,
-            org.glassfish.hk2.utilities,
-            org.glassfish.jersey.media.json.jettison;
+    exports org.glassfish.jersey.jaxb.internal;
     exports org.glassfish.jersey.jaxb.internal.l10n;
 
-    opens org.glassfish.jersey.jaxb.internal to
-            org.glassfish.hk2.locator,
-            org.glassfish.hk2.utilities;
+    opens org.glassfish.jersey.jaxb;
+    opens org.glassfish.jersey.jaxb.internal;
     opens org.glassfish.jersey.jaxb.internal.l10n;
 
     provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable

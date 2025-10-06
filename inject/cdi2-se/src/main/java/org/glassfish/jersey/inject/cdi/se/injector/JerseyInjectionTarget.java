@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,7 +19,9 @@ package org.glassfish.jersey.inject.cdi.se.injector;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
+import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.ws.rs.WebApplicationException;
 
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -29,6 +31,7 @@ import jakarta.enterprise.inject.spi.Decorator;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.Interceptor;
 
+import org.glassfish.jersey.inject.cdi.se.LocalizationMessages;
 import org.glassfish.jersey.inject.cdi.se.bean.BeanHelper;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
@@ -51,21 +54,22 @@ import org.jboss.weld.injection.producer.InterceptorApplyingInstantiator;
 import org.jboss.weld.injection.producer.SubclassDecoratorApplyingInstantiator;
 import org.jboss.weld.injection.producer.SubclassedComponentInstantiator;
 import org.jboss.weld.interceptor.spi.model.InterceptionModel;
-import org.jboss.weld.logging.BeanLogger;
 import org.jboss.weld.resources.ClassTransformer;
 import org.jboss.weld.util.reflection.Formats;
 
 /**
  * Wrapper for {@link InjectionTarget} that implements the functionality of injecting using JAX-RS annotations into provided
- * instances. {@code Delegate} is a original {@code InjectionTarget} which is able to inject other fields/parameters which
+ * instances. {@code Delegate} is an original {@code InjectionTarget} which is able to inject other fields/parameters which
  * are managed by CDI.
  * <p>
- * Implementation is also able create with custom {@code jerseyConstructor} if it is provided. This functionality allows override
+ * Implementation is also able to create with custom {@code jerseyConstructor} if it is provided. This functionality allows override
  * default instantiator and use the Jersey-specific one.
  *
  * @author Petr Bouda
  */
 public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
+
+    private static final Logger LOGGER = Logger.getLogger(JerseyInjectionTarget.class.getName());
 
     private final Bean<T> bean;
     private final Class<T> clazz;
@@ -220,16 +224,16 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
         }
         EnhancedAnnotatedConstructor<T> constructor = type.getNoArgsEnhancedConstructor();
         if (constructor == null) {
-            throw BeanLogger.LOG.decoratedHasNoNoargsConstructor(this);
+            throw deploymentException(LocalizationMessages.IT_DECORATED_HAS_NO_NOARGS_CONSTRUCTOR(type));
         } else if (constructor.isPrivate()) {
-            throw BeanLogger.LOG
-                    .decoratedNoargsConstructorIsPrivate(this, Formats.formatAsStackTraceElement(constructor.getJavaMember()));
+            String stackTraceElement = Formats.formatAsStackTraceElement(constructor.getJavaMember());
+            throw deploymentException(LocalizationMessages.IT_DECORATED_NOARGS_CONSTRUCTOR_PRIVATE(type, stackTraceElement));
         }
     }
 
     private void checkDecoratedMethods(EnhancedAnnotatedType<T> type, List<Decorator<?>> decorators) {
         if (type.isFinal()) {
-            throw BeanLogger.LOG.finalBeanClassWithDecoratorsNotAllowed(this);
+            throw deploymentException(LocalizationMessages.IT_FINAL_BEAN_CLASS_WITH_DECORATORS_NOT_ALLOWED(type));
         }
         checkNoArgsConstructor(type);
         for (Decorator<?> decorator : decorators) {
@@ -241,13 +245,13 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
             } else if (decorator instanceof CustomDecoratorWrapper<?>) {
                 decoratorClass = ((CustomDecoratorWrapper<?>) decorator).getEnhancedAnnotated();
             } else {
-                throw BeanLogger.LOG.nonContainerDecorator(decorator);
+                throw illegalStateException(LocalizationMessages.IT_NON_CONTAINER_DECORATOR(decorator));
             }
 
             for (EnhancedAnnotatedMethod<?, ?> decoratorMethod : decoratorClass.getEnhancedMethods()) {
                 EnhancedAnnotatedMethod<?, ?> method = type.getEnhancedMethod(decoratorMethod.getSignature());
                 if (method != null && !method.isStatic() && !method.isPrivate() && method.isFinal()) {
-                    throw BeanLogger.LOG.finalBeanClassWithInterceptorsNotAllowed(this);
+                    throw deploymentException(LocalizationMessages.IT_FINAL_BEAN_CLASS_WITH_INTERCEPTORS_NOT_ALLOWED(type));
                 }
             }
         }
@@ -278,6 +282,21 @@ public class JerseyInjectionTarget<T> extends BasicInjectionTarget<T> {
 
     private boolean isInterceptionCandidate() {
         return !isInterceptor() && !isDecorator() && !Modifier.isAbstract(getType().getJavaClass().getModifiers());
+    }
+
+    private static IllegalStateException illegalStateException(String message) {
+        LOGGER.warning(message);
+        return new IllegalStateException(message);
+    }
+
+    private static DeploymentException deploymentException(String message) {
+        LOGGER.warning(message);
+        return new DeploymentException(message);
+    }
+
+    private static InjectionException injectionException(String message, Throwable cause) {
+        LOGGER.warning(message);
+        return new InjectionException(message, cause);
     }
 
     @Override

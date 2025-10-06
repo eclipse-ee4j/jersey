@@ -38,6 +38,7 @@ module org.glassfish.jersey.ext.mp.rest.client {
     exports org.glassfish.jersey.microprofile.restclient;
     exports org.glassfish.jersey.microprofile.restclient.internal; // localization
 
+    opens org.glassfish.jersey.microprofile.restclient;
     opens org.glassfish.jersey.microprofile.restclient.internal;
 
     provides jakarta.enterprise.inject.spi.Extension with

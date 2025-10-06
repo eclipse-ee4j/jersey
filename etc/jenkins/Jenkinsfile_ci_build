@@ -24,12 +24,12 @@ pipeline {
 //                            '''
 //                    }
 //                }
-                stage('JDK 21') {
+                stage('JDK 25') {
                     agent {
                         label 'centos-7'
                     }
                     tools {
-                        jdk 'openjdk-jdk21-latest'
+                        jdk 'openjdk-jdk25-latest'
                         maven 'apache-maven-latest'
                     }
                     steps {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,13 +14,5 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.incubator.gae.integration {
-    requires jakarta.ws.rs;
-
-//    requires com.google.appengine.api;
-
-    requires org.glassfish.jersey.core.common;
-    requires org.glassfish.jersey.core.server;
-
-    exports org.glassfish.jersey.server.gae;
+module org.glassfish.jersey.tests.e2e.entity.main {
 }

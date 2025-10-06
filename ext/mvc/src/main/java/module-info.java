@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 202, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,13 +26,12 @@ module org.glassfish.jersey.ext.mvc {
     requires org.glassfish.jersey.core.common;
 
     exports org.glassfish.jersey.server.mvc;
-    exports org.glassfish.jersey.server.mvc.internal to org.glassfish.jersey.ext.mvc.jsp;
+    exports org.glassfish.jersey.server.mvc.internal;
     exports org.glassfish.jersey.server.mvc.internal.l10n;
     exports org.glassfish.jersey.server.mvc.spi;
 
+    opens org.glassfish.jersey.server.mvc;
+    opens org.glassfish.jersey.server.mvc.internal;
     opens org.glassfish.jersey.server.mvc.internal.l10n;
-
-    uses org.glassfish.jersey.server.mvc.spi.TemplateProcessor;
-    uses org.glassfish.jersey.server.mvc.spi.ViewableContext;
-    uses org.glassfish.jersey.server.mvc.spi.AbstractTemplateProcessor;
+    opens org.glassfish.jersey.server.mvc.spi;
 }

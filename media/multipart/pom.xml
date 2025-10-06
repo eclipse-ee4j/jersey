@@ -36,12 +36,8 @@
 
     <properties>
         <surefire.coverage.argline>
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate=ALL-UNNAMED
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.inject=ALL-UNNAMED
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.virtual=ALL-UNNAMED
             --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.io=ALL-UNNAMED
             --add-exports org.glassfish.jersey.core.client/org.glassfish.jersey.client.innate=ALL-UNNAMED
-            --add-modules=ALL-MODULE-PATH
             --add-reads org.glassfish.jersey.media.multipart=jakarta.json
         </surefire.coverage.argline>
     </properties>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -77,7 +77,7 @@ public abstract class BlindBinder implements Binder {
      * @param <T>   type of the managed instance returned using provider.
      * @return provider with instance of managed instance.
      */
-    protected final <T> Provider<T> createManagedInstanceProvider(Class<T> clazz) {
+    protected <T> Provider<T> createManagedInstanceProvider(Class<T> clazz) {
         return () -> {
             if (injectionManager == null) {
                 throw new IllegalStateException(LocalizationMessages.INJECTION_MANAGER_NOT_PROVIDED());

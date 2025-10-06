@@ -33,7 +33,10 @@ module org.glassfish.jersey.ext.cdi1x {
     exports org.glassfish.jersey.ext.cdi1x.internal; // @JerseyVetoed
     exports org.glassfish.jersey.ext.cdi1x.internal.spi;
     exports org.glassfish.jersey.ext.cdi1x.spi;
+
     opens org.glassfish.jersey.ext.cdi1x.internal;
+    opens org.glassfish.jersey.ext.cdi1x.internal.spi;
+    opens org.glassfish.jersey.ext.cdi1x.spi;
 
     uses org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider;
     uses org.glassfish.jersey.ext.cdi1x.internal.spi.BeanManagerProvider;

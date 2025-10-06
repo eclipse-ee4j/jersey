@@ -89,7 +89,7 @@ abstract class AbstractJavaConnectorTest extends JerseyTest {
             asyncResponse.setTimeout(timeoutSeconds, TimeUnit.SECONDS);
             CompletableFuture.runAsync(() -> {
                         try {
-                            Thread.sleep(3000);
+                            Thread.sleep(2000);
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                             throw new RuntimeException(e);

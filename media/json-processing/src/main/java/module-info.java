@@ -29,7 +29,12 @@ module org.glassfish.jersey.media.json.processing {
 
     opens org.glassfish.jersey.jsonp.internal to
             org.glassfish.hk2.locator,
-            org.glassfish.hk2.utilities;
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.core.client,  // NonInjectionManager
+            org.glassfish.jersey.incubator.cdi.inject.weld,
+            org.glassfish.jersey.inject.cdi2.se,
+            weld.core.impl;
+
 
     provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with
             org.glassfish.jersey.jsonp.internal.JsonProcessingAutoDiscoverable;

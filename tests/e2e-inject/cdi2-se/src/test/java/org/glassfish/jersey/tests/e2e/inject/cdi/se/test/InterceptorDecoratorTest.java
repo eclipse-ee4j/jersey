@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,50 +14,40 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.e2e.inject.cdi.se;
+package org.glassfish.jersey.tests.e2e.inject.cdi.se.test;
 
-import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.jersey.tests.e2e.inject.cdi.se.HelloResource;
+import org.glassfish.jersey.tests.e2e.inject.cdi.se.NameService;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Tests that the resource can fire an event.
+ * Tests that the resource can be intercepted and decorated.
  *
  * @author Petr Bouda
  */
-public class EventsTest extends JerseyTest {
+public class InterceptorDecoratorTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(AccountResource.class);
+        return new ResourceConfig(HelloResource.class);
     }
 
     @Test
-    public void testFiredEvents() {
-        Response credit = target("account").queryParam("amount", 50).request().post(Entity.json(""));
-        assertEquals(204, credit.getStatus());
-
-        Response debit = target("account").queryParam("amount", 25).request().delete();
-        assertEquals(204, debit.getStatus());
-
-        Long current = target("account").queryParam("amount", 25).request().get(Long.class);
-        assertEquals(25, current.longValue());
+    public void testInterceptedGet() {
+        String intercepted = target("intercepted").queryParam("user", NameService.NAME).request().get(String.class);
+        assertEquals("***Hello James***", intercepted);
     }
 
-    @Override
-    @BeforeEach
-    public void setUp() throws Exception {
-        try {
-            super.setUp();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+    @Test
+    public void testForbiddenGet() {
+        Response result = target("intercepted").queryParam("user", "unknown").request().get();
+        assertEquals(403, result.getStatus());
     }
 }

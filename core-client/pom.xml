@@ -39,7 +39,6 @@
             --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.virtual=ALL-UNNAMED
             --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.io=ALL-UNNAMED
             --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.inject=ALL-UNNAMED
-            --add-modules=ALL-MODULE-PATH
         </surefire.coverage.argline>
     </properties>
 

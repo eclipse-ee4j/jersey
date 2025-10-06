@@ -41,6 +41,7 @@ module org.glassfish.jersey.jnh.connector.test {
     requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.server;
     requires org.glassfish.jersey.jnh.connector;
+    requires org.glassfish.jersey.media.json.jackson;
 
     exports org.glassfish.jersey.jnh.connector.test;
     opens org.glassfish.jersey.jnh.connector.test;

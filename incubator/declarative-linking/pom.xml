@@ -37,8 +37,8 @@
 
     <properties>
         <surefire.coverage.argline>
-            --add-opens java.base/java.util.zip=ALL-UNNAMED
-            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.util=org.glassfish.jersey.incubator.declarative.linking
+            --add-opens java.base/java.util.zip=org.glassfish.jersey.incubator.declarative.linking
         </surefire.coverage.argline>
     </properties>
 
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.skyscreamer</groupId>
             <artifactId>jsonassert</artifactId>
-            <version>1.5.1</version>
+            <version>2.0-rc1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -131,11 +131,6 @@
             </dependencies>
         </profile>
     </profiles>
-
-    <!--<properties>
-        <surefire.coverage.argline>&#45;&#45;add-opens java.base/java.util.zip=org.glassfish.jersey.incubator.declarative.linking
-            &#45;&#45;add-opens java.base/java.util=org.glassfish.jersey.incubator.declarative.linking &#45;&#45;illegal-access=permit</surefire.coverage.argline>
-    </properties>-->
 
     <build>
         <resources>

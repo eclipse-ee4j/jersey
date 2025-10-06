@@ -28,7 +28,12 @@ module org.glassfish.jersey.media.json.jettison {
     requires org.glassfish.jersey.media.jaxb;
 
     exports org.glassfish.jersey.jettison;
+    exports org.glassfish.jersey.jettison.internal;
+    exports org.glassfish.jersey.jettison.internal.entity;
     exports org.glassfish.jersey.jettison.internal.l10n;
 
+    opens org.glassfish.jersey.jettison;
+    opens org.glassfish.jersey.jettison.internal;
+    opens org.glassfish.jersey.jettison.internal.entity;
     opens org.glassfish.jersey.jettison.internal.l10n;
 }

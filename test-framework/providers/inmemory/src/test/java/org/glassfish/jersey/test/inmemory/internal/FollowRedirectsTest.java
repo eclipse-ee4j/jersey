@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,9 @@ import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
+import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainerException;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -70,6 +73,10 @@ public class FollowRedirectsTest extends JerseyTest {
         return new ResourceConfig(RedirectResource.class);
     }
 
+    @Override
+    protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
+        return new InMemoryTestContainerFactory();
+    }
 
     private static class RedirectTestFilter implements ClientResponseFilter {
         public static final String RESOLVED_URI_HEADER = "resolved-uri";

@@ -176,6 +176,10 @@ public abstract class AbstractTemplateProcessor<T> implements TemplateProcessor<
                 if (stream == null) {
                     stream = getClass().getClassLoader().getResourceAsStream(template);
                 }
+                if (stream == null && template.startsWith("/") && template.length() > 1) {
+                    // Module.getResourceAsStream() replaces first "/" with "."
+                    stream = getClass().getClassLoader().getResourceAsStream(template.substring(1));
+                }
                 reader = stream != null ? new InputStreamReader(stream) : null;
             }
 

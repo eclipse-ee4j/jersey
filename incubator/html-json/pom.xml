@@ -156,6 +156,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Automatic-Module-Name>org.glassfish.jersey.incubator.html.json</Automatic-Module-Name>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

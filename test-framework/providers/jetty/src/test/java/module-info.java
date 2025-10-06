@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.framework.provider.jetty {
+open module org.glassfish.jersey.tests.framework.provider.jetty {
     requires java.logging;
 
     requires jakarta.inject;
@@ -31,8 +31,6 @@ module org.glassfish.jersey.tests.framework.provider.jetty {
     requires org.glassfish.jersey.inject.hk2;
 
     exports org.glassfish.jersey.test.jetty;
-
-    opens org.glassfish.jersey.test.jetty;
 
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;

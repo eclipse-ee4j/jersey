@@ -35,7 +35,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.innate.inject.InternalBinder;
-import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
+import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.innate.io.InputStreamWrapper;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;

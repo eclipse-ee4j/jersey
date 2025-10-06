@@ -51,18 +51,17 @@ module org.glassfish.jersey.core.client {
             org.glassfish.jersey.incubator.injectless.client;
 
     opens org.glassfish.jersey.client;
-    opens org.glassfish.jersey.client.spi;
+    opens org.glassfish.jersey.client.authentication;
     opens org.glassfish.jersey.client.filter;
+    opens org.glassfish.jersey.client.http;
+    opens org.glassfish.jersey.client.inject;
+    opens org.glassfish.jersey.client.spi;
 
     // for Localization messages
     opens org.glassfish.jersey.client.internal;
 
-    uses org.glassfish.jersey.client.spi.AsyncConnectorCallback;
     uses org.glassfish.jersey.client.spi.ConnectorProvider;
     uses org.glassfish.jersey.client.spi.DefaultSslContextProvider;
-    uses org.glassfish.jersey.client.spi.InvocationBuilderListener;
-    uses org.glassfish.jersey.client.spi.PostInvocationInterceptor;
-    uses org.glassfish.jersey.client.spi.PreInvocationInterceptor;
 
     provides jakarta.ws.rs.client.ClientBuilder with
             org.glassfish.jersey.client.JerseyClientBuilder;

@@ -79,22 +79,6 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler.common.mvn.plugin.version}</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <compilerArguments>
-                        <!-- Do not warn about using sun.misc.Unsafe -->
-                        <XDignore.symbol.file />
-                    </compilerArguments>
-                    <showWarnings>false</showWarnings>
-                    <fork>false</fork>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.sun.istack</groupId>
                 <artifactId>istack-commons-maven-plugin</artifactId>
                 <inherited>true</inherited>
@@ -301,7 +285,7 @@
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>add.java20-</id>
+                                <id>add.java20+</id>
                                 <phase>generate-sources</phase>
                                 <goals>
                                     <goal>add-source</goal>
@@ -474,10 +458,6 @@
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/surefire.policy</surefire.security.argline>
         <java21.build.outputDirectory>${project.build.directory}/classes-java21</java21.build.outputDirectory>
         <java21.sourceDirectory>${project.basedir}/src/main/java21</java21.sourceDirectory>
-        <surefire.coverage.argline>
-            --add-reads org.glassfish.jersey.core.common=ALL-UNNAMED
-            --add-modules=ALL-MODULE-PATH
-        </surefire.coverage.argline>
     </properties>
 
 </project>

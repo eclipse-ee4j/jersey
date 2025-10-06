@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.tests.cdi.skippinganalyzer;
+package org.glassfish.jersey.tests.cdi.skippinganalyzer.test;
 
 import org.glassfish.hk2.api.ClassAnalyzer;
 import org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider;
@@ -22,6 +22,7 @@ import org.glassfish.jersey.ext.cdi1x.internal.InjecteeSkippingAnalyzer;
 import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Injections;
+import org.glassfish.jersey.tests.cdi.skippinganalyzer.CdiServiceImpl;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.jboss.weld.environment.se.Weld;

@@ -29,12 +29,20 @@ module org.glassfish.jersey.media.moxy {
     requires org.eclipse.persistence.core;
     requires org.eclipse.persistence.moxy;
 
-    exports org.glassfish.jersey.moxy.xml;
+    exports org.glassfish.jersey.moxy.internal;
     exports org.glassfish.jersey.moxy.json;
+    exports org.glassfish.jersey.moxy.xml;
 
+    opens org.glassfish.jersey.moxy.internal;
+    opens org.glassfish.jersey.moxy.json;
     opens org.glassfish.jersey.moxy.json.internal to
             org.glassfish.hk2.locator,
-            org.glassfish.hk2.utilities;
+            org.glassfish.hk2.utilities,
+            org.glassfish.jersey.core.client,
+            org.glassfish.jersey.incubator.cdi.inject.weld,
+            org.glassfish.jersey.inject.cdi2.se,
+            weld.core.impl;
+    opens org.glassfish.jersey.moxy.xml;
 
     provides org.glassfish.jersey.internal.spi.AutoDiscoverable with
             org.glassfish.jersey.moxy.json.internal.MoxyJsonAutoDiscoverable;

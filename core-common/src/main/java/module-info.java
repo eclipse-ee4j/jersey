@@ -42,6 +42,7 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.internal.routing; //
     exports org.glassfish.jersey.internal.util;
     exports org.glassfish.jersey.internal.util.collection;
+    exports org.glassfish.jersey.io.spi;
     exports org.glassfish.jersey.logging;
     exports org.glassfish.jersey.message;
     exports org.glassfish.jersey.message.internal; // Providers
@@ -62,28 +63,32 @@ module org.glassfish.jersey.core.common {
                                            org.glassfish.jersey.container.jetty.http,
                                            org.glassfish.jersey.netty.connector,
                                            org.glassfish.jersey.ext.mp.rest.client,
+                                           org.glassfish.jersey.inject.cdi2.se,
                                            org.glassfish.jersey.incubator.cdi.inject.weld;
 
-    exports org.glassfish.jersey.innate.inject to org.glassfish.jersey.inject.hk2,
-                                                  org.glassfish.jersey.inject.cdi2.se,
-                                                  org.glassfish.jersey.core.client,
-                                                  org.glassfish.jersey.core.server,
-                                                  org.glassfish.jersey.container.grizzly2.http,
-                                                  org.glassfish.jersey.container.servlet,
-                                                  org.glassfish.jersey.container.jetty.http,
-                                                  org.glassfish.jersey.media.sse,
-                                                  org.glassfish.jersey.media.jaxb,
-                                                  org.glassfish.jersey.media.moxy,
-                                                  org.glassfish.jersey.media.multipart,
-                                                  org.glassfish.jersey.ext.bean.validation,
-                                                  org.glassfish.jersey.ext.cdi1x,
-                                                  org.glassfish.jersey.ext.cdi1x.transaction,
-                                                  org.glassfish.jersey.ext.entity.filtering,
-                                                  org.glassfish.jersey.ext.metainf.services,
-                                                  org.glassfish.jersey.ext.mvc,
-                                                  org.glassfish.jersey.incubator.cdi.inject.weld,
-                                                  org.glassfish.jersey.gf.ejb,
-                                                  org.glassfish.jersey.security.oauth1.signature;
+    exports org.glassfish.jersey.innate.inject to
+            org.glassfish.jersey.inject.hk2,
+            org.glassfish.jersey.core.client,
+            org.glassfish.jersey.core.server,
+            org.glassfish.jersey.container.grizzly2.http,
+            org.glassfish.jersey.container.servlet,
+            org.glassfish.jersey.container.jetty.http,
+            org.glassfish.jersey.media.sse,
+            org.glassfish.jersey.media.jaxb,
+            org.glassfish.jersey.media.json.jackson,
+            org.glassfish.jersey.media.moxy,
+            org.glassfish.jersey.media.multipart,
+            org.glassfish.jersey.ext.bean.validation,
+            org.glassfish.jersey.ext.cdi1x,
+            org.glassfish.jersey.ext.cdi1x.transaction,
+            org.glassfish.jersey.ext.entity.filtering,
+            org.glassfish.jersey.ext.metainf.services,
+            org.glassfish.jersey.ext.mvc,
+            org.glassfish.jersey.incubator.cdi.inject.weld,
+            org.glassfish.jersey.incubator.declarative.linking,
+            org.glassfish.jersey.inject.cdi2.se,
+            org.glassfish.jersey.gf.ejb,
+            org.glassfish.jersey.security.oauth1.signature;
     exports org.glassfish.jersey.innate.virtual to org.glassfish.jersey.container.grizzly2.http,
                                                    org.glassfish.jersey.container.jetty.http,
                                                    org.glassfish.jersey.netty.connector,
@@ -100,22 +105,38 @@ module org.glassfish.jersey.core.common {
     exports org.glassfish.jersey.innate.spi to org.glassfish.jersey.core.client,
                                                org.glassfish.jersey.core.server,
                                                org.glassfish.jersey.media.multipart;
-    exports org.glassfish.jersey.io.spi to org.glassfish.jersey.core.server,
-                                               org.glassfish.jersey.media.multipart;
     exports org.glassfish.jersey.innate.inject.spi to org.glassfish.jersey.inject.hk2;
 
+    opens org.glassfish.jersey;
+    opens org.glassfish.jersey.http;
     opens org.glassfish.jersey.innate.spi to org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.internal;
+    opens org.glassfish.jersey.internal.guava;
+    opens org.glassfish.jersey.internal.inject;
+    opens org.glassfish.jersey.internal.l10n;
+    opens org.glassfish.jersey.internal.sonar;
+    opens org.glassfish.jersey.internal.spi;
+    opens org.glassfish.jersey.internal.routing;
+    opens org.glassfish.jersey.internal.util;
     opens org.glassfish.jersey.internal.util.collection;
+    opens org.glassfish.jersey.io.spi;
+    opens org.glassfish.jersey.logging;
+    opens org.glassfish.jersey.message;
     opens org.glassfish.jersey.message.internal;
+    opens org.glassfish.jersey.model;
+    opens org.glassfish.jersey.model.internal;
+    opens org.glassfish.jersey.model.internal.spi;
+    opens org.glassfish.jersey.process;
+    opens org.glassfish.jersey.process.internal;
     opens org.glassfish.jersey.spi;
+    opens org.glassfish.jersey.uri;
+    opens org.glassfish.jersey.uri.internal;
 
     uses jakarta.ws.rs.core.Feature;
     uses jakarta.ws.rs.container.DynamicFeature;
     uses jakarta.ws.rs.ext.RuntimeDelegate;
 
     uses org.glassfish.jersey.innate.spi.EntityPartBuilderProvider;
-    uses org.glassfish.jersey.internal.ServiceFinder;
     uses org.glassfish.jersey.internal.inject.InjectionManagerFactory;
     uses org.glassfish.jersey.internal.spi.AutoDiscoverable;
     uses org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;

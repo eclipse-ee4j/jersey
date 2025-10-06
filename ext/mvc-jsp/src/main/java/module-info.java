@@ -27,5 +27,6 @@ module org.glassfish.jersey.ext.mvc.jsp {
     exports org.glassfish.jersey.server.mvc.jsp;
     exports org.glassfish.jersey.server.mvc.jsp.internal; // localization
 
+    opens org.glassfish.jersey.server.mvc.jsp;
     opens org.glassfish.jersey.server.mvc.jsp.internal;
 }

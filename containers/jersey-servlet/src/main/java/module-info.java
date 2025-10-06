@@ -34,7 +34,11 @@ module org.glassfish.jersey.container.servlet {
     exports org.glassfish.jersey.servlet;
 
     opens org.glassfish.jersey.servlet;
+    opens org.glassfish.jersey.servlet.async;
+    opens org.glassfish.jersey.servlet.init;
+    opens org.glassfish.jersey.servlet.internal.spi;
     opens org.glassfish.jersey.servlet.internal.l10n;
+    opens org.glassfish.jersey.servlet.spi;
 
     uses org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
     uses org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;

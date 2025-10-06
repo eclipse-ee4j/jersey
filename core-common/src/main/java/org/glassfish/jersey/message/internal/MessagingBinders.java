@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@ import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.innate.inject.InjectionIds;
 import org.glassfish.jersey.innate.inject.InternalBinder;
 import org.glassfish.jersey.internal.LocalizationMessages;
-import org.glassfish.jersey.innate.inject.ServiceFinderBinder;
+import org.glassfish.jersey.internal.ServiceFinderBinder;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.Tokenizer;
 import org.glassfish.jersey.spi.HeaderDelegateProvider;

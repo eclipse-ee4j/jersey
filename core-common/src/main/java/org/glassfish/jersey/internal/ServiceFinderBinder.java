@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,14 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.jersey.innate.inject;
+package org.glassfish.jersey.internal;
 
 import java.util.Map;
 
 import jakarta.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.innate.inject.InternalBinder;
-import org.glassfish.jersey.internal.ServiceFinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
 

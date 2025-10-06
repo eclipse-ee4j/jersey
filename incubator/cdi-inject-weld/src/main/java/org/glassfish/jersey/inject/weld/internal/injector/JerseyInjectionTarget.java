@@ -63,7 +63,7 @@ import org.jboss.weld.util.reflection.Formats;
 
 /**
  * Wrapper for {@link InjectionTarget} that implements the functionality of injecting using JAX-RS annotations into provided
- * instances. {@code Delegate} is a original {@code InjectionTarget} which is able to inject other fields/parameters which
+ * instances. {@code Delegate} is an original {@code InjectionTarget} which is able to inject other fields/parameters which
  * are managed by CDI.
  * <p>
  * Implementation is also able to create with custom {@code jerseyConstructor} if it is provided. This functionality allows override

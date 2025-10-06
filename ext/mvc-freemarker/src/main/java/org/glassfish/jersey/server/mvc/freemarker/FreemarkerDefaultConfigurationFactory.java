@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.server.mvc.freemarker;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;
 
 /**
@@ -55,6 +55,13 @@ public class FreemarkerDefaultConfigurationFactory implements FreemarkerConfigur
             //todo fix after jakartification
             //loaders.add(new WebappTemplateLoader(servletContext));
         }
+        // in Module
+        loaders.add(new ClassTemplateLoader(FreemarkerDefaultConfigurationFactory.class, "") {
+            @Override
+            protected URL getURL(String fullPath) {
+                return getResourceLoaderClass().getClassLoader().getResource(fullPath);
+            }
+        });
         loaders.add(new ClassTemplateLoader(FreemarkerDefaultConfigurationFactory.class, "/"));
         try {
             loaders.add(new FileTemplateLoader(new File("/")));

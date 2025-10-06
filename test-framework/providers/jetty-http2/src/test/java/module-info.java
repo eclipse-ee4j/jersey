@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.tests.framework.provider.jetty.http2 {
+open module org.glassfish.jersey.tests.framework.provider.jetty.http2 {
     requires java.logging;
 
     requires jakarta.ws.rs;
@@ -30,8 +30,6 @@ module org.glassfish.jersey.tests.framework.provider.jetty.http2 {
     requires org.glassfish.jersey.inject.hk2;
 
     exports org.glassfish.jersey.test.jetty.http2;
-
-    opens org.glassfish.jersey.test.jetty.http2;
 
     requires org.junit.jupiter.api;
     requires org.hamcrest;

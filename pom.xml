@@ -316,9 +316,9 @@
                     <version>${compiler.mvn.plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
+                        <release>${java.version}</release>
                         <compilerArguments>
+
                             <!--<Werror />-->
                             <!-- TODO work towards eliminating all warnings in order to be able to enable the -Xlint option -->
                             <!--Xlint/-->
@@ -695,6 +695,7 @@
                     <configuration>
                         <instructions>
                             <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
+                            <_noimportjava>true</_noimportjava>
                             <_nodefaultversion>false</_nodefaultversion>
                             <Include-Resource>{maven-resources},${project.build.directory}/legal</Include-Resource>
                         </instructions>
@@ -879,6 +880,20 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.mvn.plugin.version}</version>
+                <configuration>
+                    <release>${java.version}</release>
+                    <compilerArguments>
+                        <!-- Do not warn about using sun.misc.Unsafe -->
+                        <XDignore.symbol.file />
+                    </compilerArguments>
+                    <showWarnings>false</showWarnings>
+                    <fork>false</fork>
+                </configuration>
+            </plugin>
         </plugins>
         <extensions>
             <extension>
@@ -890,77 +905,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <checkstyle.version>9.3</checkstyle.version>
-                <istack.mvn.plugin.version>3.0.9</istack.mvn.plugin.version>
-            </properties>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <version>${compiler.mvn.plugin.version}</version>
-                            <inherited>true</inherited>
-                            <configuration>
-                                <excludes>
-                                    <exclude>module-info.java</exclude>
-                                </excludes>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>jdk11+</id>
-            <!--
-                JDK 9 & 10 is unsupported (as well as <release>9</release>)
-                module-info for java.xml.bind is taken from JDK (lib/ct.sym/9-modules)
-                and it depends on java.activation which clashes with javax.activation
-            -->
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <version>${compiler.mvn.plugin.version}</version>
-                            <inherited>true</inherited>
-                            <executions>
-                                <execution>
-                                    <id>default-compile</id>
-                                    <configuration>
-                                        compile everything to ensure module-info contains right entries
-                                        <release>${java.version}</release>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>default-testCompile</id>
-                                    <goals>
-                                        <goal>testCompile</goal>
-                                    </goals>
-                                    <configuration>
-                                        <compilerArgs>
-                                            <arg>--add-exports</arg>
-                                            <arg>org.glassfish.jersey.core.common/org.glassfish.jersey.innate.inject=ALL-UNNAMED</arg>
-                                        </compilerArgs>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
         <profile>
             <!-- Use it with release-perform goal to skip another test run. -->
             <id>testsSkip</id>
@@ -2178,13 +2122,6 @@
         <checkstyle.mvn.plugin.version>3.6.0</checkstyle.mvn.plugin.version>
         <checkstyle.version>10.21.4</checkstyle.version>
         <compiler.mvn.plugin.version>3.14.0</compiler.mvn.plugin.version>
-        <!--
-        Special version of the compiler plugin just for the jersey-common. All versions above
-        generate too much for OSGi manifest.mf imports (awt etc). The version 3.11.0 however
-        introduces the fix for the excludeTests issue. Which makes it preferable for the whole project
-        but the jersey-common module which has to have the separate version for OSGi reasons.
-         -->
-        <compiler.common.mvn.plugin.version>3.14.0</compiler.common.mvn.plugin.version>
         <cyclonedx.mvn.plugin.version>2.8.1</cyclonedx.mvn.plugin.version>
         <dependency.mvn.plugin.version>3.8.1</dependency.mvn.plugin.version>
         <deploy.mvn.plugin.version>3.1.4</deploy.mvn.plugin.version>

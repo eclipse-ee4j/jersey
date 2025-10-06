@@ -57,6 +57,16 @@
         </license>
     </licenses>
 
+    <properties>
+        <surefire.security.argline>
+            --add-reads org.glassfish.jersey.media.json.jackson=org.glassfish.jersey.core.server
+            --add-reads org.glassfish.jersey.media.json.jackson=org.glassfish.jersey.core.client
+            --add-exports org.glassfish.jersey.media.json.jackson/org.glassfish.jersey.jackson.internal.model=org.glassfish.jersey.core.server
+            --add-opens org.glassfish.jersey.media.json.jackson/org.glassfish.jersey.jackson.internal.model=org.glassfish.hk2.locator
+            --add-opens org.glassfish.jersey.media.json.jackson/org.glassfish.jersey.jackson.internal.model=com.fasterxml.jackson.databind
+        </surefire.security.argline>
+    </properties>
+
     <build>
         <plugins>
             <plugin>

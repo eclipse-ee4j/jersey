@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,20 +14,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.media.json.jackson {
-    requires jakarta.annotation;
-    requires jakarta.inject;
+open module org.glassfish.jersey.test.framework.provider.inmemory {
     requires jakarta.ws.rs;
-
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.module.jaxb;
-    requires com.fasterxml.jackson.module.jakarta.xmlbind;
-
+    requires java.logging;
+    requires org.glassfish.jersey.core.client;
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
-    requires org.glassfish.jersey.ext.entity.filtering;
+    requires org.glassfish.jersey.tests.framework.core;
 
-    exports org.glassfish.jersey.jackson;
+    exports org.glassfish.jersey.test.inmemory;
+
+    provides org.glassfish.jersey.test.spi.TestContainerFactory with
+            org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 }

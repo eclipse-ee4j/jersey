@@ -24,5 +24,6 @@ module org.glassfish.jersey.security.oauth2.client {
     exports org.glassfish.jersey.client.oauth2;
     exports org.glassfish.jersey.client.oauth2.internal; // localization
 
+    opens org.glassfish.jersey.client.oauth2;
     opens org.glassfish.jersey.client.oauth2.internal;
 }

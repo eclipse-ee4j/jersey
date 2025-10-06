@@ -27,4 +27,7 @@ module org.glassfish.jersey.tests.framework.provider.jetty {
     requires org.glassfish.jersey.container.jetty.http;
 
     exports org.glassfish.jersey.test.jetty;
+
+    provides org.glassfish.jersey.test.spi.TestContainerFactory with
+            org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
 }

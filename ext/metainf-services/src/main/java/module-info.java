@@ -19,7 +19,9 @@ module org.glassfish.jersey.ext.metainf.services {
     requires jakarta.ws.rs;
 
     requires org.glassfish.jersey.core.common;
-    exports org.glassfish.jersey.spidiscovery.internal to org.glassfish.hk2.locator;
+    exports org.glassfish.jersey.spidiscovery.internal to
+            org.glassfish.hk2.locator,
+            weld.core.impl;
 
     provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with
             org.glassfish.jersey.spidiscovery.internal.MetaInfServicesAutoDiscoverable;
