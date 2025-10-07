@@ -2217,7 +2217,7 @@
         <kryo.version>4.0.3</kryo.version>
         <mockito.version>4.11.0</mockito.version> <!-- CQ 17673 -->
         <mustache.version>0.9.14</mustache.version>
-        <netty.version>4.1.122.Final</netty.version>
+        <netty.version>4.1.125.Final</netty.version>
         <opentracing.version>0.33.0</opentracing.version>
         <osgi.version>6.0.0</osgi.version>
         <osgi.framework.version>1.10.0</osgi.framework.version>
@@ -2234,7 +2234,7 @@
 
         <simple.version>6.0.1</simple.version>
         <slf4j.version>2.0.17</slf4j.version>
-        <spring6.version>6.0.23</spring6.version>
+        <spring6.version>6.2.11</spring6.version>
         <testng.version>7.11.0</testng.version>
         <testng6.version>6.14.3</testng6.version>
         <thymeleaf.version>3.1.3.RELEASE</thymeleaf.version>
@@ -2283,9 +2283,9 @@
         <jaxrs.api.spec.version>3.1</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>3.1.0</jaxrs.api.impl.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>12.0.22</jetty.version>
+        <jetty.version>12.0.27</jetty.version>
         <jetty9.version>9.4.57.v20241219</jetty9.version>
-        <jetty11.version>11.0.25</jetty11.version>
+        <jetty11.version>11.0.26</jetty11.version>
         <jetty.plugin.version>12.0.22</jetty.plugin.version>
         <jsonb.api.version>3.0.1</jsonb.api.version>
         <jsonp.ri.version>1.1.7</jsonp.ri.version>
