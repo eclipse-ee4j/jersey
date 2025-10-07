@@ -246,6 +246,18 @@
             </properties>
         </profile>
         <profile>
+            <id>jdk26+</id>
+            <activation>
+                <jdk>[26,)</jdk>
+            </activation>
+            <properties>
+                <surefire.security.argline>
+                    -Djdk.tls.server.protocols=TLSv1.2
+                    -Djava.security.properties=${project.build.directory}/test-classes/disabled_tls.properties
+                </surefire.security.argline>
+            </properties>
+        </profile>
+        <profile>
             <id>xdk</id>
             <properties>
                 <!-- do not use security manager for xdk -->

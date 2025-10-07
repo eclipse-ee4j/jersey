@@ -203,7 +203,7 @@ public abstract class Ordering<T> implements Comparator<T> {
      * @throws ClassCastException if the parameters are not <i>mutually
      *                            comparable</i> under this ordering.
      */
-    <E extends T> E min(E a, E b) {
+    public <E extends T> E min(E a, E b) {
         return (compare(a, b) <= 0) ? a : b;
     }
 
@@ -278,7 +278,7 @@ public abstract class Ordering<T> implements Comparator<T> {
      * @throws ClassCastException if the parameters are not <i>mutually
      *                            comparable</i> under this ordering.
      */
-    <E extends T> E max(E a, E b) {
+    public <E extends T> E max(E a, E b) {
         return (compare(a, b) >= 0) ? a : b;
     }
 
