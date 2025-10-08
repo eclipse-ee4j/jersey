@@ -2215,7 +2215,7 @@
         <arquillian.weld.version>2.1.0.Final</arquillian.weld.version>
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.8</asm.version>
+        <asm.version>9.9</asm.version>
         <!--required for spring (ext) modules integration -->
         <aspectj.weaver.version>1.9.22.1</aspectj.weaver.version>
 <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
