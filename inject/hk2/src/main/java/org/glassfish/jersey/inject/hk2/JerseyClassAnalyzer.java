@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,9 +34,6 @@ import org.glassfish.jersey.internal.Errors;
 import org.glassfish.jersey.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.collection.ImmutableCollectors;
-import org.glassfish.jersey.internal.util.collection.LazyValue;
-import org.glassfish.jersey.internal.util.collection.Value;
-import org.glassfish.jersey.internal.util.collection.Values;
 
 import org.glassfish.hk2.api.ClassAnalyzer;
 import org.glassfish.hk2.api.MultiException;
@@ -79,33 +75,31 @@ public final class JerseyClassAnalyzer implements ClassAnalyzer {
 
         @Override
         protected void configure() {
-            ClassAnalyzer defaultAnalyzer =
-                    serviceLocator.getService(ClassAnalyzer.class, ClassAnalyzer.DEFAULT_IMPLEMENTATION_NAME);
-
-            Supplier<List<InjectionResolver>> resolvers = () -> serviceLocator.getAllServices(InjectionResolver.class);
-
-            bind(new JerseyClassAnalyzer(defaultAnalyzer, resolvers))
+            bind(JerseyClassAnalyzer.class)
                     .analyzeWith(ClassAnalyzer.DEFAULT_IMPLEMENTATION_NAME)
                     .named(JerseyClassAnalyzer.NAME)
                     .to(ClassAnalyzer.class);
         }
     }
 
+    private final Set<Class> resolverAnnotations;
     private final ClassAnalyzer defaultAnalyzer;
-    private final LazyValue<Set<Class>> resolverAnnotations;
+
     /**
      * Injection constructor.
      *
-     * @param defaultAnalyzer   default HK2 class analyzer.
-     * @param supplierResolvers configured injection resolvers.
+     * @param serviceLocator current injection manager.
      */
-    private JerseyClassAnalyzer(ClassAnalyzer defaultAnalyzer, Supplier<List<InjectionResolver>> supplierResolvers) {
-        this.defaultAnalyzer = defaultAnalyzer;
-        Value<Set<Class>> resolvers = () -> supplierResolvers.get().stream()
+    @Inject
+    public JerseyClassAnalyzer(ServiceLocator serviceLocator) {
+        defaultAnalyzer = serviceLocator.getService(ClassAnalyzer.class, ClassAnalyzer.DEFAULT_IMPLEMENTATION_NAME);
+        // Load the resolver annotations once to avoid potential deadlock later
+        // See https://github.com/eclipse-ee4j/jersey/issues/5996
+        List<InjectionResolver> resolvers = serviceLocator.getAllServices(InjectionResolver.class);
+        this.resolverAnnotations = resolvers.stream()
                 .filter(InjectionResolver::isConstructorParameterIndicator)
                 .map(InjectionResolver::getAnnotation)
                 .collect(ImmutableCollectors.toImmutableSet());
-        this.resolverAnnotations = Values.lazy(resolvers);
     }
 
     @SuppressWarnings("unchecked")
@@ -186,7 +180,7 @@ public final class JerseyClassAnalyzer implements ClassAnalyzer {
 
         final int paramSize = constructor.getParameterTypes().length;
 
-        if (paramSize != 0 && resolverAnnotations.get().isEmpty()) {
+        if (paramSize != 0 && resolverAnnotations.isEmpty()) {
             return false;
         }
 
@@ -200,7 +194,7 @@ public final class JerseyClassAnalyzer implements ClassAnalyzer {
         for (final Annotation[] paramAnnotations : constructor.getParameterAnnotations()) {
             boolean found = false;
             for (final Annotation paramAnnotation : paramAnnotations) {
-                if (resolverAnnotations.get().contains(paramAnnotation.annotationType())) {
+                if (resolverAnnotations.contains(paramAnnotation.annotationType())) {
                     found = true;
                     break;
                 }
