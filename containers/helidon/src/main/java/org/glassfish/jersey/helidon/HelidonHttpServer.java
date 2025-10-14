@@ -18,6 +18,7 @@ package org.glassfish.jersey.helidon;
 
 import jakarta.ws.rs.core.Application;
 import org.glassfish.jersey.server.JerseySeBootstrapConfiguration;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.spi.Container;
 import org.glassfish.jersey.server.spi.WebServer;
 
@@ -26,9 +27,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 
-final class HelidonHttpServer implements WebServer {
+public final class HelidonHttpServer implements WebServer {
 
     private final HelidonHttpContainer helidonHttpContainer;
+
+    HelidonHttpServer(Application application) {
+        this(HelidonHttpContainerBuilder.builder().application(application), JerseySeBootstrapConfiguration.builder().build());
+    }
 
     HelidonHttpServer(Application application, JerseySeBootstrapConfiguration seBootstrapConfig) {
         this(HelidonHttpContainerBuilder.builder().application(application), seBootstrapConfig);

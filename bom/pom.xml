@@ -125,6 +125,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-helidon-http</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
                 <artifactId>jersey-container-grizzly2-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -387,6 +392,11 @@
             <dependency>
                 <groupId>org.glassfish.jersey.test-framework.providers</groupId>
                 <artifactId>jersey-test-framework-provider-external</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+                <artifactId>jersey-test-framework-provider-helidon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

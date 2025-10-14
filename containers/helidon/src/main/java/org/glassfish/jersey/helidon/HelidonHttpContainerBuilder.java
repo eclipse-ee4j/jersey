@@ -199,7 +199,7 @@ public class HelidonHttpContainerBuilder {
                     .host(baseUri.getHost())
                     .port(baseUri.getPort());
         } else {
-            if (webServerBuilder.port() < 0) {
+            if (webServerBuilder.port() <= 0) {
                 webServerBuilder.port(Container.DEFAULT_HTTP_PORT);
             }
 

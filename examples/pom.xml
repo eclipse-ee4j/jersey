@@ -292,6 +292,15 @@
                 <module>helloworld-spring-annotations</module>
             </modules>
         </profile>
+        <profile>
+            <id>jdk21</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <modules>
+                <module>helloworld-helidon</module>
+            </modules>
+        </profile>
     </profiles>
 
 </project>

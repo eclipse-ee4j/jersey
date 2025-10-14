@@ -43,6 +43,17 @@
             <artifactId>jersey-container-helidon-http</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.helidon.webserver</groupId>
+            <artifactId>helidon-webserver</artifactId>
+            <version>${helidon.container.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.service</groupId>
+            <artifactId>helidon-service-registry</artifactId>
+            <version>${helidon.container.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
 </project>
