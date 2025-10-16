@@ -228,7 +228,7 @@ final class RuntimeLocatorModelBuilder {
         Errors.process(new Runnable() {
             @Override
             public void run() {
-                final ComponentModelValidator validator = new ComponentModelValidator(valueSuppliers, messageBodyWorkers);
+                final ComponentModelValidator validator = new ComponentModelValidator(valueSuppliers, messageBodyWorkers, config);
                 validator.validate(component);
 
                 if (Errors.fatalIssuesFound() && !ignoreValidationErrors) {

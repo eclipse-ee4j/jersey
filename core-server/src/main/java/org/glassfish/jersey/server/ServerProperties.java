@@ -462,6 +462,23 @@ public final class ServerProperties {
             "jersey.config.server.resource.validation.ignoreErrors";
 
     /**
+     * If {@code true} then validation of application resource models will not log a warning when a get resource method consumes an entity.
+     *
+     * This impacts both the validation of root resources during deployment as well as validation of any sub resources
+     * returned from sub-resource locators.
+     * <p>
+     * The default value is {@code false}.
+     * </p>
+     * <p>
+     * The name of the configuration property is <tt>{@value}</tt>.
+     * </p>
+     *
+     * @see #RESOURCE_VALIDATION_DISABLE
+     */
+    public static final String RESOURCE_VALIDATION_IGNORE_GET_CONSUMES_ENTITY_WARNINGS =
+            "jersey.config.server.resource.validation.ignoreGetConsumesEntityWarnings";
+
+    /**
      * If {@code true} then application monitoring will be enabled.
      *
      * This will enable the possibility

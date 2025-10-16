@@ -366,7 +366,7 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
 
             if (!disableValidation()) {
                 ComponentModelValidator validator = new ComponentModelValidator(
-                        bootstrapBag.getValueParamProviders(), bootstrapBag.getMessageBodyWorkers());
+                        bootstrapBag.getValueParamProviders(), bootstrapBag.getMessageBodyWorkers(), runtimeConfig);
                     validator.validate(bootstrapBag.getResourceModel());
             }
 
