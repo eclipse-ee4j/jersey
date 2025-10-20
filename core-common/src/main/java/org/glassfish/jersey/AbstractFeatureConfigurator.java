@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -49,9 +49,11 @@ public abstract class AbstractFeatureConfigurator<T> extends AbstractServiceFind
      * @param loader specific classloader (must not be NULL)
      * @return list of found classes
      */
+
     protected List<Class<T>> loadImplementations(Map<String, Object> applicationProperties, ClassLoader loader) {
         if (PropertiesHelper.isMetaInfServicesEnabled(applicationProperties, getRuntimeType())) {
-            return Stream.of(ServiceFinder.find(getContract(), loader, true).toClassArray())
+            return Stream.of(ServiceFinder.service(getContract()).loader(loader).ignoreNotFound(true)
+                            .runtimeType(getRuntimeType()).find().toClassArray())
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();

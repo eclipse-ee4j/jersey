@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -594,8 +594,8 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
 
             // Forced (always invoked).
             final List<ForcedAutoDiscoverable> forcedAutoDiscroverables = new LinkedList<>();
-            for (Class<ForcedAutoDiscoverable> forcedADType : ServiceFinder.find(ForcedAutoDiscoverable.class, true)
-                    .toClassArray()) {
+            for (Class<ForcedAutoDiscoverable> forcedADType : ServiceFinder.service(ForcedAutoDiscoverable.class)
+                    .ignoreNotFound(true).runtimeType(getRuntimeType()).find().toClassArray()) {
                 forcedAutoDiscroverables.add(injectionManager.createAndInitialize(forcedADType));
             }
             providers.addAll(forcedAutoDiscroverables);
@@ -606,15 +606,11 @@ public class CommonConfig implements FeatureContext, ExtendedConfig {
             }
 
             for (final AutoDiscoverable autoDiscoverable : providers) {
-                final ConstrainedTo constrainedTo = autoDiscoverable.getClass().getAnnotation(ConstrainedTo.class);
-
-                if (constrainedTo == null || type.equals(constrainedTo.value())) {
-                    try {
-                        autoDiscoverable.configure(this);
-                    } catch (final Exception e) {
-                        LOGGER.log(Level.FINE,
-                                LocalizationMessages.AUTODISCOVERABLE_CONFIGURATION_FAILED(autoDiscoverable.getClass()), e);
-                    }
+                try {
+                    autoDiscoverable.configure(this);
+                } catch (final Exception e) {
+                    LOGGER.log(Level.FINE,
+                            LocalizationMessages.AUTODISCOVERABLE_CONFIGURATION_FAILED(autoDiscoverable.getClass()), e);
                 }
             }
         }

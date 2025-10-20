@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -93,16 +93,12 @@ public class Injections {
      * @param clazz type of service to look for.
      * @param <T>   type of service to look for.
      * @param type {@link RuntimeType} the {@link InjectionManagerFactory} must be {@link ConstrainedTo} if annotated.
-     * @return instance of service with highest priority or {@code null} if service of given type cannot be found.
+     * @return instance of service with the highest priority or {@code null} if service of given type cannot be found.
      * @see javax.annotation.Priority
      */
     private static <T> Optional<T> lookupService(final Class<T> clazz, RuntimeType type) {
         List<RankedProvider<T>> providers = new LinkedList<>();
-        for (T provider : ServiceFinder.find(clazz)) {
-            ConstrainedTo constrain = provider.getClass().getAnnotation(ConstrainedTo.class);
-            if (constrain != null && type != constrain.value()) {
-                continue;
-            }
+        for (T provider : ServiceFinder.service(clazz).runtimeType(type).find()) {
             providers.add(new RankedProvider<>(provider));
         }
         providers.sort(new RankedComparator<>(RankedComparator.Order.DESCENDING));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +24,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.ReflectPermission;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
+
+import javax.ws.rs.ConstrainedTo;
+import javax.ws.rs.RuntimeType;
 
 /**
  * A simple service-provider lookup mechanism.  A <i>service</i> is a
@@ -106,7 +110,7 @@ import org.glassfish.jersey.internal.util.ReflectionHelper;
  *   sun.io.StandardCodec    # Standard codecs for the platform
  * </pre>
  * <p/>
- * To locate an codec for a given encoding name, the internal I/O code would
+ * To locate a codec for a given encoding name, the internal I/O code would
  * do something like this:
  * <p/>
  * <pre>
@@ -133,10 +137,98 @@ public final class ServiceFinder<T> implements Iterable<T> {
 
     private static final Logger LOGGER = Logger.getLogger(ServiceFinder.class.getName());
     private static final String PREFIX = "META-INF/services/";
-    private final Class<T> serviceClass;
-    private final String serviceName;
-    private final ClassLoader classLoader;
-    private final boolean ignoreOnClassNotFound;
+
+    public static final class Builder<T> {
+        final Class<T> service;
+        String serviceName;
+        private ClassLoader loader;
+        private Boolean ignoreOnClassNotFound;
+        RuntimeType runtimeType = null;
+
+        private Builder(Class<T> serviceClass) {
+            this.service = serviceClass;
+        }
+
+        private Builder(Builder<T> builder) {
+            this.service = builder.service;
+            this.serviceName = builder.serviceName;
+            this.loader = builder.loader;
+            this.ignoreOnClassNotFound = builder.ignoreOnClassNotFound;
+            this.runtimeType = builder.runtimeType;
+        }
+
+        /**
+         * Create the service finder capable of locating the services with information specified by the builder.
+         * @return the service finder instance.
+         */
+        public ServiceFinder<T> find() {
+            if (serviceName == null) {
+                serviceName = service.getName();
+            }
+            if (loader == null) {
+                loader = _getContextClassLoader();
+            }
+            if (ignoreOnClassNotFound == null) {
+                ignoreOnClassNotFound = false;
+            }
+
+            return new ServiceFinder<T>(this);
+        }
+
+        /**
+         * Set the service name the service finder use to locate the services.
+         * @param serviceName the service name correspond to a file in
+         *        META-INF/services that contains a list of fully qualified class
+         *        names.
+         * @return the updated builder.
+         */
+        public Builder<T> serviceName(String serviceName) {
+            this.serviceName = serviceName;
+            return this;
+        }
+
+        /**
+         * Set the service finder to use the given {@code Classloader}. By default, the context classloader is used.
+         * @param loader the given classloader for the service finder to use when searching for the service.
+         * @return the updated builder.
+         */
+        public Builder<T> loader(ClassLoader loader) {
+            this.loader = loader;
+            return this;
+        }
+
+        /**
+         * Set the service finder to ignore the service if not found. The default is {@code false}.
+         * @param ignoreOnClassNotFound whether to ignore the service not found or not.
+         * @return the updated builder.
+         */
+        public Builder<T> ignoreNotFound(boolean ignoreOnClassNotFound) {
+            this.ignoreOnClassNotFound = ignoreOnClassNotFound;
+            return this;
+        }
+
+        /**
+         * Update the builder with a specified runtime type the searched services are constrained to it.
+         * @param runtimeType the specified runtime type.
+         * @return the updated builder.
+         */
+        public Builder<T> runtimeType(RuntimeType runtimeType) {
+            this.runtimeType = runtimeType;
+            return this;
+        }
+    }
+
+    /**
+     * Start configuring {@link Builder} with a specific service class to find.
+     * @param serviceClass the service class to find.
+     * @return a new instance of service finder builder.
+     * @param <T> type of the service class the service finder builder is created for.
+     */
+    public static <T> ServiceFinder.Builder<T> service(Class<T> serviceClass) {
+        return new Builder<>(serviceClass);
+    }
+
+    private final Builder<T> builder;
 
     static {
         final OsgiRegistry osgiRegistry = ReflectionHelper.getOsgiRegistryInstance();
@@ -201,11 +293,10 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * @param <T> the type of the service instance.
      * @return the service finder
      */
+    @Deprecated
     public static <T> ServiceFinder<T> find(final Class<T> service, final ClassLoader loader)
             throws ServiceConfigurationError {
-        return find(service,
-                loader,
-                false);
+        return service(service).loader(loader).find();
     }
 
     /**
@@ -236,12 +327,11 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * @param <T> the type of the service instance.
      * @return the service finder
      */
+    @Deprecated
     public static <T> ServiceFinder<T> find(final Class<T> service,
                                             final ClassLoader loader,
                                             final boolean ignoreOnClassNotFound) throws ServiceConfigurationError {
-        return new ServiceFinder<T>(service,
-                loader,
-                ignoreOnClassNotFound);
+        return service(service).loader(loader).ignoreNotFound(ignoreOnClassNotFound).find();
     }
 
     /**
@@ -251,7 +341,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * <p/>
      * <pre>
      *   ClassLoader cl = Thread.currentThread().getContextClassLoader();
-     *   return Service.providers(service, cl, false);
+     *   return ServiceFinder.service(service).loader(cl).ignoreNotFound(false).find();
      * </pre>
      * @param service The service's abstract service class
      * @throws ServiceConfigurationError If a provider-configuration file violates the specified format
@@ -262,9 +352,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      */
     public static <T> ServiceFinder<T> find(final Class<T> service)
             throws ServiceConfigurationError {
-        return find(service,
-                _getContextClassLoader(),
-                false);
+        return ServiceFinder.service(service).find();
     }
 
     /**
@@ -275,7 +363,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * <pre>
      *   ClassLoader cl = Thread.currentThread().getContextClassLoader();
      *   boolean ingore = ...
-     *   return Service.providers(service, cl, ignore);
+     *   return ServiceFinder.service(service).loader(cl).ignoreNotFound(ignore).find();
      * </pre>
      * @param service The service's abstract service class
      * @param ignoreOnClassNotFound If a provider cannot be loaded by the class loader
@@ -286,11 +374,10 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * @param <T> the type of the service instance.
      * @return the service finder
      */
+    @Deprecated
     public static <T> ServiceFinder<T> find(final Class<T> service,
                                             final boolean ignoreOnClassNotFound) throws ServiceConfigurationError {
-        return find(service,
-                _getContextClassLoader(),
-                ignoreOnClassNotFound);
+        return ServiceFinder.service(service).ignoreNotFound(ignoreOnClassNotFound).find();
     }
 
     /**
@@ -305,7 +392,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * @return the service finder
      */
     public static ServiceFinder<?> find(final String serviceName) throws ServiceConfigurationError {
-        return new ServiceFinder<Object>(Object.class, serviceName, _getContextClassLoader(), false);
+        return service(Object.class).serviceName(serviceName).find();
     }
 
     /**
@@ -325,22 +412,8 @@ public final class ServiceFinder<T> implements Iterable<T> {
         ServiceIteratorProvider.setInstance(sip);
     }
 
-    private ServiceFinder(
-            final Class<T> service,
-            final ClassLoader loader,
-            final boolean ignoreOnClassNotFound) {
-        this(service, service.getName(), loader, ignoreOnClassNotFound);
-    }
-
-    private ServiceFinder(
-            final Class<T> service,
-            final String serviceName,
-            final ClassLoader loader,
-            final boolean ignoreOnClassNotFound) {
-        this.serviceClass = service;
-        this.serviceName = serviceName;
-        this.classLoader = loader;
-        this.ignoreOnClassNotFound = ignoreOnClassNotFound;
+    private ServiceFinder(Builder<T> builder) {
+        this.builder = new Builder<>(builder);
     }
 
     /**
@@ -354,8 +427,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return ServiceIteratorProvider.getInstance()
-                .createIterator(serviceClass, serviceName, classLoader, ignoreOnClassNotFound);
+        return createIterator();
     }
 
     /**
@@ -373,7 +445,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
         for (final T t : this) {
             result.add(t);
         }
-        return result.toArray((T[]) Array.newInstance(serviceClass, result.size()));
+        return result.toArray((T[]) Array.newInstance(builder.service, result.size()));
     }
 
     /**
@@ -388,14 +460,66 @@ public final class ServiceFinder<T> implements Iterable<T> {
     @SuppressWarnings("unchecked")
     public Class<T>[] toClassArray() throws ServiceConfigurationError {
         final List<Class<T>> result = new ArrayList<Class<T>>();
-
-        final ServiceIteratorProvider iteratorProvider = ServiceIteratorProvider.getInstance();
-        final Iterator<Class<T>> i = iteratorProvider
-                .createClassIterator(serviceClass, serviceName, classLoader, ignoreOnClassNotFound);
+        final Iterator<Class<T>> i = createClassIterator();
         while (i.hasNext()) {
             result.add(i.next());
         }
         return result.toArray((Class<T>[]) Array.newInstance(Class.class, result.size()));
+    }
+
+    /**
+     * Return true iff the service class is not constrained to other runtime type.
+     * @param clazz the service class.
+     * @param runtimeType the expected constraint runtime type.
+     * @return {@code true} when the service class is constrained to configurator's runtime type or {@code false} otherwise.
+     */
+    private static boolean isConstrained(Class<?> clazz, RuntimeType runtimeType) {
+        final ConstrainedTo annotation = clazz.getAnnotation(ConstrainedTo.class);
+        return annotation == null || annotation.value() == runtimeType;
+    }
+
+    private Iterator<Class<T>> createClassIterator() {
+        final Iterator<Class<T>> it = ServiceIteratorProvider.getInstance().createClassIterator(
+                builder.service, builder.serviceName, builder.loader, builder.ignoreOnClassNotFound);
+        return builder.runtimeType == null ? it : new ConstrainedIterator<Class<T>>(it, builder.runtimeType);
+    }
+
+    private Iterator<T> createIterator() {
+        final Iterator<T> it = ServiceIteratorProvider.getInstance().createIterator(
+                builder.service, builder.serviceName, builder.loader, builder.ignoreOnClassNotFound);
+        return builder.runtimeType == null ? it : new ConstrainedIterator<T>(it, builder.runtimeType);
+    }
+
+    private static final class ConstrainedIterator<IT> implements Iterator<IT> {
+        private final Iterator<IT> i;
+        private final RuntimeType runtimeType;
+        private IT next;
+
+        private ConstrainedIterator(Iterator<IT> i, RuntimeType runtimeType) {
+            this.i = i;
+            this.runtimeType = runtimeType;
+        }
+
+        @Override
+        public boolean hasNext() {
+            while (next == null && i.hasNext()) {
+                next = i.next();
+                if (!isConstrained(next.getClass() == Class.class ? (Class<?>) next : next.getClass(), runtimeType)) {
+                    next = null;
+                }
+            }
+            return next != null;
+        }
+
+        @Override
+        public IT next() {
+            if (next == null && !hasNext()) {
+                throw new NoSuchElementException();
+            }
+            final IT n = next;
+            next = null;
+            return n;
+        }
     }
 
     private static void fail(final String serviceName, final String msg, final Throwable cause)
@@ -480,7 +604,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
             final URLConnection uConn = u.openConnection();
             uConn.setUseCaches(false);
             in = uConn.getInputStream();
-            r = new BufferedReader(new InputStreamReader(in, "utf-8"));
+            r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             int lc = 1;
             while ((lc = parseLine(serviceName, u, r, lc, names, returned)) >= 0) {
                 // continue
@@ -863,7 +987,7 @@ public final class ServiceFinder<T> implements Iterable<T> {
      * The default service iterator provider that looks up provider classes in
      * META-INF/services files.
      * <p>
-     * This class may utilized if a {@link ServiceIteratorProvider} needs to
+     * This class may be utilized if a {@link ServiceIteratorProvider} needs to
      * reuse the default implementation.
      */
     public static final class DefaultServiceIteratorProvider extends ServiceIteratorProvider {

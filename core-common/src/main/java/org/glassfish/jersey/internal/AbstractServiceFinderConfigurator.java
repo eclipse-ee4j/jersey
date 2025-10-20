@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,8 +60,8 @@ public abstract class AbstractServiceFinderConfigurator<T> implements BootstrapC
      */
     protected List<Class<T>> loadImplementations(Map<String, Object> applicationProperties) {
         if (PropertiesHelper.isMetaInfServicesEnabled(applicationProperties, runtimeType)) {
-            return Stream.of(ServiceFinder.find(contract, true).toClassArray())
-                    .collect(Collectors.toList());
+            return Stream.of(ServiceFinder.service(contract).ignoreNotFound(true).runtimeType(runtimeType)
+                    .find().toClassArray()).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
