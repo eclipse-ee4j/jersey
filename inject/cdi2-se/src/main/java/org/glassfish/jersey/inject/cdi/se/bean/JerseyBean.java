@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -163,7 +163,7 @@ public abstract class JerseyBean<T> implements Bean<T>, PassivationCapable {
 
     @Override
     public Class<?> getBeanClass() {
-        return Object.class;
+        return getClass();
     }
 
     @Override
