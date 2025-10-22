@@ -59,6 +59,12 @@
             <artifactId>junit-platform-engine</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency> <!--added due to an issue in JUnit 5 dependencies for junit-vintage-engine -->
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform-suite.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,6 +77,12 @@
                         <groupId>org.junit.vintage</groupId>
                         <artifactId>junit-vintage-engine</artifactId>
                         <version>${junit5.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.junit.platform</groupId>
+                                <artifactId>junit-platform-launcher</artifactId>
+                            </exclusion>
+                        </exclusions>
                     </dependency>
                 </dependencies>
             </plugin>

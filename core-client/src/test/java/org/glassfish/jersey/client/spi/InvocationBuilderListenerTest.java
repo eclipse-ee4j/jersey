@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,22 +16,17 @@
 
 package org.glassfish.jersey.client.spi;
 
-import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.hamcrest.Matchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jakarta.annotation.Priority;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
-import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.CacheControl;
-import jakarta.ws.rs.core.Configuration;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -92,6 +87,20 @@ public class InvocationBuilderListenerTest {
         try (Response r = target.register(SetterInvocationBuilderListener.class, 100)
                 .register(GetterInvocationBuilderListener.class, 200).request().get()) {
             assertDefault(r);
+        }
+    }
+
+    @Test
+    public void testCounter() {
+        CountingInvocationBuilderListener listener = new CountingInvocationBuilderListener();
+        target = target.register(listener);
+        try (Response r = target.request().get()) {
+            assertDefault(r);
+            Assertions.assertEquals(1, listener.getCount());
+        }
+        try (Response r = target.request().get()) {
+            assertDefault(r);
+            Assertions.assertEquals(2, listener.getCount());
         }
     }
 
@@ -191,6 +200,19 @@ public class InvocationBuilderListenerTest {
             );
             MatcherAssert.assertThat(context.getCookies().size(), Matchers.is(1));
             MatcherAssert.assertThat(context.getCookies().get("Cookie"), Matchers.notNullValue());
+        }
+    }
+
+    private static class CountingInvocationBuilderListener implements InvocationBuilderListener {
+        private int counter = 0;
+
+        @Override
+        public void onNewBuilder(InvocationBuilderContext context) {
+            counter++;
+        }
+
+        public int getCount() {
+            return counter;
         }
     }
 }

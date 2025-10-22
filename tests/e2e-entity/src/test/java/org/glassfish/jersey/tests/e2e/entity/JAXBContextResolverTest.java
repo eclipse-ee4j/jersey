@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -191,7 +191,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class UnmarshallerTest extends AbstractTypeTester {
+    class UnmarshallerTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private MarshallerResolver mr;
@@ -244,7 +244,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class JAXBContextAppTest extends AbstractTypeTester {
+    class JAXBContextAppTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private JAXBContextResolverApp crApp;
@@ -266,7 +266,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class UnmarshallerAppTest extends AbstractTypeTester {
+    class UnmarshallerAppTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private MarshallerResolver mr;
@@ -330,7 +330,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class JAXBContextTextTest extends AbstractTypeTester {
+    class JAXBContextTextTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private JAXBContextResolverText crText;
@@ -351,7 +351,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class UnmarshallerTextTest extends AbstractTypeTester {
+    class UnmarshallerTextTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private MarshallerResolver mr;
@@ -400,7 +400,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class UnmarshallerFooTest extends AbstractTypeTester {
+    class UnmarshallerFooTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private MarshallerResolver mr;
@@ -465,7 +465,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class JAXBContextAllTest extends AbstractTypeTester {
+    class JAXBContextAllTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private JAXBContextResolverApp crApp;
@@ -501,7 +501,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class UnmarshallerAllTest extends AbstractTypeTester {
+    class UnmarshallerAllTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private JAXBContextResolverApp crApp;
@@ -616,7 +616,7 @@ public class JAXBContextResolverTest {
     }
 
     @Nested
-    public static class JAXBContextAllWithOtherJaxbBeanTest extends AbstractTypeTester {
+    class JAXBContextAllWithOtherJaxbBeanTest extends AbstractTypeTester {
 
         private JAXBContextResolver cr;
         private JAXBContextResolverApp crApp;

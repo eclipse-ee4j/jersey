@@ -42,6 +42,7 @@
     <modules>
         <module>bean-validation</module>
         <module>cdi</module>
+        <module>constants</module>
         <module>entity-filtering</module>
         <module>metainf-services</module>
         <module>micrometer</module>

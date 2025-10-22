@@ -309,7 +309,7 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
     private static class ClassReaderWrapper {
         private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
-        private static final int WARN_VERSION = Opcodes.V25;
+        private static final int WARN_VERSION = Opcodes.V26;
         private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
         private final byte[] b;
