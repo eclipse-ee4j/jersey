@@ -47,24 +47,16 @@ public abstract class HttpUrlConnectorConfiguration<C extends HttpUrlConnectorCo
             new DefaultConnectionFactory();
 
     protected NullableRef<HttpUrlConnectorProvider.ConnectionFactory> connectionFactory = NullableRef.empty();
-    protected Ref<Integer> chunkSize = NullableRef.empty();
     /* package */ Ref<Boolean> isRestrictedHeaderPropertySet = NullableRef.empty();
     protected Ref<Boolean> useFixedLengthStreaming = NullableRef.empty();
     protected Ref<Boolean> useSetMethodWorkaround = NullableRef.empty();
 
     protected void preInit(Map<String, Object> properties) {
         connectionFactory.ifEmptySet(DEFAULT_CONNECTION_FACTORY);
-        ((NullableRef<Integer>) chunkSize).ifEmptySet(ClientProperties.DEFAULT_CHUNK_SIZE);
         ((NullableRef<Boolean>) useFixedLengthStreaming).ifEmptySet(Boolean.FALSE);
         ((NullableRef<Boolean>) useSetMethodWorkaround).ifEmptySet(Boolean.FALSE);
 
-        int computedChunkSize = ClientProperties.getValue(properties,
-                _prefixed(ClientProperties.CHUNKED_ENCODING_SIZE), chunkSize.get(), Integer.class);
-        if (computedChunkSize < 0) {
-            LOGGER.warning(LocalizationMessages.NEGATIVE_CHUNK_SIZE(computedChunkSize, chunkSize.get()));
-        } else {
-            chunkSize.set(computedChunkSize);
-        }
+        chunkSize(properties);
 
         useFixedLengthStreaming(ClientProperties.getValue(properties,
                 _prefixed(HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING),
@@ -72,10 +64,6 @@ public abstract class HttpUrlConnectorConfiguration<C extends HttpUrlConnectorCo
         useSetMethodWorkaround(ClientProperties.getValue(properties,
                 _prefixed(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND),
                 useSetMethodWorkaround.get(), Boolean.class));
-    }
-
-    private String _prefixed(String property) {
-        return prefix.ifPresentOrElse("") + property;
     }
 
     /**
@@ -217,6 +205,22 @@ public abstract class HttpUrlConnectorConfiguration<C extends HttpUrlConnectorCo
         ReadWrite fromClient(Configuration configuration) {
             ReadWrite clientConfiguration = copyFromClient(configuration);
             clientConfiguration.preInit(configuration.getProperties());
+
+            int computedChunkSize = ClientProperties.getValue(configuration.getProperties(),
+                    prefixed(ClientProperties.CHUNKED_ENCODING_SIZE), clientConfiguration.chunkSize.get(), Integer.class);
+            if (computedChunkSize < 0) {
+                LOGGER.warning(LocalizationMessages.NEGATIVE_CHUNK_SIZE(computedChunkSize, clientConfiguration.chunkSize.get()));
+            } else {
+                clientConfiguration.chunkSize.set(computedChunkSize);
+            }
+
+            useFixedLengthStreaming(ClientProperties.getValue(configuration.getProperties(),
+                    prefixed(HttpUrlConnectorProvider.USE_FIXED_LENGTH_STREAMING),
+                    clientConfiguration.useFixedLengthStreaming.get(), Boolean.class));
+            useSetMethodWorkaround(ClientProperties.getValue(configuration.getProperties(),
+                    prefixed(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND),
+                    clientConfiguration.useSetMethodWorkaround.get(), Boolean.class));
+
 
             // check if sun.net.http.allowRestrictedHeaders system property has been set and log the result
             // the property is being cached in the HttpURLConnection, so this is only informative - there might

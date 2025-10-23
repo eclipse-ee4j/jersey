@@ -434,7 +434,7 @@ public class HttpUrlConnector implements Connector {
                     if (requestConfiguration.useFixedLengthStreaming.get() && length > 0) {
                         uc.setFixedLengthStreamingMode(length);
                     } else if (entityProcessing == RequestEntityProcessing.CHUNKED) {
-                        uc.setChunkedStreamingMode(requestConfiguration.chunkSize.get());
+                        uc.setChunkedStreamingMode(requestConfiguration.chunkSize());
                     }
                 }
                 uc.setDoOutput(true);
