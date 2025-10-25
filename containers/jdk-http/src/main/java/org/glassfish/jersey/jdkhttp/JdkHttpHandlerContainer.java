@@ -67,7 +67,7 @@ import com.sun.net.httpserver.HttpsExchange;
 public class JdkHttpHandlerContainer implements HttpHandler, Container {
 
     private static final Logger LOGGER = Logger.getLogger(JdkHttpHandlerContainer.class.getName());
-    private static final GenericType<Ref<HttpExchange>> httpExchangeType = new GenericType<>() {};
+    private static final GenericType<Ref<HttpExchange>> httpExchangeType = new GenericType<Ref<HttpExchange>>() {};
 
     private volatile ApplicationHandler appHandler;
 
