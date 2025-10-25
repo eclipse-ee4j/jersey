@@ -29,14 +29,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.ReferencingFactory;
+import org.glassfish.jersey.internal.util.collection.Ref;
 import org.glassfish.jersey.jdkhttp.internal.LocalizationMessages;
+import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.ContainerException;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -60,6 +67,7 @@ import com.sun.net.httpserver.HttpsExchange;
 public class JdkHttpHandlerContainer implements HttpHandler, Container {
 
     private static final Logger LOGGER = Logger.getLogger(JdkHttpHandlerContainer.class.getName());
+    private static final GenericType<Ref<HttpExchange>> httpExchangeType = new GenericType<>() {};
 
     private volatile ApplicationHandler appHandler;
 
@@ -69,7 +77,7 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
      * @param application JAX-RS / Jersey application to be deployed on the container.
      */
     JdkHttpHandlerContainer(final Application application) {
-        this.appHandler = new ApplicationHandler(application);
+        this(application, null);
     }
 
     /**
@@ -79,7 +87,7 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
      * @param parentContext DI provider specific context with application's registered bindings.
      */
     JdkHttpHandlerContainer(final Application application, final Object parentContext) {
-        this.appHandler = new ApplicationHandler(application, null, parentContext);
+        this.appHandler = new ApplicationHandler(application, new JdkBinder(), parentContext);
     }
 
     @Override
@@ -131,6 +139,9 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
         requestContext.setEntityStream(exchange.getRequestBody());
         requestContext.getHeaders().putAll(exchange.getRequestHeaders());
         requestContext.setWriter(responseWriter);
+        requestContext.setRequestScopedInitializer((injectionManager) -> {
+            injectionManager.<Ref<HttpExchange>>getInstance(httpExchangeType.getType()).set(exchange);
+        });
         try {
             appHandler.handle(requestContext);
         } finally {
@@ -208,7 +219,7 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
     public void reload(final ResourceConfig configuration) {
         appHandler.onShutdown(this);
 
-        appHandler = new ApplicationHandler(configuration);
+        appHandler = new ApplicationHandler(configuration, new JdkBinder());
         appHandler.onReload(this);
         appHandler.onStartup(this);
     }
@@ -234,6 +245,24 @@ public class JdkHttpHandlerContainer implements HttpHandler, Container {
      */
     void onServerStop() {
         this.appHandler.onShutdown(this);
+    }
+
+    private static class JdkBinder extends AbstractBinder {
+        @Override
+        protected void configure() {
+            bindFactory(ReferencingFactory.<HttpExchange>referenceFactory()).to(httpExchangeType)
+                                                                              .in(RequestScoped.class);
+            bindFactory(HttpExchangeReferencingFactory.class).to(HttpExchange.class)
+                                                              .proxy(false).in(RequestScoped.class);
+        }
+    }
+
+    private static class HttpExchangeReferencingFactory
+        extends ReferencingFactory<HttpExchange> {
+        @Inject
+        public HttpExchangeReferencingFactory(final Provider<Ref<HttpExchange>> referenceFactory) {
+            super(referenceFactory);
+        }
     }
 
     private static final class ResponseWriter implements ContainerResponseWriter {
