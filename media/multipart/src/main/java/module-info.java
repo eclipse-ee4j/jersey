@@ -30,23 +30,11 @@ module org.glassfish.jersey.media.multipart {
     exports org.glassfish.jersey.media.multipart;
     exports org.glassfish.jersey.media.multipart.file;
     exports org.glassfish.jersey.media.multipart.internal;
-//            org.glassfish.hk2.locator,
-//            org.glassfish.hk2.utilities,
-//            org.glassfish.jersey.core.server,
-//            org.glassfish.jersey.core.client;
     exports org.glassfish.jersey.media.multipart.internal.l10n;
 
     opens org.glassfish.jersey.media.multipart;
     opens org.glassfish.jersey.media.multipart.file;
     opens org.glassfish.jersey.media.multipart.internal;
-//            org.glassfish.hk2.locator,
-//            org.glassfish.hk2.utilities,
-//            org.glassfish.jersey.core.server,
-//            org.glassfish.jersey.core.client,
-//            org.glassfish.jersey.incubator.cdi.inject.weld,
-//            org.glassfish.jersey.inject.cdi2.se,
-//            weld.core.impl;
-
     opens org.glassfish.jersey.media.multipart.internal.l10n;
 
     provides org.glassfish.jersey.innate.spi.EntityPartBuilderProvider with

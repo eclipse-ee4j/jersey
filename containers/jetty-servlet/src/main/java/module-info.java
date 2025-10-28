@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,19 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-module org.glassfish.jersey.jetty11.connector {
-    requires java.logging;
+module org.glassfish.jersey.container.jetty.servlet {
 
     requires jakarta.ws.rs;
+    requires jakarta.servlet;
 
-    requires org.eclipse.jetty.client;
     requires org.eclipse.jetty.http;
-    requires org.eclipse.jetty.io;
+    requires org.eclipse.jetty.server;
     requires org.eclipse.jetty.util;
 
     requires org.glassfish.jersey.core.common;
-    requires org.glassfish.jersey.core.client;
+    requires org.glassfish.jersey.container.jetty.http;
+    requires static org.glassfish.jersey.container.servlet;
+    requires org.eclipse.jetty.ee10.webapp;
 
-    exports org.glassfish.jersey.jetty.connector;
-    opens org.glassfish.jersey.jetty.connector;
+    exports org.glassfish.jersey.jetty.servlet;
+    opens org.glassfish.jersey.jetty.servlet;
 }

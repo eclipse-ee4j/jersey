@@ -33,15 +33,6 @@
 
     <description>Jersey core client implementation</description>
 
-    <properties>
-        <surefire.coverage.argline>
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate=ALL-UNNAMED
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.virtual=ALL-UNNAMED
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.io=ALL-UNNAMED
-            --add-exports org.glassfish.jersey.core.common/org.glassfish.jersey.innate.inject=ALL-UNNAMED
-        </surefire.coverage.argline>
-    </properties>
-
     <build>
         <plugins>
             <plugin>

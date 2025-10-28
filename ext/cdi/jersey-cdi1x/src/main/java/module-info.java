@@ -40,9 +40,7 @@ module org.glassfish.jersey.ext.cdi1x {
 
     uses org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider;
     uses org.glassfish.jersey.ext.cdi1x.internal.spi.BeanManagerProvider;
-    uses org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerInjectedTarget;
     uses org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionManagerStore;
-    uses org.glassfish.jersey.ext.cdi1x.internal.spi.InjectionTargetListener;
 
     provides jakarta.enterprise.inject.spi.Extension with
             org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider,

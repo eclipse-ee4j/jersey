@@ -258,6 +258,16 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <instructions>
+                        <Automatic-Module-Name>org.glassfish.jersey.tests.framework.container.runner.plugin</Automatic-Module-Name>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
 
         <pluginManagement>

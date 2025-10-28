@@ -36,7 +36,8 @@ module org.glassfish.jersey.netty.connector {
     requires org.glassfish.jersey.core.server;
 
     exports org.glassfish.jersey.netty.connector;
-    exports org.glassfish.jersey.netty.connector.internal to org.glassfish.jersey.container.netty.http;
+    exports org.glassfish.jersey.netty.connector.internal;
 
     opens org.glassfish.jersey.netty.connector;
+    opens org.glassfish.jersey.netty.connector.internal;
 }

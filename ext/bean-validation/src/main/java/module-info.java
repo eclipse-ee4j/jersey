@@ -35,22 +35,30 @@ module org.glassfish.jersey.ext.bean.validation {
             org.glassfish.hk2.locator,
             org.glassfish.hk2.utilities,
             org.glassfish.jersey.core.client,
-            org.glassfish.jersey.ext.mvc.bean.validation;
+            org.glassfish.jersey.ext.mvc.bean.validation,
+            org.glassfish.jersey.inject.cdi2.se,
+            weld.core.impl;
     exports org.glassfish.jersey.server.validation.internal.l10n;
     exports org.glassfish.jersey.server.validation.internal.hibernate to
             org.glassfish.hk2.locator,
             org.glassfish.hk2.utilities,
-            org.glassfish.jersey.core.client;
+            org.glassfish.jersey.core.client,
+            org.glassfish.jersey.inject.cdi2.se,
+            weld.core.impl;
     opens org.glassfish.jersey.server.validation;
     opens org.glassfish.jersey.server.validation.internal to
             org.glassfish.hk2.locator,
             org.glassfish.hk2.utilities,
             org.glassfish.jersey.core.client,
-            org.glassfish.jersey.ext.mvc.bean.validation;
+            org.glassfish.jersey.ext.mvc.bean.validation,
+            org.glassfish.jersey.inject.cdi2.se,
+            weld.core.impl;
     opens org.glassfish.jersey.server.validation.internal.hibernate to
             org.glassfish.hk2.locator,
             org.glassfish.hk2.utilities,
-            org.glassfish.jersey.core.client;
+            org.glassfish.jersey.core.client,
+            org.glassfish.jersey.inject.cdi2.se,
+            weld.core.impl;
     opens org.glassfish.jersey.server.validation.internal.l10n;
 
     provides org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable with

@@ -27,7 +27,6 @@ module org.glassfish.jersey.core.server {
 
     requires jdk.httpserver;
 
-    requires static org.glassfish.jersey.inject.hk2;
     requires static org.glassfish.hk2.api;
 
     // jersey common modules

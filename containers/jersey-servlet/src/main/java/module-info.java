@@ -21,17 +21,17 @@ module org.glassfish.jersey.container.servlet {
     requires jakarta.inject;
     requires static jakarta.persistence;
     requires jakarta.ws.rs;
-    requires static jakarta.servlet;
+    requires jakarta.servlet;
 
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.core.server;
 
+    exports org.glassfish.jersey.servlet;
     exports org.glassfish.jersey.servlet.async;
     exports org.glassfish.jersey.servlet.init;
     exports org.glassfish.jersey.servlet.internal.l10n;
     exports org.glassfish.jersey.servlet.internal.spi; //
     exports org.glassfish.jersey.servlet.spi;
-    exports org.glassfish.jersey.servlet;
 
     opens org.glassfish.jersey.servlet;
     opens org.glassfish.jersey.servlet.async;
@@ -44,6 +44,8 @@ module org.glassfish.jersey.container.servlet {
     uses org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
     uses org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider;
 
+    provides jakarta.servlet.ServletContainerInitializer with
+            org.glassfish.jersey.servlet.init.JerseyServletContainerInitializer;
     provides org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider with
             org.glassfish.jersey.servlet.async.AsyncContextDelegateProviderImpl;
     provides org.glassfish.jersey.servlet.spi.FilterUrlMappingsProvider with

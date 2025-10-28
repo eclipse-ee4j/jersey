@@ -316,7 +316,12 @@
 
     <properties>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/server.policy</surefire.security.argline>
-        <surefire.coverage.argline>--add-opens org.glassfish.jersey.core.server/org.glassfish.jersey.server.internal.inject=jakarta.xml.bind</surefire.coverage.argline>
+        <surefire.coverage.argline>
+            --add-opens org.glassfish.jersey.core.server/org.glassfish.jersey.server.internal.inject=jakarta.xml.bind
+            --add-reads org.glassfish.jersey.core.server=org.glassfish.hk2.api
+            --add-reads org.glassfish.jersey.core.server=org.glassfish.hk2.locator
+            --add-reads org.glassfish.jersey.core.server=org.glassfish.jersey.inject.hk2
+        </surefire.coverage.argline>
     </properties>
 
 </project>
