@@ -82,6 +82,7 @@
                <artifactId>maven-javadoc-plugin</artifactId>
                <configuration>
                     <skip>${javadoc.skip}</skip>
+                   <legacyMode>true</legacyMode>
                </configuration>
             </plugin>
         </plugins>

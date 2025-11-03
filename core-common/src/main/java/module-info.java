@@ -73,6 +73,7 @@ module org.glassfish.jersey.core.common {
             org.glassfish.jersey.container.grizzly2.http,
             org.glassfish.jersey.container.servlet,
             org.glassfish.jersey.container.jetty.http,
+            org.glassfish.jersey.container.helidon,
             org.glassfish.jersey.media.sse,
             org.glassfish.jersey.media.jaxb,
             org.glassfish.jersey.media.json.jackson,
