@@ -19,7 +19,7 @@ Note that previous Jersey releases will continue along with Jersey 4.0.x release
 
 All the Jersey 4.0 release binaries, including the source & apidocs jars, are available for
 download under the Jersey 4.0 maven root group identifier `org.glassfish.jersey` from the 
-[maven central repository][mvn-central] as well as from the [Sonatype maven repository][mvn-oss].
+[maven central repository][mvn-central].
 
 Chances are you are using Apache Maven as a build & dependency management tool for your project.
 If you do, there is a very easy and convenient way to start playing with Jersey {{ site.latest4xVersion }} by generating
@@ -224,4 +224,4 @@ the following links are provided:
 [tag-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest30xVersion }}
 [rn-3.1.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
 [rn-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest30xVersion }}
-[rn-4.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest4xVersion }}
+[rn-4.0.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest4xVersion }}
