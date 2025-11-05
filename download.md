@@ -1,4 +1,4 @@
-[//]: # " Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved. "
+[//]: # " Copyright (c) 2018, 2025 Oracle and/or its affiliates. All rights reserved. "
 [//]: # "  "
 [//]: # " This program and the accompanying materials are made available under the "
 [//]: # " terms of the Eclipse Public License v. 2.0, which is available at "
@@ -11,6 +11,36 @@
 [//]: # " https://www.gnu.org/software/classpath/license.html. "
 [//]: # "  "
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
+
+<h3>Jakarta RESTful WebServices 4.0.0 / Jersey {{ site.latest4xVersion }}</h3>
+
+Jersey&nbsp;{{ site.latest4xVersion }}, that implements [Jakarta RESTful WebServices 4.0][jaxrs-4.0] API is the future release of Jersey.
+Note that previous Jersey releases will continue along with Jersey 4.0.x releases.
+
+All the Jersey 4.0 release binaries, including the source & apidocs jars, are available for
+download under the Jersey 4.0 maven root group identifier `org.glassfish.jersey` from the 
+[maven central repository][mvn-central] as well as from the [Sonatype maven repository][mvn-oss].
+
+Chances are you are using Apache Maven as a build & dependency management tool for your project.
+If you do, there is a very easy and convenient way to start playing with Jersey {{ site.latest4xVersion }} by generating
+the skeleton application from one of the Jersey 4.0 maven archetypes that we provide.
+
+For instance, to create a Jersey {{ site.latest4xVersion }} application using the Grizzly 3.1 HTTP server container, use
+
+```bash
+mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
+    -DarchetypeArtifactId=jersey-quickstart-grizzly2 -DarchetypeVersion={{ site.latest4xVersion }}
+```
+
+If you want to create a Servlet container deployable Jersey {{ site.latest4xVersion }} web application instead, use
+
+```bash
+mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes \
+    -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion={{ site.latest4xVersion }}
+```
+
+For the full list of updates for Jersey {{ site.latest4xVersion }}, details about all changes, bug fixed and updates,
+please check the [Jersey {{ site.latest4xVersion }} Release Notes][rn-4.0.x].
 
 <h3>Jakarta RESTful WebServices 3.1.0 / Jersey {{ site.latest3xVersion }}</h3>
 
@@ -175,6 +205,7 @@ the following links are provided:
 [jar-1.x]: https://repo1.maven.org/maven2/com/sun/eclipse-ee4j/jersey-bundle/1.19.1/jersey-bundle-1.19.1.jar
 [deps-1.x]: {{ site.links.newJerseyURL }}/documentation/1.19.1/chapter_deps.html
 
+[jaxrs-4.0]: https://jakarta.ee/specifications/restful-ws/4.0/
 [jaxrs-3.1]: https://jakarta.ee/specifications/restful-ws/3.1/
 [jaxrs-3.0]: https://jakarta.ee/specifications/restful-ws/3.0/
 [jaxrs-2.1]: https://jcp.org/en/jsr/detail?id=370
@@ -193,3 +224,4 @@ the following links are provided:
 [tag-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest30xVersion }}
 [rn-3.1.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest3xVersion }}
 [rn-3.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest30xVersion }}
+[rn-4.x]:https://github.com/eclipse-ee4j/jersey/releases/tag/{{ site.latest4xVersion }}

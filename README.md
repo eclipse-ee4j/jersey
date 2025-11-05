@@ -35,6 +35,7 @@ Goals of Jersey project can be summarized in the following points:
 *   The latest stable release of Jersey is [{{ site.latestVersion }}][dwnld].
 *   The latest published release of Jakarta EE 9 Jersey is [{{ site.latest30xVersion }}][dwnld].
 *   The latest published release of Jakarta EE 10 Jersey is [{{ site.latest3xVersion }}][dwnld].
+*   The latest published release of Jakarta EE 11 Jersey is [{{ site.latest4xVersion }}][dwnld].
 
 ---
 
@@ -52,6 +53,11 @@ Goals of Jersey project can be summarized in the following points:
     <var class="icon-book"></var> Documentation
 </a></h3>
 
+<h4>Jersey 4.0.x</h4>
+        <ul>
+                <li><a href="{{ site.links.newJerseyURL }}/documentation/{{ site.latest4xFolder }}/index.html">latest Jakarta EE11 ({{ site.latest4xVersion }}) Jersey User Guide</a></li>
+                <li><a href="{{ site.links.newJerseyURL }}/apidocs/{{ site.latest4xFolder }}/jersey/index.html">latest Jakarta EE11 ({{ site.latest4xVersion }}) Jersey API</a></li>
+        </ul>
 <h4>Jersey 3.1.x</h4>
         <ul>
                 <li><a href="{{ site.links.newJerseyURL }}/documentation/{{ site.latest3xFolder }}/index.html">latest Jakarta EE10 ({{ site.latest3xVersion }}) Jersey User Guide</a></li>

@@ -11,6 +11,8 @@ latest30xVersion: '3.0.18'
 latest30xFolder: 'latest30x'
 latest3xVersion: '3.1.11'
 latest3xFolder: 'latest31x'
+latest4xVersion: '4.0.0'
+latest4xFolder: 'latest4x'
 
 
 links:
