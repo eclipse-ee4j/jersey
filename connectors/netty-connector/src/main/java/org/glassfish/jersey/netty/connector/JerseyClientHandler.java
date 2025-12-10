@@ -27,6 +27,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.client.ResponseProcessingException;
 
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -38,6 +39,7 @@ import org.glassfish.jersey.netty.connector.internal.RedirectException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponse;
@@ -179,33 +181,40 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             return;
         }
         if (msg instanceof HttpResponse) {
-            final HttpResponse response = (HttpResponse) msg;
-            jerseyResponse = new ClientResponse(new Response.StatusType() {
-                @Override
-                public int getStatusCode() {
-                    return response.status().code();
+            if (msg.decoderResult().isFailure()) {
+                Throwable cause = msg.decoderResult().cause();
+                ResponseProcessingException ex = new ResponseProcessingException(null, cause);
+                responseAvailable.completeExceptionally(ex);
+                return;
+            } else {
+                final HttpResponse response = (HttpResponse) msg;
+                jerseyResponse = new ClientResponse(new Response.StatusType() {
+                    @Override
+                    public int getStatusCode() {
+                        return response.status().code();
+                    }
+
+                    @Override
+                    public Response.Status.Family getFamily() {
+                        return Response.Status.Family.familyOf(response.status().code());
+                    }
+
+                    @Override
+                    public String getReasonPhrase() {
+                        return response.status().reasonPhrase();
+                    }
+                }, jerseyRequest);
+
+                for (Map.Entry<String, String> entry : response.headers().entries()) {
+                    jerseyResponse.getHeaders().add(entry.getKey(), entry.getValue());
                 }
 
-                @Override
-                public Response.Status.Family getFamily() {
-                    return Response.Status.Family.familyOf(response.status().code());
-                }
+                // request entity handling.
+                nis = new NettyInputStream();
+                responseDone.whenComplete((_r, th) -> nis.complete(th));
 
-                @Override
-                public String getReasonPhrase() {
-                    return response.status().reasonPhrase();
-                }
-            }, jerseyRequest);
-
-            for (Map.Entry<String, String> entry : response.headers().entries()) {
-                jerseyResponse.getHeaders().add(entry.getKey(), entry.getValue());
+                jerseyResponse.setEntityStream(nis);
             }
-
-            // request entity handling.
-            nis = new NettyInputStream();
-            responseDone.whenComplete((_r, th) -> nis.complete(th));
-
-            jerseyResponse.setEntityStream(nis);
         }
         if (msg instanceof HttpContent) {
 

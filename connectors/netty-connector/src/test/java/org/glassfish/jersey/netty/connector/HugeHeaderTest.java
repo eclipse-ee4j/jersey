@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
@@ -36,6 +37,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class HugeHeaderTest extends JerseyTest {
 
@@ -90,13 +92,14 @@ public class HugeHeaderTest extends JerseyTest {
         for (int i = 1; i < 33; i++) {
             veryHugeHeader.append(hugeHeader);
         }
-        final Response response = target("test").request()
-                .header("X-HUGE-HEADER", veryHugeHeader.toString())
-                .post(null);
-
-        assertNull(response.getHeaderString("X-HUGE-HEADER-SIZE"));
-        assertNull(response.getHeaderString("X-HUGE-HEADER"));
-        response.close();
+        try {
+            target("test").request()
+                    .header("X-HUGE-HEADER", veryHugeHeader.toString())
+                    .post(null);
+            fail("Expected an exception");
+        } catch (ProcessingException ex) {
+            assertEquals("HTTP header is larger than 8192 bytes.", ex.getCause().getCause().getMessage());
+        }
     }
 
     @Test
