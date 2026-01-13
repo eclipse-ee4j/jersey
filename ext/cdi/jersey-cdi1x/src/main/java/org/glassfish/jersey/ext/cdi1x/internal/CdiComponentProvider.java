@@ -258,7 +258,14 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     @Override
     public void done() {
-        effectiveInjectionManager.remove();
+
+        if (beanManager != null) {
+            final CdiComponentProvider extension = beanManager.getExtension(CdiComponentProvider.class);
+            if (extension != null) {
+                extension.effectiveInjectionManager.remove();
+            }
+        }
+
         if (requestScopedComponents.size() > 0) {
             InstanceBinding<ForeignRequestScopeBridge> descriptor = Bindings
                     .service((ForeignRequestScopeBridge) () -> requestScopedComponents)
@@ -709,7 +716,16 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
         @Override
         public void setInjectionManager(final InjectionManager injectionManager) {
-            effectiveInjectionManager.set(injectionManager);
+            // The injectionManager is always the same within a single invocation.
+            // We set it only once, which is a bit faster than calling set with the same value
+            final InjectionManager manager = effectiveInjectionManager.get();
+            if (manager == null) {
+                effectiveInjectionManager.set(injectionManager);
+            } else if (!manager.equals(injectionManager)) {
+                LOGGER.log(Level.SEVERE, "Leaking injection manager found in the current thread."
+                        + " Very likely because it wasn't removed in a previous invocation and"
+                        + " leaked into this invocation.");
+            }
         }
     }
 
