@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.memleaks.redeployment</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.1</version>
     </parent>
 
     <artifactId>redeployment-threadlocals-app</artifactId>

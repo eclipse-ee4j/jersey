@@ -23,7 +23,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.containers</groupId>
-        <version>${revision}</version>
+        <version>4.0.1</version>
     </parent>
 
     <artifactId>jersey-container-helidon-http</artifactId>

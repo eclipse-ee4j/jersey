@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
         <artifactId>cdi-integration-project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.1</version>
     </parent>
 
     <artifactId>cdi-test-webapp</artifactId>

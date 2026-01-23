@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.test-framework</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.1</version>
     </parent>
 
     <artifactId>jersey-test-framework-util</artifactId>
