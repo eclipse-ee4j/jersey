@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.ext.rx</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
 
     <artifactId>jersey-rx-client-guava</artifactId>

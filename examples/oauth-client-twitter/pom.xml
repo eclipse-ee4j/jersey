@@ -15,7 +15,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>org.glassfish.jersey.examples</groupId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.osgi</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
 
     <artifactId>jersey-tests-osgi-functional</artifactId>

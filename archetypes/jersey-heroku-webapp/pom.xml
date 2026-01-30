@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey.archetypes</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
     <packaging>maven-archetype</packaging>
 

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.inject</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
 
     <artifactId>jersey-hk2</artifactId>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.containers.glassfish</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
 
     <artifactId>jersey-gf-ejb</artifactId>

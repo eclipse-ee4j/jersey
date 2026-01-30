@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.ext.cdi</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>4.0.2</version>
     </parent>
 
     <artifactId>jersey-cdi1x-ban-custom-hk2-binding</artifactId>
