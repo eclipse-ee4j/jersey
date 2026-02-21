@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -168,7 +168,7 @@ public class HttpUrlConnector implements Connector {
                         return uc.getInputStream();
                     } else {
                         InputStream ein = uc.getErrorStream();
-                        return (ein != null) ? ein : new ByteArrayInputStream(new byte[0]);
+                        return (ein != null) ? ein : InputStream.nullInputStream();
                     }
                 }
             });

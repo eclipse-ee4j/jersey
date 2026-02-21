@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -62,8 +62,7 @@ public final class ReaderProvider extends AbstractMessageReaderWriterProvider<Re
 
         final EntityInputStream entityStream = EntityInputStream.create(inputStream);
         if (entityStream.isEmpty()) {
-            return new BufferedReader(new InputStreamReader(
-                    new ByteArrayInputStream(new byte[0]), MessageUtils.getCharset(mediaType)));
+            return Reader.nullReader();
         }
 
         return new BufferedReader(new InputStreamReader(entityStream, ReaderWriter.getCharset(mediaType)));

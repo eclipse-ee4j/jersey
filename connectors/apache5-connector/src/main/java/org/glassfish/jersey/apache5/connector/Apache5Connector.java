@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -749,7 +749,7 @@ class Apache5Connector implements Connector {
         final InputStream inputStream;
 
         if (response.getEntity() == null) {
-            inputStream = new ByteArrayInputStream(new byte[0]);
+            inputStream = InputStream.nullInputStream();
         } else {
             final InputStream i = new CancellableInputStream(response.getEntity().getContent(), isCancelled);
             if (i.markSupported()) {

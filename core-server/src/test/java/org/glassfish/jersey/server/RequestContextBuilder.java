@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package org.glassfish.jersey.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -79,7 +80,6 @@ public class RequestContextBuilder {
         @Override
         public void setWorkers(final MessageBodyWorkers workers) {
             super.setWorkers(workers);
-            final byte[] entityBytes;
             if (workers != null) {
                 if (entity != null) {
                     final MultivaluedMap<String, Object> myMap = new MultivaluedHashMap<String, Object>(getHeaders());
@@ -101,11 +101,10 @@ public class RequestContextBuilder {
                             }
                         }
                     }
-                    entityBytes = baos.toByteArray();
+                    setEntityStream(new ByteArrayInputStream(baos.toByteArray()));
                 } else {
-                    entityBytes = new byte[0];
+                    setEntityStream(InputStream.nullInputStream());
                 }
-                setEntityStream(new ByteArrayInputStream(entityBytes));
             }
         }
     }

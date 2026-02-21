@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,8 +39,8 @@ class FirstByteCachingStreamTest {
 
     @Test
     void testNoByte() throws Exception {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(new byte[0]);
-        InputStream testIs = createFirstByteCachingStream(byteArrayInputStream);
+        InputStream inputStream = InputStream.nullInputStream();
+        InputStream testIs = createFirstByteCachingStream(inputStream);
         Assertions.assertEquals(0, testIs.available());
     }
 
