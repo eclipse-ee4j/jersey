@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
@@ -44,6 +45,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
+
+import java.util.Collections;
+import java.util.function.Consumer;
 
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.innate.inject.Bindings;
@@ -369,7 +373,11 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
 
             injectionManager.completeRegistration();
 
-            bootstrapConfigurators.forEach(configurator -> configurator.postInit(injectionManager, bootstrapBag));
+            /* postInit must be called in reversed order
+             - some configurators (e.g. CDI component provider) perform cleanup (e.g. remove thread locals)
+               and must be called after other configurators that depend on them
+            */
+            forEachInReversedOrder(bootstrapConfigurators, configurator -> configurator.postInit(injectionManager, bootstrapBag));
             resourceModelConfigurator.postInit(injectionManager, bootstrapBag);
 
             Iterable<ApplicationEventListener> appEventListeners =
@@ -463,6 +471,12 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
         }
 
         return serverRuntime;
+    }
+
+    private static <T> void forEachInReversedOrder(List<T> list, Consumer<? super T> consumer) {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            consumer.accept(list.get(i));
+        }
     }
 
     private boolean ignoreValidationError() {
