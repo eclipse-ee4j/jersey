@@ -46,9 +46,6 @@ import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.ext.MessageBodyReader;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
-import java.util.Collections;
-import java.util.function.Consumer;
-
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.innate.inject.Bindings;
 import org.glassfish.jersey.innate.inject.CompositeBinder;
@@ -373,12 +370,24 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
 
             injectionManager.completeRegistration();
 
-            /* postInit must be called in reversed order
-             - some configurators (e.g. CDI component provider) perform cleanup (e.g. remove thread locals)
-               and must be called after other configurators that depend on them
-            */
-            forEachInReversedOrder(bootstrapConfigurators, configurator -> configurator.postInit(injectionManager, bootstrapBag));
+            ComponentProviderConfigurator componentProviderConfigurator = null;
+            for (BootstrapConfigurator configurator : bootstrapConfigurators) {
+                if (configurator instanceof ComponentProviderConfigurator internalComponentProviderConfigurator) {
+                    componentProviderConfigurator = internalComponentProviderConfigurator;
+                } else {
+                    configurator.postInit(injectionManager, bootstrapBag);
+                }
+            }
+
             resourceModelConfigurator.postInit(injectionManager, bootstrapBag);
+
+            /*
+                postInit on ComponentProviderConfigurator must be called last to clean up thread local,
+                which is also possibly set by other configurators
+            */
+            if (componentProviderConfigurator != null) {
+                componentProviderConfigurator.postInit(injectionManager, bootstrapBag);
+            }
 
             Iterable<ApplicationEventListener> appEventListeners =
                     Providers.getAllProviders(injectionManager, ApplicationEventListener.class, new RankedComparator<>());
@@ -471,12 +480,6 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
         }
 
         return serverRuntime;
-    }
-
-    private static <T> void forEachInReversedOrder(List<T> list, Consumer<? super T> consumer) {
-        for (int i = list.size() - 1; i >= 0; i--) {
-            consumer.accept(list.get(i));
-        }
     }
 
     private boolean ignoreValidationError() {
