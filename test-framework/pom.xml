@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.jersey</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>5.0.0-M1</version>
     </parent>
 
     <groupId>org.glassfish.jersey.test-framework</groupId>

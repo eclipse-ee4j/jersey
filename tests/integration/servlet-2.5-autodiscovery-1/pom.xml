@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration</groupId>
         <artifactId>project</artifactId>
-        <version>${revision}</version>
+        <version>5.0.0-M1</version>
     </parent>
 
     <artifactId>servlet-2.5-autodiscovery-1</artifactId>

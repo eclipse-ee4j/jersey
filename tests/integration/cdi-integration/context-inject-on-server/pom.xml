@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
         <artifactId>cdi-integration-project</artifactId>
-        <version>${revision}</version>
+        <version>5.0.0-M1</version>
     </parent>
 
     <artifactId>context-inject-on-server</artifactId>

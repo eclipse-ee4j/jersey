@@ -24,7 +24,7 @@
     <parent>
         <artifactId>cdi-integration-project</artifactId>
         <groupId>org.glassfish.jersey.tests.integration.cdi</groupId>
-        <version>${revision}</version>
+        <version>5.0.0-M1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
