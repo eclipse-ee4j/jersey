@@ -161,9 +161,20 @@ public class SpringComponentProvider implements ComponentProvider {
             Object bean = ctx.getBean(beanName);
             if (bean instanceof Advised) {
                 try {
-                    // Unwrap the bean and inject the values inside of it
-                    Object localBean = ((Advised) bean).getTargetSource().getTarget();
-                    injectionManager.inject(localBean);
+                    Object target = bean;
+                    // Recursively unwrap the bean until we find the real POJO and then inject the values inside of it
+                    while (target instanceof Advised) {
+                        try {
+                            Object nextTarget = ((Advised) target).getTargetSource().getTarget();
+                            if (nextTarget == null || nextTarget == target) {
+                                break;
+                            }
+                            target = nextTarget;
+                        } catch (Exception e) {
+                            break;
+                        }
+                    }
+                    injectionManager.inject(target);
                 } catch (Exception e) {
                     // Ignore and let the injection happen as it normally would.
                     injectionManager.inject(bean);
