@@ -956,8 +956,16 @@ public class ServerRuntime {
                 stateLock.readLock().unlock();
             }
             stateLock.writeLock().lock();
-            state = RESUMED;
-            stateLock.writeLock().unlock();
+            try {
+                // Re-check under write lock: another thread may have changed state
+                // between releasing the read lock and acquiring the write lock.
+                if (state != SUSPENDED) {
+                    return false;
+                }
+                state = RESUMED;
+            } finally {
+                stateLock.writeLock().unlock();
+            }
 
             try {
                 responder.runtime.requestScope.runInScope(requestContext, handler);
@@ -1019,9 +1027,20 @@ public class ServerRuntime {
             }
 
             stateLock.writeLock().lock();
-            state = RESUMED;
-            cancelled = true;
-            stateLock.writeLock().unlock();
+            try {
+                // Re-check under write lock: another thread may have changed state
+                // between releasing the read lock and acquiring the write lock.
+                if (cancelled) {
+                    return true;
+                }
+                if (state != SUSPENDED) {
+                    return false;
+                }
+                state = RESUMED;
+                cancelled = true;
+            } finally {
+                stateLock.writeLock().unlock();
+            }
 
             responder.runtime.requestScope.runInScope(requestContext, new Runnable() {
                 @Override
