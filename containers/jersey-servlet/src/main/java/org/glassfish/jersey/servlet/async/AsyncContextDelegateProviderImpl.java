@@ -83,7 +83,7 @@ public class AsyncContextDelegateProviderImpl implements AsyncContextDelegatePro
 
             @Override
             public void onComplete(AsyncEvent event) throws IOException {
-                complete();
+                completed.set(true);
             }
 
             @Override
@@ -93,7 +93,7 @@ public class AsyncContextDelegateProviderImpl implements AsyncContextDelegatePro
 
             @Override
             public void onError(AsyncEvent event) throws IOException {
-                complete();
+                completed.set(true);
             }
 
             @Override
