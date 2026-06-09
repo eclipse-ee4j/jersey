@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
@@ -362,8 +363,24 @@ public final class ApplicationHandler implements ContainerLifecycleListener {
 
             injectionManager.completeRegistration();
 
-            bootstrapConfigurators.forEach(configurator -> configurator.postInit(injectionManager, bootstrapBag));
+            ComponentProviderConfigurator componentProviderConfigurator = null;
+            for (BootstrapConfigurator configurator : bootstrapConfigurators) {
+                if (configurator instanceof ComponentProviderConfigurator) {
+                    componentProviderConfigurator = (ComponentProviderConfigurator) configurator;
+                } else {
+                    configurator.postInit(injectionManager, bootstrapBag);
+                }
+            }
+
             resourceModelConfigurator.postInit(injectionManager, bootstrapBag);
+
+            /*
+                postInit on ComponentProviderConfigurator must be called last to clean up thread local,
+                which is also possibly set by other configurators
+            */
+            if (componentProviderConfigurator != null) {
+                componentProviderConfigurator.postInit(injectionManager, bootstrapBag);
+            }
 
             Iterable<ApplicationEventListener> appEventListeners =
                     Providers.getAllProviders(injectionManager, ApplicationEventListener.class, new RankedComparator<>());
