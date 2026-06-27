@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation and/or its affiliates.
  *
@@ -425,6 +426,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             final ClientMessageBodyFactory.MessageBodyWorkersConfigurator messageBodyWorkersConfigurator =
                     new ClientMessageBodyFactory.MessageBodyWorkersConfigurator();
 
+            ClientComponentConfigurator clientComponentConfigurator = new ClientComponentConfigurator();
             List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(
                     new RequestScope.RequestScopeConfigurator(),
                     new ParamConverterConfigurator(),
@@ -435,7 +437,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
                     new ExceptionMapperFactory.ExceptionMappersConfigurator(),
                     new JaxrsProviders.ProvidersConfigurator(),
                     new AutoDiscoverableConfigurator(RuntimeType.CLIENT),
-                    new ClientComponentConfigurator(),
+                    clientComponentConfigurator,
                     new FeatureConfigurator(RuntimeType.CLIENT));
             bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
 
@@ -465,12 +467,20 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
 
             injectionManager.completeRegistration();
 
-            bootstrapConfigurators.forEach(configurator -> configurator.postInit(injectionManager, bootstrapBag));
+            //bootstrapConfigurators.forEach(configurator -> configurator.postInit(injectionManager, bootstrapBag));
+            bootstrapConfigurators.forEach(configurator -> {
+                if (!configurator.equals(clientComponentConfigurator)) {
+                    configurator.postInit(injectionManager, bootstrapBag);
+                }
+            });
 
             final ClientConfig configuration = new ClientConfig(runtimeCfgState);
             final Connector connector = connectorProvider.getConnector(client, configuration);
             final ClientRuntime crt = new ClientRuntime(configuration, connector, injectionManager, bootstrapBag);
 
+            // We call postInit here to clean up thread locals,
+            // while other configurators need to be postInit earlier because they set up dependencies for ClientRuntime
+            clientComponentConfigurator.postInit(injectionManager, bootstrapBag);
             client.registerShutdownHook(crt);
             messageBodyWorkersConfigurator.setClientRuntime(crt);
 

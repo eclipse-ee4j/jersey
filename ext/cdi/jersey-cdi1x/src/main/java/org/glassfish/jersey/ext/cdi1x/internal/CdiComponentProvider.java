@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates. All rights reserved.
  *
@@ -144,6 +145,10 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     private boolean initialized = false;
 
+    // Shared by multiple clients, which can be initialized in parallel,
+    // therefore storing to a thread local and removing after initialization done in the done() method
+    private ThreadLocal<InjectionManager> effectiveInjectionManager = new ThreadLocal<>();
+
     public CdiComponentProvider() {
         customHk2TypesProvider = CdiUtil.lookupService(Hk2CustomBoundTypesProvider.class);
         injectionManagerStore = CdiUtil.createHk2InjectionManagerStore();
@@ -253,6 +258,14 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
     @Override
     public void done() {
+
+        if (beanManager != null) {
+            final CdiComponentProvider extension = beanManager.getExtension(CdiComponentProvider.class);
+            if (extension != null) {
+                extension.effectiveInjectionManager.remove();
+            }
+        }
+
         if (requestScopedComponents.size() > 0) {
             InstanceBinding<ForeignRequestScopeBridge> descriptor = Bindings
                     .service((ForeignRequestScopeBridge) () -> requestScopedComponents)
@@ -656,7 +669,6 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
     /* package */ abstract class InjectionManagerInjectedCdiTarget implements InjectionManagerInjectedTarget {
 
         private final InjectionTarget delegate;
-        private volatile InjectionManager effectiveInjectionManager;
 
         public InjectionManagerInjectedCdiTarget(InjectionTarget delegate) {
             this.delegate = delegate;
@@ -669,7 +681,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
         public void inject(final Object t, final CreationalContext cc) {
             InjectionManager injectingManager = getEffectiveInjectionManager();
             if (injectingManager == null || /* reload */ injectingManager.isShutdown()) {
-                injectingManager = effectiveInjectionManager;
+                injectingManager = effectiveInjectionManager.get();
                 threadInjectionManagers.set(injectingManager);
             }
 
@@ -704,7 +716,16 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
         @Override
         public void setInjectionManager(final InjectionManager injectionManager) {
-            this.effectiveInjectionManager = injectionManager;
+            // The injectionManager is always the same within a single invocation.
+            // We set it only once, which is a bit faster than calling set with the same value
+            final InjectionManager manager = effectiveInjectionManager.get();
+            if (manager == null) {
+                effectiveInjectionManager.set(injectionManager);
+            } else if (!manager.equals(injectionManager)) {
+                LOGGER.log(Level.SEVERE, "Leaking injection manager found in the current thread."
+                        + " Very likely because it wasn't removed in a previous invocation and"
+                        + " leaked into this invocation.");
+            }
         }
     }
 
