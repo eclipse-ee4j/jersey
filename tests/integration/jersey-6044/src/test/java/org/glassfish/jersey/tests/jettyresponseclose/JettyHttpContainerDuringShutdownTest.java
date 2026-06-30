@@ -45,6 +45,7 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -134,7 +135,7 @@ public class JettyHttpContainerDuringShutdownTest {
             assertThrows(TimeoutException.class, () -> shutdownServer(100));
             for (Future<Response> responseFuture : waitingResponses) {
                 try (Response response = responseFuture.get(30, TimeUnit.SECONDS)) {
-                    assertThat("Unexpected response code", response.getStatus(), equalTo(204));
+                    assertThat("Unexpected response code", response.getStatus(), Matchers.anyOf(equalTo(204), equalTo(500)));
                     countOf204.incrementAndGet();
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();

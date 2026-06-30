@@ -40,6 +40,6 @@ public class Resource204 {
             LOG.log(INFO, () -> "Resuming " + ar);
             ar.resume(Response.noContent().build());
             LOG.log(INFO, () -> "Processing finished: " + ar);
-        }, 50, TimeUnit.MILLISECONDS);
+        }, 100, TimeUnit.MILLISECONDS);
     }
 }
