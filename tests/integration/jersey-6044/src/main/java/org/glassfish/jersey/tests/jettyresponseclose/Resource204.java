@@ -22,18 +22,24 @@ import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Response;
 
+import java.lang.System.Logger;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.System.Logger.Level.INFO;
+
 @Path("/get-me-204")
 public class Resource204 {
-    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
+    private static final Logger LOG = System.getLogger(Resource204.class.getName());
+    private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(200);
 
     @GET
     public void get(@Suspended final AsyncResponse ar) {
-        executor.schedule(() -> {
+        EXECUTOR.schedule(() -> {
+            LOG.log(INFO, () -> "Resuming " + ar);
             ar.resume(Response.noContent().build());
+            LOG.log(INFO, () -> "Processing finished: " + ar);
         }, 50, TimeUnit.MILLISECONDS);
     }
 }
