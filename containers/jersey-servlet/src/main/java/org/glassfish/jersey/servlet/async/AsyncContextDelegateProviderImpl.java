@@ -17,7 +17,6 @@
 
 package org.glassfish.jersey.servlet.async;
 
-import java.io.IOException;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,8 +26,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.servlet.AsyncEvent;
-import jakarta.servlet.AsyncListener;
 import org.glassfish.jersey.servlet.init.internal.LocalizationMessages;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegateProvider;
@@ -75,31 +72,7 @@ public class AsyncContextDelegateProviderImpl implements AsyncContextDelegatePro
             // Suspend only if not completed and not suspended before.
             if (!completed.get() && asyncContextRef.get() == null) {
                 final AsyncContext asyncContext = getAsyncContext();
-                asyncContext.addListener(new CompletedAsyncContextListener());
                 asyncContextRef.set(asyncContext);
-            }
-        }
-
-        private class CompletedAsyncContextListener implements AsyncListener {
-
-            @Override
-            public void onComplete(AsyncEvent event) throws IOException {
-                complete();
-            }
-
-            @Override
-            public void onTimeout(AsyncEvent event) throws IOException {
-
-            }
-
-            @Override
-            public void onError(AsyncEvent event) throws IOException {
-                complete();
-            }
-
-            @Override
-            public void onStartAsync(AsyncEvent event) throws IOException {
-
             }
         }
 
