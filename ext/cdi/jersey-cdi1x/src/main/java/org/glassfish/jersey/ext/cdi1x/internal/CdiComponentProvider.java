@@ -685,13 +685,16 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 threadInjectionManagers.set(injectingManager);
             }
 
-            delegate.inject(t, cc); // here the injection manager is used in HK2Bean
+            try {
+                delegate.inject(t, cc); // here the injection manager is used in HK2Bean
 
-            if (injectingManager != null) {
-                injectingManager.inject(t, CdiComponentProvider.CDI_CLASS_ANALYZER);
+                if (injectingManager != null) {
+                    injectingManager.inject(t, CdiComponentProvider.CDI_CLASS_ANALYZER);
+                }
+            } finally {
+                threadInjectionManagers.remove();
+                effectiveInjectionManager.remove();
             }
-
-            threadInjectionManagers.remove();
         }
 
         @Override
