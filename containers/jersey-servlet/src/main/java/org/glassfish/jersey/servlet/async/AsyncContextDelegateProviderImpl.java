@@ -102,7 +102,7 @@ public class AsyncContextDelegateProviderImpl implements AsyncContextDelegatePro
                     new RuntimeException("Stacktrace to see the redundant call of the complete() method."));
                 return;
             }
-            LOGGER.log(Level.FINE, () -> "complete()");
+            LOGGER.log(Level.FINE, "complete()");
             completed.set(true);
 
             final AsyncContext asyncContext = asyncContextRef.getAndSet(null);
