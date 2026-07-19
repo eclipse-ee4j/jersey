@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright (c) 2026 Contributors to the Eclipse Foundation.
-    Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2011, 2026 Oracle and/or its affiliates. All rights reserved.
     Copyright (c) 2018 Payara Foundation and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -60,6 +60,7 @@
         <module>jersey-4722</module>
         <module>jersey-5087</module>
         <module>jersey-5796</module>
+        <module>jersey-6044</module>
         <module>microprofile</module>
         <module>property-check</module>
         <module>reactive-streams</module>
@@ -161,6 +162,7 @@
                 <module>jersey-2892</module>
                 <module>jersey-3796</module>
                 <module>jersey-4949</module>
+                <module>jersey-6044</module>
                 <module>resteasy-client</module>
                 <module>security-digest</module>
                 <module>servlet-2.5-autodiscovery-1</module>
