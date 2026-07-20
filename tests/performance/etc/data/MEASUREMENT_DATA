@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2015, 2018, 2026 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,13 +23,13 @@ mbw-text-plain|wrk -c64 -t16 -d800s  http://SERVER_MACHINE:SERVER_PORT/APP_CONTE
 mbw-text-plain|wrk -c64 -t16 -d800s -s text-put.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.text.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-text-put.properties
 mbw-text-plain|wrk -c64 -t16 -d800s -s text-post.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.text.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-text-post.properties
 
-mbw-json-moxy|wrk -c64 -t16 -d800s  http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-moxy-get.properties
-mbw-json-moxy|wrk -c64 -t16 -d800s -s json-put.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-moxy-put.properties
-mbw-json-moxy|wrk -c64 -t16 -d800s -s json-post.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-moxy-post.properties
+mbw-json-moxy|wrk -c64 -t16 -d800s  http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JakartaRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-moxy-get.properties
+mbw-json-moxy|wrk -c64 -t16 -d800s -s json-put.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JakartaRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-moxy-put.properties
+mbw-json-moxy|wrk -c64 -t16 -d800s -s json-post.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JakartaRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-moxy-post.properties
 
-mbw-json-jackson|wrk -c64 -t16 -d800s  http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-jackson-get.properties
-mbw-json-jackson|wrk -c64 -t16 -d800s -s json-put.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-jackson-put.properties
-mbw-json-jackson|wrk -c64 -t16 -d800s -s json-post.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-jackson-post.properties
+mbw-json-jackson|wrk -c64 -t16 -d800s  http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JakartaRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-jackson-get.properties
+mbw-json-jackson|wrk -c64 -t16 -d800s -s json-put.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JakartaRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-jackson-put.properties
+mbw-json-jackson|wrk -c64 -t16 -d800s -s json-post.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.json.JakartaRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-json-jackson-post.properties
 
 mbw-kryo|wrk -c64 -t16 -d800s  http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.kryo.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-kryo-get.properties
 mbw-kryo|wrk -c64 -t16 -d800s -s kryo-put.lua http://SERVER_MACHINE:SERVER_PORT/APP_CONTEXT/|org.glassfish.jersey.tests.performance.mbw.kryo.JaxRsApplication||metrics:name=org.glassfish.jersey.server.ApplicationHandler.handle|mbw-kryo-put.properties

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,17 @@
 
 package org.glassfish.jersey.servlet.async;
 
-import java.io.IOException;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncEvent;
 import jakarta.servlet.AsyncListener;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.glassfish.jersey.servlet.internal.l10n.LocalizationMessages;
 import org.glassfish.jersey.servlet.spi.AsyncContextDelegate;
@@ -74,31 +75,7 @@ public class AsyncContextDelegateProviderImpl implements AsyncContextDelegatePro
             // Suspend only if not completed and not suspended before.
             if (!completed.get() && asyncContextRef.get() == null) {
                 final AsyncContext asyncContext = getAsyncContext();
-                asyncContext.addListener(new CompletedAsyncContextListener());
                 asyncContextRef.set(asyncContext);
-            }
-        }
-
-        private class CompletedAsyncContextListener implements AsyncListener {
-
-            @Override
-            public void onComplete(AsyncEvent event) throws IOException {
-                complete();
-            }
-
-            @Override
-            public void onTimeout(AsyncEvent event) throws IOException {
-
-            }
-
-            @Override
-            public void onError(AsyncEvent event) throws IOException {
-                complete();
-            }
-
-            @Override
-            public void onStartAsync(AsyncEvent event) throws IOException {
-
             }
         }
 
@@ -123,6 +100,12 @@ public class AsyncContextDelegateProviderImpl implements AsyncContextDelegatePro
 
         @Override
         public void complete() {
+            if (isCompleted()) {
+                LOGGER.log(Level.WARNING, "The processing was already completed!",
+                    new RuntimeException("Stacktrace to see the redundant call of the complete() method."));
+                return;
+            }
+            LOGGER.log(Level.FINE, "complete()");
             completed.set(true);
 
             final AsyncContext asyncContext = asyncContextRef.getAndSet(null);
