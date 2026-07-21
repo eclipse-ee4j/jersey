@@ -24,8 +24,8 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.9</version>
-        <relativePath/>
+        <version>2.0.5</version>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
@@ -459,6 +459,14 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>oss-release</id>
+            <properties>
+                <release.projectName>Eclipse Jersey BOM</release.projectName>
+                <release.autoPublish>false</release.autoPublish>
+                <release.waitUntil>published</release.waitUntil>
+            </properties>
+        </profile>
         <profile>
             <id>project-info</id>
             <activation>
