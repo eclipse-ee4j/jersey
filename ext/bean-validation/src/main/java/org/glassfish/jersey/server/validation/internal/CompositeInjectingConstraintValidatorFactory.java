@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Payara Foundation  and/or its affiliates. All rights reserved.
  *
@@ -25,14 +26,19 @@ import jakarta.validation.ConstraintValidatorFactory;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- * {@link ConstraintValidatorFactory} implementation that uses {@link InjectingConstraintValidatorFactory}
- * by default and fallbacks to {@link HibernateInjectingConstraintValidatorFactory} when the resource
- * cannot be found in resource context of Jersey.
+ * {@link ConstraintValidatorFactory} implementation that uses {@link InjectingConstraintValidatorFactory} by default
+ * and fallbacks to {@link HibernateInjectingConstraintValidatorFactory} when the resource cannot be found in resource
+ * context of Jersey.
  *
  * @author Mert Caliskan
  */
 public class CompositeInjectingConstraintValidatorFactory implements ConstraintValidatorFactory {
+
+    private static final Logger LOGGER = Logger.getLogger(CompositeInjectingConstraintValidatorFactory.class.getName());
 
     @Context
     private ResourceContext resourceContext;
@@ -48,10 +54,17 @@ public class CompositeInjectingConstraintValidatorFactory implements ConstraintV
 
     @Override
     public <T extends ConstraintValidator<?, ?>> T getInstance(final Class<T> key) {
-        T jerseyInstance = jerseyVF.getInstance(key);
+        T jerseyInstance = null;
+        try {
+            jerseyInstance = jerseyVF.getInstance(key);
+        } catch (Exception e) {
+            LOGGER.log(Level.FINE, () -> "Failed to obtain " + key + " from ResourceContext");
+        }
+
         if (jerseyInstance == null) {
             return hibernateVF.getInstance(key);
         }
+
         return jerseyInstance;
     }
 

@@ -31,7 +31,7 @@ The project maintains the following source code repositories:
 
 ## Third-party Content
 
-Hibernate Validator CDI, 8.0.2.Final
+Hibernate Validator CDI, 9.1.0.Final-ee12patch1
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/
 * Repackaged in org.glassfish.jersey.server.validation.internal.hibernate

@@ -56,8 +56,12 @@
                     <artifactId>jakarta.annotation-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>jakarta.enterprise</groupId>
-                    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                    <groupId>jakarta.cdi</groupId>
+                    <artifactId>jakarta.cdi-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.cdi</groupId>
+                    <artifactId>jakarta.cdi-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>jakarta.el</groupId>
@@ -89,11 +93,10 @@
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>jakarta.interceptor</groupId>

@@ -16,6 +16,11 @@
 
 package org.glassfish.jersey.jetty.connector;
 
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Configuration;
+import jakarta.ws.rs.core.MultivaluedMap;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -39,27 +44,31 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.core.Configuration;
-import jakarta.ws.rs.core.MultivaluedMap;
-
 import javax.net.ssl.SSLContext;
 
 import org.eclipse.jetty.client.AuthenticationStore;
 import org.eclipse.jetty.client.BasicAuthentication;
 import org.eclipse.jetty.client.ByteBufferRequestContent;
+import org.eclipse.jetty.client.CompletableResponseListener;
 import org.eclipse.jetty.client.ContentResponse;
-import org.eclipse.jetty.client.FutureResponseListener;
+import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpClientTransport;
+import org.eclipse.jetty.client.HttpProxy;
 import org.eclipse.jetty.client.OutputStreamRequestContent;
+import org.eclipse.jetty.client.ProxyConfiguration;
 import org.eclipse.jetty.client.Request;
 import org.eclipse.jetty.client.Response;
 import org.eclipse.jetty.client.Result;
 import org.eclipse.jetty.client.transport.HttpClientTransportOverHTTP;
 import org.eclipse.jetty.client.transport.HttpRequest;
 import org.eclipse.jetty.http.HttpCookieStore;
+import org.eclipse.jetty.http.HttpField;
+import org.eclipse.jetty.http.HttpFields;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.io.ClientConnector;
+import org.eclipse.jetty.util.Jetty;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.ClientResponse;
@@ -71,16 +80,6 @@ import org.glassfish.jersey.internal.util.collection.NonBlockingInputStream;
 import org.glassfish.jersey.message.internal.HeaderUtils;
 import org.glassfish.jersey.message.internal.OutboundMessageContext;
 import org.glassfish.jersey.message.internal.Statuses;
-
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.HttpProxy;
-import org.eclipse.jetty.client.ProxyConfiguration;
-import org.eclipse.jetty.http.HttpField;
-import org.eclipse.jetty.http.HttpFields;
-import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.util.Jetty;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 /**
  * A {@link Connector} that utilizes the Jetty HTTP Client to send and receive
@@ -294,10 +293,11 @@ public class JettyConnector implements Connector {
                 jettyResponse = jettyRequest.send();
             }
             else {
-                final FutureResponseListener listener
-                        = new FutureResponseListener(jettyRequest, syncListenerResponseMaxSize.get());
-                jettyRequest.send(listener);
-                jettyResponse = listener.get();
+                jettyResponse = new CompletableResponseListener(
+                        jettyRequest,
+                        syncListenerResponseMaxSize.get())
+                        .send()
+                        .get();
             }
             HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, jerseyRequest.getHeaders(),
                     JettyConnector.this.getClass().getName(), jerseyRequest.getConfiguration());

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2024 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -450,6 +450,12 @@ public class RequestResponseWrapperProvider extends NoOpServletContainerProvider
                 @Override
                 public Locale getLocale() {
                     return getHttpServletResponse().getLocale();
+                }
+
+                @Override
+                public void sendEarlyHints() {
+                    getHttpServletResponse().sendEarlyHints();
+
                 }
             }
             ) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +39,7 @@ import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import static org.junit.Assert.assertEquals;
+import static org.ops4j.pax.exam.CoreOptions.frameworkProperty;
 
 /**
  * @author Jakub Podlesak
@@ -56,6 +58,7 @@ public class BasicOsgiIntegrationTest {
     @Configuration
     public static Option[] configuration() {
         List<Option> options = Helper.getCommonOsgiOptions();
+        options.add(frameworkProperty("felix.log.level").value("4"));
         return Helper.asArray(options);
     }
 

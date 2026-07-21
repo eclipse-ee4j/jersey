@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,7 @@
 
 package org.glassfish.jersey.tests.integration.jersey2689;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public class SampleBean {
 

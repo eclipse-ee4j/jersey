@@ -42,7 +42,7 @@ jobs:
         secLoc=`find $JAVA_HOME -name java.security`
         sed -i 's/jdk.tls.disabledAlgorithms/# jdk.tls.disabledAlgorithms/g' -i $secLoc
     - name: Build
-      run: mvn -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout -pl '!:version-agnostic'
+      run: mvn -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout -pl '!:version-agnostic' -Pstaged,snapshots
     - name: Upload license-check info
       uses: actions/upload-artifact@v4
       with:

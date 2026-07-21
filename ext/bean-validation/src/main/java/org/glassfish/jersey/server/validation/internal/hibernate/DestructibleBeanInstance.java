@@ -1,18 +1,13 @@
 /*
- * Hibernate Validator, declare and validate application constraints
- *
- * License: Apache License, Version 2.0
- * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright Red Hat Inc. and Hibernate Authors
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-
 package org.glassfish.jersey.server.validation.internal.hibernate;
 
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
-import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 
 /**
  * @author Hardy Ferentschik
@@ -44,9 +39,7 @@ public class DestructibleBeanInstance<T> {
 
     private InjectionTarget<T> createInjectionTarget(BeanManager beanManager, Class<T> type) {
         AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(type);
-        InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
-
-        return injectionTargetFactory.createInjectionTarget(null);
+        return beanManager.getInjectionTargetFactory(annotatedType).createInjectionTarget(null);
     }
 
     private static <T> T createAndInjectBeans(BeanManager beanManager, InjectionTarget<T> injectionTarget) {
@@ -59,7 +52,8 @@ public class DestructibleBeanInstance<T> {
     }
 
     private static <T> void injectBeans(BeanManager beanManager, CreationalContext<T> creationalContext,
-                                        InjectionTarget<T> injectionTarget, T instance) {
+            InjectionTarget<T> injectionTarget,
+            T instance) {
         injectionTarget.inject(instance, creationalContext);
         injectionTarget.postConstruct(instance);
     }

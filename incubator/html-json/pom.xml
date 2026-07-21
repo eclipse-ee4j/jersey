@@ -39,7 +39,7 @@
     </description>
 
     <properties>
-        <net.java.html.version>1.8.1</net.java.html.version>
+        <net.java.html.version>1.8.2</net.java.html.version>
         <enforcer.skip>true</enforcer.skip>
         <surefire.coverage.argline>
             --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED

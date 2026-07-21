@@ -19,7 +19,6 @@ env:
   matrix:
     - TEST_SET="-Ptravis_e2e_skip"
     - TEST_SET="-Ptravis_e2e"
-    - TEST_SET="glassfish-copyright:check"
 
 install: true
 

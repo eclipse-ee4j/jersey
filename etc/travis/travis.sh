@@ -27,11 +27,8 @@ PING_LOOP_PID=$!
 
 mvn -version
 
-if [ "$1" = "glassfish-copyright:check" ]; then
-    mvn -e $1 -Dcopyright.quiet=false
-else
-    mvn -e -U -B -V -Peclipse_repo,staging clean install $1 >> $BUILD_OUTPUT 2>&1
-fi
+
+mvn -e -U -B -V -Peclipse_repo,staging clean install $1 >> $BUILD_OUTPUT 2>&1
 
 # The build finished without returning an error so dump a tail of the output
 dump_output

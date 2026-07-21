@@ -35,10 +35,10 @@
     <description>Jersey post-release validation tests</description>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <hk2.version>3.0.3</hk2.version>
-        <jersey.version>4.0.0-M1</jersey.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <hk2.version>4.0.0-M3</hk2.version>
+        <jersey.version>5.0.99-SNAPSHOT</jersey.version>
     </properties>
 
     <build>
@@ -46,33 +46,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.5.5</version>
                 <configuration>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.glassfish.copyright</groupId>
-                <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <excludeFile>etc/config/copyright-exclude</excludeFile>
-                    <!--svn|mercurial|git - defaults to svn-->
-                    <scm>git</scm>
-                    <!-- turn on/off debugging -->
-                    <debug>false</debug>
-                    <!-- skip files not under SCM-->
-                    <scmOnly>true</scmOnly>
-                    <!-- turn off warnings -->
-                    <warn>false</warn>
-                    <!-- for use with repair -->
-                    <update>false</update>
-                    <!-- check that year is correct -->
-                    <ignoreYear>false</ignoreYear>
-                    <templateFile>etc/config/copyright.txt</templateFile>
-                    <bsdTemplateFile>etc/config/edl-copyright.txt</bsdTemplateFile>
                 </configuration>
             </plugin>
             <plugin>
@@ -133,7 +111,6 @@
                 <dependency>
                     <groupId>org.glassfish.jersey.inject</groupId>
                     <artifactId>jersey-hk2</artifactId>
-                    <version>${jersey.version}</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>

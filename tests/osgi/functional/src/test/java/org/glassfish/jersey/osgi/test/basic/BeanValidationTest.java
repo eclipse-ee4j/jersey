@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +43,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import static org.junit.Assert.assertEquals;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
  * Basic test of Bean Validation.
@@ -65,11 +67,12 @@ public class BeanValidationTest {
         options.addAll(Helper.expandedList(
                 // for debug purposes
                 // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"),
+                systemProperty("org.ops4j.pax.logging.jbosslogging.disabled").value("true"),
 
                 // validation
                 mavenBundle().groupId("org.glassfish.jersey.ext").artifactId("jersey-bean-validation").versionAsInProject(),
                 mavenBundle().groupId("org.hibernate.validator").artifactId("hibernate-validator").versionAsInProject(),
-                mavenBundle().groupId("org.jboss.logging").artifactId("jboss-logging").versionAsInProject(),
+                mavenBundle().groupId("org.jboss.logging").artifactId("jboss-logging").version("3.6.1.Final"),
                 mavenBundle().groupId("com.fasterxml").artifactId("classmate").versionAsInProject(),
                 mavenBundle().groupId("jakarta.el").artifactId("jakarta.el-api").versionAsInProject(),
                 mavenBundle().groupId("org.glassfish.expressly").artifactId("expressly").versionAsInProject()
@@ -113,6 +116,30 @@ public class BeanValidationTest {
 
             resourceConfig.register(org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainerProvider.class);
         }
+
+        System.out.println("Logger class = " + org.jboss.logging.Logger.class);
+        System.out.println("Logger resource = " + org.jboss.logging.Logger.class.getResource("Logger.class"));
+
+        try {
+            System.out.println("Expected method = " + org.jboss.logging.Logger.class.getMethod(
+                "getMessageLogger",
+                java.lang.invoke.MethodHandles.Lookup.class,
+                Class.class,
+                String.class
+            ));
+        } catch (NoSuchMethodException e) {
+            System.out.println("MISSING getMessageLogger(Lookup, Class, String)");
+        }
+
+        org.osgi.framework.Bundle lb = org.osgi.framework.FrameworkUtil.getBundle(org.jboss.logging.Logger.class);
+        System.out.println("Logger bundle = " + lb);
+        System.out.println("Logger bundle version = " + (lb != null ? lb.getVersion() : "null"));
+
+        org.osgi.framework.Bundle hvb = org.osgi.framework.FrameworkUtil.getBundle(
+                org.hibernate.validator.HibernateValidator.class);
+        System.out.println("HV bundle = " + hvb);
+        System.out.println("HV bundle version = " + (hvb != null ? hvb.getVersion() : "null"));
+
 
         final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 

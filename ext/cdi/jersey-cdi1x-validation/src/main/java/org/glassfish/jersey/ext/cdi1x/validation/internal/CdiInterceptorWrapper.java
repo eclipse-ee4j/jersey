@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,8 +28,7 @@ import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 
-import org.hibernate.validator.cdi.internal.interceptor.MethodValidated;
-import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
+import org.hibernate.validator.cdi.interceptor.spi.ValidationInterceptor;
 
 /**
  * JAX-RS wrapper for Hibernate CDI bean validation interceptor.
@@ -38,7 +38,6 @@ import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
  *
  * @author Jakub Podlesak
  */
-@MethodValidated
 @Interceptor
 @Priority(Interceptor.Priority.PLATFORM_AFTER + 800)
 public class CdiInterceptorWrapper {

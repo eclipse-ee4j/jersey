@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,29 +17,31 @@
 
 package org.glassfish.jersey.server.validation.internal;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorFactory;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.core.Context;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorFactory;
+import org.hibernate.validator.constraintvalidation.spi.DefaultConstraintValidatorFactory;
+
+import static org.glassfish.jersey.server.validation.internal.hibernate.HibernateInjectingConstraintValidatorFactory.isBuiltInConstraintValidator;
 
 /**
  * {@link ConstraintValidatorFactory} with support of injecting Jersey providers/resources.
  *
  * @author Michal Gajdos
  */
-public class InjectingConstraintValidatorFactory implements ConstraintValidatorFactory {
+public class InjectingConstraintValidatorFactory extends DefaultConstraintValidatorFactory {
 
     @Context
     private ResourceContext resourceContext;
 
     @Override
     public <T extends ConstraintValidator<?, ?>> T getInstance(final Class<T> key) {
-        return resourceContext.getResource(key);
-    }
+        if (isBuiltInConstraintValidator(key)) {
+            return super.getInstance(key);
+        }
 
-    @Override
-    public void releaseInstance(final ConstraintValidator<?, ?> instance) {
-        // NOOP
+        return resourceContext.getResource(key);
     }
 }

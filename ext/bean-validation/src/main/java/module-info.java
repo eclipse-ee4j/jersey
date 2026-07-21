@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +30,7 @@ module org.glassfish.jersey.ext.bean.validation {
 
     requires static org.glassfish.jersey.ext.cdi1x;
     requires static jakarta.cdi;
+    requires org.hibernate.validator;
 
     exports org.glassfish.jersey.server.validation;
     exports org.glassfish.jersey.server.validation.internal to
