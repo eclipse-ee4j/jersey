@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -99,17 +100,17 @@ public class ApplicationInfoTest {
 
     public static List<TestData> testData() {
         return Arrays.asList(new TestData[] {
-                //force, 3x AutoDiscoverable, 3x ResourceConfig,   response
-                // no property set => 500
-                new TestData(false, false, false, false, null, null, null, 500),
+                //force, 3x AutoDiscoverable, 3x ResourceConfig, response
+                // no property set => 204
+                new TestData(false, false, false, false, null, null, null, 204),
                 // property set by ForcedAutoDiscoverable => 200
                 new TestData(false, true, false, false, null, null, null, 200),
                 new TestData(false, false, true, false, null, null, null, 200),
                 new TestData(false, false, false, true, null, null, null, 200),
-                // property disable by ResourceConfig => 500
-                new TestData(false, true, false, false, false, false, false, 500),
-                new TestData(false, false, true, false, false, false, false, 500),
-                new TestData(false, false, false, true, false, false, false, 500),
+                // property disable by ResourceConfig => 204 (No Content)
+                new TestData(false, true, false, false, false, false, false, 204),
+                new TestData(false, false, true, false, false, false, false, 204),
+                new TestData(false, false, false, true, false, false, false, 204),
                 // property disable by ResourceConfig but forced by ForcedAutoDiscoverable => 200
                 new TestData(true, true, false, false, false, false, false, 200),
                 new TestData(true, false, true, false, false, false, false, 200),
@@ -185,7 +186,7 @@ public class ApplicationInfoTest {
         @GET
         public String getAppName() {
             final ApplicationInfo applicationInfo = applicationInfoProvider.get();
-            return applicationInfo.getResourceConfig().getApplicationName();
+            return applicationInfo == null ? null : applicationInfo.getResourceConfig().getApplicationName();
         }
     }
 
