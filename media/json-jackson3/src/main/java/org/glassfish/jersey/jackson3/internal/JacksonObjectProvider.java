@@ -1,0 +1,238 @@
+/*
+ * Copyright (c) 2015, 2024, 2026 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package org.glassfish.jersey.jackson3.internal;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
+import org.glassfish.jersey.message.filtering.spi.AbstractObjectProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityGraphProvider;
+import org.glassfish.jersey.message.filtering.spi.EntityInspector;
+import org.glassfish.jersey.message.filtering.spi.ObjectGraph;
+import org.glassfish.jersey.message.filtering.spi.ScopeProvider;
+
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+import tools.jackson.databind.ser.FilterProvider;
+import tools.jackson.databind.ser.PropertyFilter;
+import tools.jackson.databind.ser.PropertyWriter;
+import tools.jackson.databind.ser.std.SimpleBeanPropertyFilter;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
+
+/**
+ * @author Michal Gajdos
+ */
+final class JacksonObjectProvider extends AbstractObjectProvider<FilterProvider> {
+
+    @Inject
+    public JacksonObjectProvider(@Context ScopeProvider scopeProvider,
+                                 @Context EntityInspector entityInspector,
+                                 @Context EntityGraphProvider graphProvider) {
+        super(scopeProvider, entityInspector, graphProvider);
+    }
+
+    @Override
+    public FilterProvider transform(final ObjectGraph graph) {
+        // Root entity.
+        final FilteringPropertyFilter root = new FilteringPropertyFilter(graph.getEntityClass(),
+                graph.getFields(),
+                createSubfilters(graph.getEntityClass(), graph.getSubgraphs()));
+
+        return new FilteringFilterProvider(root);
+    }
+
+    private Map<String, FilteringPropertyFilter> createSubfilters(final Class<?> entityClass,
+                                                                  final Map<String, ObjectGraph> entitySubgraphs) {
+        final Map<String, FilteringPropertyFilter> subfilters = new HashMap<>();
+
+        for (final Map.Entry<String, ObjectGraph> entry : entitySubgraphs.entrySet()) {
+            final String fieldName = entry.getKey();
+            final ObjectGraph graph = entry.getValue();
+
+            // Subgraph Fields.
+            final Map<String, ObjectGraph> subgraphs = graph.getSubgraphs(fieldName);
+
+            Map<String, FilteringPropertyFilter> subSubfilters = new HashMap<>();
+            if (!subgraphs.isEmpty()) {
+                final Class<?> subEntityClass = graph.getEntityClass();
+                final Set<String> processed = Collections.singleton(subgraphIdentifier(entityClass, fieldName, subEntityClass));
+
+                subSubfilters = createSubfilters(fieldName, subEntityClass, subgraphs, processed);
+            }
+
+            final FilteringPropertyFilter filter = new FilteringPropertyFilter(graph.getEntityClass(),
+                    graph.getFields(fieldName), subSubfilters);
+
+            subfilters.put(fieldName, filter);
+        }
+
+        return subfilters;
+    }
+
+    private Map<String, FilteringPropertyFilter> createSubfilters(final String parent, final Class<?> entityClass,
+                                                                  final Map<String, ObjectGraph> entitySubgraphs,
+                                                                  final Set<String> processed) {
+        final Map<String, FilteringPropertyFilter> subfilters = new HashMap<>();
+
+        for (final Map.Entry<String, ObjectGraph> entry : entitySubgraphs.entrySet()) {
+            final String fieldName = entry.getKey();
+            final ObjectGraph graph = entry.getValue();
+
+            final String path = parent + "." + fieldName;
+
+            // Subgraph Fields.
+            final Map<String, ObjectGraph> subgraphs = graph.getSubgraphs(path);
+
+            final Class<?> subEntityClass = graph.getEntityClass();
+            final String processedSubgraph = subgraphIdentifier(entityClass, fieldName, subEntityClass);
+
+            Map<String, FilteringPropertyFilter> subSubfilters = new HashMap<>();
+            if (!subgraphs.isEmpty() && !processed.contains(processedSubgraph)) {
+                // duplicate processed set so that elements in different subtrees aren't skipped (JERSEY-2892)
+                final Set<String> subProcessed = immutableSetOf(processed, processedSubgraph);
+
+                subSubfilters = createSubfilters(path, subEntityClass, subgraphs, subProcessed);
+            }
+
+            subfilters.put(fieldName, new FilteringPropertyFilter(graph.getEntityClass(), graph.getFields(path), subSubfilters));
+        }
+
+        return subfilters;
+    }
+
+    private static class FilteringFilterProvider extends FilterProvider {
+
+        private final FilteringPropertyFilter root;
+        private final Stack<FilteringPropertyFilter> stack = new Stack<>();
+
+        public FilteringFilterProvider(final FilteringPropertyFilter root) {
+            this.root = root;
+        }
+
+        public FilteringFilterProvider(final FilteringFilterProvider src) {
+            this.root = src.root;
+            this.stack.addAll(src.stack);
+        }
+
+        @Override
+        public FilteringFilterProvider snapshot() {
+            return new FilteringFilterProvider(this);
+        }
+
+        @Override
+        public PropertyFilter findPropertyFilter(SerializationContext ctzt, final Object filterId, final Object valueToFilter) {
+            if (filterId instanceof String) {
+                final String id = (String) filterId;
+
+                // FilterId should represent a class only in case of root entity is marshalled.
+                if (id.equals(root.getEntityClass().getName())) {
+                    stack.clear();
+                    return stack.push(root);
+                }
+
+                while (!stack.isEmpty()) {
+                    final FilteringPropertyFilter peek = stack.peek();
+                    final FilteringPropertyFilter subfilter = peek.findSubfilter(id);
+
+                    if (subfilter != null) {
+                        stack.push(subfilter);
+
+                        // Need special handling for maps here - map keys can be filtered as well so we just say that every key is
+                        // allowed.
+                        if (valueToFilter instanceof Map) {
+                            final Map<String, ?> map = (Map<String, ?>) valueToFilter;
+                            return new FilteringPropertyFilter(Map.class, map.keySet(),
+                                    Collections.<String, FilteringPropertyFilter>emptyMap());
+                        }
+                        return subfilter;
+                    } else {
+                        stack.pop();
+                    }
+                }
+            }
+            return SimpleBeanPropertyFilter.filterOutAllExcept();
+        }
+    }
+
+    private static final class FilteringPropertyFilter implements PropertyFilter {
+
+        private final Class<?> entityClass;
+
+        private final Set<String> fields;
+        private final Map<String, FilteringPropertyFilter> subfilters;
+
+        private FilteringPropertyFilter(final Class<?> entityClass,
+                                        final Set<String> fields, final Map<String, FilteringPropertyFilter> subfilters) {
+            this.entityClass = entityClass;
+
+            this.fields = fields;
+            this.subfilters = subfilters;
+        }
+
+        private boolean include(final String fieldName) {
+            return fields.contains(fieldName) || subfilters.containsKey(fieldName);
+        }
+
+        @Override
+        public FilteringPropertyFilter snapshot() {
+            return this;
+        }
+
+        @Override
+        public void serializeAsProperty(final Object pojo,
+                                        final JsonGenerator jgen,
+                                        final SerializationContext ctxt,
+                                        final PropertyWriter writer) throws Exception {
+            if (include(writer.getName())) {
+                writer.serializeAsProperty(pojo, jgen, ctxt);
+            }
+        }
+
+        @Override
+        public void serializeAsElement(final Object elementValue,
+                                       final JsonGenerator jgen,
+                                       final SerializationContext ctxt,
+                                       final PropertyWriter writer) throws Exception {
+            if (include(writer.getName())) {
+                writer.serializeAsElement(elementValue, jgen, ctxt);
+            }
+        }
+
+        @Override
+        public void depositSchemaProperty(final PropertyWriter writer,
+                                          final JsonObjectFormatVisitor objectVisitor,
+                                          final SerializationContext ctxt) {
+            if (include(writer.getName())) {
+                writer.depositSchemaProperty(objectVisitor, ctxt);
+            }
+        }
+
+        public FilteringPropertyFilter findSubfilter(final String fieldName) {
+            return subfilters.get(fieldName);
+        }
+
+        public Class<?> getEntityClass() {
+            return entityClass;
+        }
+    }
+}

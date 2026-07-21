@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright (c) 2026 Contributors to the Eclipse Foundation.
-    Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2026 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -68,8 +68,9 @@
             <distribution>repo</distribution>
             <comments>Google Guava @ org.glassfish.jersey.internal.guava,
                 Dropwizard Monitoring inspired classes @ org.glassfish.jersey.server.internal.monitoring.core,
-                Hibernate Validation classes @ org.glassfish.jersey.server.validation.internal.hibernate, and
-                Jackson JAX-RS Providers @ org.glassfish.jersey.jackson.internal.jackson.jaxrs</comments>
+                Hibernate Validation classes @ org.glassfish.jersey.server.validation.internal.hibernate,
+                Jackson JAX-RS Providers @ org.glassfish.jersey.jackson.internal.jackson.jaxrs, and
+                Jackson Jakarta RS Providers @ org.glassfish.jersey.jackson3.internal.jackson.jakarta.rs</comments>
         </license>
         <license>
             <name>Public Domain</name>
