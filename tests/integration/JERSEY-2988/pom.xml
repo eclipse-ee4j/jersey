@@ -59,8 +59,8 @@
 
         <!-- Weld -->
         <dependency>
-            <groupId>jakarta.cdi</groupId>
-            <artifactId>jakarta.cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
 <!--            <version>2.0</version>-->
         </dependency>
         <dependency>

@@ -158,11 +158,6 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
             <scope>provided</scope>
@@ -276,7 +271,7 @@
                             jakarta.servlet.*;version="[6.0,7.0)",
                             ${jakarta.annotation.osgi.version},
                             jakarta.persistence.*;resolution:=optional,
-                            jakarta.validation.*;resolution:=optional;version="[3,5)",
+                            jakarta.validation.*;resolution:=optional;version="[3,4)",
                             sun.misc.*;resolution:=optional,
                             jakarta.activation.*;version="!";resolution:=optional,
                             javax.imageio;resolution:=optional,

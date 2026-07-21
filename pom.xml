@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>2.0.0</version>
+        <version>1.0.9</version>
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
@@ -296,9 +296,6 @@
                             </goals>
                             <configuration>
                                 <rules>
-                                    <requireMavenVersion>
-                                        <version>3.9.6</version>
-                                    </requireMavenVersion>
                                     <requireJavaVersion>
                                         <version>${java.version}</version>
                                     </requireJavaVersion>
@@ -716,6 +713,27 @@
                     <groupId>org.glassfish.embedded</groupId>
                     <artifactId>maven-embedded-glassfish-plugin</artifactId>
                     <version>${gfembedded.mvn.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.copyright</groupId>
+                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                    <configuration>
+                        <excludeFile>etc/config/copyright-exclude</excludeFile>
+                        <!--svn|mercurial|git - defaults to svn-->
+                        <scm>git</scm>
+                        <!-- turn on/off debugging -->
+                        <debug>false</debug>
+                        <!-- skip files not under SCM-->
+                        <scmOnly>true</scmOnly>
+                        <!-- turn off warnings -->
+                        <warn>false</warn>
+                        <!-- for use with repair -->
+                        <update>false</update>
+                        <!-- check that year is correct -->
+                        <ignoreYear>false</ignoreYear>
+                        <templateFile>etc/config/copyright.txt</templateFile>
+                        <bsdTemplateFile>etc/config/edl-copyright.txt</bsdTemplateFile>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -1576,8 +1594,6 @@
     </reporting>
 
     <modules>
-        <module>hibernate-validator-patched</module>
-        <module>hibernate-validator-cdi-patched</module>
         <module>archetypes</module>
         <module>bom</module>
         <module>connectors</module>
@@ -1608,8 +1624,8 @@
             </dependency>
 
             <dependency>
-                <groupId>jakarta.cdi</groupId>
-                <artifactId>jakarta.cdi-api</artifactId>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
                 <version>${cdi.api.version}</version>
             </dependency>
             <dependency>
@@ -2216,7 +2232,7 @@
     </dependencyManagement>
 
     <properties>
-        <revision>5.0.99-SNAPSHOT</revision>
+        <revision>4.0.99-SNAPSHOT</revision>
         <archetype.mvn.plugin.version>3.4.0</archetype.mvn.plugin.version>
 
         <findbugs.skip>false</findbugs.skip>
@@ -2228,8 +2244,12 @@
             jakarta.enterprise
         </findbugs.glassfish.logging.validLoggerPrefixes>
         <java.version>17</java.version>
+<!--        <jersey.repackaged.prefix>jersey.repackaged</jersey.repackaged.prefix>-->
+<!--        <netbeans.hint.license>gf-cddl-gpl</netbeans.hint.license>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!--        <release.tests.args>-Dmaven.test.skip=false</release.tests.args>-->
+        <!--        <release.preparationGoals>clean install</release.preparationGoals>-->
         <skip.tests>false</skip.tests>
         <xdk.absolute.path />
         <surefire.security.argline />
@@ -2243,8 +2263,8 @@
         <mvn.ant.version>1.10.15</mvn.ant.version>
         <assembly.mvn.plugin.version>3.7.1</assembly.mvn.plugin.version>
         <clean.mvn.plugin.version>3.5.0</clean.mvn.plugin.version>
-        <enforcer.mvn.plugin.version>3.6.2</enforcer.mvn.plugin.version>
-        <exec.mvn.plugin.version>3.6.3</exec.mvn.plugin.version>
+        <enforcer.mvn.plugin.version>3.6.1</enforcer.mvn.plugin.version>
+        <exec.mvn.plugin.version>3.5.1</exec.mvn.plugin.version>
         <buildhelper.mvn.plugin.version>3.6.1</buildhelper.mvn.plugin.version>
         <buildnumber.mvn.plugin.version>3.2.1</buildnumber.mvn.plugin.version>
         <checkstyle.mvn.plugin.version>3.6.0</checkstyle.mvn.plugin.version>
@@ -2254,7 +2274,7 @@
         <dependency.mvn.plugin.version>3.8.1</dependency.mvn.plugin.version>
         <deploy.mvn.plugin.version>3.1.4</deploy.mvn.plugin.version>
         <ear.mvn.plugin.version>3.4.0</ear.mvn.plugin.version>
-        <failsafe.mvn.plugin.version>3.5.5</failsafe.mvn.plugin.version>
+        <failsafe.mvn.plugin.version>3.5.3</failsafe.mvn.plugin.version>
         <felix.mvn.plugin.version>5.1.9</felix.mvn.plugin.version> <!-- newer versions are not supported by JDK 11- -->
         <findbugs.mvn.plugin.version>3.0.5</findbugs.mvn.plugin.version>
         <gfembedded.mvn.plugin.version>5.1</gfembedded.mvn.plugin.version>
@@ -2268,7 +2288,7 @@
         <resources.mvn.plugin.version>3.3.1</resources.mvn.plugin.version>
         <shade.mvn.plugin.version>3.6.0</shade.mvn.plugin.version>
         <source.mvn.plugin.version>3.3.1</source.mvn.plugin.version>
-        <surefire.mvn.plugin.version>3.5.5</surefire.mvn.plugin.version>
+        <surefire.mvn.plugin.version>3.5.3</surefire.mvn.plugin.version>
         <war.mvn.plugin.version>3.4.0</war.mvn.plugin.version>
         <wiremock.mvn.plugin.version>2.11.0</wiremock.mvn.plugin.version>
         <xml.mvn.plugin.version>1.1.0</xml.mvn.plugin.version>
@@ -2281,11 +2301,13 @@
         <arquillian.weld.version>4.0.0.Final</arquillian.weld.version> <!-- 3.0.2.Final fails microprofile TCK tests -->
         <!-- asm is now source integrated - keeping this property to see the version -->
         <!-- see core-server/src/main/java/jersey/repackaged/asm/.. -->
-        <asm.version>9.9.1</asm.version>
+        <asm.version>9.9</asm.version>
         <!--required for spring (ext) modules integration -->
         <aspectj.weaver.version>1.9.24</aspectj.weaver.version>
+        <!--        <bnd.plugin.version>2.3.6</bnd.plugin.version>-->
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons.codec.version>1.18.0</commons.codec.version>
+<!--        <commons-lang3.version>3.3.2</commons-lang3.version>-->
         <commons.logging.version>1.3.5</commons.logging.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
@@ -2353,62 +2375,64 @@
         <rxjava2.version>2.2.21</rxjava2.version>
 
         <servlet4.version>4.0.4</servlet4.version>
-        <servlet6.version>6.2.0-M2</servlet6.version>
+        <servlet6.version>6.1.0</servlet6.version>
 
         <slf4j.version>2.0.17</slf4j.version>
         <spring6.version>6.2.11</spring6.version>
         <testng.version>7.11.0</testng.version>
         <testng6.version>6.14.3</testng6.version>
         <thymeleaf.version>3.1.3.RELEASE</thymeleaf.version>
-        <weld.api.version>7.0.Alpha4</weld.api.version>
-        <weld.version>7.0.0.Alpha1</weld.version>
-        <validation.impl.version>9.1.0.Final-ee12patch1</validation.impl.version>
+        <!-- Jakartified, eligible for CQ -->
+        <weld.api.version>6.0.Final</weld.api.version>
+        <weld.version>6.0.3.Final</weld.version>
+        <validation.impl.version>8.0.2.Final</validation.impl.version>
+        <!-- END of Jakartified, eligible for CQ -->
         <wiremock.jetty9.version>2.27.2</wiremock.jetty9.version>
-        <wiremock.jetty11.version>3.10.0</wiremock.jetty11.version> <!-- Do not update, newer versions fail jersey-rest-client-tck -->
+        <wiremock.jetty11.version>3.10.0</wiremock.jetty11.version> <!-- Do not update,
+        newer versions fail jersey-rest-client-tck -->
         <xerces.version>2.12.2</xerces.version>
 
         <!-- Graal VM       -->
         <graalvm.version>20.3.17</graalvm.version>
 
-        <gf.impl.version>8.0.0</gf.impl.version>
-        <cdi.api.version>5.0.0.Alpha3</cdi.api.version>
-        <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,6)"</cdi.osgi.version>
+        <!-- do not need CQs (below this line till the end of version properties)-->
+        <gf.impl.version>8.0.0-JDK17-M6</gf.impl.version>
+        <!-- Jakartified -->
+        <cdi.api.version>4.1.0</cdi.api.version>
+        <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
-        <grizzly2.version>5.0.2</grizzly2.version>
+        <grizzly2.version>4.0.2</grizzly2.version>
         <grizzly.client.version>1.16</grizzly.client.version>
-        <grizzly.npn.version>2.0.1</grizzly.npn.version>
+        <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <hk2.version>4.0.1</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[4.0,5)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[4.0,5)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>7.0.4</hk2.config.version>
+        <hk2.config.version>8.0.0-JDK17-M6</hk2.config.version>
         <jsp.version>4.0.0-M2</jsp.version>
         <jstl.version>3.0.2</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.2.0</istack.commons.runtime.version>
-        <jakarta.activation-api.version>2.2.0-M1</jakarta.activation-api.version>
-        <jakarta.activation.version>2.1.0-M1</jakarta.activation.version>
-
+        <jakarta.activation-api.version>2.1.3</jakarta.activation-api.version>
+        <jakarta.activation.version>2.0.2</jakarta.activation.version>
         <!-- org.hibernate.validator has lookup limitation up to the 6 version of EL API-->
-        <jakarta.el.version>6.1.0-M2</jakarta.el.version> <!-- el6 does not work with OSGi with expressly 5 -->
-
+        <jakarta.el.version>5.0.1</jakarta.el.version> <!-- el6 does not work with OSGi with expressly 5 -->
         <!-- org.hibernate.validator has lookup limitation up to the 6 version of EL IMPL -->
-        <jakarta.el.impl.version>6.0.0</jakarta.el.impl.version> <!-- EE11 expressly 6 does not work with EE10 BV 8.0.1 (OSGi) -->
-
+        <jakarta.el.impl.version>5.0.0</jakarta.el.impl.version> <!-- EE11 expressly 6 does not work with EE10 BV 8.0.1 (OSGi) -->
         <jakarta.annotation.osgi.version>jakarta.annotation.*;version="[3.0,4)"</jakarta.annotation.osgi.version>
         <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
         <jakarta.decorator.osgi.version>jakarta.decorator.*;version="[4.0,5)"</jakarta.decorator.osgi.version> <!-- CDI -->
         <jakarta.inject.version>2.0.1</jakarta.inject.version>
         <jakarta.interceptor.version>2.2.0</jakarta.interceptor.version>
         <jakarta.jsonp.version>2.1.3</jakarta.jsonp.version>
-        <jakarta.persistence.version>4.0.0-M1</jakarta.persistence.version>
-        <jakarta.validation.api.version>4.0.0-M1</jakarta.validation.api.version>
-        <jakarta.jaxb.api.version>4.0.5</jakarta.jaxb.api.version>
-        <jaxb.ri.version>4.0.6</jaxb.ri.version>
+        <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
+        <jakarta.validation.api.version>3.1.0</jakarta.validation.api.version>
+        <jakarta.jaxb.api.version>4.0.2</jakarta.jaxb.api.version>
+        <jaxb.ri.version>4.0.5</jaxb.ri.version>
         <jaxrs.api.spec.version>4.0.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>4.0.0</jaxrs.api.impl.version>
         <jakarta.rest.osgi.version>jakarta.ws.rs;version="[3.1,5)",jakarta.ws.rs.client;version="[3.1,5)",jakarta.ws.rs.container;version="[3.1,5)",jakarta.ws.rs.core;version="[3.1,5)",jakarta.ws.rs.ext;version="[3.1,5)",jakarta.ws.rs.sse;version="[3.1,5)"</jakarta.rest.osgi.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>12.1.7</jetty.version>
+        <jetty.version>12.0.27</jetty.version>
         <jetty9.version>9.4.58.v20250814</jetty9.version>
         <jetty.servlet.api.version>5.0.2</jetty.servlet.api.version>
         <jetty11.version>11.0.26</jetty11.version>
@@ -2419,13 +2443,13 @@
         <moxy.version>5.0.0-B09</moxy.version>
         <moxy.asm.version>9.9.0</moxy.asm.version>
         <yasson.version>3.0.4</yasson.version>
+        <!-- END of Jakartified -->
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
         <mimepull.version>1.9.15</mimepull.version>
 
         <!-- Do not autopublish by default -->
         <release.autopublish>false</release.autopublish>
-
         <!-- By default block until everything is really published -->
         <release.waitUntil>published</release.waitUntil>
     </properties>

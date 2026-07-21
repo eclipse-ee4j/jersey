@@ -56,8 +56,8 @@
         </dependency>
         <!-- Overrides CDI from parent pom -->
         <dependency>
-            <groupId>jakarta.cdi</groupId>
-            <artifactId>jakarta.cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.ejb</groupId>
