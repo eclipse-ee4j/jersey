@@ -34,13 +34,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>jakarta.cdi</groupId>
-            <artifactId>jakarta.cdi-api</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
             <version>${project.version}</version>
@@ -50,6 +43,7 @@
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
             <version>${project.version}</version>
+<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -66,6 +60,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

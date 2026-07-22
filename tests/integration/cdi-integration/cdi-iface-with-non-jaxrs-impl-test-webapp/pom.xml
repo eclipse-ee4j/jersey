@@ -29,7 +29,7 @@
     <packaging>war</packaging>
     <name>jersey-tests-cdi-iface-with-non-jaxrs-impl-test-webapp</name>
 
-    <description>Jersey CDI using non Jakarta REST implementation for CDI injection</description>
+    <description>Jersey CDI using non JAX-RS implementation for CDI injection</description>
 
     <dependencies>
         <dependency>
@@ -38,8 +38,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.cdi</groupId>
-            <artifactId>jakarta.cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -30,21 +30,9 @@
     <packaging>jar</packaging>
     <name>jersey-ext-cdi1x-validation</name>
 
-    <description>Jersey CDI 1.x Jakarta Validation Support</description>
+    <description>Jersey CDI 1.x Bean Validation Support</description>
 
     <dependencies>
-        <dependency>
-            <groupId>jakarta.cdi</groupId>
-            <artifactId>jakarta.cdi-api</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
-                <exclusion>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>jakarta.el-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -71,6 +59,20 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <!-- Remove ancient jakarta.el that causes problems with Hibernate -->
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 
     <build>

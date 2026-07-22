@@ -15,7 +15,7 @@ name: "Validate"
 on: [pull_request, push]
 
 env:
-  JAVA_VERSION: '21'
+  JAVA_VERSION: '17'
   JAVA_DISTRO: 'temurin'
 
 concurrency:
@@ -54,7 +54,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: Build JDK21+ required modules
-        run: mvn -B -U -V clean install -DskipTests -pl :jersey-helidon-connector -am -Pstaged,snapshots
+        run: mvn -B -U -V clean install -DskipTests -pl :jersey-helidon-connector -am
       - name: Build ApiDocs
         run: etc/scripts/apidocs.sh
   archetypes:

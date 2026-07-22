@@ -34,7 +34,7 @@
     <packaging>pom</packaging>
     <name>jersey-bom</name>
     <properties>
-        <revision>5.0.99-SNAPSHOT</revision>
+        <revision>4.0.99-SNAPSHOT</revision>
     </properties>
 
     <description>Jersey Bill of Materials (BOM)</description>

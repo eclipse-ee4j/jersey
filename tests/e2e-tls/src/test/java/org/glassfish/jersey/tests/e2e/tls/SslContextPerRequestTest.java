@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,6 @@
 
 package org.glassfish.jersey.tests.e2e.tls;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
-import org.glassfish.jersey.client.RequestEntityProcessing;
-import org.glassfish.jersey.client.SslContextClientBuilder;
-import org.glassfish.jersey.client.spi.ConnectorProvider;
-import org.glassfish.jersey.netty.connector.NettyClientProperties;
-import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLParameters;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.ProcessingException;
@@ -44,14 +27,26 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.UriBuilder;
-import java.io.InputStream;
-import java.net.URI;
-import java.security.KeyStore;
+
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import javax.net.ssl.SSLContext;
+
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.glassfish.jersey.client.SslContextClientBuilder;
+import org.glassfish.jersey.client.spi.ConnectorProvider;
+import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class SslContextPerRequestTest extends SslParentTest {
 

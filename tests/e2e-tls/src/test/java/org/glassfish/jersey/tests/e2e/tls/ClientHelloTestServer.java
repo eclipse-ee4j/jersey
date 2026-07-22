@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,28 @@
 
 package org.glassfish.jersey.tests.e2e.tls;
 
-import org.glassfish.jersey.tests.e2e.tls.explorer.SSLCapabilities;
-import org.glassfish.jersey.tests.e2e.tls.explorer.SSLExplorer;
-
-import javax.net.ServerSocketFactory;
-import javax.net.ssl.SNIHostName;
-import javax.net.ssl.SNIMatcher;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
+
+import javax.net.ServerSocketFactory;
+
+import org.glassfish.jersey.tests.e2e.tls.explorer.SSLCapabilities;
+import org.glassfish.jersey.tests.e2e.tls.explorer.SSLExplorer;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyIterable;
 
 public class ClientHelloTestServer {
     private ServerSocket serverSocket;
     private Thread serverThread;
     private volatile State state = State.NONE;
+    private final List<Throwable> unexpected = new ArrayList<>();
 
     private enum State {
         NONE,
@@ -65,7 +62,7 @@ public class ClientHelloTestServer {
 
             state = State.INIT;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to create a server socket on port " + port, e);
         }
     }
 
@@ -78,14 +75,15 @@ public class ClientHelloTestServer {
                 Socket socket = null;
                 try {
                     socket = serverSocket.accept();
-
                     inspect(socket);
                 } catch (SocketException e) {
-                    if (!e.getMessage().equals("Interrupted function call: accept failed")) {
-                        e.printStackTrace();
+                    String message = e.getMessage();
+                    if (!message.equals("Interrupted function call: accept failed")
+                        && !message.equals("Socket closed")) {
+                        unexpected.add(e);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    unexpected.add(e);
                 }
             }
         });
@@ -96,11 +94,16 @@ public class ClientHelloTestServer {
     public void stop() {
         try {
             state = State.STOPPED;
-            serverSocket.close();
-            serverThread.join();
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
+            if (serverThread != null) {
+                serverThread.join();
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
+        assertThat("acceptor thread exceptions", unexpected, emptyIterable());
     }
 
     public void inspect(Socket socket) throws IOException {

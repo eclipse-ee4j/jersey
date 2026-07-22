@@ -103,7 +103,7 @@
                             javax.xml.transform;resolution:=optional,
                             javax.xml.transform.sax;resolution:=optional,
                             javax.xml.transform.stream;resolution:=optional,
-                            jakarta.validation.*;resolution:=optional;version="[3,5)",
+                            jakarta.validation.*;resolution:=optional;version="[3,4)",
                             ${jakarta.rest.osgi.version},
                             *
                         </Import-Package>

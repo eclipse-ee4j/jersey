@@ -36,8 +36,7 @@ pipeline {
                         sh '''
                                 bash ${WORKSPACE}/etc/jenkins/jenkins_build.sh
                                 export EXCLUDE_ARGS=' -pl !:configured-client '
-                                # Enable again when all dependencies updated.
-                                # bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
+                                bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
                             '''
                     }
                 }

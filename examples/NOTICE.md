@@ -37,13 +37,13 @@ aopalliance Version 1
 * Project: http://aopalliance.sourceforge.net
 * Copyright: Material in the public domain is not protected by copyright
 
-Bean Validation API 4.0.0-M1
+Bean Validation API 3.1.0
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/3.0/
 * Copyright: 2009, 2020 Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
-Hibernate Validator CDI, 9.1.0.Final-ee12patch1
+Hibernate Validator CDI, 8.0.2.Final
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/
 * Repackaged in org.glassfish.jersey.server.validation.internal.hibernate
@@ -101,7 +101,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.9.1
+org.objectweb.asm Version 9.9
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 
