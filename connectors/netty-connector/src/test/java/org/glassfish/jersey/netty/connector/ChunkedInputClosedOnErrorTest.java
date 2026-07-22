@@ -104,7 +104,14 @@ public class ChunkedInputClosedOnErrorTest extends JerseyTest {
         }
 
         boolean isEndOfInput() throws Exception {
-            return writer.get().getChunkedInput().isEndOfInput();
+            // getChunkedInput blocks and waits for the flush call, but that doesn't mean
+            // that the ChunkedInput is closed, so we give it a bit more time.
+            ChunkedInput<ByteBuf> chunkedInput = writer.get().getChunkedInput();
+            long timeout = System.currentTimeMillis() + 100;
+            while (!chunkedInput.isEndOfInput() && System.currentTimeMillis() < timeout) {
+                Thread.onSpinWait();
+            }
+            return chunkedInput.isEndOfInput();
         }
 
         @Override
