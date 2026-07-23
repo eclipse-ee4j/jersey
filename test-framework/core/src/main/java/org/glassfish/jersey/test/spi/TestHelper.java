@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicTest;
@@ -32,6 +35,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @author Michal Gajdos
  */
 public final class TestHelper {
+    private static final Logger LOG = Logger.getLogger(TestHelper.class.getName());
 
     /**
      * Create a human readable string from given URI. This method replaces {@code 0} port (start container at first available
@@ -65,6 +69,7 @@ public final class TestHelper {
         for (Method method : testMethods) {
             children.add(DynamicTest.dynamicTest(method.getName(), () -> {
                 try {
+                    LOG.log(Level.INFO, "Invoking test " + displayName + "." + method.getName());
                     for (Method beforeEachMethod : beforeEachMethods) {
                         beforeEachMethod.invoke(test);
                     }
