@@ -54,8 +54,8 @@
     <modules>
         <module>assemblies</module>
         <!--<module>bean-validation-webapp</module>-->
-        <module>bookmark</module>
-        <module>bookmark-em</module>
+        <!--<module>bookmark</module>-->
+        <!--<module>bookmark-em</module>-->
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
@@ -116,7 +116,7 @@
         <module>server-sent-events-jersey</module>
         <module>server-sent-events-jaxrs</module>
         <module>servlet3-webapp</module>
-        <module>simple-console</module>
+        <!--<module>simple-console</module>-->
         <!--<module>shortener-webapp</module>-->
         <!--<module>sparklines</module>-->
         <module>sse-item-store-jersey-webapp</module>
