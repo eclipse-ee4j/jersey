@@ -39,7 +39,7 @@
             <name>MIT license</name>
             <url>http://www.opensource.org/licenses/mit-license.php</url>
             <distribution>repo</distribution>
-            <comments>AngularJS, Bootstrap v3.3.7 (http://getbootstrap.com), 
+            <comments>AngularJS, Bootstrap v3.3.7 (http://getbootstrap.com),
                       jQuery Barcode plugin 0.3, KineticJS v4.7.1</comments>
         </license>
     </licenses>
@@ -53,9 +53,8 @@
 
     <modules>
         <module>assemblies</module>
-        <!--<module>bean-validation-webapp</module>-->
-        <!--<module>bookmark</module>-->
-        <!--<module>bookmark-em</module>-->
+        <module>bookmark</module>
+        <module>bookmark-em</module>
         <module>bookstore-webapp</module>
         <module>cdi-webapp</module>
         <module>clipboard</module>
@@ -68,9 +67,7 @@
         <module>extended-wadl-webapp</module>
         <module>exception-mapping</module>
         <module>expect-100-continue-netty-client</module>
-        <!--<module>feed-combiner-java8-webapp</module>-->
         <module>freemarker-webapp</module>
-        <!--<module>flight-mgmt-webapp</module>-->
         <module>helloworld</module>
         <module>helloworld-benchmark</module>
         <module>helloworld-cdi2-se</module>
@@ -100,14 +97,12 @@
         <module>managed-client</module>
         <module>managed-client-webapp</module>
         <module>managed-client-simple-webapp</module>
-        <!--<module>monitoring-webapp</module>-->
         <module>multipart-webapp</module>
         <module>micrometer</module>
         <module>open-tracing</module>
         <module>osgi-helloworld-webapp</module>
         <module>osgi-http-service</module>
         <module>oauth-client-twitter</module>
-        <!--<module>oauth2-client-google-webapp</module>-->
         <module>reload</module>
         <module>rx-client-webapp</module>
         <module>server-async</module>
@@ -116,14 +111,11 @@
         <module>server-sent-events-jersey</module>
         <module>server-sent-events-jaxrs</module>
         <module>servlet3-webapp</module>
-        <!--<module>simple-console</module>-->
-        <!--<module>shortener-webapp</module>-->
-        <!--<module>sparklines</module>-->
+        <module>simple-console</module>
         <module>sse-item-store-jersey-webapp</module>
         <module>sse-item-store-jaxrs-webapp</module>
         <module>sse-twitter-aggregator</module>
         <module>system-properties-example</module>
-        <!--<module>tone-generator</module>-->
         <module>webapp-example-parent</module>
         <module>xml-moxy</module>
     </modules>

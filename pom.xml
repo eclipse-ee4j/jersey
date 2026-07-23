@@ -2261,7 +2261,7 @@
         <javassist.version>3.30.2-GA</javassist.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
-        <jettison.version>1.5.6</jettison.version>
+        <jettison.version>1.5.7</jettison.version>
         <jboss.vfs.version>3.3.2.Final</jboss.vfs.version>
         <jboss.vfs.jdk8.version>3.2.17.Final</jboss.vfs.jdk8.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
