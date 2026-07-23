@@ -418,51 +418,9 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             runtimeCfgState.markAsShared();
 
             final InjectionManager injectionManager = findInjectionManager();
-            injectionManager.register(new ClientBinder(runtimeCfgState.getProperties()));
-
-            final ClientBootstrapBag bootstrapBag = new ClientBootstrapBag();
-            bootstrapBag.setManagedObjectsFinalizer(new ManagedObjectsFinalizer(injectionManager));
-
-            final ClientMessageBodyFactory.MessageBodyWorkersConfigurator messageBodyWorkersConfigurator =
-                    new ClientMessageBodyFactory.MessageBodyWorkersConfigurator();
-
-            List<BootstrapConfigurator> bootstrapConfigurators = Arrays.asList(
-                    new RequestScope.RequestScopeConfigurator(),
-                    new ParamConverterConfigurator(),
-                    new ParameterUpdaterConfigurator(),
-                    new RuntimeConfigConfigurator(runtimeCfgState),
-                    new ContextResolverFactory.ContextResolversConfigurator(),
-                    messageBodyWorkersConfigurator,
-                    new ExceptionMapperFactory.ExceptionMappersConfigurator(),
-                    new JaxrsProviders.ProvidersConfigurator(),
-                    new AutoDiscoverableConfigurator(RuntimeType.CLIENT),
-                    new ClientComponentConfigurator(),
-                    new FeatureConfigurator(RuntimeType.CLIENT));
-            bootstrapConfigurators.forEach(configurator -> configurator.init(injectionManager, bootstrapBag));
-
-            // AutoDiscoverable.
-            if (!CommonProperties.getValue(runtimeCfgState.getProperties(), RuntimeType.CLIENT,
-                    CommonProperties.FEATURE_AUTO_DISCOVERY_DISABLE, Boolean.FALSE, Boolean.class)) {
-                runtimeCfgState.configureAutoDiscoverableProviders(injectionManager, bootstrapBag.getAutoDiscoverables());
-            } else {
-                runtimeCfgState.configureForcedAutoDiscoverableProviders(injectionManager);
-            }
-
-            // Configure binders and features.
-            runtimeCfgState.configureMetaProviders(injectionManager, bootstrapBag.getManagedObjectsFinalizer());
-
-            // Bind providers.
-            final Collection<ComponentProvider> componentProviders = bootstrapBag.getComponentProviders().get();
-            ProviderBinder.bindProviders(
-                    runtimeCfgState.getComponentBag(), RuntimeType.CLIENT, null, injectionManager, componentProviders
-            );
-
-            ClientExecutorProvidersConfigurator executorProvidersConfigurator =
-                    new ClientExecutorProvidersConfigurator(runtimeCfgState.getComponentBag(),
-                            runtimeCfgState.client,
-                            this.executorService,
-                            this.scheduledExecutorService);
-            executorProvidersConfigurator.init(injectionManager, bootstrapBag);
+            final PreInitialization preInit =
+                    new PreInitialization(runtimeCfgState, injectionManager, this.executorService, this.scheduledExecutorService);
+            List<BootstrapConfigurator> bootstrapConfigurators = preInit.bootstrapConfigurators;
 
             injectionManager.completeRegistration();
 
@@ -475,19 +433,19 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
 
             final ClientConfig configuration = new ClientConfig(runtimeCfgState);
             final Connector connector = connectorProvider.getConnector(client, configuration);
-            final ClientRuntime crt = new ClientRuntime(configuration, connector, injectionManager, bootstrapBag);
+            final ClientRuntime crt = new ClientRuntime(configuration, connector, injectionManager, preInit.bootstrapBag);
 
             // We call postInit here to clean up thread locals,
             // while other configurators need to be postInit earlier because they set up dependencies for ClientRuntime
             preInit.clientComponentConfigurator.postInit(injectionManager, preInit.bootstrapBag);
 
             client.registerShutdownHook(crt);
-            messageBodyWorkersConfigurator.setClientRuntime(crt);
+            preInit.messageBodyWorkersConfigurator.setClientRuntime(crt);
 
             return crt;
         }
 
-        private final InjectionManager findInjectionManager() {
+        private InjectionManager findInjectionManager() {
             try {
                 return Injections.createInjectionManager(RuntimeType.CLIENT);
             } catch (IllegalStateException ise) {
