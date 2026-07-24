@@ -77,6 +77,18 @@
                 <configuration>
                     <instructions>
                         <Import-Package>${jakarta.annotation.osgi.version},*</Import-Package>
+                        <!-- Needed to integrate ServiceLoader mechanism with OSGi -->
+                        <Require-Capability><![CDATA[
+                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.processor)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.extender;filter:="(&(osgi.extender=osgi.serviceloader.registrar)(version>=1.0.0)(!(version>=2.0.0)))";resolution:=optional,
+                         osgi.serviceloader;filter:="(osgi.serviceloader=jakarta.ws.rs.sse.SseEventSource$Builder)";osgi.serviceloader="jakarta.ws.rs.sse.SseEventSource$Builder";cardinality:=multiple;resolution:=optional,
+                         osgi.serviceloader;filter:="(osgi.serviceloader=org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable)";osgi.serviceloader="org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable";cardinality:=multiple;resolution:=optional,
+                         osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+                         ]]></Require-Capability>
+                        <Provide-Capability><![CDATA[
+                        osgi.serviceloader;osgi.serviceloader="jakarta.ws.rs.sse.SseEventSource$Builder",
+                        osgi.serviceloader;osgi.serviceloader="org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable"
+                        ]]></Provide-Capability>
                     </instructions>
                 </configuration>
             </plugin>
