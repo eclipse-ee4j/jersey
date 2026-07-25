@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.IdentityHashMap;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
@@ -316,54 +317,89 @@ class BinderRegisterExtension implements Extension {
         final Collection<Binding> bindings = binder.getBindings();
         binder.setReadOnly();
 
+        // Reuse the same BindingBeanPair for the same binding object.
+        final IdentityHashMap<ClassBinding<?>, BindingBeanPair> classPairCache = new IdentityHashMap<>();
+        final IdentityHashMap<SupplierClassBinding<?>, BindingBeanPair> supplierPairCache = new IdentityHashMap<>();
+
         allBindingsLabel:
         for (Binding binding : bindings) {
+            // ---------- ClassBinding ----------
             if (ClassBinding.class.isAssignableFrom(binding.getClass())) {
+                final ClassBinding<?> cb = (ClassBinding<?>) binding;
+
+                // Keep existing "update" path for CLIENT
                 if (RuntimeType.CLIENT == runtimeType) {
-                    for (Type contract : ((ClassBinding<?>) binding).getContracts()) {
-                        final List<BindingBeanPair> preregistered = classBindings.get(contract);
-                        if (preregistered != null && preregistered.size() == 1) {
-                            BeanHelper.updateBean(
-                                    (ClassBinding<?>) binding, preregistered.get(0), injectionResolvers, beanManager);
+                    for (Type contract : cb.getContracts()) {
+                        final java.util.List<BindingBeanPair> pre = classBindings.get(contract);
+                        if (pre != null && pre.size() == 1) {
+                            BeanHelper.updateBean(cb, pre.get(0), injectionResolvers, beanManager);
                             continue allBindingsLabel;
                         }
                     }
                 }
-                BindingBeanPair pair = BeanHelper.registerBean(
-                        runtimeType, (ClassBinding<?>) binding, abd, injectionResolvers, beanManager);
-                for (Type contract : ((ClassBinding<?>) binding).getContracts()) {
-                    classBindings.add(contract, pair);
+                // Register once per ClassBinding instance and reuse the pair
+                BindingBeanPair pair = classPairCache.get(cb);
+                if (pair == null) {
+                    pair = BeanHelper.registerBean(
+                            runtimeType, cb, abd, injectionResolvers, beanManager);
+                    classPairCache.put(cb, pair);
                 }
+
+                // Write contracts in deterministic order
+                final java.util.List<Type> contracts = new java.util.ArrayList<>(cb.getContracts());
+                contracts.sort(java.util.Comparator.comparing(Type::getTypeName));
+                for (Type c : contracts) {
+                    classBindings.add(c, pair);
+                }
+
+                // ---------- SupplierClassBinding ----------
             } else if (SupplierClassBinding.class.isAssignableFrom(binding.getClass())) {
+                final SupplierClassBinding<?> scb = (SupplierClassBinding<?>) binding;
+
+                // Keep existing "update" path for CLIENT
                 if (RuntimeType.CLIENT == runtimeType) {
-                    for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
-                        final List<BindingBeanPair> preregistered = supplierClassBindings.get(contract);
-                        if (preregistered != null && preregistered.size() == 1) {
+                    for (Type contract : scb.getContracts()) {
+                        final java.util.List<BindingBeanPair> pre = supplierClassBindings.get(contract);
+                        if (pre != null && pre.size() == 1) {
                             BeanHelper.updateSupplierBean(
-                                    (SupplierClassBinding<?>) binding, preregistered.get(0), injectionResolvers, beanManager);
+                                scb, pre.get(0), injectionResolvers, beanManager);
                             continue allBindingsLabel;
                         }
                     }
                 }
-                BindingBeanPair pair = BeanHelper.registerSupplier(
-                        runtimeType, (SupplierClassBinding<?>) binding, abd, injectionResolvers, beanManager);
+                // Register once per SupplierClassBinding instance and reuse the pair
+                BindingBeanPair pair = supplierPairCache.get(scb);
+                if (pair == null) {
+                    pair = BeanHelper.registerSupplier(
+                            runtimeType, scb, abd, injectionResolvers, beanManager);
+                    supplierPairCache.put(scb, pair);
+                }
                 if (pair != null) {
-                    for (Type contract : ((SupplierClassBinding<?>) binding).getContracts()) {
-                        supplierClassBindings.add(contract, pair);
+                    // Write contracts in deterministic order
+                    final java.util.List<Type> contracts = new java.util.ArrayList<>(scb.getContracts());
+                    contracts.sort(java.util.Comparator.comparing(Type::getTypeName));
+                    for (Type c : contracts) {
+                        supplierClassBindings.add(c, pair);
                     }
                 }
+                // ---------- Instance bindings (unchanged) ----------
             } else if (InitializableInstanceBinding.class.isAssignableFrom(binding.getClass())) {
                 if (RuntimeType.SERVER == runtimeType
                         || !matchInitializableInstanceBinding((InitializableInstanceBinding<?>) binding)) {
                     initializableInstanceBindings.add((InitializableInstanceBinding<?>) binding);
                     BeanHelper.registerBean(
-                            runtimeType, (InitializableInstanceBinding<?>) binding, abd, injectionResolvers, beanManager);
+                            runtimeType, (InitializableInstanceBinding<?>) binding,
+                            abd, injectionResolvers, beanManager);
                 }
             } else if (InitializableSupplierInstanceBinding.class.isInstance(binding)) {
                 if (RuntimeType.SERVER == runtimeType
-                        || !matchInitializableSupplierInstanceBinding((InitializableSupplierInstanceBinding) binding)) {
-                    initializableSupplierInstanceBindings.add((InitializableSupplierInstanceBinding) binding);
-                    BeanHelper.registerSupplier(runtimeType, (InitializableSupplierInstanceBinding<?>) binding, abd, beanManager);
+                        || !matchInitializableSupplierInstanceBinding(
+                                (InitializableSupplierInstanceBinding) binding)) {
+                    initializableSupplierInstanceBindings.add(
+                            (InitializableSupplierInstanceBinding) binding);
+                    BeanHelper.registerSupplier(
+                            runtimeType, (InitializableSupplierInstanceBinding<?>) binding,
+                            abd, beanManager);
                 }
             }
         }
