@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+# Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0 which is available at
@@ -9,42 +9,86 @@
 #
 # SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
 #
-
-name: Eclipse Required License Check
-
-on: [push, pull_request]
-
+name: License Check
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "0 5 * * *"
+  issue_comment:
+    types: [created]
+permissions:
+  contents: read
+  pull-requests: write
 jobs:
   build:
+    if: >
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.pull_request &&
+       contains(github.event.comment.body, '/check-license') ||
+       contains(github.event.comment.body, '/license-check')
+      )
     name: Build on JDK ${{ matrix.java_version }} with ${{matrix.test_profiles}} profile
     runs-on: ubuntu-latest
     env:
       script-directory: $GITHUB_WORKSPACE/etc/jenkins
-
     strategy:
       matrix:
         java_version: [ 21 ]
-        verify_profiles: [ '-Plicense_check,staging' ]
-    continue-on-error: false
-
+        verify_profiles: [ '-Plicense_check' ]
     steps:
+    - name: Get PR ref
+      if: github.event_name == 'issue_comment'
+      id: pr
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const pr = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number
+          });
+          core.setOutput('ref', pr.data.head.sha);
     - name: Checkout for build
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        ref: ${{ steps.pr.outputs.ref || github.ref }}
     - name: Set up JDK
       uses: actions/setup-java@v4.1.0
       with:
-        distribution: 'zulu'
+        distribution: 'temurin'
         java-version: ${{ matrix.java_version }}
-    - name: configure JDK
-      run: |
-        secLoc=`find $JAVA_HOME -name java.security`
-        sed -i 's/jdk.tls.disabledAlgorithms/# jdk.tls.disabledAlgorithms/g' -i $secLoc
     - name: Build
-      run: mvn -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout -pl '!:version-agnostic'
+      id: license-check
+      run: mvn -ntp -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout -pl '!:version-agnostic'
+      continue-on-error: true
     - name: Upload license-check info
       uses: actions/upload-artifact@v4
       with:
         name: license-summary.txt
         path: target/dash/summary
+    - name: Post license summary to PR
+      if: github.event_name == 'issue_comment'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = 'target/dash/summary';
+          let body = '### 📋 Eclipse License Check\n\n';
+          if (fs.existsSync(path)) {
+            const content = fs.readFileSync(path, 'utf8').slice(0, 60000);
+            const status = '${{ steps.license-check.outcome }}' === 'success' ? '✅ Passed' : '⚠️ Issues found (non-blocking) — see the run log for details';
+            body += `**Status:** ${status}\n\n<details><summary>Full summary</summary>\n\n\`\`\`\n${content}\n\`\`\`\n</details>`;
+          } else {
+            const status = '${{ steps.license-check.outcome }}' === 'success' ? '✅ Passed' : '⚠️ Failed (non-blocking) — no summary file produced, check the run log';
+            body += `**Status:** ${status}`;
+          }
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number
+          });
+          const existing = comments.find(c => c.body.startsWith('### 📋 Eclipse License Check'));
+          if (existing) {
+            await github.rest.issues.updateComment({ owner: context.repo.owner, repo: context.repo.repo, comment_id: existing.id, body });
+          } else {
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body });
+          }

@@ -23,8 +23,8 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.9</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <version>2.0.5</version>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.jersey.tests</groupId>
@@ -78,7 +78,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

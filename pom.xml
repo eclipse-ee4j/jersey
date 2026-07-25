@@ -17,13 +17,17 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+    child.project.url.inherit.append.path="false">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.9</version>
+        <version>2.0.5</version>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
@@ -37,8 +41,6 @@
     </description>
 
     <url>https://projects.eclipse.org/projects/ee4j.jersey</url>
-
-    <!-- prerequisites -->
 
     <issueManagement>
         <system>JIRA</system>
@@ -216,7 +218,9 @@
         </license>
     </licenses>
 
-    <scm>
+    <scm child.scm.connection.inherit.append.path="false"
+     child.scm.developerConnection.inherit.append.path="false"
+     child.scm.url.inherit.append.path="false">
         <connection>scm:git:git@github.com:jersey/jersey.git</connection>
         <developerConnection>scm:git:git@github.com:eclipse-ee4j/jersey.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/jersey</url>
@@ -998,6 +1002,14 @@
             </build>
         </profile>
         <profile>
+            <id>oss-release</id>
+            <properties>
+                <release.projectName>Eclipse Jersey</release.projectName>
+                <release.autoPublish>false</release.autoPublish>
+                <release.waitUntil>published</release.waitUntil>
+            </properties>
+        </profile>
+        <profile>
             <id>xdk</id>
             <activation>
                 <property>
@@ -1099,37 +1111,6 @@
                     <url>http://localhost</url>
                 </site>
             </distributionManagement>
-        </profile>
-        <profile>
-            <id>sbom</id>
-            <activation>
-                <property>
-                    <name>!skipSBOM</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.cyclonedx</groupId>
-                        <artifactId>cyclonedx-maven-plugin</artifactId>
-                        <version>${cyclonedx.mvn.plugin.version}</version>
-                        <inherited>true</inherited>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>makeAggregateBom</goal>
-                                </goals>
-                                <configuration>
-                                    <!--                            <schemaVersion>1.4</schemaVersion>-->
-                                    <projectType>framework</projectType>
-                                    <excludeTestProject>true</excludeTestProject>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>sonar</id>
@@ -1328,24 +1309,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>central-release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.8.0</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>central</publishingServerId>
-                            <autoPublish>false</autoPublish>
-                            <!-- waitUntil>published</waitUntil -->
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
