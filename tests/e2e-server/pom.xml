@@ -211,6 +211,11 @@
             <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>

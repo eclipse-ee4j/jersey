@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 
 /**
  * A web resource for a list of colours.
@@ -48,10 +50,11 @@ public class Colours {
      * @param filter If not empty, constrains the list of colours to only
      * those that contain this substring
      * @return the list of colours matching the filter
+     * @throws JSONException
      */
     @GET
     @Produces("application/json")
-    public JSONArray getColourListAsJSON(@QueryParam("match") String filter) {
+    public JSONArray getColourListAsJSON(@QueryParam("match") String filter) throws JSONException {
         return new JSONArray(getMatchingColours(filter));
     }
 
