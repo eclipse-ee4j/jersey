@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,10 +36,11 @@ class HttpRequestEncoder {
 
     private static void appendUpgradeHeaders(StringBuilder request, Map<String, List<String>> headers) {
         for (Map.Entry<String, List<String>> header : headers.entrySet()) {
+            String delimiter = "Cookie".equalsIgnoreCase(header.getKey()) ? "; " : ",";
             StringBuilder value = new StringBuilder();
             for (String valuePart : header.getValue()) {
                 if (value.length() != 0) {
-                    value.append(",");
+                    value.append(delimiter);
                 }
                 value.append(valuePart);
             }
