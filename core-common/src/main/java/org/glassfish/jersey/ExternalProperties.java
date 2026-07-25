@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,6 +46,12 @@ public final class ExternalProperties {
      * Property used to specify the password to authenticate with the proxy.
      */
     public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+
+    /**
+     * Property used to define the string sent in the User-Agent
+     * request header in http requests.
+     */
+    public static final String HTTP_AGENT = "http.agent";
 
     /**
      * Prevent instantiation.
