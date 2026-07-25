@@ -29,6 +29,8 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.netty.connector.FileAttachingRedirectController;
+import org.glassfish.jersey.netty.connector.NettyClientProperties;
 import org.glassfish.jersey.netty.connector.NettyConnectorProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -36,8 +38,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,11 +47,20 @@ public class RedirectLargeFileTest {
     private static final int SERVER_PORT = 9997;
     private static final String SERVER_ADDR = String.format("http://localhost:%d/submit", SERVER_PORT);
 
-    Client client() {
+    Client client(boolean registerControler) {
         final ClientConfig config = new ClientConfig();
         config.connectorProvider(new NettyConnectorProvider());
         config.register(MultiPartFeature.class);
+        if (registerControler) {
+            registerFileUploadController(config);
+        }
         return ClientBuilder.newClient(config);
+    }
+
+    void registerFileUploadController(ClientConfig config) {
+        // Register custom redirect controller
+        FileAttachingRedirectController redirectController = new FileAttachingRedirectController();
+        config.property(NettyClientProperties.HTTP_REDIRECT_CONTROLLER, redirectController);
     }
 
     @BeforeAll
@@ -78,13 +87,46 @@ public class RedirectLargeFileTest {
 
             final byte[] content = Files.readAllBytes(realFilePath);
 
+        final FormDataMultiPart mp = new FormDataMultiPart();
+        mp.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name(fileName).fileName(fileName).build(),
+                content,
+                MediaType.TEXT_PLAIN_TYPE));
+
+            try (final Response response = client(false).target(SERVER_ADDR).request()
+                    .post(Entity.entity(mp, MediaType.MULTIPART_FORM_DATA_TYPE))) {
+                Assertions.assertEquals(200, response.getStatus());
+            }
+        } finally {
+            Files.deleteIfExists(pathResource);
+        }
+    }
+
+    @Test
+    void sendFileAfterRedirectTest() throws Exception {
+        final String fileName = "bigFile.json";
+        final String path = "target/" + fileName;
+
+        final Path pathResource = Paths.get(path);
+        try {
+            final Path realFilePath = Files.createFile(pathResource.toAbsolutePath());
+
+            generateJson(realFilePath.toString(), 1000000); // 33Mb real file size
+
+            final byte[] content = Files.readAllBytes(realFilePath);
+
+            // Create the multipart form data
             final FormDataMultiPart mp = new FormDataMultiPart();
             mp.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name(fileName).fileName(fileName).build(),
                     content,
                     MediaType.TEXT_PLAIN_TYPE));
 
-            try (final Response response = client().target(SERVER_ADDR).request()
-                    .post(Entity.entity(mp, MediaType.MULTIPART_FORM_DATA_TYPE))) {
+            // Set the file entity to be attached after the redirect on the request properties
+            final Response response = client(true).target(SERVER_ADDR).request()
+                    .property(FileAttachingRedirectController.FILE_ENTITY_AFTER_REDIRECT, mp)
+                    .property(FileAttachingRedirectController.FILE_ENTITY_MEDIA_TYPE_AFTER_REDIRECT,
+                              MediaType.MULTIPART_FORM_DATA_TYPE)
+                    .post(Entity.entity("", MediaType.TEXT_PLAIN_TYPE));
+            if (response != null){
                 Assertions.assertEquals(200, response.getStatus());
             }
         } finally {
