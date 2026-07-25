@@ -1,0 +1,191 @@
+{
+	"id": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+	"name": "Auth",
+	"description": "",
+	"order": [
+		"2d71cf08-6feb-5f73-4135-2521754f46a5",
+		"16301e72-d2d9-ae9f-d04f-401565ef7041",
+		"163e2c18-f2ed-87b6-7ccc-bbce8663f32e",
+		"c4c2f685-cc54-1ca0-f3fb-3c6af458eab9",
+		"7d7c6c62-d3d1-ba71-b407-68021fd39433",
+		"6cbb2b1d-088e-f53b-1ee9-7017448caf61"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1525531166347,
+	"owner": "1002945",
+	"public": false,
+	"requests": [
+		{
+			"id": "16301e72-d2d9-ae9f-d04f-401565ef7041",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{auth}}/login",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1525535406863,
+			"name": "Password Login",
+			"description": "",
+			"collectionId": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+			"responses": [],
+			"rawModeData": "{\"username\":\"test\",\"password\":\"teste123\"}"
+		},
+		{
+			"id": "163e2c18-f2ed-87b6-7ccc-bbce8663f32e",
+			"headers": "Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsidXNlciJdLCJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE1MjU1MzQ5NDksImV4cCI6MTUyNTYyMTM0OSwiaXNzIjoiTXlQZXQuQ29tIn0.TYJ5GkdHmTbm0aWcL8GOADXeC06obyW1jzVseyPCkxd4XStEhPGgcPqJK9KE0navR1IZ6unV-mPmgT4-lJEmsw\n",
+			"headerData": [
+				{
+					"key": "Authorization",
+					"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsidXNlciJdLCJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE1MjU1MzQ5NDksImV4cCI6MTUyNTYyMTM0OSwiaXNzIjoiTXlQZXQuQ29tIn0.TYJ5GkdHmTbm0aWcL8GOADXeC06obyW1jzVseyPCkxd4XStEhPGgcPqJK9KE0navR1IZ6unV-mPmgT4-lJEmsw",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{auth}}/friends",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+			"data": null,
+			"dataMode": "params",
+			"name": "Private resource",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1525535110718,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "2d71cf08-6feb-5f73-4135-2521754f46a5",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{auth}}/register",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1525535117326,
+			"name": "Register Resource",
+			"description": "",
+			"collectionId": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+			"responses": [],
+			"rawModeData": "{\"username\":\"test\",\"password\":\"teste123\",\"firstname\":\"test\",\"lastname\":\"test\"}"
+		},
+		{
+			"id": "6cbb2b1d-088e-f53b-1ee9-7017448caf61",
+			"headers": "",
+			"headerData": [],
+			"url": "{{auth}}/login/facebook",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+			"data": null,
+			"dataMode": "params",
+			"name": "Ouath login",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1525535945608,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "7d7c6c62-d3d1-ba71-b407-68021fd39433",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{auth}}/password/reset",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1525535376615,
+			"name": "Reset password",
+			"description": "",
+			"collectionId": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+			"responses": [],
+			"rawModeData": "{\"password\":\"123Test\",\"token\":\"a67847a6-6311-47b0-afda-64cd9871e273\"}"
+		},
+		{
+			"id": "c4c2f685-cc54-1ca0-f3fb-3c6af458eab9",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{auth}}/password/forget",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "e6d5085e-89e4-21ba-0172-11ce3178f9b0",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Forget Password",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1525535265378,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\"username\":\"test\"}"
+		}
+	]
+}
