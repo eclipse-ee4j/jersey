@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -100,9 +100,19 @@ import org.apache.http.client.HttpClient;
  */
 public class ApacheConnectorProvider implements ConnectorProvider {
 
+    private final Config config;
+
+    public ApacheConnectorProvider() {
+        config = config();
+    }
+
+    private ApacheConnectorProvider(Config config) {
+        this.config = config;
+    }
+
     @Override
     public Connector getConnector(final Client client, final Configuration runtimeConfig) {
-        return new ApacheConnector(client, runtimeConfig);
+        return new ApacheConnector(client, runtimeConfig, config);
     }
 
     /**
@@ -159,4 +169,23 @@ public class ApacheConnectorProvider implements ConnectorProvider {
             throw new IllegalArgumentException(LocalizationMessages.EXPECTED_CONNECTOR_PROVIDER_NOT_USED());
         }
     }
+
+    /**
+     * Instantiate a builder allowing to configure the ApacheConnectorProvider.
+     * @return a new {@link Config} instance.
+     */
+    public static Config config() {
+        return new Config();
+    }
+
+    public static final class Config extends ApacheConnectorConfiguration<Config> {
+
+        private Config() {
+        }
+
+        public ApacheConnectorProvider build() {
+            return new ApacheConnectorProvider(this);
+        }
+    }
+
 }

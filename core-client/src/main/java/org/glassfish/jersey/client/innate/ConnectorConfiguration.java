@@ -20,6 +20,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientRequest;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.innate.http.SSLParamConfigurator;
+import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.PropertiesResolver;
 
 import javax.net.ssl.SSLContext;
@@ -39,6 +40,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 /**
  * Configuration object to use for configuring the client connectors and HTTP request processing.
@@ -47,7 +49,11 @@ import java.util.function.Supplier;
  * @param <E> the connector configuration subtype.
  */
 public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
+
+    protected static final Logger LOGGER = Logger.getLogger(ConnectorConfiguration.class.getName());
+
     protected final NullableRef<Integer> connectTimeout = NullableRef.empty();
+    protected final NullableRef<Integer> chunkSize = NullableRef.empty();
     protected final NullableRef<Boolean> expect100Continue = NullableRef.empty();
     protected final NullableRef<Long> expect100continueThreshold = NullableRef.empty();
     protected final NullableRef<Boolean> followRedirects = NullableRef.empty();
@@ -261,6 +267,24 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         return (E) this;
     }
 
+    protected E chunkSize(Map<String, Object> properties) {
+        chunkSize.ifEmptySet(ClientProperties.DEFAULT_CHUNK_SIZE);
+        int computedChunkSize = ClientProperties.getValue(properties,
+                _prefixed(ClientProperties.CHUNKED_ENCODING_SIZE), chunkSize.get(), Integer.class);
+        if (computedChunkSize < 0) {
+            LOGGER.warning(LocalizationMessages.NEGATIVE_CHUNK_SIZE(computedChunkSize, chunkSize.get()));
+        } else {
+            chunkSize.set(computedChunkSize);
+        }
+
+        return self();
+    }
+
+    protected String _prefixed(String property) {
+        return prefix.ifPresentOrElse("") + property;
+    }
+
+
     /**
      * <p>
      * A reference to a value. The reference can be empty, but unlike the {@code Optional}, once a value is set,
@@ -445,6 +469,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
          */
         public default <X extends ConnectorConfiguration<?>> void setNonEmpty(X other) {
             me().connectTimeout.setNonEmpty(other.connectTimeout);
+            me().chunkSize.setNonEmpty(other.chunkSize);
             me().expect100Continue.setNonEmpty(other.expect100Continue);
             me().expect100continueThreshold.setNonEmpty(other.expect100continueThreshold);
             me().followRedirects.setNonEmpty(other.followRedirects);
@@ -552,6 +577,10 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             return requestConfiguration;
         }
 
+        default int chunkSize() {
+            return me().chunkSize.get();
+        }
+
         @Override
         default String getSniHostNameProperty(Configuration configuration) {
             Object property = configuration.getProperty(prefixed(ClientProperties.SNI_HOST_NAME));
@@ -649,6 +678,10 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             return proxy;
         }
 
+        public default Optional<ClientProxy> proxy(Configuration configuration) {
+            return ClientProxy.proxyFromConfiguration(new PrefixedConfiguration(me().prefix.get(), configuration));
+        }
+
         /**
          * Update {@link #readTimeout(int) read timeout} based on the HTTP request properties.
          *
@@ -706,6 +739,23 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
             @SuppressWarnings("unchecked")
             Supplier<SSLContext> supplier =
                     request.resolveProperty(prefixed(ClientProperties.SSL_CONTEXT_SUPPLIER), Supplier.class);
+            if (supplier == null) {
+                supplier = me().sslContextSupplier.get();
+            }
+            return supplier == null ? client.getSslContext() : supplier.get();
+        }
+
+        /**
+         * Get {@link SSLContext} either from the {@link ClientProperties#SSL_CONTEXT_SUPPLIER}, or from this configuration,
+         * or from the {@link Client#getSslContext()} in this order.
+         *
+         * @param client the client used to get the {@link SSLContext}.
+         * @return the {@link SSLContext}.
+         */
+        public default SSLContext sslContext(Client client) {
+            @SuppressWarnings("unchecked")
+            Supplier<SSLContext> supplier =
+                    (Supplier<SSLContext>) client.getConfiguration().getProperty(prefixed(ClientProperties.SSL_CONTEXT_SUPPLIER));
             if (supplier == null) {
                 supplier = me().sslContextSupplier.get();
             }
@@ -832,7 +882,7 @@ public class ConnectorConfiguration<E extends ConnectorConfiguration<E>> {
         private final String prefix;
         private final Configuration inner;
 
-        private PrefixedConfiguration(String prefix, Configuration inner) {
+        protected PrefixedConfiguration(String prefix, Configuration inner) {
             this.prefix = prefix;
             this.inner = inner;
         }

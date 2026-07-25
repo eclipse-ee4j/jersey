@@ -217,6 +217,10 @@ public class HttpUrlConnectorProvider implements ConnectorProvider {
     protected Connector createHttpUrlConnector(Client client, ConnectionFactory connectionFactory,
                                                int chunkSize, boolean fixLengthStreaming,
                                                boolean setMethodWorkaround) {
+        config.connectionFactory(connectionFactory)
+                .chunkSize(chunkSize)
+                .useFixedLengthStreaming(fixLengthStreaming)
+                .useSetMethodWorkaround(setMethodWorkaround);
         return new HttpUrlConnector(client, client.getConfiguration(), config);
     }
 
