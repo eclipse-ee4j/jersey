@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -154,7 +155,8 @@ class RestClientContext {
         }
 
         Builder inboundHeadersProviders(Set<InboundHeadersProvider> inboundHeadersProviders) {
-            this.inboundHeadersProviders = new HashSet<>(inboundHeadersProviders);
+            // Preserve registration order (DefaultInboundHeaderProvider first) — issue #6101.
+            this.inboundHeadersProviders = new LinkedHashSet<>(inboundHeadersProviders);
             return this;
         }
 
