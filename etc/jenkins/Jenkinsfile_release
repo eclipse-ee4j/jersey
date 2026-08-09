@@ -2,28 +2,38 @@
 
 node {
 
-    def   MVN_HOME='/opt/tools/apache-maven/latest'
-    def   HELP_PLUGIN='org.apache.maven.plugins:maven-help-plugin:2.1.1'
-    def   TARGET = 'deploy'
-    def   RELEASE_VERSION=RELEASE_VERSION
-    def   NEXT_VERSION=NEXT_VERSION
-    def   RELEASE_TAG=''
-    def   OVERWRITE=OVERWRITE
-    def   PROJECT_NAME='Jersey'
-    def   LOGIN='jersey-bot'
-    def   EMAIL = 'jersey-bot@eclipse.org'
-    def   REPO='git@github.com:eclipse-ee4j/jersey.git'
-    def   SECRET_FILE_ID='6474d9ed-eadc-47a0-8f60-43277c1cad52'
-    def   SECURITY_FILE_ID='8e6103e6-a03e-44fe-bd9a-a4ed070d9b56'
-    def   CONFIG_FILE_ID='c88e58d9-97bd-4f06-af82-fd469abcedea'
-    def   CREDENTIALS_ID='f5848e71-9994-45e3-8214-137ce91ddbcf'
-    def   GIT_ORIGIN='origin'
-    def   RELEASE_FOLDER='.'
-    def   RELEASE_BRANCH=BRANCH
+    def MVN_HOME = tool name: 'apache-maven-latest', type: 'maven'
+    def HELP_PLUGIN = 'org.apache.maven.plugins:maven-help-plugin:2.1.1'
+    def TARGET = 'package source:jar javadoc:jar gpg:sign install:install'
+    def RELEASE_VERSION = RELEASE_VERSION
+    def NEXT_VERSION = NEXT_VERSION
+    def RELEASE_TAG = ''
+    def NEW_RELEASE_BRANCH = ''
+    def OVERWRITE = OVERWRITE
+    def PROJECT_NAME = 'Jersey'
+    def LOGIN = 'jersey-bot'
+    def EMAIL = 'jersey-bot@eclipse.org'
+    def REPO = 'git@github.com:eclipse-ee4j/jersey.git'
+    def SECRET_FILE_ID = '6474d9ed-eadc-47a0-8f60-43277c1cad52'
+    def SECURITY_FILE_ID = '8e6103e6-a03e-44fe-bd9a-a4ed070d9b56'
+    def CONFIG_FILE_ID = 'c88e58d9-97bd-4f06-af82-fd469abcedea'
+    def CREDENTIALS_ID = 'f5848e71-9994-45e3-8214-137ce91ddbcf'
+    def GIT_ORIGIN = 'origin'
+    def RELEASE_FOLDER = env.WORKSPACE
+    def RELEASE_BRANCH = BRANCH
 
-    env.JAVA_HOME="/opt/tools/java/oracle/jdk-8/1.8.0_181"
-    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-    sh '/opt/tools/java/oracle/jdk-8/1.8.0_181/bin/java -version'
+    def STAGING_NAME_PATTERN = 'orgglassfishjersey-[0-9]+'
+    def STAGING_NAME = ''
+    def STAGING_PREV_NAME = ''
+    def STAGING_OPEN_NAME = ''
+    def STAGING_DESC = 'org.glassfish.jersey:' + RELEASE_VERSION
+    def STAGING_BOM_DESC = 'org.glassfish.jersey.bom:' + RELEASE_VERSION
+    def STAGING_PROFILE_ID = '70fa3a107a8918'
+
+
+    env.JAVA_HOME = tool name: 'oracle-jdk8-latest', type: 'jdk'
+    env.PATH = "${env.JAVA_HOME}/bin:${env.PATH}:${MVN_HOME}/bin"
+
     sh 'java -version'
 
     stage('Fetch from git') {
@@ -31,14 +41,14 @@ node {
     }
     stage('Prepare environment') {
 
-        dir (RELEASE_FOLDER) {
+        dir(RELEASE_FOLDER) {
             //# Check whether top level pom.xml contains SNAPSHOT version
             if (!sh(returnStdout: true, script: "grep '<version>' pom.xml | grep 'SNAPSHOT'")?.trim()) {
                 error('-[ Missing SNAPSHOT version in POM! ]-------------------------------------------')
             }
 
             //# Compute release versions
-            def SNAPSHOT_VERSION = sh(returnStdout: true, script: "${MVN_HOME}/bin/mvn -B ${HELP_PLUGIN}:evaluate -Dexpression=project.version 2> /dev/null | grep -E '^[0-9]+(.[0-9]+)+-SNAPSHOT\$'").trim()
+            def SNAPSHOT_VERSION = sh(returnStdout: true, script: 'mvn -q -Dexec.executable="echo" -Dexec.args=\'${project.version}\' --non-recursive exec:exec -Pstaging').trim()
 
             if (!RELEASE_VERSION?.trim()) {
                 if (!SNAPSHOT_VERSION?.trim()) {
@@ -55,12 +65,14 @@ node {
                 NEXT_VERSION = MAJOR_VERSION + '.' + NEXT_MINOR_VERSION + '-SNAPSHOT'
             }
 
-            RELEASE_TAG = RELEASE_VERSION + '-RELEASE'
+            RELEASE_TAG = RELEASE_VERSION
+            NEW_RELEASE_BRANCH = RELEASE_VERSION+'-BRANCH'
 
             echo "Current version: ${SNAPSHOT_VERSION}"
             echo "Release version: ${RELEASE_VERSION}"
             echo "Next version:    ${NEXT_VERSION}"
             echo "Release tag:     ${RELEASE_TAG}"
+            echo "Release branch:  ${NEW_RELEASE_BRANCH}"
 
             if (!SNAPSHOT_VERSION?.trim() || !RELEASE_VERSION?.trim() || !NEXT_VERSION?.trim()) {
                 error '-[ Missing required version numbers! ]------------------------------------------'
@@ -68,7 +80,9 @@ node {
 
             if (DRY_RUN == 'true') {
                 echo '-[ Dry run turned on ]----------------------------------------------------------'
-                TARGET = 'install'
+                //TARGET = 'install'
+            } else {
+                TARGET = TARGET + ' deploy:deploy'
             }
             echo '-[ Configure git user ]--------------------------------------------------------'
             sh "git config --local user.email \"${EMAIL}\""
@@ -77,7 +91,7 @@ node {
         }
 
     }
-    stage ('Prepare GPG') {
+    stage('Prepare GPG') {
         withCredentials([file(credentialsId: SECRET_FILE_ID, variable: 'KEYRING')]) {
             //# Workaround: GPG initialization
             sh("gpg --batch --import ${KEYRING}")
@@ -89,33 +103,19 @@ node {
                 '''
         }
     }
-    stage ('Prepare branch') {
+    stage('Prepare branch') {
         echo '-[ Prepare branch ]-------------------------------------------------------------'
 
-        def BRANCH_CHECK = sh(returnStdout: true, script: "git branch -r").trim().contains(GIT_ORIGIN+'/'+RELEASE_VERSION)
-
-        if (BRANCH_CHECK) {
-            if ( OVERWRITE == 'true' ) {
-                echo "${GIT_ORIGIN}/${RELEASE_VERSION} branch already exists, deleting"
-                sshagent([CREDENTIALS_ID]) {
-                    sh "git push ${GIT_ORIGIN} :${RELEASE_VERSION} && true"
-                }
-            } else {
-                error "${GIT_ORIGIN}/${RELEASE_VERSION} branch already exists"
-            }
-        }
-        echo '-[ Swiching to release branch ]-------------------------------------------------'
+        echo '-[ Switching to release branch ]-------------------------------------------------'
         sh """
         git checkout ${GIT_ORIGIN}/${RELEASE_BRANCH} && true
         git reset --hard ${GIT_ORIGIN}/${RELEASE_BRANCH} && true
-        # Always delete local branch if exists
-        git branch --delete ${RELEASE_VERSION} && true
-        git checkout -b ${RELEASE_VERSION}
+        git checkout -B ${NEW_RELEASE_BRANCH}
         """
         echo '-[ Release tag cleanup ]--------------------------------------------------------'
-        def TAG_CHECK = sh(returnStdout: true, script: "git tag").trim().contains(RELEASE_TAG)
-        if (TAG_CHECK) {
-            if (OVERWRITE == 'true' ) {
+        def TAG_NAME = sh(returnStdout: true, script: "git tag").trim()
+        if (RELEASE_TAG == TAG_NAME) {
+            if (OVERWRITE == 'true') {
                 echo "${RELEASE_TAG} tag already exists, deleting"
                 sshagent([CREDENTIALS_ID]) {
                     sh "git push --delete origin ${RELEASE_TAG} && true"
@@ -128,36 +128,92 @@ node {
             git tag --delete ${RELEASE_TAG} && true
             """
         }
-
+        sh '''
+        sed -i 's|<suppress files="generated" checks=".*"/>|<suppress files="generated" checks=".*"/><suppress files="unpacked-src" checks=".*"/>|g' etc/config/checkstyle-suppressions.xml
+        '''
     }
+    stage('Check previous stagings') {
+        if (DRY_RUN == 'true') {
+            echo DRY_RUN + ' ------'
+        } else {
+            configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
+
+                configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
+                    if (OVERWRITE == 'true') {
+                        STAGING_PREV_NAME = sh(returnStdout: true,
+                                script: "mvn -B --non-recursive -s ${MAVEN_SETTINGS_XML} -Pstaging nexus-staging:rc-list | awk '/\\[INFO] $STAGING_NAME_PATTERN[ ]+CLOSED[ ]+$STAGING_DESC/ {if(a){a = \$2\",\"a} else{a = \$2}}END{print a}'").trim()
+                        echo 'Previously closed staging name: ' + STAGING_PREV_NAME
+                    }
+
+                    STAGING_OPEN_NAME = sh(returnStdout: true,
+                            script: "mvn -B --non-recursive -s ${MAVEN_SETTINGS_XML} -Pstaging nexus-staging:rc-list | awk  '/$STAGING_NAME_PATTERN OPEN / {if(a){a = \$2\",\"a} else{a = \$2}}END{print a}'").trim()
+
+                    if (!STAGING_OPEN_NAME?.trim()) {
+                        echo 'No currently open stagings'
+                    } else {
+                        echo 'Currently open redundand staging: ' + STAGING_OPEN_NAME + ', immediately closing'
+                        sh """
+                            OPEN_STAGINGS=${STAGING_OPEN_NAME}
+                            mvn -B -s ${MAVEN_SETTINGS_XML} -q -Pstaging nexus-staging:rc-drop -DstagingRepositoryId=\${OPEN_STAGINGS}  
+                        """
+                    }
+                }
+            }
+        }
+    }
+    /*
+    stage('Open new staging') {
+        if (DRY_RUN == 'true') {
+            echo DRY_RUN + ' ------'
+        } else {
+            configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
+
+                configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
+                    STAGING_NAME = sh(returnStdout: true,
+                            script: "mvn -B --non-recursive -s ${MAVEN_SETTINGS_XML} -Pstaging -DstagingProfileId=${STAGING_PROFILE_ID} -DstagingDescription=${STAGING_DESC} nexus-staging:rc-open | awk  '/\\[INFO] Opened / {print \$3}'").trim()
+                    echo 'New staging name: '+STAGING_NAME
+                }
+            }
+        }
+    }*/
     stage("Build ${PROJECT_NAME}") {
         echo env.JAVA_HOME
         echo '-[ Run maven release ]---------------------------------------------------------'
         echo '-[ Set Release version ]-------------------------------------------------------'
         sh """
         cd ${RELEASE_FOLDER}
-        ${MVN_HOME}/bin/mvn -q versions:set -DnewVersion=${RELEASE_VERSION}
-        ${MVN_HOME}/bin/mvn -q versions:commit
+        mvn -q -Pstaging versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
+        cd bom
+        mvn -q -Pstaging versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
+        cd ..
         """
         echo '-[ Run release build ]---------------------------------------------------------'
-        dir (RELEASE_FOLDER) {
-                configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
+        dir(RELEASE_FOLDER) {
+            configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
 
-                    configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
-                        sh "${MVN_HOME}/bin/mvn -q -B -s ${MAVEN_SETTINGS_XML} -DskipTests -Ddoclint=none -Dadditionalparam='-Xdoclint:none' " +
-                                " -U -C clean package source:jar javadoc:jar ${TARGET}"
-                    }
+                configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
+                    sh "mvn -q -B -s ${MAVEN_SETTINGS_XML} -DskipTests -Ddoclint=none -Dadditionalparam='-Xdoclint:none' " +
+                            //" -DstagingDescription='${STAGING_DESC}' -DstagingRepositoryId='${STAGING_NAME}' "+
+                            " -Poss-release,staging -U -C ${TARGET}"
                 }
+            }
         }
     }
-    stage ('Prepare release') {
+    stage('Prepare release') {
+        sh '''
+        git checkout -- etc/config/checkstyle-suppressions.xml
+        '''
         echo '-[ Perform release commit to git ]---------------------------------------------'
         sh "git commit -a -m ${RELEASE_VERSION}"
         sh "git tag -m ${RELEASE_TAG} -a ${RELEASE_TAG}"
         echo '-[ Set next snapshot version ]-------------------------------------------------'
-        dir (RELEASE_FOLDER) {
-            sh "${MVN_HOME}/bin/mvn -q versions:set -DnewVersion=${NEXT_VERSION}"
-            sh "${MVN_HOME}/bin/mvn -q versions:commit"
+        dir(RELEASE_FOLDER) {
+            sh """
+                mvn -q -Pstaging versions:set -DnewVersion=${NEXT_VERSION} -DgenerateBackupPoms=false 
+                cd bom
+                mvn -q -Pstaging versions:set -DnewVersion=${NEXT_VERSION} -DgenerateBackupPoms=false
+                cd ..
+            """
         }
         echo '-[ Perform commit to git ]-----------------------------------------------------'
         sh "git commit -a -m ${NEXT_VERSION}"
@@ -165,18 +221,72 @@ node {
     stage('Publish release') {
         if (DRY_RUN == 'true') {
             echo '-[ Prepared branch ]----------------------------------------------------------'
-            sh "git branch --list ${RELEASE_VERSION}"
+            sh "git branch --list ${NEW_RELEASE_BRANCH}"
             echo '-[ Prepared tag ]-------------------------------------------------------------'
-            sh "git tag --list ${RELEASE_TAG}"
+            sh "git tag --list ${NEW_RELEASE_BRANCH}"
             echo '-[ Prepared commits ]---------------------------------------------------------'
             sh 'git log -n 5'
             sshagent([CREDENTIALS_ID]) {
-                sh "git push ${GIT_ORIGIN} ${RELEASE_VERSION} --dry-run"
+                sh "git push ${GIT_ORIGIN} ${NEW_RELEASE_BRANCH} --dry-run"
             }
             return
         } else {
             sshagent([CREDENTIALS_ID]) {
-                sh "git push ${GIT_ORIGIN} ${RELEASE_VERSION} --follow-tags"
+                sh "git push -f ${GIT_ORIGIN} ${NEW_RELEASE_BRANCH} --follow-tags"
+            }
+        }
+    }
+    stage('Find related staging') {
+        if (DRY_RUN != 'true') {
+            if (!STAGING_NAME?.trim()) {
+                try {
+                    configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
+
+                        configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
+                            STAGING_NAME =
+                                    sh(returnStdout: true,
+                                            script: "mvn -B --non-recursive -s ${MAVEN_SETTINGS_XML} -Pstaging nexus-staging:rc-list | awk  '/$STAGING_NAME_PATTERN OPEN / {if(a){a = \$2\",\"a} else{a = \$2}}END{print a}'"
+                                    ).trim()
+                        }
+                    }
+                } catch (Error err) {
+                    currentBuild.result = 'UNSTABLE'
+                }
+            }
+            echo 'Staging name: ' + STAGING_NAME
+        } else {
+            echo 'DRY_RUN'
+        }
+    }
+    stage('Close released staging') {
+        if (!STAGING_NAME?.trim()) {
+            echo 'Nothing to be closed'
+        } else {
+            configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
+
+                configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
+                    sh("mvn -B -q -s ${MAVEN_SETTINGS_XML} -Pstaging nexus-staging:rc-close -DstagingRepositoryId=${STAGING_NAME} -DstagingDescription='${STAGING_DESC}'")
+                }
+            }
+
+        }
+    }
+    stage('Drop redundant staging') {
+        if (!STAGING_PREV_NAME?.trim()) {
+            echo 'Nothing to be dropped'
+        } else {
+            try {
+                configFileProvider([configFile(fileId: SECURITY_FILE_ID, targetLocation: '/home/jenkins/.m2/')]) {
+
+                    configFileProvider([configFile(fileId: CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_XML')]) {
+                        sh("""
+                        OPEN_STAGINGS=${STAGING_PREV_NAME}
+                        mvn -B -q -s ${MAVEN_SETTINGS_XML} -Pstaging nexus-staging:rc-drop -DstagingRepositoryId=\${OPEN_STAGINGS}
+                        """)
+                    }
+                }
+            } catch (Error err) {
+                currentBuild.result = 'UNSTABLE'
             }
         }
     }
