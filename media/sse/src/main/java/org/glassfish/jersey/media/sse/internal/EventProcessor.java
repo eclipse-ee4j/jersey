@@ -29,11 +29,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.ServiceUnavailableException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.sse.SseEvent;
 
 import org.glassfish.jersey.client.ClientExecutor;
+import org.glassfish.jersey.client.JerseyInvocation;
 import org.glassfish.jersey.internal.util.ExtendedLogger;
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.EventListener;
@@ -166,7 +169,20 @@ public class EventProcessor implements Runnable, EventListener {
                 final Invocation.Builder request = prepareHandshakeRequest();
                 if (state.get() == State.OPEN) { // attempt to connect only if even source is open
                     LOGGER.debugLog("Connecting...");
-                    eventInput = request.get(EventInput.class);
+                    final Response response = request.get();
+                    if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+                        // HTTP 204 No Content: the server signalled that no further events will be sent.
+                        // Terminate gracefully instead of reconnecting, in alignment with the WHATWG
+                        // EventSource processing model, where a 204 response stops the reconnection loop.
+                        response.close();
+                        LOGGER.debugLog("Received HTTP 204 - closing the event source.");
+                        shutdownHandler.shutdown();
+                        return;
+                    }
+                    if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+                        throw translateNonSuccessfulResponse(response);
+                    }
+                    eventInput = response.readEntity(EventInput.class);
                     LOGGER.debugLog("Connected!");
                 }
             } finally {
@@ -222,6 +238,24 @@ public class EventProcessor implements Runnable, EventListener {
             }
             LOGGER.debugLog("Listener task finished.");
         }
+    }
+
+    /**
+     * Translate a non-successful handshake response into the same {@link WebApplicationException} subtype
+     * that {@link JerseyInvocation} would have produced when the response entity was requested directly,
+     * so that the error handling behavior stays unchanged.
+     *
+     * @param response a response with a non-{@link Response.Status.Family#SUCCESSFUL} status code.
+     * @return the exception to throw for the given response.
+     */
+    private static WebApplicationException translateNonSuccessfulResponse(final Response response) {
+        try {
+            // Buffer and close entity input stream (if any) to prevent leaking connections (see JERSEY-2157).
+            response.bufferEntity();
+        } catch (final Exception ignored) {
+            // exception during buffering ignored - the original response status is what matters here
+        }
+        return JerseyInvocation.convertToWebApplicationException(response);
     }
 
     /**
