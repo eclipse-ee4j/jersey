@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -193,6 +194,9 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
                 }
             }
         }
+        final var listener = config.getListener();
+        if (listener != null)
+           listener.closed();
     }
 
     /**
@@ -380,6 +384,10 @@ public class JerseyClient implements jakarta.ws.rs.client.Client, Initializable<
 
     public ScheduledExecutorService getScheduledExecutorService() {
         return config.getScheduledExecutorService();
+    }
+
+    public ClientListener getListener() {
+        return config.getListener();
     }
 
     @Override

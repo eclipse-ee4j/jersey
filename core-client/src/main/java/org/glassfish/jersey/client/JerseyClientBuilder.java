@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientListener;
 import jakarta.ws.rs.core.Configuration;
 
 import javax.net.ssl.HostnameVerifier;
@@ -139,6 +141,12 @@ public class JerseyClientBuilder extends ClientBuilder {
     @Override
     public ClientBuilder scheduledExecutorService(ScheduledExecutorService scheduledExecutorService) {
         config.scheduledExecutorService(scheduledExecutorService);
+        return this;
+    }
+
+    @Override
+    public ClientBuilder listener(ClientListener listener) {
+        config.listener(listener);
         return this;
     }
 

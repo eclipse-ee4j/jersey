@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 import jakarta.ws.rs.RuntimeType;
+import jakarta.ws.rs.client.ClientListener;
 import jakarta.ws.rs.core.Configurable;
 import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Feature;
@@ -115,6 +116,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
         private volatile ConnectorProvider connectorProvider;
         private volatile ExecutorService executorService;
         private volatile ScheduledExecutorService scheduledExecutorService;
+        private volatile ClientListener listener;
 
         private final LazyValue<ClientRuntime> runtime = Values.lazy((Value<ClientRuntime>) this::initRuntime);
 
@@ -166,6 +168,7 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             this.connectorProvider = original.connectorProvider;
             this.executorService = original.executorService;
             this.scheduledExecutorService = original.scheduledExecutorService;
+            this.listener = original.listener;
         }
 
         /**
@@ -297,6 +300,12 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
             return state;
         }
 
+        State listener(final ClientListener listener) {
+            final State state = strategy.onChange(this);
+            state.listener = listener;
+            return state;
+        }
+
         Connector getConnector() {
             // Get the connector only if the runtime has been initialized.
             return (runtime.isInitialized()) ? runtime.get().getConnector() : null;
@@ -312,6 +321,10 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
 
         ScheduledExecutorService getScheduledExecutorService() {
             return scheduledExecutorService;
+        }
+
+        ClientListener getListener() {
+            return listener;
         }
 
         JerseyClient getClient() {
@@ -810,6 +823,17 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
     }
 
     /**
+     * Register client listener.
+     *
+     * @param listener listener instance
+     * @return this client config instance
+     */
+    public ClientConfig listener(final ClientListener listener) {
+        state = state.listener(listener);
+        return this;
+    }
+
+    /**
      * Get the client transport connector.
      * <p>
      * May return {@code null} if no connector has been set.
@@ -856,6 +880,18 @@ public class ClientConfig implements Configurable<ClientConfig>, ExtendedConfig 
      */
     public ScheduledExecutorService getScheduledExecutorService() {
         return state.getScheduledExecutorService();
+    }
+
+    /**
+     * Get client listener.
+     * <p>
+     * May return null if no client listener has been set.
+     *
+     * @return client listener instance or {@code null} if not set.
+     * @since 5.0
+     */
+    public ClientListener getListener() {
+        return state.getListener();
     }
 
     /**
