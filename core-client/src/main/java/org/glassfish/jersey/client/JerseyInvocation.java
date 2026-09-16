@@ -962,47 +962,34 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
      * @return the {@link WebApplicationException} subtype matching the response status code.
      */
     public static WebApplicationException convertToWebApplicationException(final Response response) {
-        final WebApplicationException webAppException;
         final Response.Status status = Response.Status.fromStatusCode(response.getStatus());
 
         if (status == null) {
-            final Response.Status.Family statusFamily = response.getStatusInfo().getFamily();
-            webAppException = createExceptionForFamily(response, statusFamily);
-        } else {
-            switch (status) {
-                case BAD_REQUEST:
-                    webAppException = new BadRequestException(response);
-                    break;
-                case UNAUTHORIZED:
-                    webAppException = new NotAuthorizedException(response);
-                    break;
-                case FORBIDDEN:
-                    webAppException = new ForbiddenException(response);
-                    break;
-                case NOT_FOUND:
-                    webAppException = new NotFoundException(response);
-                    break;
-                case METHOD_NOT_ALLOWED:
-                    webAppException = new NotAllowedException(response);
-                    break;
-                case NOT_ACCEPTABLE:
-                    webAppException = new NotAcceptableException(response);
-                    break;
-                case UNSUPPORTED_MEDIA_TYPE:
-                    webAppException = new NotSupportedException(response);
-                    break;
-                case INTERNAL_SERVER_ERROR:
-                    webAppException = new InternalServerErrorException(response);
-                    break;
-                case SERVICE_UNAVAILABLE:
-                    webAppException = new ServiceUnavailableException(response);
-                    break;
-                default:
-                    final Response.Status.Family statusFamily = response.getStatusInfo().getFamily();
-                    webAppException = createExceptionForFamily(response, statusFamily);
-            }
+            return createExceptionForFamily(response, response.getStatusInfo().getFamily());
         }
-        return webAppException;
+
+        switch (status) {
+            case BAD_REQUEST:
+                return new BadRequestException(response);
+            case UNAUTHORIZED:
+                return new NotAuthorizedException(response);
+            case FORBIDDEN:
+                return new ForbiddenException(response);
+            case NOT_FOUND:
+                return new NotFoundException(response);
+            case METHOD_NOT_ALLOWED:
+                return new NotAllowedException(response);
+            case NOT_ACCEPTABLE:
+                return new NotAcceptableException(response);
+            case UNSUPPORTED_MEDIA_TYPE:
+                return new NotSupportedException(response);
+            case INTERNAL_SERVER_ERROR:
+                return new InternalServerErrorException(response);
+            case SERVICE_UNAVAILABLE:
+                return new ServiceUnavailableException(response);
+            default:
+                return createExceptionForFamily(response, response.getStatusInfo().getFamily());
+        }
     }
 
     private static WebApplicationException createExceptionForFamily(final Response response,
