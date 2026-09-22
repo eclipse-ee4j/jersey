@@ -941,46 +941,7 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
             // leaking connections (see JERSEY-2157).
             response.bufferEntity();
 
-            final WebApplicationException webAppException;
-            final Response.Status status = Response.Status.fromStatusCode(statusCode);
-
-            if (status == null) {
-                final Response.Status.Family statusFamily = finalResponse.getStatusInfo().getFamily();
-                webAppException = createExceptionForFamily(finalResponse, statusFamily);
-            } else {
-                switch (status) {
-                    case BAD_REQUEST:
-                        webAppException = new BadRequestException(finalResponse);
-                        break;
-                    case UNAUTHORIZED:
-                        webAppException = new NotAuthorizedException(finalResponse);
-                        break;
-                    case FORBIDDEN:
-                        webAppException = new ForbiddenException(finalResponse);
-                        break;
-                    case NOT_FOUND:
-                        webAppException = new NotFoundException(finalResponse);
-                        break;
-                    case METHOD_NOT_ALLOWED:
-                        webAppException = new NotAllowedException(finalResponse);
-                        break;
-                    case NOT_ACCEPTABLE:
-                        webAppException = new NotAcceptableException(finalResponse);
-                        break;
-                    case UNSUPPORTED_MEDIA_TYPE:
-                        webAppException = new NotSupportedException(finalResponse);
-                        break;
-                    case INTERNAL_SERVER_ERROR:
-                        webAppException = new InternalServerErrorException(finalResponse);
-                        break;
-                    case SERVICE_UNAVAILABLE:
-                        webAppException = new ServiceUnavailableException(finalResponse);
-                        break;
-                    default:
-                        final Response.Status.Family statusFamily = finalResponse.getStatusInfo().getFamily();
-                        webAppException = createExceptionForFamily(finalResponse, statusFamily);
-                }
-            }
+            final WebApplicationException webAppException = convertToWebApplicationException(finalResponse);
 
             return new ResponseProcessingException(finalResponse, webAppException);
         } catch (final Throwable t) {
@@ -989,7 +950,50 @@ public class JerseyInvocation implements jakarta.ws.rs.client.Invocation {
         }
     }
 
-    private WebApplicationException createExceptionForFamily(final Response response, final Response.Status.Family statusFamily) {
+    /**
+     * Convert the given response into the {@link WebApplicationException} subtype matching its status code,
+     * in the same way the sync and async invocation entry points do for non-successful responses.
+     * <p>
+     * Note that the response entity is not buffered by this method. Callers that do not consume the entity
+     * are responsible for buffering or closing the response to prevent leaking connections.
+     * </p>
+     *
+     * @param response the response to convert.
+     * @return the {@link WebApplicationException} subtype matching the response status code.
+     */
+    public static WebApplicationException convertToWebApplicationException(final Response response) {
+        final Response.Status status = Response.Status.fromStatusCode(response.getStatus());
+
+        if (status == null) {
+            return createExceptionForFamily(response, response.getStatusInfo().getFamily());
+        }
+
+        switch (status) {
+            case BAD_REQUEST:
+                return new BadRequestException(response);
+            case UNAUTHORIZED:
+                return new NotAuthorizedException(response);
+            case FORBIDDEN:
+                return new ForbiddenException(response);
+            case NOT_FOUND:
+                return new NotFoundException(response);
+            case METHOD_NOT_ALLOWED:
+                return new NotAllowedException(response);
+            case NOT_ACCEPTABLE:
+                return new NotAcceptableException(response);
+            case UNSUPPORTED_MEDIA_TYPE:
+                return new NotSupportedException(response);
+            case INTERNAL_SERVER_ERROR:
+                return new InternalServerErrorException(response);
+            case SERVICE_UNAVAILABLE:
+                return new ServiceUnavailableException(response);
+            default:
+                return createExceptionForFamily(response, response.getStatusInfo().getFamily());
+        }
+    }
+
+    private static WebApplicationException createExceptionForFamily(final Response response,
+            final Response.Status.Family statusFamily) {
         final WebApplicationException webAppException;
         switch (statusFamily) {
             case REDIRECTION:
