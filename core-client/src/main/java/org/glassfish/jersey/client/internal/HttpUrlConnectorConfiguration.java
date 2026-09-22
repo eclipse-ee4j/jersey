@@ -221,11 +221,14 @@ public abstract class HttpUrlConnectorConfiguration<C extends HttpUrlConnectorCo
             // check if sun.net.http.allowRestrictedHeaders system property has been set and log the result
             // the property is being cached in the HttpURLConnection, so this is only informative - there might
             // already be some connection(s), that existed before the property was set/changed.
-            isRestrictedHeaderPropertySet.set(Boolean.valueOf(AccessController.doPrivileged(
+            // Must set on the returned clientConfiguration (not on this intermediate instance):
+            // copyFromClient() already created a copy via init()+setNonEmpty(this), and this value
+            // is what HttpUrlConnector stores and later propagates via fromRequest().
+            clientConfiguration.isRestrictedHeaderPropertySet.set(Boolean.valueOf(AccessController.doPrivileged(
                     PropertiesHelper.getSystemProperty(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY, "false")
             )));
 
-            LOGGER.config(isRestrictedHeaderPropertySet.get()
+            LOGGER.config(clientConfiguration.isRestrictedHeaderPropertySet.get()
                     ? LocalizationMessages.RESTRICTED_HEADER_PROPERTY_SETTING_TRUE(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY)
                     : LocalizationMessages.RESTRICTED_HEADER_PROPERTY_SETTING_FALSE(ALLOW_RESTRICTED_HEADERS_SYSTEM_PROPERTY)
             );
