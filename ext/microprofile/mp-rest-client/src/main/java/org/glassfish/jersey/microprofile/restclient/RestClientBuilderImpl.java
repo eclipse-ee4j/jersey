@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019, 2026 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019, 2021 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -114,7 +115,10 @@ class RestClientBuilderImpl implements RestClientBuilder {
         clientBuilder = ClientBuilder.newBuilder();
         responseExceptionMappers = new HashSet<>();
         paramConverterProviders = new HashSet<>();
-        inboundHeaderProviders = new HashSet<>();
+        // LinkedHashSet: DefaultInboundHeaderProvider is registered first and must stay first so its
+        // ClientHeadersFactory.update() only sees RestClientBuilder.header(...) values, not headers
+        // from application InboundHeadersProviders (issue #6101).
+        inboundHeaderProviders = new LinkedHashSet<>();
         asyncInterceptorFactories = new ArrayList<>();
         config = ConfigProvider.getConfig();
         configWrapper = new ConfigWrapper(clientBuilder.getConfiguration());
@@ -567,8 +571,10 @@ class RestClientBuilderImpl implements RestClientBuilder {
         @Override
         public MultivaluedMap<String, String> update(MultivaluedMap<String, String> incomingHeaders,
                                                      MultivaluedMap<String, String> clientOutgoingHeaders) {
+            // Only RestClientBuilder.header(...) values. Application InboundHeadersProviders must not
+            // be auto-copied into the outbound request; they are only for ClientHeadersFactory (issue #6101).
             MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
-            map.putAll(incomingHeaders);
+            map.putAll(headers);
             clientOutgoingHeaders.forEach((k, v) -> map.addAll(k, v));
             return map;
         }
