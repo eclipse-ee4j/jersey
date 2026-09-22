@@ -1559,7 +1559,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
-                <artifactId>hk2-config</artifactId>
+                <artifactId>hk2-config-generator</artifactId>
                 <version>${hk2.config.version}</version>
             </dependency>
             <dependency>
@@ -2254,7 +2254,7 @@
         <graalvm.version>20.3.17</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>8.0.0-JDK17-M6</gf.impl.version>
+        <gf.impl.version>8.0.4</gf.impl.version>
         <cdi.api.version>4.1.0</cdi.api.version>
         <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
@@ -2264,8 +2264,8 @@
         <hk2.version>4.0.1</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[4.0,5)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[4.0,5)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>8.0.0-JDK17-M6</hk2.config.version>
-        <jsp.version>4.0.0-M2</jsp.version>
+        <hk2.config.version>8.0.4</hk2.config.version>
+        <jsp.version>4.0.0</jsp.version>
         <jstl.version>3.0.2</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.2.0</istack.commons.runtime.version>
