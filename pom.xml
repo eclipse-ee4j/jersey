@@ -2288,11 +2288,5 @@
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
         <mimepull.version>1.9.15</mimepull.version>
-
-        <!-- Do not autopublish by default -->
-        <release.autopublish>false</release.autopublish>
-
-        <!-- By default block until everything is really published -->
-        <release.waitUntil>published</release.waitUntil>
     </properties>
 </project>
