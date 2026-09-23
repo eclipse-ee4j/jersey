@@ -130,7 +130,7 @@ public class JettyHttpContainerDuringShutdownTest {
             }
             // invoke them fast as possible.
             List<Future<Response>> waitingResponses = invokers.stream().map(AsyncInvoker::get).collect(Collectors.toList());
-            assertThrows(TimeoutException.class, () -> shutdownServer(100));
+            assertThrows(TimeoutException.class, () -> shutdownServer(10));
             for (Future<Response> responseFuture : waitingResponses) {
                 try (Response response = responseFuture.get(30, TimeUnit.SECONDS)) {
                     assertThat("Unexpected response code", response.getStatus(), equalTo(204));
