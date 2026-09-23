@@ -43,7 +43,7 @@
     <url>https://projects.eclipse.org/projects/ee4j.jersey</url>
 
     <issueManagement>
-        <system>JIRA</system>
+        <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/jersey/issues</url>
     </issueManagement>
 
