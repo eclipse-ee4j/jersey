@@ -452,14 +452,6 @@
 
     <profiles>
         <profile>
-            <id>oss-release</id>
-            <properties>
-                <release.projectName>Eclipse Jersey BOM</release.projectName>
-                <release.autoPublish>false</release.autoPublish>
-                <release.waitUntil>published</release.waitUntil>
-            </properties>
-        </profile>
-        <profile>
             <id>project-info</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
