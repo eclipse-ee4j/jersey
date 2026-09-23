@@ -53,7 +53,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.glassfish.jersey.jsonp.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.jsonp.*;version=$${project.version.osgi}</Export-Package>
                         <!-- TODO: change to ${range;[==,+);${jsonp.api.version}} once the version is final-->
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},

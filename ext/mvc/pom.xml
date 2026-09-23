@@ -65,7 +65,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.glassfish.jersey.server.mvc.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.server.mvc.*;version=$${project.version.osgi}</Export-Package>
                         <Import-Package>
                             jakarta.servlet.*;version="[6.0,7.0)",
                             ${jakarta.annotation.osgi.version},

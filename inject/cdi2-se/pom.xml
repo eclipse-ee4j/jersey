@@ -140,7 +140,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.jersey.inject.cdi.se.*;version=${project.version}
+                            org.glassfish.jersey.inject.cdi.se.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,

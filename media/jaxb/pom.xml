@@ -100,7 +100,7 @@
                             ${jakarta.rest.osgi.version},
                             *
                         </Import-Package>
-                        <Export-Package>org.glassfish.jersey.jaxb.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.jaxb.*;version=$${project.version.osgi}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

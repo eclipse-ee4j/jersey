@@ -694,10 +694,14 @@
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
-                            <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
-                            <_noimportjava>true</_noimportjava>
+                            <!-- Version overrides are not warnings, but serious errors -->
+                            <_fixupmessages>"Version for package * is set to different values in the source *";restrict:=warning;is:=error</_fixupmessages>
                             <_nodefaultversion>false</_nodefaultversion>
                             <_noimportjava>true</_noimportjava>
+                            <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
+                            <!-- Strip -M1, -RC1, -SNAPSHOT qualifiers using versioncleanup -->
+                            <project.version.osgi>${versionmask;===;${version_cleanup;${project.version}}}</project.version.osgi>
+                            <Bundle-Version>$${project.version.osgi}</Bundle-Version>
                             <Include-Resource>{maven-resources},${project.build.directory}/legal</Include-Resource>
                         </instructions>
                     </configuration>
@@ -1540,7 +1544,7 @@
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
-                <version>3.0.0</version> <!-- JDK 17 needed for 1.0.4 -->
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
@@ -2123,7 +2127,7 @@
         <deploy.mvn.plugin.version>3.1.4</deploy.mvn.plugin.version>
         <ear.mvn.plugin.version>3.4.0</ear.mvn.plugin.version>
         <failsafe.mvn.plugin.version>3.5.5</failsafe.mvn.plugin.version>
-        <felix.mvn.plugin.version>5.1.9</felix.mvn.plugin.version> <!-- newer versions are not supported by JDK 11- -->
+        <felix.mvn.plugin.version>6.2.0</felix.mvn.plugin.version>
         <findbugs.mvn.plugin.version>3.0.5</findbugs.mvn.plugin.version>
         <gfembedded.mvn.plugin.version>5.1</gfembedded.mvn.plugin.version>
         <install.mvn.plugin.version>3.1.4</install.mvn.plugin.version>

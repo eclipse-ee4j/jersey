@@ -46,7 +46,7 @@
                             ${jakarta.rest.osgi.version},
                             *
                         </Import-Package>
-                        <Export-Package>org.glassfish.jersey.server.mvc.mustache.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.server.mvc.mustache.*;version=$${project.version.osgi}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

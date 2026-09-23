@@ -261,9 +261,9 @@
                         <Extension-Name>${project.artifactId}</Extension-Name>
                         <Export-Package>
                             jakarta.ws.rs.*;version=${jaxrs.api.impl.version},
-                            org.glassfish.jersey.*;version=${project.version},
-                            com.sun.research.ws.wadl.*;version=${project.version},
-                            jersey.repackaged.org.objectweb.asm.*;version=${project.version}
+                            org.glassfish.jersey.*;version=$${project.version.osgi},
+                            com.sun.research.ws.wadl.*;version=$${project.version.osgi},
+                            jersey.repackaged.org.objectweb.asm.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package><![CDATA[
                             jakarta.servlet.annotation.*;resolution:=optional;version="[6.0,7.0)",
