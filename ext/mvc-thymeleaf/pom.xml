@@ -44,7 +44,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.glassfish.jersey.server.mvc.thymeleaf.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.server.mvc.thymeleaf.*;version=$${project.version.osgi}</Export-Package>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>

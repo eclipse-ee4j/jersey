@@ -111,7 +111,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.jersey.microprofile.restclient.*;version=${project.version}
+                            org.glassfish.jersey.microprofile.restclient.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package>
                             ${cdi.osgi.version},

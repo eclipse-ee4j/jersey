@@ -163,7 +163,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.jersey.inject.weld.managed.*;version=${project.version}
+                            org.glassfish.jersey.inject.weld.managed.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package>
                             sun.misc.*;resolution:=optional,

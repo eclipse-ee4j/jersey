@@ -109,7 +109,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.glassfish.jersey.ext.cdi1x.validation.internal;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.ext.cdi1x.validation.internal;version=$${project.version.osgi}</Export-Package>
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
                             ${cdi.osgi.version},

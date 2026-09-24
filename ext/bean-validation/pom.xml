@@ -54,7 +54,7 @@
                 <configuration>
                     <instructions>
                         <!-- Note: When you're changing these properties change them also in bundles/jax-rs-ri/bundle/pom.xml. -->
-                        <Export-Package>org.glassfish.jersey.server.validation.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.server.validation.*;version=$${project.version.osgi}</Export-Package>
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
                             ${cdi.osgi.version},

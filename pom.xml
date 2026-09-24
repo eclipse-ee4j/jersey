@@ -17,13 +17,17 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+    child.project.url.inherit.append.path="false">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.9</version>
+        <version>2.0.5</version>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.jersey</groupId>
@@ -38,10 +42,8 @@
 
     <url>https://projects.eclipse.org/projects/ee4j.jersey</url>
 
-    <!-- prerequisites -->
-
     <issueManagement>
-        <system>JIRA</system>
+        <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/jersey/issues</url>
     </issueManagement>
 
@@ -70,32 +72,6 @@
             </snapshots>
         </repository>
     </repositories>
-
-    <!-- TODO: Can be removed after it would be removed from parent too -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>Disabled Sonatype Nexus</name>
-            <url>http://localhost</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <name>Disabled Sonatype Nexus</name>
-            <url>http://localhost</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </distributionManagement>
 
     <inceptionYear>2010</inceptionYear>
 
@@ -264,7 +240,9 @@
         </license>
     </licenses>
 
-    <scm>
+    <scm child.scm.connection.inherit.append.path="false"
+     child.scm.developerConnection.inherit.append.path="false"
+     child.scm.url.inherit.append.path="false">
         <connection>scm:git:git@github.com:jersey/jersey.git</connection>
         <developerConnection>scm:git:git@github.com:eclipse-ee4j/jersey.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/jersey</url>
@@ -572,14 +550,6 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>${deploy.mvn.plugin.version}</version>
-                    <configuration>
-                        <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.ops4j.pax.exam</groupId>
                     <artifactId>maven-paxexam-plugin</artifactId>
                     <version>${paxexam.mvn.plugin.version}</version>
@@ -724,10 +694,14 @@
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
-                            <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
-                            <_noimportjava>true</_noimportjava>
+                            <!-- Version overrides are not warnings, but serious errors -->
+                            <_fixupmessages>"Version for package * is set to different values in the source *";restrict:=warning;is:=error</_fixupmessages>
                             <_nodefaultversion>false</_nodefaultversion>
                             <_noimportjava>true</_noimportjava>
+                            <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
+                            <!-- Strip -M1, -RC1, -SNAPSHOT qualifiers using versioncleanup -->
+                            <project.version.osgi>${versionmask;===;${version_cleanup;${project.version}}}</project.version.osgi>
+                            <Bundle-Version>$${project.version.osgi}</Bundle-Version>
                             <Include-Resource>{maven-resources},${project.build.directory}/legal</Include-Resource>
                         </instructions>
                     </configuration>
@@ -805,56 +779,30 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <configuration>
-                        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>injected-nexus-deploy</id>
-                            <phase>none</phase>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.10.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <autoPublish>${release.autopublish}</autoPublish>
-                        <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots</centralSnapshotsUrl>
-                        <deploymentName>Eclipse Jersey ${project.version}</deploymentName>
-                        <publishingServerId>central</publishingServerId>
-                        <waitUntil>${release.waitUntil}</waitUntil>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.7.2</version>
+                <version>1.8.0</version>
                 <configuration>
                     <updatePomFile>true</updatePomFile>
                     <flattenMode>resolveCiFriendliesOnly</flattenMode>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>flatten.clean</id>
                         <phase>clean</phase>
                         <goals>
                             <goal>clean</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -1063,15 +1011,16 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>oss-release</id>
+            <properties>
+                <release.projectName>Eclipse Jersey</release.projectName>
+                <release.autoPublish>false</release.autoPublish>
+                <release.waitUntil>published</release.waitUntil>
+            </properties>
         </profile>
         <profile>
             <id>xdk</id>
@@ -1175,37 +1124,6 @@
                     <url>http://localhost</url>
                 </site>
             </distributionManagement>
-        </profile>
-        <profile>
-            <id>sbom</id>
-            <activation>
-                <property>
-                    <name>!skipSBOM</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.cyclonedx</groupId>
-                        <artifactId>cyclonedx-maven-plugin</artifactId>
-                        <version>${cyclonedx.mvn.plugin.version}</version>
-                        <inherited>true</inherited>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>makeAggregateBom</goal>
-                                </goals>
-                                <configuration>
-                                    <!--                            <schemaVersion>1.4</schemaVersion>-->
-                                    <projectType>framework</projectType>
-                                    <excludeTestProject>true</excludeTestProject>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>sonar</id>
@@ -1407,50 +1325,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>central-release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <!-- TODO: Can be removed after upgrade to parent 2.0.0, overrides parent's settings.' -->
-        <profile>
-            <id>staging</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>sonatype-nexus-staging</id>
-                    <name>Sonatype Nexus Staging</name>
-                    <url>${sonatypeOssDistMgmtStagingUrl}</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>sonatype-nexus-staging</id>
-                    <name>Sonatype Nexus Staging</name>
-                    <url>${sonatypeOssDistMgmtStagingUrl}</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
     </profiles>
 
@@ -1670,11 +1544,11 @@
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
-                <version>3.0.0</version> <!-- JDK 17 needed for 1.0.4 -->
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.hk2</groupId>
-                <artifactId>hk2-config</artifactId>
+                <artifactId>hk2-config-generator</artifactId>
                 <version>${hk2.config.version}</version>
             </dependency>
             <dependency>
@@ -2253,7 +2127,7 @@
         <deploy.mvn.plugin.version>3.1.4</deploy.mvn.plugin.version>
         <ear.mvn.plugin.version>3.4.0</ear.mvn.plugin.version>
         <failsafe.mvn.plugin.version>3.5.5</failsafe.mvn.plugin.version>
-        <felix.mvn.plugin.version>5.1.9</felix.mvn.plugin.version> <!-- newer versions are not supported by JDK 11- -->
+        <felix.mvn.plugin.version>6.2.0</felix.mvn.plugin.version>
         <findbugs.mvn.plugin.version>3.0.5</findbugs.mvn.plugin.version>
         <gfembedded.mvn.plugin.version>5.1</gfembedded.mvn.plugin.version>
         <install.mvn.plugin.version>3.1.4</install.mvn.plugin.version>
@@ -2369,7 +2243,7 @@
         <graalvm.version>20.3.17</graalvm.version>
 
         <!-- do not need CQs (below this line till the end of version properties)-->
-        <gf.impl.version>8.0.0-JDK17-M6</gf.impl.version>
+        <gf.impl.version>8.0.4</gf.impl.version>
         <cdi.api.version>4.1.0</cdi.api.version>
         <cdi.osgi.version>jakarta.enterprise.*;version="[4.0,5)"</cdi.osgi.version>
         <ejb.version>4.0.1</ejb.version>
@@ -2379,8 +2253,8 @@
         <hk2.version>4.0.1</hk2.version>
         <hk2.osgi.version>org.glassfish.hk2.*;version="[4.0,5)"</hk2.osgi.version>
         <hk2.jvnet.osgi.version>org.jvnet.hk2.*;version="[4.0,5)"</hk2.jvnet.osgi.version>
-        <hk2.config.version>8.0.0-JDK17-M6</hk2.config.version>
-        <jsp.version>4.0.0-M2</jsp.version>
+        <hk2.config.version>8.0.4</hk2.config.version>
+        <jsp.version>4.0.0</jsp.version>
         <jstl.version>3.0.2</jstl.version>
         <jta.api.version>2.0.1</jta.api.version>
         <istack.commons.runtime.version>4.2.0</istack.commons.runtime.version>
@@ -2417,12 +2291,6 @@
         <yasson.version>3.0.4</yasson.version>
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
-        <mimepull.version>1.9.15</mimepull.version>
-
-        <!-- Do not autopublish by default -->
-        <release.autopublish>false</release.autopublish>
-
-        <!-- By default block until everything is really published -->
-        <release.waitUntil>published</release.waitUntil>
+        <mimepull.version>1.11.0</mimepull.version>
     </properties>
 </project>

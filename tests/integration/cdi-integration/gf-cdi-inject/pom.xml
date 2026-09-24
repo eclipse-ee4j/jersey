@@ -200,15 +200,6 @@
                                     <destFileName>jersey-container-servlet.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.glassfish.jersey.containers</groupId>
-                                    <artifactId>jersey-container-servlet</artifactId>
-                                    <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-container-servlet-core.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
                                     <groupId>org.glassfish.jersey.ext</groupId>
                                     <artifactId>jersey-entity-filtering</artifactId>
                                     <version>${jersey.version}</version>

@@ -90,8 +90,8 @@
                     <instructions>
                         <!-- Note: When you're changing these properties change them also in bundles/jaxrs-ri/pom.xml. -->
                         <Export-Package>
-                            org.glassfish.jersey.server.*;version=${project.version},
-                            com.sun.research.ws.wadl.*;version=${project.version}
+                            org.glassfish.jersey.server.*;version=$${project.version.osgi},
+                            com.sun.research.ws.wadl.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},

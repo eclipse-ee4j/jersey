@@ -79,7 +79,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.glassfish.jersey.message.filtering.*;version=${project.version}</Export-Package>
+                        <Export-Package>org.glassfish.jersey.message.filtering.*;version=$${project.version.osgi}</Export-Package>
                         <Import-Package>
                             ${jakarta.annotation.osgi.version},
                             ${jakarta.rest.osgi.version},

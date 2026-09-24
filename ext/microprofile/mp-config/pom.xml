@@ -109,7 +109,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.jersey.microprofile.config.*;version=${project.version}
+                            org.glassfish.jersey.microprofile.config.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package>
                             org.eclipse.microprofile.config.*;version="!",

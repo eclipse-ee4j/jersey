@@ -96,7 +96,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.jersey.micrometer.server.*;version=${project.version}
+                            org.glassfish.jersey.micrometer.server.*;version=$${project.version.osgi}
                         </Export-Package>
                         <Import-Package>
                             org.eclipse.microprofile.micrometer.server.*;version="!",
