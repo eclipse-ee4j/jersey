@@ -31,12 +31,14 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>4.0.2</jersey.version> <!-- the public version that pass the tck -->
-        <glassfish.container.version>7.1.1</glassfish.container.version>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.version>8.0.4</glassfish.version>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <jakarta.platform.version>10.0.0</jakarta.platform.version>
         <junit.jupiter.version>5.7.2</junit.jupiter.version>
         <jakarta.rest.version>4.0.0</jakarta.rest.version>
+        <tck.artifactId>jakarta-restful-ws-tck</tck.artifactId>
         <tck.version>4.0.1</tck.version>
     </properties>
 
@@ -61,33 +63,46 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.hk2</groupId>
-            <artifactId>hk2-locator</artifactId>
-            <version>4.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>4.0.9</version>
-            <scope>runtime</scope>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta-restful-ws-tck</artifactId>
+            <version>${tck.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>glassfish-client-ee11</artifactId>
+            <version>2.2.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>2.2.1</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta-restful-ws-tck</artifactId>
-            <version>${tck.version}</version>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <version>1.10.2.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>2.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -98,67 +113,10 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>3.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>simple-glassfish-api</artifactId>
-            <version>${glassfish.container.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-container</artifactId>
-            <version>1.10.2.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>${jakarta.platform.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- For SE TCK tests -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.tools</groupId>
-            <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-binding</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-jaxb</artifactId>
-            <scope>test</scope>
-        </dependency>
-       <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-sse</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -179,7 +137,7 @@
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>glassfish</artifactId>
-                                    <version>${glassfish.container.version}</version>
+                                    <version>${glassfish.version}</version>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}</outputDirectory>
@@ -194,251 +152,132 @@
                             <goal>copy</goal>
                         </goals>
                         <configuration>
+                            <stripVersion>true</stripVersion>
+                            <stripClassifier>true</stripClassifier>
+                            <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
                             <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.containers</groupId>
+                                    <artifactId>jersey-container-grizzly2-http</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.containers</groupId>
+                                    <artifactId>jersey-container-servlet</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.glassfish.jersey.core</groupId>
                                     <artifactId>jersey-client</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-client.jar</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.glassfish.jersey.core</groupId>
-                                    <artifactId>jersey-server</artifactId>
-                                    <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-server.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.glassfish.jersey.core</groupId>
                                     <artifactId>jersey-common</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-common.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.glassfish.jersey.containers</groupId>
-                                    <artifactId>jersey-container-grizzly2-http</artifactId>
+                                    <groupId>org.glassfish.jersey.core</groupId>
+                                    <artifactId>jersey-server</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-container-grizzly2-http.jar</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext</groupId>
+                                    <artifactId>jersey-bean-validation</artifactId>
+                                    <version>${jersey.version}</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.glassfish.jersey.containers</groupId>
-                                    <artifactId>jersey-container-servlet</artifactId>
+                                    <groupId>org.glassfish.jersey.ext</groupId>
+                                    <artifactId>jersey-entity-filtering</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-container-servlet-core.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.glassfish.jersey.containers</groupId>
-                                    <artifactId>jersey-container-servlet</artifactId>
+                                    <groupId>org.glassfish.jersey.ext</groupId>
+                                    <artifactId>jersey-mvc</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-container-servlet.jar</destFileName>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext</groupId>
+                                    <artifactId>jersey-mvc-jsp</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                    <artifactId>jersey-cdi1x</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                    <artifactId>jersey-cdi1x-servlet</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                    <artifactId>jersey-cdi1x-transaction</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                    <artifactId>jersey-cdi-rs-inject</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.ext.microprofile</groupId>
+                                    <artifactId>jersey-mp-rest-client</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.inject</groupId>
+                                    <artifactId>jersey-hk2</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.glassfish.jersey.media</groupId>
-                                    <artifactId>jersey-media-sse</artifactId>
+                                    <artifactId>jersey-media-jaxb</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-media-sse.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.glassfish.jersey.media</groupId>
                                     <artifactId>jersey-media-json-binding</artifactId>
                                     <version>${jersey.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jersey-media-json-binding.jar</destFileName>
                                 </artifactItem>
-                                 <artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.media</groupId>
+                                    <artifactId>jersey-media-json-jackson</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.media</groupId>
+                                    <artifactId>jersey-media-json-jettison</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.media</groupId>
+                                    <artifactId>jersey-media-json-processing</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.media</groupId>
+                                    <artifactId>jersey-media-multipart</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.glassfish.jersey.media</groupId>
+                                    <artifactId>jersey-media-sse</artifactId>
+                                    <version>${jersey.version}</version>
+                                </artifactItem>
+
+                                <artifactItem>
                                     <groupId>jakarta.ws.rs</groupId>
                                     <artifactId>jakarta.ws.rs-api</artifactId>
                                     <version>${jakarta.rest.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
-                                    <destFileName>jakarta.ws.rs-api.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.4</version>
-                <configuration>
-                    <inheritIo>true</inheritIo>
-                    <useMavenLogger>true</useMavenLogger>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>StopDomain1</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>stop-domain</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>StartDomain1</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>start-domain</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Enable Trace requests</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>set</argument>
-                                <argument>server-config.network-config.protocols.protocol.http-listener-1.http.trace-enabled=true</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Delete User j2ee</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>--passwordfile</argument>
-                                <argument>${project.basedir}/j2ee.pass</argument>
-                                <argument>delete-file-user</argument>
-                                <argument>j2ee</argument>
-                            </arguments>
-                            <successCodes>
-                                <successCode>0</successCode>
-                                <successCode>1</successCode>
-                            </successCodes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Add User j2ee</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>--passwordfile</argument>
-                                <argument>${project.basedir}/j2ee.pass</argument>
-                                <argument>create-file-user</argument>
-                                <argument>--groups</argument>
-                                <argument>staff:mgr</argument>
-                                <argument>j2ee</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Delete User javajoe</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>--passwordfile</argument>
-                                <argument>${project.basedir}/javajoe.pass</argument>
-                                <argument>delete-file-user</argument>
-                                <argument>javajoe</argument>
-                            </arguments>
-                            <successCodes>
-                                <successCode>0</successCode>
-                                <successCode>1</successCode>
-                            </successCodes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Add User javajoe</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>--passwordfile</argument>
-                                <argument>${project.basedir}/javajoe.pass</argument>
-                                <argument>create-file-user</argument>
-                                <argument>--groups</argument>
-                                <argument>guest</argument>
-                                <argument>javajoe</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>list users</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>list-file-users</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>StopDomain</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${asadmin.home}</workingDirectory>
-                            <executable>${asadmin}</executable>
-                            <arguments>
-                                <argument>stop-domain</argument>
-                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -452,39 +291,44 @@
                         <id>gf-tests</id>
                         <goals>
                             <goal>integration-test</goal>
-                            <goal>verify</goal>
                         </goals>
                         <configuration>
                             <excludes>
                                 <exclude>**/SeBootstrapIT.java</exclude>
                             </excludes>
+                            <test>${run.test}</test>
                             <skipTests>false</skipTests> <!-- Do not skip when the jersey-tck profile is on -->
                             <dependenciesToScan>jakarta.ws.rs:${tck.artifactId}</dependenciesToScan>
                             <systemPropertyVariables>
-                                <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
-                                <servlet_adaptor>org.glassfish.jersey.servlet.ServletContainer</servlet_adaptor>
-                                <webServerHost>localhost</webServerHost>
-                                <webServerPort>8080</webServerPort>
-                                <junit.log.traceflag>true</junit.log.traceflag>
+                                <glassfish.home>${glassfish.home}</glassfish.home>
+
+                                <glassfish.postBootCommands>
+                                    --passwordfile ${basedir}/j2ee.pass create-file-user --groups staff:mgr:DIRECTOR j2ee
+                                    --passwordfile ${basedir}/javajoe.pass create-file-user --groups guest:OTHERROLE javajoe
+                                    set server-config.network-config.protocols.protocol.http-listener-1.http.trace-enabled=true
+                                </glassfish.postBootCommands>
+
                                 <user>j2ee</user>
                                 <password>j2ee</password>
                                 <authuser>javajoe</authuser>
                                 <authpassword>javajoe</authpassword>
+
+                                <webServerHost>localhost</webServerHost>
+                                <webServerPort>8080</webServerPort>
+
+                                <servlet_adaptor>org.glassfish.jersey.servlet.ServletContainer</servlet_adaptor>
+                                <junit.log.traceflag>true</junit.log.traceflag>
                                 <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
-                                <jimage.dir>${project.build.directory}/jdk11-bundle</jimage.dir>
+                                <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
                                 <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
-                                <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.ws.rs-api.jar:${glassfish.home}/glassfish/modules/jakarta.xml.bind-api.jar:${project.build.directory}/jdk11-bundle/java.base:${project.build.directory}/jdk11-bundle/java.rmi:${project.build.directory}/jdk11-bundle/java.sql:${project.build.directory}/jdk11-bundle/java.naming</signature.sigTestClasspath>
+                                <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.ws.rs-api.jar:${glassfish.home}/glassfish/modules/jakarta.xml.bind-api.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</signature.sigTestClasspath>
                             </systemPropertyVariables>
-                            <environmentVariables>
-                                <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
-                            </environmentVariables>
                         </configuration>
                     </execution>
                     <execution>
                         <id>se-tests</id>
                         <goals>
                             <goal>integration-test</goal>
-                            <goal>verify</goal>
                         </goals>
                         <configuration>
                             <skipTests>false</skipTests> <!-- Do not skip when the jersey-tck profile is on -->
@@ -493,6 +337,12 @@
                             </includes>
                             <dependenciesToScan>jakarta.ws.rs:${tck.artifactId}</dependenciesToScan>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>verify-tests</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
