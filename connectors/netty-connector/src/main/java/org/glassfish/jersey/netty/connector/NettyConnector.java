@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2016, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -222,7 +223,14 @@ class NettyConnector implements Connector {
                }
             }
 
-            final JerseyExpectContinueHandler expect100ContinueHandler = new JerseyExpectContinueHandler();
+            // On a channel taken from the pool the handler of the pipeline has to be used, because only
+            // that handler receives the 100 Continue response.
+            final JerseyExpectContinueHandler pooledExpect100ContinueHandler =
+                    chan == null ? null : chan.pipeline().get(JerseyExpectContinueHandler.class);
+            final JerseyExpectContinueHandler expect100ContinueHandler =
+                    pooledExpect100ContinueHandler == null
+                            ? new JerseyExpectContinueHandler()
+                            : pooledExpect100ContinueHandler;
 
             if (chan == null) {
                requestConfiguration.connectTimeout(jerseyRequest);
@@ -453,6 +461,7 @@ class NettyConnector implements Connector {
 
                 if (continueExpected) {
                     final CountDownLatch expect100ContinueLatch = new CountDownLatch(1);
+                    expect100ContinueHandler.resetHandler();
                     expect100ContinueHandler.attachCountDownLatch(expect100ContinueLatch);
                     //send expect request, sync and wait till either response or timeout received
                     entityWriter.writeAndFlush(nettyRequest);
