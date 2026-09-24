@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -174,7 +175,7 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
 
     private URI getRequestUri(final Request request, final URI baseUri) throws URISyntaxException {
         final String serverAddress = getServerAddress(baseUri);
-        String uri = request.getHttpURI().getPath();
+        String uri = Request.getPathInContext(request);
 
         final String queryString = request.getHttpURI().getQuery();
         if (queryString != null) {
