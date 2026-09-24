@@ -32,7 +32,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jersey.version>4.0.2</jersey.version> <!-- the public version that pass the tck -->
+        <jersey.version>4.0.99-SNAPSHOT</jersey.version> <!-- the public version that pass the tck -->
         <glassfish.version>8.0.4</glassfish.version>
         <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <jakarta.platform.version>10.0.0</jakarta.platform.version>
@@ -297,7 +297,7 @@
                                 <exclude>**/SeBootstrapIT.java</exclude>
                             </excludes>
                             <test>${run.test}</test>
-                            <skipTests>false</skipTests> <!-- Do not skip when the jersey-tck profile is on -->
+                            <skipTests>false</skipTests>
                             <dependenciesToScan>jakarta.ws.rs:${tck.artifactId}</dependenciesToScan>
                             <systemPropertyVariables>
                                 <glassfish.home>${glassfish.home}</glassfish.home>
@@ -331,7 +331,7 @@
                             <goal>integration-test</goal>
                         </goals>
                         <configuration>
-                            <skipTests>false</skipTests> <!-- Do not skip when the jersey-tck profile is on -->
+                            <skipTests>false</skipTests>
                             <includes>
                                 <include>**/SeBootstrapIT.java</include>
                             </includes>
@@ -371,12 +371,6 @@
             <properties>
                 <asadmin.home>${glassfish.home}/glassfish/bin</asadmin.home>
                 <asadmin>asadmin</asadmin>
-            </properties>
-        </profile>
-        <profile>
-            <id>jersey-tck</id>
-            <properties>
-                <jersey.version>${revision}</jersey.version> <!-- When running the profile, use SNAPSHOT -->
             </properties>
         </profile>
     </profiles>
