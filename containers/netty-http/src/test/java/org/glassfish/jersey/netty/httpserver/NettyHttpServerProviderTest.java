@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2021, 2023 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2018 Markus KARG. All rights reserved.
  *
@@ -17,6 +18,34 @@
 
 package org.glassfish.jersey.netty.httpserver;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.SeBootstrap;
+import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.UriBuilder;
+
+import java.lang.System.Logger;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.server.spi.WebServer;
+import org.glassfish.jersey.server.spi.WebServerProvider;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -25,36 +54,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
-import java.security.AccessController;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.net.ssl.SSLContext;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.SeBootstrap;
-import jakarta.ws.rs.SeBootstrap.Configuration.SSLClientAuthentication;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.UriBuilder;
-
-import org.glassfish.jersey.internal.util.PropertiesHelper;
-import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.spi.Container;
-import org.glassfish.jersey.server.spi.WebServer;
-import org.glassfish.jersey.server.spi.WebServerProvider;
-
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
-
 /**
  * Unit tests for {@link NettyHttpServerProvider}.
  *
@@ -62,6 +61,7 @@ import org.junit.jupiter.api.Timeout;
  * @since 3.1.0
  */
 public final class NettyHttpServerProviderTest {
+    private static final Logger LOG = System.getLogger(NettyHttpServerProviderTest.class.getName());
 
     @Test
     @Timeout(value = 15000L, unit = TimeUnit.MILLISECONDS)
@@ -84,7 +84,7 @@ public final class NettyHttpServerProviderTest {
             throws InterruptedException, ExecutionException {
         // given
         final WebServerProvider webServerProvider = new NettyHttpServerProvider();
-        final SeBootstrap.Configuration configuration = configuration(getPort(), FALSE);
+        final SeBootstrap.Configuration configuration = configuration(0, FALSE);
 
         // when
         final WebServer webServer = Application.class.isInstance(application)
@@ -126,32 +126,6 @@ public final class NettyHttpServerProviderTest {
         public Set<Object> getSingletons() {
             return Collections.singleton(new Resource());
         }
-    }
-
-    private static final Logger LOGGER = Logger.getLogger(NettyHttpServerProviderTest.class.getName());
-
-    private static final int DEFAULT_PORT = 0;
-
-    private static final int getPort() {
-        final String value = AccessController
-                .doPrivileged(PropertiesHelper.getSystemProperty("jersey.config.test.container.port"));
-        if (value != null) {
-            try {
-                final int i = Integer.parseInt(value);
-                if (i < 0) {
-                    throw new NumberFormatException("Value is negative.");
-                }
-                return i;
-            } catch (final NumberFormatException e) {
-                LOGGER.log(Level.CONFIG,
-                        "Value of 'jersey.config.test.container.port'"
-                                + " property is not a valid non-negative integer [" + value + "]."
-                                + " Reverting to default [" + DEFAULT_PORT + "].",
-                        e);
-            }
-        }
-
-        return DEFAULT_PORT;
     }
 
     @Test

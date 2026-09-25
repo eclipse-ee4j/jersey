@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,6 @@ module org.glassfish.jersey.netty.connector {
     requires jakarta.ws.rs;
     requires jakarta.inject;
 
-    requires io.netty.all;
     requires io.netty.buffer;
     requires io.netty.handler;
     requires io.netty.handler.proxy;

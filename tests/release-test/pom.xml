@@ -36,10 +36,10 @@
     <description>Jersey post-release validation tests</description>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.version>3.8.6</maven.version>
-        <maven.resolver.version>1.7.3</maven.resolver.version> <!-- 1.8.2 does not work-->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.version>3.9.16</maven.version>
+        <maven.resolver.version>1.9.27</maven.resolver.version>
         <httpcore.version>4.4.16</httpcore.version>
     </properties>
 

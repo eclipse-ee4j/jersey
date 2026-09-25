@@ -122,7 +122,8 @@ public class NettyHttpContainerProvider implements ContainerProvider {
         try {
             final EventLoopGroup bossGroup = serverBootstrap.config().group();
             final EventLoopGroup workerGroup = serverBootstrap.config().childGroup();
-
+            // Netty 4.2.18 doesn't always make ports immediately available.
+            Thread.sleep(100L);
             Channel ch = serverBootstrap.bind(port).sync().channel();
 
             ch.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {

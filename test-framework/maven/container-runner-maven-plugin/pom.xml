@@ -37,9 +37,9 @@
 
     <properties>
         <groovy-eclipse-compiler.version>3.9.0</groovy-eclipse-compiler.version>
-        <groovy-eclipse-batch.version>4.0.26-01</groovy-eclipse-batch.version>
-        <maven.version>3.9.9</maven.version>
-        <maven-plugin.version>3.15.1</maven-plugin.version>
+        <groovy-eclipse-batch.version>4.0.33-02</groovy-eclipse-batch.version>
+        <maven.version>3.9.16</maven.version>
+        <maven-plugin.version>3.16.0</maven-plugin.version>
     </properties>
 
     <dependencies>

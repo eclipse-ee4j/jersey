@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2016, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,9 @@
 package org.glassfish.jersey.test.netty;
 
 import java.net.URI;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -73,9 +77,12 @@ public class NettyTestContainerFactory implements TestContainerFactory {
 
         @Override
         public void stop() {
+            if (server == null) {
+                return;
+            }
             try {
-                server.close().sync();
-            } catch (InterruptedException e) {
+                server.close().sync().get(10L, TimeUnit.SECONDS);
+            } catch (InterruptedException | TimeoutException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
