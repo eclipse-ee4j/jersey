@@ -1,6 +1,10 @@
 pipeline {
     agent none
 
+    environment {
+        MAVEN_OPTS = "-Xms1g -Xmx2g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
+    }
+
     options {
           disableConcurrentBuilds()
           buildDiscarder(logRotator(numToKeepStr:'15', artifactNumToKeepStr: '2' ))
