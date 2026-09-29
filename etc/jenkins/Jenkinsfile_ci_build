@@ -21,10 +21,10 @@ pipeline {
                         maven 'apache-maven-latest'
                     }
                     steps {
-                        sh '''
-                                mvn -B -e -ntp clean install -DskipTests -T4C # Fastest possible check
-                                mvn -B -e -ntp clean install -Dcheckstyle.skip=true
-                            '''
+                        // Fastest possible check
+                        sh 'mvn -B -e -ntp clean install -DskipTests -T4C'
+                        // Tests
+                        sh 'mvn -B -e -ntp clean install -Dcheckstyle.skip=true'
                     }
                 }
                 stage('JDK 25') {
@@ -34,14 +34,18 @@ pipeline {
                         maven 'apache-maven-latest'
                     }
                     steps {
+                        // Fastest possible check
+                        sh 'mvn -B -e -ntp clean install -DskipTests -T4C'
+                        // Check for version irregularities
+                        sh 'mvn -B -e -ntp clean verify -f tests/version-agnostic -Djersey.version=4.0.99-SNAPSHOT'
+                        // Tests
+                        sh 'mvn -B -e -ntp clean install -Dcheckstyle.skip=true'
+                        // jenkins echo on own line, will be well visible in the GUI.
+                        echo "If dependency convergence fails, try to exclude some dependencies you don't need, or override them."
                         sh '''
-                                mvn -B -e -ntp clean install -DskipTests -T4C # Fastest possible check
-                                mvn -B -e -ntp clean verify -f tests/version-agnostic -Djersey.version=4.0.99-SNAPSHOT # Check for version irregularities
-                                mvn -B -e -ntp clean install -Dcheckstyle.skip=true
-                                echo "*** If dependency convergence fails, try to exclude some dependencies you don't need, or override them. ***"
-                                export EXCLUDE_ARGS=''
-                                bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
-                            '''
+                           export EXCLUDE_ARGS=''
+                           bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
+                           '''
                     }
                 }
             }
