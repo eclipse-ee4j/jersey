@@ -37,15 +37,15 @@
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
-        <hk2.version>3.0.3</hk2.version>
-        <jersey.version>4.0.0-M1</jersey.version>
+        <hk2.version>4.0.2</hk2.version>
+        <jersey.version>4.0.99-SNAPSHOT</jersey.version>
     </properties>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.5</version>
+                <version>3.6.0</version>
                 <configuration>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
