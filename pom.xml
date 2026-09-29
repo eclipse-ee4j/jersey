@@ -2240,7 +2240,7 @@
         <gson.version>2.13.1</gson.version>
 
         <jaeger.version>1.8.1</jaeger.version>
-        <org.codehaus.gmavenplus.version>4.2.0</org.codehaus.gmavenplus.version>
+        <org.codehaus.gmavenplus.version>4.3.1</org.codehaus.gmavenplus.version>
 
         <!-- micrometer -->
         <micrometer.version>1.15.1</micrometer.version>
