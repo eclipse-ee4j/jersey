@@ -29,6 +29,7 @@
 
     <groupId>org.glassfish.jersey.tests</groupId>
     <artifactId>version-agnostic</artifactId>
+    <version>0.0.0</version>
     <packaging>jar</packaging>
     <name>jersey-agnostic-test</name>
 

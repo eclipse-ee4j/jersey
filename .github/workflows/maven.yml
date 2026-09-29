@@ -60,7 +60,7 @@ jobs:
         java-version: ${{ matrix.java_version }}
     - name: Build
       id: license-check
-      run: mvn -ntp -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout -pl '!:version-agnostic'
+      run: mvn -ntp -V -U -B ${{matrix.verify_profiles}} org.eclipse.dash:license-tool-plugin:license-check -DexcludeArtifactIds=bsh,jmh-core,jmh-generator-annprocess,swing-layout
       continue-on-error: true
     - name: Upload license-check info
       uses: actions/upload-artifact@v4

@@ -52,7 +52,8 @@
         <module>release-test</module>
         <module>performance</module>
         <module>stress</module>
-        <module>version-agnostic</module>
+        <!-- Always standalone, should be executed manually after everything else with -Djersey.version=x.y.z -->
+<!--        <module>version-agnostic</module>-->
     </modules>
 
     <dependencyManagement>
