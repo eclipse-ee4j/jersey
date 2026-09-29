@@ -105,8 +105,9 @@
         </profile>
         <profile>
             <id>JMOCKIT-MODULE-FOR-PRE-JDK24</id>
+            <!-- JMockit 1.50 is still incompatible with Java 24+ -->
             <activation>
-                <jdk>[11,24)</jdk>
+                <jdk>[17,24)</jdk>
             </activation>
             <modules>
                 <module>jmockit</module>

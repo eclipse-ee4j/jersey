@@ -102,8 +102,7 @@
                 <version>3.14.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>17</release>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>

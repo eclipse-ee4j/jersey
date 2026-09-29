@@ -36,8 +36,7 @@
     <description>Jersey post-release validation tests</description>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <hk2.version>3.0.3</hk2.version>
         <jersey.version>4.0.0-M1</jersey.version>
     </properties>
@@ -45,7 +44,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.5</version>
                 <configuration>
@@ -55,7 +53,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>
                     <skip>true</skip>
@@ -111,7 +108,6 @@
                 <dependency>
                     <groupId>org.glassfish.jersey.inject</groupId>
                     <artifactId>jersey-hk2</artifactId>
-                    <version>${jersey.version}</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>

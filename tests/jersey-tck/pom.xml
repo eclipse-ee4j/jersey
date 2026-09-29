@@ -29,8 +29,7 @@
     <description>This test verifies the compliance of Eclipse Jersey with Jakarta REST</description>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>4.0.99-SNAPSHOT</jersey.version> <!-- the public version that pass the tck -->
         <glassfish.version>8.0.4</glassfish.version>

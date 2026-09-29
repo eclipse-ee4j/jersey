@@ -67,8 +67,7 @@
                 <version>${compiler.mvn.plugin.version}</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>
