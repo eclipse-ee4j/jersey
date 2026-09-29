@@ -1443,8 +1443,8 @@
                         com.sun.ws.rs.ext:*.examples.*:*.innate:*.innate.*:*.tests:*.tests.*
                     </excludePackageNames>
                     <links>
-                        <link>https://jax-rs.github.io/apidocs/2.1</link>
-                        <link>https://javaee.github.io/hk2/apidocs/</link>
+                        <link>https://jakartaee.github.io/rest/apidocs/</link>
+                        <link>https://eclipse-ee4j.github.io/glassfish-hk2/apidocs/</link>
                     </links>
                     <doclint>none</doclint>
                     <sourceFileExcludes>
