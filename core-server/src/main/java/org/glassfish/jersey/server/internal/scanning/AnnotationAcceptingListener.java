@@ -142,11 +142,13 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
     }
 
     // ScannerListener
+    @Override
     public boolean accept(final String name) {
         return !(name == null || name.isEmpty()) && name.endsWith(".class");
 
     }
 
+    @Override
     public void process(final String name, final InputStream in) throws IOException {
         new ClassReaderWrapper(in).accept(classVisitor, 0);
     }
@@ -309,7 +311,8 @@ public final class AnnotationAcceptingListener implements ResourceProcessor {
 
     private static class ClassReaderWrapper {
         private static final Logger LOGGER = Logger.getLogger(ClassReader.class.getName());
-        private static final int WARN_VERSION = Opcodes.V26;
+        /** Highest supported version */
+        private static final int WARN_VERSION = Opcodes.V27;
         private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
         private final byte[] b;

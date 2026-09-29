@@ -56,7 +56,8 @@ public interface Opcodes {
    *
    * @deprecated This API is experimental.
    */
-  @Deprecated int ASM10_EXPERIMENTAL = 1 << 24 | 10 << 16 | 0 << 8;
+  @Deprecated(forRemoval = false)
+  int ASM10_EXPERIMENTAL = 1 << 24 | 10 << 16 | 0 << 8;
 
   /*
    * Internal flags used to redirect calls to deprecated methods. For instance, if a visitOldStuff
@@ -292,6 +293,7 @@ public interface Opcodes {
   int V24 = 0 << 16 | 68;
   int V25 = 0 << 16 | 69;
   int V26 = 0 << 16 | 70;
+  int V27 = 0 << 16 | 71;
 
   /**
    * Version flag indicating that the class is using 'preview' features.
