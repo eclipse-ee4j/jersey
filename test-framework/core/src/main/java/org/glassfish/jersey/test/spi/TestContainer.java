@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,6 +55,13 @@ public interface TestContainer {
      * Stop the container.
      */
     public void stop();
+
+    /**
+     * @return simple name of this class.
+     */
+    default String getName() {
+        return getClass().getSimpleName();
+    }
 
     /**
      * optional method to configure container before it's being started

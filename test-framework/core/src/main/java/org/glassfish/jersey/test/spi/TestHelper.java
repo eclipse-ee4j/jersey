@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,9 @@
 
 package org.glassfish.jersey.test.spi;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
@@ -33,6 +37,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
  * @author Michal Gajdos
  */
 public final class TestHelper {
+    private static final Logger LOG = System.getLogger(TestHelper.class.getName());
 
     /**
      * Create a human readable string from given URI. This method replaces {@code 0} port (start container at first available
@@ -69,14 +74,19 @@ public final class TestHelper {
         for (Method method : testMethods) {
             children.add(DynamicTest.dynamicTest(method.getName(), () -> {
                 try {
+                    LOG.log(Level.INFO, "Invoking test " + displayName + "." + method.getName());
                     for (Method beforeEachMethod : beforeEachMethods) {
                         beforeEachMethod.invoke(test);
                     }
                     method.invoke(test);
+                } catch (InvocationTargetException e) {
+                    // Strip the reflection
+                    throw e.getCause();
                 } finally {
                     for (Method afterEachMethod : afterEachMethods) {
                         afterEachMethod.invoke(test);
                     }
+                    LOG.log(Level.INFO, "Finished test " + displayName + "." + method.getName());
                 }
             }));
         }

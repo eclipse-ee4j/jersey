@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2014, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,9 @@
 
 package org.glassfish.jersey.tests.e2e.container;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
@@ -34,7 +33,7 @@ import org.glassfish.jersey.test.spi.TestContainerFactory;
  */
 public abstract class JerseyContainerTest extends JerseyTest {
 
-    private static final List<TestContainerFactory> FACTORIES = listContainerFactories(
+    private static final List<TestContainerFactory> FACTORIES = List.of(
             new GrizzlyTestContainerFactory(),
             new InMemoryTestContainerFactory(),
             new JdkHttpServerTestContainerFactory(),
@@ -48,17 +47,5 @@ public abstract class JerseyContainerTest extends JerseyTest {
 
     public JerseyContainerTest(TestContainerFactory testContainerFactory) {
         super(testContainerFactory);
-    }
-
-    protected static List<TestContainerFactory> listContainerFactories(TestContainerFactory... factories) {
-        final JdkVersion version = JdkVersion.getJdkVersion();
-        boolean isJDKGreaterThanOrEqualTo17 = version.getMajor() >= 17;
-        final List<TestContainerFactory> filtered = new LinkedList<>();
-        for (TestContainerFactory factory : factories) {
-            if (isJDKGreaterThanOrEqualTo17 || !JettyTestContainerFactory.class.isInstance(factory)) {
-                filtered.add(factory);
-            }
-        }
-        return filtered;
     }
 }
