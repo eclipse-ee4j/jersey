@@ -2186,7 +2186,7 @@
         <buildhelper.mvn.plugin.version>3.6.1</buildhelper.mvn.plugin.version>
         <buildnumber.mvn.plugin.version>3.2.1</buildnumber.mvn.plugin.version>
         <checkstyle.mvn.plugin.version>3.6.0</checkstyle.mvn.plugin.version>
-        <checkstyle.version>10.21.4</checkstyle.version>
+        <checkstyle.version>10.26.1</checkstyle.version>
         <compiler.mvn.plugin.version>3.14.0</compiler.mvn.plugin.version>
         <cyclonedx.mvn.plugin.version>2.8.1</cyclonedx.mvn.plugin.version>
         <dependency.mvn.plugin.version>3.8.1</dependency.mvn.plugin.version>
