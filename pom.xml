@@ -2229,7 +2229,7 @@
         <bouncycastle.version>1.70</bouncycastle.version>
         <commons.codec.version>1.18.0</commons.codec.version>
         <commons.logging.version>1.4.0</commons.logging.version>
-        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
+        <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
         <felix.framework.security.version>2.8.4</felix.framework.security.version>
         <felix.framework.version>7.0.5</felix.framework.version>
@@ -2263,10 +2263,10 @@
         <xmlunit.version>2.14.0</xmlunit.version>
         <httpclient.version>4.5.14</httpclient.version>
         <httpclient5.version>5.6.4</httpclient5.version>
-        <jackson.version>2.20.1</jackson.version>
-        <jackson3.version>3.1.1</jackson3.version>
-        <jackson.annotation.version>2.21</jackson.annotation.version>
-        <javassist.version>3.30.2-GA</javassist.version>
+        <jackson.version>2.22.3</jackson.version>
+        <jackson3.version>3.2.3</jackson3.version>
+        <jackson.annotation.version>2.22</jackson.annotation.version>
+        <javassist.version>3.33.0-GA</javassist.version>
         <jettison.version>1.5.7</jettison.version>
         <jboss.vfs.version>3.3.2.Final</jboss.vfs.version>
         <jboss.logging.version>3.6.3.Final</jboss.logging.version>
@@ -2353,12 +2353,12 @@
         <jetty.servlet.api.version>5.0.2</jetty.servlet.api.version>
         <jetty11.version>11.0.26</jetty11.version>
         <jetty.plugin.version>12.1.13</jetty.plugin.version>
-        <jsonb.api.version>3.0.1</jsonb.api.version>
-        <jsonp.ri.version>1.1.7</jsonp.ri.version>
-        <jsonp.jaxrs.version>1.1.7</jsonp.jaxrs.version>
-        <yasson.version>3.0.4</yasson.version>
+        <jsonb.api.version>3.0.3</jsonb.api.version>
+        <jsonp.ri.version>1.1.9</jsonp.ri.version>
+        <jsonp.jaxrs.version>1.1.9</jsonp.jaxrs.version>
         <moxy.version>5.0.2</moxy.version>
         <moxy.asm.version>9.10.0</moxy.asm.version>
+        <yasson.version>3.0.5</yasson.version>
 
         <javax.annotation.version>1.3.2</javax.annotation.version> <!--Deprecated, used only for @generated annotation in perf tests -->
         <mimepull.version>1.11.0</mimepull.version>
