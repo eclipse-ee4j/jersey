@@ -1,7 +1,7 @@
 package ${package}.heroku;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.ee10.webapp.WebAppContext;
+import org.eclipse.jetty.ee11.webapp.WebAppContext;
 
 /**
  * This class launches the web application in an embedded Jetty container. This is the entry point to your application. The Java

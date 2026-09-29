@@ -730,10 +730,9 @@
                     <artifactId>buildnumber-maven-plugin</artifactId>
                     <version>${buildnumber.mvn.plugin.version}</version>
                 </plugin>
-                <!-- TODO: remove the old jetty plugin dependencies -->
                 <plugin>
-                    <groupId>org.eclipse.jetty.ee10</groupId>
-                    <artifactId>jetty-ee10-maven-plugin</artifactId>
+                    <groupId>org.eclipse.jetty.ee11</groupId>
+                    <artifactId>jetty-ee11-maven-plugin</artifactId>
                     <version>${jetty.plugin.version}</version>
                 </plugin>
                 <plugin>
@@ -1722,8 +1721,8 @@
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.jetty.ee10</groupId>
-                <artifactId>jetty-ee10-webapp</artifactId>
+                <groupId>org.eclipse.jetty.ee11</groupId>
+                <artifactId>jetty-ee11-webapp</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
 
@@ -2344,11 +2343,11 @@
         <jaxrs.api.impl.version>4.0.0</jaxrs.api.impl.version>
         <jakarta.rest.osgi.version>jakarta.ws.rs;version="[3.1,5)",jakarta.ws.rs.client;version="[3.1,5)",jakarta.ws.rs.container;version="[3.1,5)",jakarta.ws.rs.core;version="[3.1,5)",jakarta.ws.rs.ext;version="[3.1,5)",jakarta.ws.rs.sse;version="[3.1,5)"</jakarta.rest.osgi.version>
         <jetty.osgi.version>org.eclipse.jetty.*;version="[11,15)"</jetty.osgi.version>
-        <jetty.version>12.0.27</jetty.version>
+        <jetty.version>12.1.13</jetty.version>
         <jetty9.version>9.4.58.v20250814</jetty9.version>
         <jetty.servlet.api.version>5.0.2</jetty.servlet.api.version>
         <jetty11.version>11.0.26</jetty11.version>
-        <jetty.plugin.version>12.0.22</jetty.plugin.version>
+        <jetty.plugin.version>12.1.13</jetty.plugin.version>
         <jsonb.api.version>3.0.1</jsonb.api.version>
         <jsonp.ri.version>1.1.7</jsonp.ri.version>
         <jsonp.jaxrs.version>1.1.7</jsonp.jaxrs.version>

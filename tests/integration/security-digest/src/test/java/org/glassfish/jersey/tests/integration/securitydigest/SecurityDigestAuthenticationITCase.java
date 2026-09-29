@@ -33,11 +33,13 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author Miroslav Fuksa
  */
+@Disabled("Stopped working with Jetty 12.1, see also https://github.com/jetty/jetty.project/pull/15160")
 public class SecurityDigestAuthenticationITCase extends JerseyTest {
 
     @Override

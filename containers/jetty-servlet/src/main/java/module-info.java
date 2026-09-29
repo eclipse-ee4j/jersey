@@ -26,7 +26,7 @@ module org.glassfish.jersey.container.jetty.servlet {
     requires org.glassfish.jersey.core.common;
     requires org.glassfish.jersey.container.jetty.http;
     requires static org.glassfish.jersey.container.servlet;
-    requires org.eclipse.jetty.ee10.webapp;
+    requires org.eclipse.jetty.ee11.webapp;
 
     exports org.glassfish.jersey.jetty.servlet;
     opens org.glassfish.jersey.jetty.servlet;

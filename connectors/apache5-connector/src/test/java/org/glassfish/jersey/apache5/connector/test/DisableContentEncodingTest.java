@@ -77,7 +77,7 @@ public class DisableContentEncodingTest extends JerseyTest {
         WebTarget r = client.target(getBaseUri());
 
         String enc = r.request().get().readEntity(String.class);
-        assertEquals("gzip, x-gzip, deflate", enc);
+        assertEquals("gzip, deflate, x-gzip", enc);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class DisableContentEncodingTest extends JerseyTest {
         WebTarget r = client.target(getBaseUri());
 
         String enc = r.request().get().readEntity(String.class);
-        assertEquals("gzip, x-gzip, deflate", enc);
+        assertEquals("gzip, deflate, x-gzip", enc);
     }
 
     @Test

@@ -146,7 +146,7 @@
                         <id>default-compile</id>
                         <configuration>
                             <!-- compile everything to ensure module-info contains right entries -->
-                            <release>11</release>
+                            <release>17</release>
                             <compilerArgs>
                                 <arg>--add-reads</arg>
                                 <arg>org.glassfish.jersey.incubator.html.json=ALL-UNNAMED</arg>

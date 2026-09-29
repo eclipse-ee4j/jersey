@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +18,9 @@
 package org.glassfish.jersey.tests.integration.jersey2176;
 
 import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,14 +33,13 @@ public class TraceResponseWrapper extends HttpServletResponseWrapper {
 
     public TraceResponseWrapper(final HttpServletResponse response) throws IOException {
         super(response);
-
         localStream = new ByteArrayOutputStream();
         localStream.write("[FILTER]".getBytes(response.getCharacterEncoding()));
     }
 
     @Override
     public PrintWriter getWriter() throws IOException {
-        throw new IllegalStateException();
+        throw new IllegalStateException("Writer not supported!");
     }
 
     @Override
@@ -64,12 +64,15 @@ public class TraceResponseWrapper extends HttpServletResponseWrapper {
 
     public void writeBodyAndClose(final String encoding) throws IOException {
         localStream.write("[/FILTER]".getBytes(encoding));
-
-        super.getOutputStream().write(localStream.toByteArray());
-        super.getOutputStream().close();
         localStream.close();
+        super.getOutputStream().write(localStream.toByteArray());
     }
 
+    /**
+     * First call {@link #writeBodyAndClose(String)}
+     *
+     * @return length of the internal buffer.
+     */
     public String getContentLength() {
         return String.valueOf(localStream.size() + "[/FILTER]".length());
     }
