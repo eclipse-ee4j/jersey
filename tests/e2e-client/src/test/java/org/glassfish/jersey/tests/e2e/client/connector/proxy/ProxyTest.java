@@ -168,6 +168,9 @@ public class ProxyTest {
 
         @AfterAll
         public static void tearDownProxy() {
+            if (server == null) {
+                return;
+            }
             try {
                 server.stop();
             } catch (Exception e) {
