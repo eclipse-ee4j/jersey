@@ -43,7 +43,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${enforcer.mvn.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>
