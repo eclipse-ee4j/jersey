@@ -77,10 +77,11 @@
                 <inherited>true</inherited>
                 <configuration>
                     <release>17</release>
+                    <compilerArgs>
                         <!--<Werror />-->
                         <!-- TODO work towards eliminating all warnings in order to be able to enable the -Xlint option -->
                         <!--Xlint/-->
-                    </compilerArguments>
+                    </compilerArgs>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>

@@ -346,12 +346,12 @@
                     <inherited>true</inherited>
                     <configuration>
                         <release>${java.version}</release>
-                        <compilerArguments>
+                        <compilerArgs>
 
                             <!--<Werror />-->
                             <!-- TODO work towards eliminating all warnings in order to be able to enable the -Xlint option -->
                             <!--Xlint/-->
-                        </compilerArguments>
+                        </compilerArgs>
                         <showWarnings>false</showWarnings>
                         <fork>false</fork>
                     </configuration>
@@ -895,10 +895,10 @@
                 <version>${compiler.mvn.plugin.version}</version>
                 <configuration>
                     <release>${java.version}</release>
-                    <compilerArguments>
+                    <compilerArgs>
                         <!-- Do not warn about using sun.misc.Unsafe -->
                         <XDignore.symbol.file />
-                    </compilerArguments>
+                    </compilerArgs>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>
