@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,6 @@
 
 package org.glassfish.jersey.tests.e2e.json;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.AccessController;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Application;
@@ -33,9 +24,18 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
-
 import jakarta.xml.bind.JAXBContext;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.util.JdkVersion;
 import org.glassfish.jersey.internal.util.PropertiesHelper;
@@ -47,9 +47,12 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-
-import org.eclipse.persistence.jaxb.JAXBContextFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -60,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public abstract class JsonTest extends JerseyTest {
 
     private static final String PKG_NAME = "org/glassfish/jersey/tests/e2e/json/entity/";
-    private static final Logger LOGGER = Logger.getLogger(JsonTest.class.getName());
+    private static final Logger LOG = System.getLogger(JsonTest.class.getName());
 
     /**
      * Helper class representing configuration for one test case.
@@ -114,7 +117,7 @@ public abstract class JsonTest extends JerseyTest {
                 this.context = new JettisonJaxbContext(jsonConfiguration, classes);
             } else {
                 this.context = forMoxyProvider
-                        ? JAXBContextFactory.createContext(classes, new HashMap()) : JAXBContext.newInstance(classes);
+                        ? JAXBContextFactory.createContext(classes, new HashMap<>()) : JAXBContext.newInstance(classes);
             }
         }
 
@@ -154,10 +157,9 @@ public abstract class JsonTest extends JerseyTest {
                         // Check if the JSON is the same as in the previous version.
                         containerRequest.bufferEntity();
                         try {
-                            String json = JsonTestHelper.getResourceAsString(PKG_NAME,
-                                    providerName + "_" + testName + (moxyJaxbProvider() || runningOnJdk7AndLater() ? "_MOXy" : "")
-                                            + ".json").trim();
-
+                            final String fileName = providerName + "_" + testName + "_MOXy" + ".json";
+                            LOG.log(Level.INFO, "Loading file " + fileName);
+                            String json = JsonTestHelper.getResourceAsString(PKG_NAME, fileName).trim();
                             final InputStream entityStream = containerRequest.getEntityStream();
                             String retrievedJson = JsonTestHelper.getEntityAsString(entityStream).trim();
                             entityStream.reset();
@@ -174,8 +176,8 @@ public abstract class JsonTest extends JerseyTest {
                             }
 
                             if (!json.equals(retrievedJson)) {
-                                LOGGER.log(Level.SEVERE, "Expected: " + json);
-                                LOGGER.log(Level.SEVERE, "Actual:   " + retrievedJson);
+                                LOG.log(ERROR, "Expected: " + json);
+                                LOG.log(ERROR, "Actual:   " + retrievedJson);
 
                                 return Response.ok("{\"error\":\"JSON values doesn't match.\"}").build();
                             }
@@ -210,15 +212,9 @@ public abstract class JsonTest extends JerseyTest {
         }
     }
 
-    private static boolean runningOnJdk7AndLater() {
-        final String javaVersion = AccessController.doPrivileged(PropertiesHelper.getSystemProperty("java.version"));
-        final JdkVersion jdkVersion = JdkVersion.parseVersion(javaVersion);
-        return (jdkVersion.getMajor() == 1 && jdkVersion.getMinor() >= 7) || (jdkVersion.getMajor() > 8);
-    }
-
     private static boolean moxyJaxbProvider() {
         return "org.eclipse.persistence.jaxb.JAXBContextFactory".equals(
-                AccessController.doPrivileged(PropertiesHelper.getSystemProperty("jakarta.xml.bind.JAXBContext")));
+                PropertiesHelper.getSystemProperty("jakarta.xml.bind.JAXBContext"));
     }
 
     /**
@@ -315,13 +311,19 @@ public abstract class JsonTest extends JerseyTest {
     @Test
     public void test() throws Exception {
         final Object entity = getJsonTestSetup().getTestEntity();
-
-        final Object receivedEntity = target()
+        final Class<?> entityClass = getJsonTestSetup().getEntityClass();
+        final Object receivedEntity;
+        try {
+            receivedEntity = target()
                 .path(getProviderPathPart())
                 .path(getEntityPathPart())
                 .request("application/json; charset=UTF-8")
-                .post(Entity.entity(entity, "application/json; charset=UTF-8"), getJsonTestSetup().getEntityClass());
-
+                .post(Entity.entity(entity, "application/json; charset=UTF-8"), entityClass);
+        } catch (Exception e) {
+            // This is because the junit error doesn't provide any useful info what broke.
+            LOG.log(ERROR, "Failed test for entity " + entity + " and entity " + entityClass, e);
+            throw e;
+        }
         // Print out configuration for this test case as there is no way to rename generated JUnit tests at the moment.
         // TODO remove once JUnit supports parameterized tests with custom names
         // TODO (see http://stackoverflow.com/questions/650894/change-test-name-of-parameterized-tests
@@ -329,6 +331,6 @@ public abstract class JsonTest extends JerseyTest {
         assertEquals(entity, receivedEntity,
                 String.format("%s - %s: Received JSON entity content does not match expected JSON entity content.",
                 getJsonTestSetup().getJsonProvider().getClass().getSimpleName(),
-                getJsonTestSetup().getEntityClass().getSimpleName()));
+                entityClass.getSimpleName()));
     }
 }

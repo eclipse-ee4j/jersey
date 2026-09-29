@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.glassfish.grizzly.utils.ArrayUtils;
-import org.glassfish.jersey.internal.util.PropertiesHelper;
 import org.glassfish.jersey.test.spi.TestHelper;
 import org.glassfish.jersey.tests.e2e.json.JsonTest.JsonTestSetup;
 import org.glassfish.jersey.tests.e2e.json.entity.AnotherArrayTestBean;
@@ -103,44 +102,17 @@ public class JaxbTest {
         return java.util.regex.Pattern.matches("\\d+", s);
     }
 
-    /**
-     * check if the current JVM is supported by this test.
-     *
-     * @return true if all tests can be run, false if some tests shall be excluded due to JRE bug
-     */
-    private static boolean isJavaVersionSupported() {
-        final String javaVersion = PropertiesHelper.getSystemProperty("java.version").run();
-        if (javaVersion != null) {
-            int pos =  javaVersion.lastIndexOf("_");
-            if (pos > -1) {
-                final String rawMinorVersion = javaVersion.substring(pos + 1);
-                final Integer minorVersion = (isNumeric(rawMinorVersion)) ? Integer.valueOf(rawMinorVersion) : 0;
-                return minorVersion < 160 || minorVersion > 172; //only those between 161 and 172 minor
-                                                                 // releases are not supported
-            } else if (javaVersion.contains("adoptopenjdk")) {
-                return false; //because that is exactly that case when
-                // Eclipse Jenkins runs JVM of adoptopenjdk of not supported version
-                //and we even do not have a chance to recognize that
-            }
-        }
-        return  true;
-    }
-
     @TestFactory
     public Collection<DynamicContainer> generateTests() throws Exception {
         List<DynamicContainer> tests = new ArrayList<>();
-        final Class<?>[]
-                filteredClasses = (isJavaVersionSupported()) ? CLASSES : ArrayUtils.remove(CLASSES, EncodedContentBean.class);
-
         for (final JsonTestProvider jsonProvider : JsonTestProvider.JAXB_PROVIDERS) {
-            for (final Class<?> entityClass : filteredClasses) {
+            for (final Class<?> entityClass : CLASSES) {
                 JsonTestSetup setupTest = new JsonTestSetup(entityClass, jsonProvider);
                 JsonTest jsonTest = new JsonTest(setupTest) {};
                 tests.add(TestHelper.toTestContainer(jsonTest,
-                    String.format("jaxbTest (%s, %s)", entityClass.getSimpleName(), jsonProvider.getClass().getSimpleName())));
+                    String.format("JaxbTest (%s, %s)", entityClass.getSimpleName(), jsonProvider.getClass().getSimpleName())));
             }
         }
-
         return tests;
     }
 }

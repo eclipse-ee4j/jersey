@@ -2262,7 +2262,7 @@
         <jackson3.version>3.1.1</jackson3.version>
         <jackson.annotation.version>2.21</jackson.annotation.version>
         <javassist.version>3.30.2-GA</javassist.version>
-        <jettison.version>1.3.7</jettison.version> <!-- TODO: 1.3.8 doesn't work; AbstractJsonTest complexBeanWithAttributes -->
+        <jettison.version>1.5.7</jettison.version>
         <jboss.vfs.version>3.3.2.Final</jboss.vfs.version>
         <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <jmh.version>1.37</jmh.version>
