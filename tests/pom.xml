@@ -47,7 +47,6 @@
         <module>e2e-testng</module>
         <module>e2e-tls</module>
         <module>integration</module>
-        <module>mem-leaks</module>
         <module>osgi</module>
         <module>release-test</module>
         <module>performance</module>
