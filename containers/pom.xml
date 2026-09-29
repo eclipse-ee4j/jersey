@@ -34,7 +34,6 @@
     <description>Jersey container providers umbrella project module</description>
 
     <modules>
-        <module>glassfish</module>
         <module>grizzly2-http</module>
         <module>grizzly2-servlet</module>
         <module>jdk-http</module>
