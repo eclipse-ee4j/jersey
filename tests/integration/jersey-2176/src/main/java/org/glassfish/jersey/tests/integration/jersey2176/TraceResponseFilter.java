@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,29 @@
 
 package org.glassfish.jersey.tests.integration.jersey2176;
 
-import java.io.IOException;
-
-import jakarta.ws.rs.core.HttpHeaders;
-
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.HttpHeaders;
+
+import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 /**
  * @author Libor Kramolis
  */
-public class TraceResponseFilter implements Filter {
+public class TraceResponseFilter extends HttpFilter {
 
     public static final String X_SERVER_DURATION_HEADER = "X-SERVER-DURATION";
     public static final String X_STATUS_HEADER = "X-STATUS";
     public static final String X_NO_FILTER_HEADER = "X-NO-FILTER";
+
+    private static final Logger LOG = System.getLogger(TraceResponseFilter.class.getName());
+    private static final long serialVersionUID = 1L;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -47,29 +50,35 @@ public class TraceResponseFilter implements Filter {
     }
 
     @Override
-    public void doFilter(final ServletRequest request, ServletResponse response, final FilterChain chain)
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        TraceResponseWrapper wrappedResponse = null;
-        if (((HttpServletRequest) request).getHeader(X_NO_FILTER_HEADER) == null) {
-            response = wrappedResponse = new TraceResponseWrapper((HttpServletResponse) response);
+        final TraceResponseWrapper wrappedResponse;
+        if (request.getHeader(X_NO_FILTER_HEADER) != null) {
+            wrappedResponse = null;
+        } else {
+            wrappedResponse = new TraceResponseWrapper(response);
         }
         String status = "n/a";
         final long startTime = System.nanoTime();
         try {
-            chain.doFilter(request, response);
+            chain.doFilter(request, wrappedResponse == null ? response : wrappedResponse);
             status = "OK";
         } catch (final Throwable th) {
             status = "FAIL";
         } finally {
-            if (((HttpServletResponse) response).getStatus() == 500) {
+            int httpStatus = response.getStatus();
+            if (httpStatus == 500) {
                 status = "FAIL";
             }
             final long duration = System.nanoTime() - startTime;
-            ((HttpServletResponse) response).addHeader(X_SERVER_DURATION_HEADER, String.valueOf(duration));
-            ((HttpServletResponse) response).addHeader(X_STATUS_HEADER, status);
-            if (wrappedResponse != null) {
-                ((HttpServletResponse) response).setHeader(HttpHeaders.CONTENT_LENGTH, wrappedResponse.getContentLength());
-                wrappedResponse.writeBodyAndClose(response.getCharacterEncoding());
+            LOG.log(Level.INFO, "Status: " + status + ", http status: " + httpStatus + ", duration: " + duration + " ns");
+            if (!response.isCommitted()) {
+                response.addHeader(X_SERVER_DURATION_HEADER, String.valueOf(duration));
+                response.addHeader(X_STATUS_HEADER, status);
+                if (wrappedResponse != null) {
+                    response.setHeader(HttpHeaders.CONTENT_LENGTH, wrappedResponse.getContentLength());
+                    wrappedResponse.writeBodyAndClose(response.getCharacterEncoding());
+                }
             }
         }
     }

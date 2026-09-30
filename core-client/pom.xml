@@ -52,10 +52,10 @@
                         <configuration>
                             <source>${java.version}</source>
                             <target>${java.version}</target>
-                            <compilerArguments>
+                            <compilerArgs>
                                 <!-- Do not warn about using sun.misc.Unsafe -->
                                 <XDignore.symbol.file/>
-                            </compilerArguments>
+                            </compilerArgs>
                         </configuration>
                     </execution>
                     <execution>

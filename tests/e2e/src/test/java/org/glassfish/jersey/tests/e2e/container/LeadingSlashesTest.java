@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,6 @@
 
 package org.glassfish.jersey.tests.e2e.container;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import jakarta.ws.rs.Encoded;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -30,9 +27,15 @@ import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.test.jetty.JettyTestContainerFactory;
+import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.glassfish.jersey.test.spi.TestHelper;
 import org.junit.jupiter.api.DynamicContainer;
@@ -41,6 +44,7 @@ import org.junit.jupiter.api.TestFactory;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Test Jersey container implementation of URL resolving.
@@ -126,53 +130,55 @@ public class LeadingSlashesTest {
         @Test
         public void testSimpleSlashes() {
             Response result = call("/simple");
-            assertEquals(CONTAINER_RESPONSE, result.readEntity(String.class));
+            assertEquals(CONTAINER_RESPONSE, result.readEntity(String.class), getTestContainerFactory().toString());
 
             result = call("//simple");
-            assertNotEquals(CONTAINER_RESPONSE, result.readEntity(String.class));
+            assertNotEquals(CONTAINER_RESPONSE, result.readEntity(String.class), getTestContainerFactory().toString());
         }
 
         @Test
         public void testSlashesWithBeginningEmpty() {
             Response result = call("/test");
-            assertEquals(CONTAINER_RESPONSE, result.readEntity(String.class));
+            assertEquals(CONTAINER_RESPONSE, result.readEntity(String.class), getTestContainerFactory().toString());
         }
 
         @Test
         public void testSlashesWithBeginningEmptyPathParam() {
-            if (JettyTestContainerFactory.class.isInstance(getTestContainerFactory())) {
-                return; // since Jetty 11.0.5
-            }
+            skipTest();
             Response result = call("///test");
-            assertEquals("-", result.readEntity(String.class));
+            assertEquals("-", result.readEntity(String.class), getTestContainerFactory().toString());
         }
 
         @Test
         public void testSlashesWithBeginningEmptyPathParamWithQueryParams() {
-            if (JettyTestContainerFactory.class.isInstance(getTestContainerFactory())) {
-                return; // since Jetty 11.0.5
-            }
+            skipTest();
             URI hostPort = UriBuilder.fromUri("http://localhost/").port(getPort()).build();
             WebTarget target = client().target(hostPort).path("///testParams")
                     .queryParam("bar", "Container")
                     .queryParam("baz", "Response");
 
             Response result = target.request().get();
-            assertEquals("PATH PARAM: -, QUERY PARAM Container-Response", result.readEntity(String.class));
+            assertEquals("PATH PARAM: -, QUERY PARAM Container-Response", result.readEntity(String.class),
+                getTestContainerFactory().toString());
         }
 
         @Test
         public void testEncodedQueryParams() {
-            if (JettyTestContainerFactory.class.isInstance(getTestContainerFactory())) {
-                return; // since Jetty 11.0.5
-            }
+            skipTest();
             URI hostPort = UriBuilder.fromUri("http://localhost/").port(getPort()).build();
             WebTarget target = client().target(hostPort).path("///encoded")
                     .queryParam("query", "%dummy23+a");
 
             Response response = target.request().get();
-            assertEquals(200, response.getStatus());
-            assertEquals("true:%25dummy23%2Ba", response.readEntity(String.class));
+            assertEquals(200, response.getStatus(), getTestContainerFactory().toString());
+            assertEquals("true:%25dummy23%2Ba", response.readEntity(String.class), getTestContainerFactory().toString());
+        }
+
+        private void skipTest() {
+            String containerName = getTestContainer().getName();
+            // since Jetty 11.0.5 and latest patches of all JDK versions.
+            assumeFalse(Set.of("JettyTestContainer", "JdkHttpServerTestContainer").contains(containerName),
+                "Detected container which returns HTTP 400 for multiple leading slashes: " + containerName);
         }
 
         private Response call(String path) {

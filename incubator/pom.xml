@@ -57,7 +57,7 @@
         <profile>
             <id>HTML-JSON-FOR-PRE-JDK24</id>
             <activation>
-                <jdk>[11, 24)</jdk>
+                <jdk>[17, 24)</jdk>
             </activation>
             <modules>
                 <module>html-json</module>

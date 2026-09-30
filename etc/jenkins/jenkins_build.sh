@@ -2,4 +2,4 @@
 
 export DEBUG=true
 
-mvn -V -U -B -e -Pstaging clean install -DskipSBOM
+mvn -V -B -ntp -e  clean install

@@ -32,13 +32,11 @@
 
     <description>Jersey EJB for GlassFish integration</description>
 
+    <properties>
+        <glassfish.version>7.1.0</glassfish.version>
+    </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>org.glassfish.jersey.ext.cdi</groupId>
-            <artifactId>jersey-cdi1x</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
@@ -47,12 +45,18 @@
         <dependency>
             <groupId>jakarta.interceptor</groupId>
             <artifactId>jakarta.interceptor-api</artifactId>
-            <version>${jakarta.interceptor.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -61,29 +65,29 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- TODO remove versions when org.glassfish.exousia:exousia:jar in central-->
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
             <artifactId>ejb-container</artifactId>
-            <version>6.0.0</version>
+            <version>${glassfish.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>container-common</artifactId>
-            <version>6.0.0</version>
+            <version>${glassfish.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.hk2</groupId>
-            <artifactId>hk2-config</artifactId>
-            <version>6.0.0</version>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>hk2-config-generator</artifactId>
+            <version>${glassfish.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -93,7 +97,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <!--
@@ -119,16 +122,14 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <inherited>true</inherited>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <!-- Explicitly set versions for packages from GlassFish to allow future uptake of GlassFish 7.x-->
                         <Import-Package>
-                            com.sun.*;version="[6.0,8)",
+                            com.sun.*;version="[7.1,9)",
                             ${jakarta.annotation.osgi.version},
-                            org.glassfish.ejb.*;version="[6.0,8)",
-                            org.glassfish.internal.*;version="[6.0,8)",
+                            org.glassfish.ejb.*;version="[7.1,9)",
+                            org.glassfish.internal.*;version="[7.1,9)",
                             ${hk2.osgi.version},
                             *
                         </Import-Package>

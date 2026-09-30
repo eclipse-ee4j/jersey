@@ -47,13 +47,6 @@
                     <reuseForks>false</reuseForks>
                     <enableAssertions>false</enableAssertions>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-testng</artifactId>
-                        <version>${surefire.mvn.plugin.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -69,7 +62,6 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${testng6.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +45,7 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
  */
 public abstract class JsonTestProvider {
 
-    public static final Collection<JsonTestProvider> JAXB_PROVIDERS = new LinkedHashSet<JsonTestProvider>() {{
+    public static final Collection<JsonTestProvider> JAXB_PROVIDERS = new LinkedHashSet<>() {{
         add(new JacksonJsonTestProvider());
         add(new JettisonMappedJsonTestProvider());
         add(new JettisonBadgerfishJsonTestProvider());
@@ -53,7 +54,7 @@ public abstract class JsonTestProvider {
     }};
 
     //  TODO add MoxyJsonTestProvider once MOXy supports POJO
-    public static final Collection<JsonTestProvider> POJO_PROVIDERS = new LinkedHashSet<JsonTestProvider>() {{
+    public static final Collection<JsonTestProvider> POJO_PROVIDERS = new LinkedHashSet<>() {{
         add(new JacksonJsonTestProvider());
     }};
 
@@ -104,7 +105,7 @@ public abstract class JsonTestProvider {
         public MoxyJsonConfig getContext(final Class<?> objectType) {
             final MoxyJsonConfig configuration = new MoxyJsonConfig();
 
-            final Map<String, String> namespacePrefixMapper = new HashMap<>(1);
+            final Map<String, String> namespacePrefixMapper = new HashMap<>(3);
             namespacePrefixMapper.put("http://www.w3.org/2001/XMLSchema-instance", "xsi");
             namespacePrefixMapper.put("http://example.com", "example");
             namespacePrefixMapper.put("http://test.jaxb.com", "jaxb");

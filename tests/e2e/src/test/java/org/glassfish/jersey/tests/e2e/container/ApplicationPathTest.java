@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2021, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,12 +38,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static org.glassfish.jersey.tests.e2e.container.JerseyContainerTest.listContainerFactories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ApplicationPathTest {
 
-    private static final List<TestContainerFactory> FACTORIES = listContainerFactories(
+    private static final List<TestContainerFactory> FACTORIES = List.of(
             new GrizzlyTestContainerFactory(),
             new JdkHttpServerTestContainerFactory(),
             new NettyTestContainerFactory()

@@ -104,7 +104,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.15.1</version>
+                <version>3.16.0</version>
                 <configuration>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
@@ -121,11 +121,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
+                <version>3.16.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>
@@ -134,8 +133,8 @@
     </build>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.version>3.9.9</maven.version>
+        <java.version>17</java.version>
+        <maven.version>3.9.16</maven.version>
         <commons.io.version>2.19.0</commons.io.version>
         <junit.version>5.13.3</junit.version>
     </properties>

@@ -264,13 +264,6 @@
                         <exclude>org/glassfish/jersey/examples/extendedwadl/ExtendedWadlWebappOsgiTest.java</exclude>
                     </excludes>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit47</artifactId>
-                        <version>${surefire.mvn.plugin.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.ops4j.pax.exam</groupId>

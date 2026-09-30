@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -108,7 +109,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
     /**
      * Name of a "template" file.
      * The file should contain all the static content from the docbook section related to modules.
-     * The file should contain a placeholder {@see CONTENT_PLACEHOLDER}, which will be replaced by the generated table.
+     * The file should contain a placeholder {@link #CONTENT_PLACEHOLDER}, which will be replaced by the generated table.
      *
      * @parameter
      */
@@ -118,7 +119,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
     /**
      * Template for a header part of each category.
      * Written to the output once per category.
-     * Supported placeholders are {@see CATEGORY_CAPTION_PLACEHOLDER} and {@see CATEGORY_GROUP_ID_PLACEHOLDER}.
+     * Supported placeholders are {@link #CATEGORY_CAPTION_PLACEHOLDER} and {@link #CATEGORY_GROUP_ID_PLACEHOLDER}.
      *
      * @parameter
      */
@@ -137,7 +138,7 @@ public class GenerateJerseyModuleListMojo extends AbstractMojo {
     /**
      * Template for a table row in the module listing.
      * Written to the output once per module.
-     * Supported placeholders are {@see MODULE_NAME_PLACEHOLDER} and {@see MODULE_DESCRIPTION_PLACEHOLDER}.
+     * Supported placeholders are {@link #MODULE_NAME_PLACEHOLDER} and {@link #MODULE_DESCRIPTION_PLACEHOLDER}.
      *
      * @parameter
      */

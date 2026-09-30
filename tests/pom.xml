@@ -47,12 +47,12 @@
         <module>e2e-testng</module>
         <module>e2e-tls</module>
         <module>integration</module>
-        <module>mem-leaks</module>
         <module>osgi</module>
         <module>release-test</module>
         <module>performance</module>
         <module>stress</module>
-        <module>version-agnostic</module>
+        <!-- Always standalone, should be executed manually after everything else with -Djersey.version=x.y.z -->
+<!--        <module>version-agnostic</module>-->
     </modules>
 
     <dependencyManagement>
@@ -104,8 +104,9 @@
         </profile>
         <profile>
             <id>JMOCKIT-MODULE-FOR-PRE-JDK24</id>
+            <!-- JMockit 1.50 is still incompatible with Java 24+ -->
             <activation>
-                <jdk>[11,24)</jdk>
+                <jdk>[17,24)</jdk>
             </activation>
             <modules>
                 <module>jmockit</module>

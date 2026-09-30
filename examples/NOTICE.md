@@ -37,13 +37,13 @@ aopalliance Version 1
 * Project: http://aopalliance.sourceforge.net
 * Copyright: Material in the public domain is not protected by copyright
 
-Bean Validation API 3.1.0
+Bean Validation API 3.1.1
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/3.0/
 * Copyright: 2009, 2020 Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag.
 
-Hibernate Validator CDI, 8.0.2.Final
+Hibernate Validator CDI, 8.0.5.Final
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/
 * Repackaged in org.glassfish.jersey.server.validation.internal.hibernate
@@ -66,12 +66,12 @@ jakarta.inject Version: 2.0.1
 * License: Apache License, 2.0
 * Copyright (C) 2009, 2021 The JSR-330 Expert Group
 
-Javassist Version 3.30.2-GA
+Javassist Version 3.33.0-GA
 * License: Apache License, 2.0
 * Project: http://www.javassist.org/
 * Copyright (C) 1999- Shigeru Chiba. All Rights Reserved.
 
-Jackson JAX-RS Providers Version 2.20.1
+Jackson JAX-RS Providers Version 2.22.3
 * License: Apache License, 2.0
 * Project: https://github.com/FasterXML/jackson-jaxrs-providers
 * Copyright: (c) 2009-2023 FasterXML, LLC. All rights reserved unless otherwise indicated.
@@ -101,7 +101,7 @@ KineticJS, v4.7.1
 * Project: http://www.kineticjs.com, https://github.com/ericdrowell/KineticJS
 * Copyright: Eric Rowell
 
-org.objectweb.asm Version 9.9
+org.objectweb.asm Version 9.10.1
 * License: Modified BSD (https://asm.ow2.io/license.html)
 * Copyright (c) 2000-2011 INRIA, France Telecom. All rights reserved.
 

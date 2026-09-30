@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,9 +25,11 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.external.ExternalTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Reproducer tests for JERSEY-2176.
@@ -120,18 +123,18 @@ public abstract class Jersey2176ITCaseBase extends JerseyTest {
         final Response response = builder.get();
         final String assertMessage = uc + "|" + responseEntity;
 
-        Assertions.assertEquals(uc, response.getStatus(), assertMessage);
-        if (!sendErrorExpected(uc, responseEntity)) {
-            Assertions.assertEquals("OK", response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage);
-            Assertions.assertNotNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER), assertMessage);
-            if (responseEntity) {
-                Assertions.assertEquals(expectedContent, response.readEntity(String.class), assertMessage);
-                Assertions.assertEquals(String.valueOf(expectedContent.length()),
-                        response.getHeaderString(HttpHeaders.CONTENT_LENGTH), assertMessage);
-            }
+        assertEquals(uc, response.getStatus(), assertMessage + ", HTTP status");
+        if (sendErrorExpected(uc, responseEntity)) {
+            assertNull(response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage + ", status");
+            assertNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER), assertMessage + ", duration");
         } else {
-            Assertions.assertNull(response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage);
-            Assertions.assertNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER), assertMessage);
+            assertEquals("OK", response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage + ", status");
+            assertNotNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER), assertMessage + ", duration");
+            if (responseEntity) {
+                assertEquals(expectedContent, response.readEntity(String.class), assertMessage + ", content");
+                assertEquals(String.valueOf(expectedContent.length()),
+                        response.getHeaderString(HttpHeaders.CONTENT_LENGTH), assertMessage + ", content length");
+            }
         }
     }
 
@@ -147,16 +150,18 @@ public abstract class Jersey2176ITCaseBase extends JerseyTest {
         final String expectedContent = "[FILTER][/FILTER]";
         final String assertMessage = uc + ":" + expectedStatus + "|" + fail;
 
-        Assertions.assertEquals(expectedStatus, response.getStatus(), assertMessage);
-        if (!sendErrorExpected(expectedStatus, false)) {
-            Assertions.assertEquals(expectedStatus == 500 ? "FAIL" : "OK",
-                    response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage);
-            Assertions.assertNotNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER), assertMessage);
-            Assertions.assertEquals(String.valueOf(expectedContent.length()),
-                    response.getHeaderString(HttpHeaders.CONTENT_LENGTH), assertMessage);
+        assertEquals(expectedStatus, response.getStatus(), assertMessage);
+        if (sendErrorExpected(expectedStatus, false)) {
+            assertNull(response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage + ", status");
+            assertNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER),
+                assertMessage + ", expected null duration");
         } else {
-            Assertions.assertNull(response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage);
-            Assertions.assertNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER), assertMessage);
+            assertEquals(expectedStatus == 500 ? "FAIL" : "OK",
+                response.getHeaderString(TraceResponseFilter.X_STATUS_HEADER), assertMessage + ", status");
+            assertNotNull(response.getHeaderString(TraceResponseFilter.X_SERVER_DURATION_HEADER),
+                assertMessage + ", duration");
+            assertEquals(String.valueOf(expectedContent.length()), response.getHeaderString(HttpHeaders.CONTENT_LENGTH),
+                assertMessage + ", content length");
         }
     }
 

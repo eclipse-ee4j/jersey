@@ -21,6 +21,8 @@ package org.glassfish.jersey.tests.integration.jersey2176;
  */
 public class MyException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     public MyException(String message) {
         super(message);
     }

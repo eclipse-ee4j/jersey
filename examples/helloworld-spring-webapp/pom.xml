@@ -125,8 +125,8 @@
         <plugins>
             <!-- Run the application using "mvn jetty:run" to deploy to Jetty-->
             <plugin>
-                <groupId>org.eclipse.jetty.ee10</groupId>
-                <artifactId>jetty-ee10-maven-plugin</artifactId>
+                <groupId>org.eclipse.jetty.ee11</groupId>
+                <artifactId>jetty-ee11-maven-plugin</artifactId>
                 <configuration>
                     <webApp>
                         <contextPath>/helloworld-spring-webapp</contextPath>

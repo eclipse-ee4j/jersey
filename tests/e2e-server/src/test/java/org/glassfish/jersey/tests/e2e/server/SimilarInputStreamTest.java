@@ -18,8 +18,8 @@ package org.glassfish.jersey.tests.e2e.server;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.InternalProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;

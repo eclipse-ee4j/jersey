@@ -577,7 +577,8 @@ class Frame {
       return outputStack[--outputStackTop];
     } else {
       // If the output frame stack is empty, pop from the input stack.
-      return STACK_KIND | -(--outputStackStart);
+      --outputStackStart;
+      return STACK_KIND | -outputStackStart;
     }
   }
 

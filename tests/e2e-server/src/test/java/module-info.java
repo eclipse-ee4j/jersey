@@ -26,7 +26,7 @@ open module org.glassfish.jersey.tests.e2e.server.test {
     requires java.logging;
     requires java.management;
     requires java.xml;
-    requires org.eclipse.jetty.ee10.servlet;
+    requires org.eclipse.jetty.ee11.servlet;
     requires org.eclipse.jetty.server;
     requires org.eclipse.persistence.moxy;
     requires org.glassfish.grizzly.http.server;

@@ -82,8 +82,8 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.eclipse.jetty.ee10</groupId>
-                <artifactId>jetty-ee10-maven-plugin</artifactId>
+                <groupId>org.eclipse.jetty.ee11</groupId>
+                <artifactId>jetty-ee11-maven-plugin</artifactId>
                 <dependencies>
                     <dependency>
                         <groupId>jakarta.servlet</groupId>

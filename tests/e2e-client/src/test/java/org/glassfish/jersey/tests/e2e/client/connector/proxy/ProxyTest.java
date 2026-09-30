@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2019 Banco do Brasil S/A. All rights reserved.
  *
@@ -21,7 +22,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpChannel;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.internal.HttpChannelState;
 import org.eclipse.jetty.util.Callback;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
@@ -158,7 +158,7 @@ public class ProxyTest {
         @BeforeAll
         public static void startFakeProxy() {
             server = new Server(9997);
-            server.setHandler(new ProxyHandler());
+            server.setDefaultHandler(new ProxyHandler());
             try {
                 server.start();
             } catch (Exception e) {
@@ -168,6 +168,9 @@ public class ProxyTest {
 
         @AfterAll
         public static void tearDownProxy() {
+            if (server == null) {
+                return;
+            }
             try {
                 server.stop();
             } catch (Exception e) {
@@ -219,7 +222,7 @@ public class ProxyTest {
                 if (response.getStatus() != 400) {
                     response.setStatus(200);
                     if ("CONNECT".equalsIgnoreCase(request.getMethod())) { // NETTY way of doing proxy
-                        if (!(request.getComponents() instanceof HttpChannelState)) {
+                        if (!(request.getComponents() instanceof HttpChannel)) {
                             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                             callback.failed(new IllegalStateException(
                                     "Expecting request.getComponents() to be an instance of HttpChannelState"));
@@ -231,7 +234,7 @@ public class ProxyTest {
                 }
                 //TODO Add redirect to requestURI
             } else {
-                if (!(request.getComponents() instanceof HttpChannelState)) {
+                if (!(request.getComponents() instanceof HttpChannel)) {
                     response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                     callback.failed(new IllegalStateException(
                             "Expecting request.getComponents() to be an instance of HttpChannelState"));

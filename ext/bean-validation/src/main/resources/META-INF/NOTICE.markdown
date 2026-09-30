@@ -1,4 +1,4 @@
-# Notice for Jersey Bean Validation module 
+# Notice for Jersey Bean Validation module
 This content is produced and maintained by the Eclipse Jersey project.
 
 * https://projects.eclipse.org/projects/ee4j.jersey
@@ -31,7 +31,7 @@ The project maintains the following source code repositories:
 
 ## Third-party Content
 
-Hibernate Validator CDI, 8.0.2.Final
+Hibernate Validator CDI, 8.0.5.Final
 * License: Apache License, 2.0
 * Project: https://beanvalidation.org/
 * Repackaged in org.glassfish.jersey.server.validation.internal.hibernate
