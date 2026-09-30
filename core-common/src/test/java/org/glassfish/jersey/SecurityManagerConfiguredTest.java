@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,9 @@
 package org.glassfish.jersey;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -24,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Marek Potociar
  */
+@EnabledOnJre(JRE.JAVA_17)
 public class SecurityManagerConfiguredTest {
     /**
      * Check that system security manager has been configured.

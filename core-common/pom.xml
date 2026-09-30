@@ -69,7 +69,6 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
         <testResources>
             <testResource>
                 <directory>${basedir}/src/test/resources</directory>
@@ -81,25 +80,43 @@
             <plugin>
                 <groupId>com.sun.istack</groupId>
                 <artifactId>istack-commons-maven-plugin</artifactId>
-                <inherited>true</inherited>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <inherited>true</inherited>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <skipMain>${skipCompileMain}</skipMain>
+                </configuration>
                 <executions>
+                    <!-- Default is 17, but we have 21+ specific sources too -->
                     <execution>
-                        <id>default-jar</id>
-                        <phase>package</phase>
+                        <id>compile21</id>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>compile</goal>
                         </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <multiReleaseOutput>true</multiReleaseOutput>
+                            <release>21</release>
+                            <compileSourceRoots>
+                                <compileSourceRoot>${basedir}/src/main/java21</compileSourceRoot>
+                            </compileSourceRoots>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -156,7 +173,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <executions>
                     <execution>
@@ -174,7 +190,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <argLine>-Djava.security.policy=${project.build.directory}/test-classes/surefire-jdk17.policy</argLine>
+                            <argLine>-Djava.security.policy=${project.build.testOutputDirectory}/surefire-jdk17.policy</argLine>
                             <includes>
                                 <include>**/ByteBufferInputStreamTest.java</include>
                             </includes>
@@ -246,202 +262,10 @@
 
     <profiles>
         <profile>
-            <id>build.jdk20-</id>
-            <activation>
-                <jdk>[17,21)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>add.java20-</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/main/java20-</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>build.jdk21</id>
-            <activation>
-                <jdk>[21,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>add.java20+</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/main/java21</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-compile</id>
-                                <configuration>
-                                    <!-- compile everything to ensure module-info contains right entries -->
-                                    <release>21</release>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <echo>Building for JDK 21+</echo>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>compile-java21</id>
-                                <phase>process-resources</phase>
-                                <configuration>
-                                    <target>
-                                        <mkdir dir="${java21.build.outputDirectory}" />
-                                        <javac srcdir="${java21.sourceDirectory}${path.separator}${project.basedir}/src/main/java/org/glassfish/jersey/innate/virtual" destdir="${java21.build.outputDirectory}"
-                                               classpath="${project.build.outputDirectory}" includeantruntime="false" release="21"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>copyJDK21FilesToMultiReleaseJar</id>
-            <activation>
-                <file>
-                    <!-- ${java21.build.outputDirectory} does not work here -->
-                    <exists>target/classes-java21/org/glassfish/jersey/innate/VirtualThreadSupport.class</exists>
-                </file>
-                <jdk>[17,21)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.felix</groupId>
-                        <artifactId>maven-bundle-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <instructions>
-                                <Multi-Release>true</Multi-Release>
-                            </instructions>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <inherited>true</inherited>
-                        <executions>
-                            <execution>
-                                <id>copy-jdk21-sources</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.directory}/generated-sources/rsrc-gen/META-INF/versions/21/org/glassfish/jersey/innate</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${java21.sourceDirectory}/org/glassfish/jersey/innate</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>copy-jdk21-classes-to-meta-inf</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.outputDirectory}/META-INF/versions/21</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${java21.build.outputDirectory}</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>securityOff</id>
-            <activation>
-                <jdk>[24,)</jdk>
-            </activation>
-            <properties>
-                <surefire.security.argline />
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-test</id>
-                                <configuration>
-                                    <excludes>
-                                        <exclude>**/SecurityManagerConfiguredTest.java</exclude>
-                                        <exclude>**/ReflectionHelperTest.java</exclude>
-                                    </excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>sonar</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <!-- disable parallel execution so that JaCoCo listener can properly work -->
@@ -455,9 +279,9 @@
     </profiles>
 
     <properties>
-        <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${project.build.directory}/test-classes/surefire.policy</surefire.security.argline>
-        <java21.build.outputDirectory>${project.build.directory}/classes-java21</java21.build.outputDirectory>
-        <java21.sourceDirectory>${project.basedir}/src/main/java21</java21.sourceDirectory>
+        <!-- Used by Jenkins to compile with 21 but test with 17 -->
+        <skipCompileMain>false</skipCompileMain>
+        <test.security.policy>${project.build.testOutputDirectory}/surefire.policy</test.security.policy>
+        <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${test.security.policy}</surefire.security.argline>
     </properties>
-
 </project>

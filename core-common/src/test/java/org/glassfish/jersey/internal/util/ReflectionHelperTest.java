@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +23,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -35,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * @author Pavel Bucek
  */
-@SuppressWarnings("unchecked")
+@EnabledOnJre(JRE.JAVA_17)
+@SuppressWarnings({"rawtypes", "removal"})
 public class ReflectionHelperTest {
 
     @SuppressWarnings("UnusedDeclaration")
