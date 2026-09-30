@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.jersey.client;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -118,7 +120,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
         this.responseProcessingRoot = responseFilteringStage != null ? responseFilteringStage : Stages.identity();
         this.managedObjectsFinalizer = bootstrapBag.getManagedObjectsFinalizer();
         this.config = config;
-        this.connector = connector;
+        this.connector = Objects.requireNonNull(connector, "connector");
         this.requestScope = bootstrapBag.getRequestScope();
         this.asyncRequestExecutor = Values.lazy((Value<ExecutorService>) () ->
                 config.getExecutorService() == null
@@ -157,7 +159,6 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
         }
 
         return () -> requestScope.runInScope(() -> {
-            RuntimeException runtimeException = null;
             try {
                 ClientRequest processedRequest;
 
@@ -370,7 +371,9 @@ class ClientRuntime implements JerseyClient.ShutdownHook, ClientExecutor {
                 try {
                     connector.close();
                 } finally {
-                    managedObjectsFinalizer.preDestroy();
+                    if (managedObjectsFinalizer != null) {
+                        managedObjectsFinalizer.preDestroy();
+                    }
                     injectionManager.shutdown();
                 }
             }
