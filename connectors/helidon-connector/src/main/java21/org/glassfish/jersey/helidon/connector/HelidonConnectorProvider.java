@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,9 +45,6 @@ import org.glassfish.jersey.internal.util.collection.Values;
 public class HelidonConnectorProvider implements ConnectorProvider {
     private static final LazyValue<Helidon3ConnectorProvider> helidon3ConnectorProvider =
             Values.lazy((Value<Helidon3ConnectorProvider>) Helidon3ConnectorProvider::new);
-
-    public HelidonConnectorProvider() {
-    }
 
     @Override
     public Connector getConnector(Client client, Configuration runtimeConfig) {
