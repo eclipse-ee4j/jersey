@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2016, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -476,11 +477,9 @@ class NettyConnector implements Connector {
                     }
                     entityWriter.writeAndFlush(nettyRequest);
                 }
-                if (HttpUtil.isTransferEncodingChunked(nettyRequest)) {
-                    entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
-                } else {
-                    entityWriter.write(entityWriter.getChunkedInput());
-                }
+                // The wrapper appends the LastHttpContent that terminates the message, so the encoder is
+                // reset and the channel can be reused for the next request.
+                entityWriter.write(new HttpChunkedInput(entityWriter.getChunkedInput()));
 
                 if (entityWriter.getType() == NettyEntityWriter.Type.DELAYED) {
                     contentLengthSet.await();
