@@ -37,7 +37,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <!--
@@ -51,16 +50,8 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <inherited>false</inherited>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <compilerArgs>
-                        <!-- Do not warn about using sun.misc.Unsafe -->
-                        <XDignore.symbol.file />
-                    </compilerArgs>
                     <compilerArgs>
                         <arg>-Xdiags:verbose</arg>
                     </compilerArgs>
@@ -95,7 +86,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <test>**/MetaInfServicesTest*</test>

@@ -29,7 +29,7 @@
     <groupId>org.glassfish.jersey.core</groupId>
     <artifactId>jersey-common</artifactId>
     <packaging>jar</packaging>
-    <name>jersey-core-common</name>
+    <name>jersey-common</name>
 
     <description>Jersey core common packages</description>
 
@@ -87,9 +87,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <skipMain>${skipCompileMain}</skipMain>
-                </configuration>
                 <executions>
                     <!-- Default is 17, but we have 21+ specific sources too -->
                     <execution>
@@ -262,6 +259,15 @@
 
     <profiles>
         <profile>
+            <id>securityOff</id>
+            <activation>
+                <jdk>[24,)</jdk>
+            </activation>
+            <properties>
+                <surefire.security.argline />
+            </properties>
+        </profile>
+        <profile>
             <id>sonar</id>
             <build>
                 <plugins>
@@ -279,8 +285,6 @@
     </profiles>
 
     <properties>
-        <!-- Used by Jenkins to compile with 21 but test with 17 -->
-        <skipCompileMain>false</skipCompileMain>
         <test.security.policy>${project.build.testOutputDirectory}/surefire.policy</test.security.policy>
         <surefire.security.argline>-Djava.security.manager -Djava.security.policy=${test.security.policy}</surefire.security.argline>
     </properties>

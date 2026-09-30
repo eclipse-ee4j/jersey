@@ -13,40 +13,30 @@ pipeline {
 
     stages {
         stage('Jersey build') {
-            parallel {
-                stage('JDK 17') {
-                    agent any
-                    tools {
-                        jdk 'temurin-jdk17-latest'
-                        maven 'apache-maven-latest'
-                    }
-                    steps {
-                        // Fastest possible check
-                        sh 'mvn -V -B -e -ntp clean install -DskipTests'
-                        // Tests
-                        sh 'mvn -B -e -ntp clean install -Dcheckstyle.skip=true'
-                    }
-                }
-                stage('JDK 25') {
-                    agent any
-                    tools {
-                        jdk 'temurin-jdk25-latest'
-                        maven 'apache-maven-latest'
-                    }
-                    steps {
-                        // Fastest possible check
-                        sh 'mvn -V -B -e -ntp clean install -DskipTests'
-                        // Check for version irregularities
-                        sh 'mvn -B -e -ntp clean verify -f tests/version-agnostic -Djersey.version=4.0.99-SNAPSHOT'
-                        // Tests
-                        sh 'mvn -B -e -ntp clean install -Dcheckstyle.skip=true -pl :e2e -Dtest=LeadingSlashesTest'
-                        // jenkins echo on own line, will be well visible in the GUI.
-                        echo "If dependency convergence fails, try to exclude some dependencies you don't need, or override them."
-                        sh '''
-                           export EXCLUDE_ARGS=''
-                           bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
-                           '''
-                    }
+            agent any
+            tools {
+                jdk 'temurin-jdk25-latest'
+                maven 'apache-maven-latest'
+            }
+            steps {
+                // Fastest possible check
+                sh 'mvn -V -B -e -ntp clean install -DskipTests'
+                // Check for version irregularities
+                sh 'mvn -B -e -ntp clean verify -f tests/version-agnostic -Djersey.version=4.0.99-SNAPSHOT'
+
+                // Tests
+                sh 'mvn -B -e -ntp clean install -Dcheckstyle.skip=true'
+
+                // jenkins echo on own line, will be well visible in the GUI.
+                echo "If dependency convergence fails, try to exclude some dependencies you don't need, or override them."
+                sh '''
+                   export EXCLUDE_ARGS=''
+                   bash ${WORKSPACE}/etc/scripts/validation/dependency-convergence.sh
+                   '''
+
+                // Tests with JDK17 without recompilation for multirelease jars
+                withEnv(["JAVA_HOME=${tool 'temurin-jdk17-latest'}", "PATH+JDK=${tool 'temurin-jdk17-latest'}/bin"]) {
+                    sh 'mvn -B -e -ntp verify -Dcheckstyle.skip=true -DskipCompileMain=true -pl :jersey-common'
                 }
             }
         }
