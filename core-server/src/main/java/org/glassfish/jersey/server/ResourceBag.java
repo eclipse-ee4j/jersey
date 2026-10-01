@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,13 +48,9 @@ final class ResourceBag {
          */
         private final Set<Object> instances = Collections.newSetFromMap(new IdentityHashMap<>());
         /**
-         * Resource models.
+         * Resource models in the order of their registration.
          */
-        private final List<Resource> models = new LinkedList<Resource>();
-        /**
-         * Map of root path to resource model.
-         */
-        private final Map<String, Resource> rootResourceMap = new HashMap<String, Resource>();
+        private final List<Registration> registrations = new LinkedList<>();
 
         /**
          * Register a new resource model created from a specific resource class.
@@ -62,7 +59,7 @@ final class ResourceBag {
          * @param resourceModel resource model for the class.
          */
         void registerResource(Class<?> resourceClass, Resource resourceModel) {
-            registerModel(resourceModel);
+            registrations.add(new Registration(resourceClass, resourceModel));
             classes.add(resourceClass);
         }
 
@@ -73,7 +70,7 @@ final class ResourceBag {
          * @param resourceModel    resource model for the instance.
          */
         void registerResource(Object resourceInstance, Resource resourceModel) {
-            registerModel(resourceModel);
+            registrations.add(new Registration(null, resourceModel));
             instances.add(resourceInstance);
         }
 
@@ -83,25 +80,9 @@ final class ResourceBag {
          * @param resourceModel programmatically created resource model.
          */
         void registerProgrammaticResource(Resource resourceModel) {
-            registerModel(resourceModel);
+            registrations.add(new Registration(null, resourceModel));
             classes.addAll(resourceModel.getHandlerClasses());
             instances.addAll(resourceModel.getHandlerInstances());
-        }
-
-        private void registerModel(Resource resourceModel) {
-            final String path = resourceModel.getPath();
-            if (path != null) {
-                Resource existing = rootResourceMap.get(path);
-                if (existing != null) {
-                    // merge resources
-                    existing = Resource.builder(existing).mergeWith(resourceModel).build();
-                    rootResourceMap.put(path, existing);
-                } else {
-                    rootResourceMap.put(path, resourceModel);
-                }
-            } else {
-                models.add(resourceModel);
-            }
         }
 
         /**
@@ -110,9 +91,17 @@ final class ResourceBag {
          * @return new resource bag initialized with the content of the resource bag builder.
          */
         ResourceBag build() {
-            models.addAll(rootResourceMap.values());
-            return new ResourceBag(classes, instances, models);
+            return new ResourceBag(classes, instances, registrations);
         }
+    }
+
+    /**
+     * Resource model with the resource class it was introspected from.
+     *
+     * @param resourceClass introspected resource class, {@code null} for models of instances and programmatic models.
+     * @param model         resource model.
+     */
+    private record Registration(Class<?> resourceClass, Resource model) {
     }
 
     /**
@@ -127,11 +116,62 @@ final class ResourceBag {
      * Resource models.
      */
     final List<Resource> models;
+    /**
+     * Registered resource models, before merging models with the same path.
+     */
+    private final List<Registration> registrations;
 
-    private ResourceBag(Set<Class<?>> classes, Set<Object> instances, List<Resource> models) {
+    private ResourceBag(Set<Class<?>> classes, Set<Object> instances, List<Registration> registrations) {
         this.classes = classes;
         this.instances = instances;
-        this.models = models;
+        this.registrations = registrations;
+        this.models = mergeModels(registrations);
+    }
+
+    private static List<Resource> mergeModels(List<Registration> registrations) {
+        final List<Resource> models = new LinkedList<>();
+        final Map<String, Resource> rootResourceMap = new HashMap<>();
+        for (Registration registration : registrations) {
+            final Resource resourceModel = registration.model();
+            final String path = resourceModel.getPath();
+            if (path != null) {
+                Resource existing = rootResourceMap.get(path);
+                if (existing != null) {
+                    // merge resources
+                    existing = Resource.builder(existing).mergeWith(resourceModel).build();
+                    rootResourceMap.put(path, existing);
+                } else {
+                    rootResourceMap.put(path, resourceModel);
+                }
+            } else {
+                models.add(resourceModel);
+            }
+        }
+        models.addAll(rootResourceMap.values());
+        return models;
+    }
+
+    /**
+     * Returns a resource bag without the given resource classes and without the resource models
+     * introspected from them.
+     *
+     * @param resourceClasses resource classes to remove.
+     * @return new resource bag, or this one if there is nothing to remove.
+     */
+    ResourceBag withoutResourceClasses(Set<Class<?>> resourceClasses) {
+        if (resourceClasses.isEmpty()) {
+            return this;
+        }
+        final Set<Class<?>> remainingClasses = Collections.newSetFromMap(new IdentityHashMap<>());
+        remainingClasses.addAll(classes);
+        remainingClasses.removeAll(resourceClasses);
+        final List<Registration> remainingRegistrations = new LinkedList<>();
+        for (Registration registration : registrations) {
+            if (registration.resourceClass() == null || !resourceClasses.contains(registration.resourceClass())) {
+                remainingRegistrations.add(registration);
+            }
+        }
+        return new ResourceBag(remainingClasses, instances, remainingRegistrations);
     }
 
 
