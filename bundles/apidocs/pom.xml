@@ -186,7 +186,6 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
-            <version>${osgi.version}</version>
         </dependency>
         <!-- CONNECTORS -->
         <dependency>
@@ -231,17 +230,16 @@
             <version>${project.version}</version>
         </dependency>
         <!-- CONTAINERS -->
+        <!-- need to explicitly include the servlet dependency here
+              as it is scoped as provided in the jersey-servet modules -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- need to explicitly include the servlet dependency here
-              as it is scoped as provided in the jersey-servet modules -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>${jakarta.persistence.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -306,7 +304,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>${jackson.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>jakarta.xml.bind</groupId>
@@ -413,11 +410,12 @@
                 <executions>
                     <execution>
                         <id>javadoc-jar</id>
-                        <!--phase>package</phase-->
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
+                            <!-- To include virtual threads -->
+                            <release>21</release>
                             <includeDependencySources>true</includeDependencySources>
                             <sourceFileExcludes>
                                 <fileExclude>META-INF/versions/21/org/glassfish/jersey/helidon/connector/*.java</fileExclude>
@@ -427,7 +425,6 @@
                                 <fileExclude>org/glassfish/jersey/wadl/doclet/*.java</fileExclude>
                                 <fileExclude>module-info.java</fileExclude>
                             </sourceFileExcludes>
-                            <source>${java.version}</source>
                             <disableSourcepathUsage>true</disableSourcepathUsage>
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>org.glassfish.jersey.*:*</dependencySourceInclude>

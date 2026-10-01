@@ -111,7 +111,6 @@
     </build>
 
     <properties>
-        <java.version>17</java.version>
         <maven.version>3.9.16</maven.version>
         <maven.shared.version>3.3.0</maven.shared.version>
     </properties>

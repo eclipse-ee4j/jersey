@@ -123,7 +123,6 @@
     </profiles>
 
     <properties>
-        <java.version>17</java.version>
         <jersey.config.test.container.port>8080</jersey.config.test.container.port>
     </properties>
 </project>

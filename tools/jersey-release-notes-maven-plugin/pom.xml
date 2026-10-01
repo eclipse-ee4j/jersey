@@ -124,7 +124,7 @@
                 <version>3.16.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <release>${java.version}</release>
+                    <release>17</release>
                     <showWarnings>false</showWarnings>
                     <fork>false</fork>
                 </configuration>
@@ -133,9 +133,9 @@
     </build>
 
     <properties>
-        <java.version>17</java.version>
         <maven.version>3.9.16</maven.version>
         <commons.io.version>2.19.0</commons.io.version>
         <junit.version>5.13.3</junit.version>
+        <harness.testing.mvn.plugin.version>3.5.1</harness.testing.mvn.plugin.version>
     </properties>
 </project>
