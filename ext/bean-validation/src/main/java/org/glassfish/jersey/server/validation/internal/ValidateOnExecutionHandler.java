@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -157,8 +158,8 @@ class ValidateOnExecutionHandler {
                 if (!executableTypes.isEmpty()) {
 
                     // If an overriding/implementing method is annotated with @ValidateOnExecution, throw an exception.
-                    if (checkOverrides
-                            && processAnnotation(method, hierarchy, false) != null) {
+                    if (checkOverrides && processAnnotation(method,
+                            getOverridingClasses(method, overriddenMethod, hierarchy), false) != null) {
                         final String methodName = method.getDeclaringClass().getName() + "#" + method.getName();
                         throw new ValidationException(LocalizationMessages.OVERRIDE_CHECK_ERROR(methodName));
                     }
@@ -178,6 +179,23 @@ class ValidateOnExecutionHandler {
             }
         }
         return null;
+    }
+
+    /**
+     * Return the classes of the given {@code hierarchy} that override or implement the {@code overriddenMethod}, leaving out
+     * the classes that inherit it.
+     *
+     * @param method method to be examined.
+     * @param overriddenMethod method annotated with {@link ValidateOnExecution} in a supertype.
+     * @param hierarchy subtypes of the type declaring the {@code overriddenMethod}.
+     * @return classes overriding or implementing the {@code overriddenMethod}.
+     */
+    private Deque<Class<?>> getOverridingClasses(final Method method, final Method overriddenMethod,
+                                                 final Deque<Class<?>> hierarchy) {
+        return hierarchy.stream()
+                .filter(clazz -> !overriddenMethod.equals(
+                        AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(clazz, method))))
+                .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
     /**
@@ -222,7 +240,7 @@ class ValidateOnExecutionHandler {
 
         // Get all superclasses.
         for (Class<?> currentClass = clazz; currentClass != Object.class; currentClass = currentClass.getSuperclass()) {
-            hierarchy.add(clazz);
+            hierarchy.add(currentClass);
         }
 
         hierarchy.addAll(getAllValidationInterfaces(clazz));
