@@ -61,6 +61,15 @@ public class ValidateOnExecutionHandlerTest {
         }
     }
 
+    @ValidateOnExecution(type = ExecutableType.ALL)
+    public static class AnnotatedClassOverridingResource extends AnnotatedMethodBase {
+
+        @Override
+        public String post(final String value) {
+            return value;
+        }
+    }
+
     @ValidateOnExecution(type = ExecutableType.NONE)
     public static class AnnotatedClassBase {
 
@@ -106,6 +115,11 @@ public class ValidateOnExecutionHandlerTest {
     @Test
     public void testInheritedAnnotatedMethodIsNotAnOverride() throws Exception {
         assertFalse(validateMethod(InheritingResource.class));
+    }
+
+    @Test
+    public void testAnnotationOnOverridingClassIsNotAnOverride() throws Exception {
+        assertFalse(validateMethod(AnnotatedClassOverridingResource.class));
     }
 
     @Test

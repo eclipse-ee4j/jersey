@@ -158,8 +158,7 @@ class ValidateOnExecutionHandler {
                 if (!executableTypes.isEmpty()) {
 
                     // If an overriding/implementing method is annotated with @ValidateOnExecution, throw an exception.
-                    if (checkOverrides && processAnnotation(method,
-                            getOverridingClasses(method, overriddenMethod, hierarchy), false) != null) {
+                    if (checkOverrides && isOverriddenWithAnnotation(method, overriddenMethod, hierarchy)) {
                         final String methodName = method.getDeclaringClass().getName() + "#" + method.getName();
                         throw new ValidationException(LocalizationMessages.OVERRIDE_CHECK_ERROR(methodName));
                     }
@@ -182,20 +181,21 @@ class ValidateOnExecutionHandler {
     }
 
     /**
-     * Return the classes of the given {@code hierarchy} that override or implement the {@code overriddenMethod}, leaving out
-     * the classes that inherit it.
+     * Determine whether a class of the given {@code hierarchy} overrides or implements the {@code overriddenMethod} with a
+     * method annotated with {@link ValidateOnExecution}. Classes that inherit the {@code overriddenMethod} without overriding
+     * it, and annotations on the overriding classes themselves, are not taken into account.
      *
      * @param method method to be examined.
      * @param overriddenMethod method annotated with {@link ValidateOnExecution} in a supertype.
      * @param hierarchy subtypes of the type declaring the {@code overriddenMethod}.
-     * @return classes overriding or implementing the {@code overriddenMethod}.
+     * @return {@code true} if an overriding or implementing method is annotated with {@link ValidateOnExecution}.
      */
-    private Deque<Class<?>> getOverridingClasses(final Method method, final Method overriddenMethod,
-                                                 final Deque<Class<?>> hierarchy) {
+    private boolean isOverriddenWithAnnotation(final Method method, final Method overriddenMethod,
+                                               final Deque<Class<?>> hierarchy) {
         return hierarchy.stream()
-                .filter(clazz -> !overriddenMethod.equals(
-                        AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(clazz, method))))
-                .collect(Collectors.toCollection(ArrayDeque::new));
+                .map(clazz -> AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(clazz, method)))
+                .filter(overridingMethod -> overridingMethod != null && !overridingMethod.equals(overriddenMethod))
+                .anyMatch(overridingMethod -> !getExecutableTypes(overridingMethod).isEmpty());
     }
 
     /**
