@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -157,8 +158,7 @@ class ValidateOnExecutionHandler {
                 if (!executableTypes.isEmpty()) {
 
                     // If an overriding/implementing method is annotated with @ValidateOnExecution, throw an exception.
-                    if (checkOverrides
-                            && processAnnotation(method, hierarchy, false) != null) {
+                    if (checkOverrides && isOverriddenWithAnnotation(method, overriddenMethod, hierarchy)) {
                         final String methodName = method.getDeclaringClass().getName() + "#" + method.getName();
                         throw new ValidationException(LocalizationMessages.OVERRIDE_CHECK_ERROR(methodName));
                     }
@@ -178,6 +178,24 @@ class ValidateOnExecutionHandler {
             }
         }
         return null;
+    }
+
+    /**
+     * Determine whether a class of the given {@code hierarchy} overrides or implements the {@code overriddenMethod} with a
+     * method annotated with {@link ValidateOnExecution}. Classes that inherit the {@code overriddenMethod} without overriding
+     * it, and annotations on the overriding classes themselves, are not taken into account.
+     *
+     * @param method method to be examined.
+     * @param overriddenMethod method annotated with {@link ValidateOnExecution} in a supertype.
+     * @param hierarchy subtypes of the type declaring the {@code overriddenMethod}.
+     * @return {@code true} if an overriding or implementing method is annotated with {@link ValidateOnExecution}.
+     */
+    private boolean isOverriddenWithAnnotation(final Method method, final Method overriddenMethod,
+                                               final Deque<Class<?>> hierarchy) {
+        return hierarchy.stream()
+                .map(clazz -> AccessController.doPrivileged(ReflectionHelper.findMethodOnClassPA(clazz, method)))
+                .filter(overridingMethod -> overridingMethod != null && !overridingMethod.equals(overriddenMethod))
+                .anyMatch(overridingMethod -> !getExecutableTypes(overridingMethod).isEmpty());
     }
 
     /**
@@ -222,7 +240,7 @@ class ValidateOnExecutionHandler {
 
         // Get all superclasses.
         for (Class<?> currentClass = clazz; currentClass != Object.class; currentClass = currentClass.getSuperclass()) {
-            hierarchy.add(clazz);
+            hierarchy.add(currentClass);
         }
 
         hierarchy.addAll(getAllValidationInterfaces(clazz));
