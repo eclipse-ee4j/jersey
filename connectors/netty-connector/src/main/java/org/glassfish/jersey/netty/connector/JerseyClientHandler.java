@@ -184,6 +184,7 @@ class JerseyClientHandler extends SimpleChannelInboundHandler<HttpObject> {
             if (msg.decoderResult().isFailure()) {
                 Throwable cause = msg.decoderResult().cause();
                 ResponseProcessingException ex = new ResponseProcessingException(null, cause);
+                responseDone.completeExceptionally(ex);
                 responseAvailable.completeExceptionally(ex);
                 return;
             } else {
