@@ -38,7 +38,9 @@ import jakarta.ws.rs.core.Context;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,10 +67,31 @@ class CdiComponentProviderServerRuntimeSpecifics implements CdiComponentProvider
             }};
 
 
-    // Check first if a class is a JAX-RS resource, and only if so check with validation.
+    private static final String JAX_RS_PACKAGE = "jakarta.ws.rs.";
+
+    // Cheaply skip classes without any JAX-RS annotations, as building a resource model is expensive.
+    // Then check if a class is a JAX-RS resource, and only if so check with validation.
     // This prevents unnecessary warnings being logged for pure CDI beans.
     private final Cache<Class<?>, Boolean> jaxRsResourceCache = new Cache<>(
-            clazz -> Resource.from(clazz, true) != null && Resource.from(clazz) != null);
+            clazz -> mayBeResource(clazz) && Resource.from(clazz, true) != null && Resource.from(clazz) != null);
+
+    private static boolean mayBeResource(Class<?> clazz) {
+        return clazz != null && !clazz.getName().startsWith("java.")
+                && (hasJaxRsAnnotation(clazz)
+                || Arrays.stream(clazz.getDeclaredMethods())
+                        .anyMatch(CdiComponentProviderServerRuntimeSpecifics::hasJaxRsAnnotation)
+                || mayBeResource(clazz.getSuperclass())
+                || Arrays.stream(clazz.getInterfaces())
+                        .anyMatch(CdiComponentProviderServerRuntimeSpecifics::mayBeResource));
+    }
+
+    // JAX-RS annotations, or custom annotations meta-annotated with @HttpMethod
+    private static boolean hasJaxRsAnnotation(AnnotatedElement element) {
+        return Arrays.stream(element.getAnnotations()).anyMatch(annotation ->
+                annotation.annotationType().getName().startsWith(JAX_RS_PACKAGE)
+                || Arrays.stream(annotation.annotationType().getAnnotations()).anyMatch(meta ->
+                        meta.annotationType().getName().equals(JAX_RS_PACKAGE + "HttpMethod")));
+    }
 
     /**
      * CDI producer for CDI bean constructor String parameters, that should be injected by JAX-RS.
