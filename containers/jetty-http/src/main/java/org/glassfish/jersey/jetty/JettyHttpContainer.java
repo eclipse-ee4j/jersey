@@ -360,6 +360,7 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
                     } catch (final IllegalStateException ex) {
                         // a race condition externally committing the response can still occur...
                         LOGGER.log(Level.FINER, "Unable to reset failed response.", ex);
+                        callback.failed(error);
                     }
                 } else {
                     // Too late to answer, but Jetty keeps the connection open until the callback is completed.
