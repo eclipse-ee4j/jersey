@@ -35,6 +35,7 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -71,6 +72,19 @@ public class CdiComponentProviderTest {
     public static class MyPojo {
     }
 
+    public static class OptionalDependency {
+    }
+
+    public static class BeanWithOptionalDependency {
+
+        private OptionalDependency optional() {
+            return null;
+        }
+    }
+
+    public static class UnrelatedBean extends BeanWithOptionalDependency {
+    }
+
     public static class LocatorSubResource {
 
         @Path("/")
@@ -91,6 +105,34 @@ public class CdiComponentProviderTest {
     public static class ResourceMethodSubResource {
 
         @GET
+        public Object get() {
+            return this;
+        }
+    }
+
+    public static class OverriddenResourceMethodSubResource extends ResourceMethodSubResource {
+
+        @Override
+        public Object get() {
+            return this;
+        }
+    }
+
+    public interface ResourceMethod {
+
+        @GET
+        Object get();
+    }
+
+    public interface LeftResourceMethod extends ResourceMethod {
+    }
+
+    public interface RightResourceMethod extends ResourceMethod {
+    }
+
+    public static class DiamondResourceMethodSubResource implements LeftResourceMethod, RightResourceMethod {
+
+        @Override
         public Object get() {
             return this;
         }
@@ -121,6 +163,41 @@ public class CdiComponentProviderTest {
         assertTrue(provider.isJaxRsComponentType(MyOtherMessageBodyReader.class));
     }
 
+    @Test
+    public void testMissingPrivateSignatureDependency() throws ClassNotFoundException {
+        ClassLoader loader = new ClassLoader(getClass().getClassLoader()) {
+            @Override
+            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                if (name.equals(OptionalDependency.class.getName())) {
+                    throw new ClassNotFoundException(name);
+                }
+                if (!name.equals(BeanWithOptionalDependency.class.getName())
+                        && !name.equals(UnrelatedBean.class.getName())) {
+                    return super.loadClass(name, resolve);
+                }
+                Class<?> loaded = findLoadedClass(name);
+                if (loaded == null) {
+                    try (InputStream stream = getResourceAsStream(name.replace('.', '/') + ".class")) {
+                        if (stream == null) {
+                            throw new ClassNotFoundException(name);
+                        }
+                        byte[] bytes = stream.readAllBytes();
+                        loaded = defineClass(name, bytes, 0, bytes.length);
+                    } catch (IOException exception) {
+                        throw new ClassNotFoundException(name, exception);
+                    }
+                }
+                if (resolve) {
+                    resolveClass(loaded);
+                }
+                return loaded;
+            }
+        };
+        Class<?> bean = loader.loadClass(UnrelatedBean.class.getName());
+        assertThrows(NoClassDefFoundError.class, () -> bean.getSuperclass().getDeclaredMethods());
+        assertFalse(new CdiComponentProviderServerRuntimeSpecifics().isJaxRsResource(bean));
+    }
+
     /**
      * Test sub-resource detection.
      */
@@ -130,6 +207,8 @@ public class CdiComponentProviderTest {
         assertTrue(provider.isJaxRsComponentType(LocatorSubResource.class));
         assertTrue(provider.isJaxRsComponentType(ResourceMethodResource.class));
         assertTrue(provider.isJaxRsComponentType(ResourceMethodSubResource.class));
+        assertTrue(provider.isJaxRsComponentType(OverriddenResourceMethodSubResource.class));
+        assertTrue(provider.isJaxRsComponentType(DiamondResourceMethodSubResource.class));
         assertTrue(provider.isJaxRsComponentType(CustomResourceMethodSubResource.class));
     }
 }
