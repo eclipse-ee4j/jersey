@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -451,7 +452,7 @@ public class ContainerRequest extends InboundMessageContext
         this.absolutePathUri = null;
         this.uriRoutingContext.invalidateUriComponentViews();
 
-        this.requestUri = requestUri;
+        this.requestUri = resolveRequestUri(baseUri, requestUri);
     }
 
     @Override
@@ -466,8 +467,20 @@ public class ContainerRequest extends InboundMessageContext
         this.uriRoutingContext.invalidateUriComponentViews();
 
         this.baseUri = baseUri;
-        this.requestUri = requestUri;
+        this.requestUri = resolveRequestUri(baseUri, requestUri);
         OutboundJaxrsResponse.Builder.setBaseUri(baseUri);
+    }
+
+    /**
+     * Resolve the given request URI against the given base URI, so that a relative request URI set by a pre-matching filter
+     * identifies a resource of the application.
+     *
+     * @param baseUri base URI of the application, may be {@code null}.
+     * @param requestUri request URI, absolute or relative to the base URI.
+     * @return the resolved request URI, or the given request URI if it is absolute or there is no base URI.
+     */
+    private static URI resolveRequestUri(final URI baseUri, final URI requestUri) {
+        return baseUri == null || requestUri.isAbsolute() ? requestUri : baseUri.resolve(requestUri);
     }
 
     /**
