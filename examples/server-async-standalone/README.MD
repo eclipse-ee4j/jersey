@@ -91,7 +91,7 @@ using the -Dexec.args="<arguments>" flag, e.g.:
 >   mvn exec:java -Dexec.args="req=20 mode=sync uri=http://foo.com/bar"
 
 When the example client is run, successfully executed requests are output as an
-asterisk '*', failed requests as an exclamation mark '!'. Any errors that occured
+asterisk '*', failed requests as an exclamation mark '!'. Any errors that occurred
 during the client execution are reported at the end of the run including the
 statistics about the processing time and success ratio.
 
