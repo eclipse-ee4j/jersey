@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +31,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 
 import org.glassfish.jersey.message.MessageUtils;
+import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.server.validation.ValidationErrorData;
 
 /**
@@ -59,7 +61,8 @@ final class ValidationErrorMessageBodyWriter implements MessageBodyWriter<Object
     }
 
     private static boolean isSupportedMediaType(final MediaType mediaType) {
-        return MediaType.TEXT_HTML_TYPE.equals(mediaType) || MediaType.TEXT_PLAIN_TYPE.equals(mediaType);
+        return MediaTypes.typeEqual(MediaType.TEXT_HTML_TYPE, mediaType)
+                || MediaTypes.typeEqual(MediaType.TEXT_PLAIN_TYPE, mediaType);
     }
 
     @Override
