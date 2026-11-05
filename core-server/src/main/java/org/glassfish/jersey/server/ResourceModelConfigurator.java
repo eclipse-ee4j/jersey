@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2024 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,8 +61,15 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
 
         // Adds all providers from resource config to InjectionManager -> BootstrapConfigurators are able to work with these
         // services and get them.
-        bindProvidersAndResources(
+        Set<Class<?>> ignoredResourceClasses = bindProvidersAndResources(
                 injectionManager, serverBag, componentBag, resourceBag.classes, resourceBag.instances, runtimeConfig);
+
+        // Resource classes which cannot be instantiated must not contribute resource methods, otherwise they would
+        // collide with resources using the same path or expose methods failing on invocation.
+        if (!ignoredResourceClasses.isEmpty()) {
+            resourceBag = resourceBag.withoutResourceClasses(ignoredResourceClasses);
+            serverBag.setResourceBag(resourceBag);
+        }
 
         ResourceModel resourceModel = new ResourceModel.Builder(resourceBag.getRootResources(), false).build();
         resourceModel = processResourceModel(modelProcessors, resourceModel, runtimeConfig);
@@ -100,7 +108,12 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
         bindProvidersAndResources(injectionManager, bootstrapBag, emptyComponentBag, newClasses, newInstances, runtimeConfig);
     }
 
-    private void bindProvidersAndResources(
+    /**
+     * Binds providers and resources.
+     *
+     * @return resource classes which were ignored, because they cannot be instantiated.
+     */
+    private Set<Class<?>> bindProvidersAndResources(
             InjectionManager injectionManager,
             ServerBootstrapBag bootstrapBag,
             ComponentBag componentBag,
@@ -144,6 +157,8 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
         classes.addAll(componentClasses);
         classes.addAll(resourceClasses);
 
+        Set<Class<?>> ignoredResourceClasses = Collections.newSetFromMap(new IdentityHashMap<>());
+
         // Bind classes.
         for (final Class<?> componentClass: classes) {
             ContractProvider model = componentBag.getModel(componentClass);
@@ -154,6 +169,7 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
             if (resourceClasses.contains(componentClass)) {
                 if (!Resource.isAcceptable(componentClass)) {
                     LOGGER.warning(LocalizationMessages.NON_INSTANTIABLE_COMPONENT(componentClass));
+                    ignoredResourceClasses.add(componentClass);
                     continue;
                 }
 
@@ -185,6 +201,7 @@ public class ResourceModelConfigurator implements BootstrapConfigurator {
                 ProviderBinder.bindProvider(component, model, injectionManager);
             }
         }
+        return ignoredResourceClasses;
     }
 
     private boolean bindWithComponentProvider(

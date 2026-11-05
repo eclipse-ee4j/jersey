@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2014, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +42,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -305,7 +307,7 @@ public class NonPublicNonStaticTest {
                 }
             }
             assertTrue(firstFound, "Expected log message (1st) was not found.");
-            assertTrue(secondFound, "Expected log message (2nd) was not found.");
+            assertFalse(secondFound, "Resource model of the ignored class was validated.");
         }
     }
 
@@ -411,7 +413,7 @@ public class NonPublicNonStaticTest {
                 }
             }
             assertTrue(firstFound, "Expected log message (1st) was not found.");
-            assertTrue(secondFound, "Expected log message (2nd) was not found.");
+            assertFalse(secondFound, "Resource model of the ignored class was validated.");
         }
     }
 
