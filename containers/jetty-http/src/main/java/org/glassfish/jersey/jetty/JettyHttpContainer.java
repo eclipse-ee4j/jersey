@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -360,7 +360,11 @@ public final class JettyHttpContainer extends Handler.Abstract implements Contai
                     } catch (final IllegalStateException ex) {
                         // a race condition externally committing the response can still occur...
                         LOGGER.log(Level.FINER, "Unable to reset failed response.", ex);
+                        callback.failed(error);
                     }
+                } else {
+                    // Too late to answer, but Jetty keeps the connection open until the callback is completed.
+                    callback.failed(error);
                 }
             } finally {
                 LOGGER.log(Level.FINEST, "failure(...) called");
