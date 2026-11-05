@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -145,6 +146,23 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
 
     Set<String> getHttpMethods() {
         return consumesProducesAcceptors.keySet();
+    }
+
+    /**
+     * Get the methods allowed by the resource for the {@code Allow} header of a 405 response:
+     * the HTTP methods of its resource methods, and {@code HEAD} when it is implicitly supported
+     * by a {@code GET} resource method, as for the response to {@code OPTIONS}.
+     *
+     * @return the allowed HTTP methods.
+     */
+    private Set<String> getAllowedMethods() {
+        final Set<String> httpMethods = consumesProducesAcceptors.keySet();
+        if (!httpMethods.contains(HttpMethod.GET) || httpMethods.contains(HttpMethod.HEAD)) {
+            return httpMethods;
+        }
+        final Set<String> allowedMethods = new HashSet<>(httpMethods);
+        allowedMethods.add(HttpMethod.HEAD);
+        return allowedMethods;
     }
 
     protected abstract ConsumesProducesAcceptor createConsumesProducesAcceptor(CombinedMediaType.EffectiveMediaType consumes,
@@ -394,7 +412,7 @@ abstract class AbstractMethodSelectingRouter extends ContentTypeDeterminer imple
         final List<ConsumesProducesAcceptor> acceptors = consumesProducesAcceptors.get(request.getMethod());
         if (acceptors == null) {
             throw new NotAllowedException(
-                    Response.status(Response.Status.METHOD_NOT_ALLOWED).allow(consumesProducesAcceptors.keySet()).build());
+                    Response.status(Response.Status.METHOD_NOT_ALLOWED).allow(getAllowedMethods()).build());
         }
 
         final List<ConsumesProducesAcceptor> satisfyingAcceptors = new LinkedList<>();
