@@ -162,7 +162,7 @@ public class ReadTimeoutRespectedTest {
     }
 
     @Test
-    @Timeout(10)
+    @Timeout(value = 10, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     public void testReadTimeoutIsRespectedWhenServerDoesNotRespond() {
         final long startTime = System.currentTimeMillis();
         try {
