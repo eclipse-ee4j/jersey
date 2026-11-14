@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,10 +18,16 @@ package org.glassfish.jersey.jaxb.internal;
 
 import org.glassfish.jersey.internal.inject.InjectionManager;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jakarta.ws.rs.core.Configuration;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Context;
+import org.glassfish.jersey.jaxb.internal.l10n.LocalizationMessages;
+
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
@@ -32,6 +38,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
  * @author Marek Potociar
  */
 public class DocumentBuilderFactoryInjectionProvider extends AbstractXmlFactory<DocumentBuilderFactory> {
+
+    private static final Logger LOGGER = Logger.getLogger(DocumentBuilderFactoryInjectionProvider.class.getName());
 
     /**
      * Create new document builder factory provider.
@@ -56,6 +64,13 @@ public class DocumentBuilderFactoryInjectionProvider extends AbstractXmlFactory<
 
         if (!isXmlSecurityDisabled()) {
             f.setExpandEntityReferences(false);
+            try {
+                f.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                f.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                f.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            } catch (Exception e) {
+                LOGGER.log(Level.CONFIG, LocalizationMessages.UNABLE_TO_SECURE_DOCUMENT_BUILDER_FACTORY(f.getClass()), e);
+            }
         }
 
         JaxbFeatureUtil.setProperties(injectionManager, DocumentBuilderFactory.class, f::setAttribute);
