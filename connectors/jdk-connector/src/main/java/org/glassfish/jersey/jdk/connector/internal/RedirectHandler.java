@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,9 @@ class RedirectHandler {
 
     private static final Set<Integer> REDIRECT_STATUS_CODES = Collections
             .unmodifiableSet(new HashSet<>(Arrays.asList(301, 302, 303, 307, 308)));
+
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String COOKIE = "Cookie";
 
     private final int maxRedirects;
     private final boolean followRedirects;
@@ -152,9 +155,27 @@ class RedirectHandler {
 
         HttpRequest httpRequest = HttpRequest.createBodyless(method, location);
         httpRequest.getHeaders().putAll(headers);
+        if (!isSameOrigin(originalHttpRequest.getUri(), location)) {
+            // credentials of the original request must not be sent to another origin
+            httpRequest.getHeaders().keySet().removeIf(
+                    name -> AUTHORIZATION.equalsIgnoreCase(name) || COOKIE.equalsIgnoreCase(name));
+        }
         lastRequestUri = location;
 
         httpConnectionPool.send(httpRequest, completionHandler);
+    }
+
+    private static boolean isSameOrigin(URI original, URI location) {
+        return original.getScheme().equalsIgnoreCase(location.getScheme())
+                && original.getHost().equalsIgnoreCase(location.getHost())
+                && port(original) == port(location);
+    }
+
+    private static int port(URI uri) {
+        if (uri.getPort() != -1) {
+            return uri.getPort();
+        }
+        return Constants.HTTPS.equalsIgnoreCase(uri.getScheme()) ? 443 : 80;
     }
 
     private void consumeBodyIfPresent(HttpResponse response, final CompletionHandler<Void> completionHandler) {
