@@ -32,6 +32,14 @@
 
     <description>WELD 4.x SE support</description>
 
+    <properties>
+        <surefire.security.argline>
+            --add-reads org.jboss.logging=weld.core.impl
+            --add-reads org.jboss.logging=weld.environment.common
+            --add-reads org.jboss.logging=weld.se.core
+        </surefire.security.argline>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
@@ -87,6 +95,12 @@
             <version>${jakarta.interceptor.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -105,6 +119,15 @@
                 <directory>${project.build.directory}/legal</directory>
             </resource>
         </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/main/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>

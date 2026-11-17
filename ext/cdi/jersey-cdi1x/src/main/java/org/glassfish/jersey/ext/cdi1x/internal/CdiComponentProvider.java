@@ -570,7 +570,31 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
      * @return HK2 injection manager.
      */
     public InjectionManager getEffectiveInjectionManager() {
-        return injectionManagerStore.getEffectiveInjectionManager();
+        final InjectionManager manager = threadInjectionManagers.get();
+        return manager != null ? manager : injectionManagerStore.getEffectiveInjectionManager();
+    }
+
+    /**
+     * Associates the supplied injection manager with the supplied supplier.
+     *
+     * @param manager an {@link InjectionManager}
+     * @param supplier a {@link Supplier}
+     * @return the result of invoking the supplied {@link Supplier}'s {@link Supplier#get() get()} method, in the scope
+     * of the supplied {@link InjectionManager}
+     * @throws NullPointerException if {@code supplier} is {@code null}
+     */
+    /* package */ <T> T withInjectionManager(final InjectionManager manager, final Supplier<T> supplier) {
+        final InjectionManager previous = threadInjectionManagers.get();
+        threadInjectionManagers.set(manager);
+        try {
+            return supplier.get();
+        } finally {
+            if (previous == null) {
+                threadInjectionManagers.remove();
+            } else {
+                threadInjectionManagers.set(previous);
+            }
+        }
     }
 
     /**
@@ -681,20 +705,20 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
         @Override
         public void inject(final Object t, final CreationalContext cc) {
-            InjectionManager injectingManager = getEffectiveInjectionManager();
-            if (injectingManager == null || /* reload */ injectingManager.isShutdown()) {
-                injectingManager = effectiveInjectionManager.get();
-                threadInjectionManagers.set(injectingManager);
-            }
+            final InjectionManager manager = getEffectiveInjectionManager();
+            final InjectionManager injectingManager = manager == null || /* reload */ manager.isShutdown()
+                    ? effectiveInjectionManager.get() : manager;
 
             try {
-                delegate.inject(t, cc); // here the injection manager is used in HK2Bean
+                withInjectionManager(injectingManager, () -> {
+                    delegate.inject(t, cc); // here the injection manager is used in HK2Bean
 
-                if (injectingManager != null) {
-                    injectingManager.inject(t, CdiComponentProvider.CDI_CLASS_ANALYZER);
-                }
+                    if (injectingManager != null) {
+                        injectingManager.inject(t, CdiComponentProvider.CDI_CLASS_ANALYZER);
+                    }
+                    return null;
+                });
             } finally {
-                threadInjectionManagers.remove();
                 effectiveInjectionManager.remove();
             }
         }
@@ -759,12 +783,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
 
         @Override
         public Object create(final CreationalContext creationalContext) {
-            InjectionManager injectionManager = getEffectiveInjectionManager();
-            if (injectionManager == null || /* reload */ injectionManager.isShutdown()) {
-                injectionManager = threadInjectionManagers.get();
-            }
-
-            return injectionManager.getInstance(t);
+            return getEffectiveInjectionManager().getInstance(t);
         }
 
         @Override
