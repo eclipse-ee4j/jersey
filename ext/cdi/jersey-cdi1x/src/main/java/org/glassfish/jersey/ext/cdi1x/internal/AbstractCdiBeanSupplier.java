@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2014, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,6 +53,9 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
     final Class<T> clazz;
     final InstanceManager<T> referenceProvider;
     final Annotation[] qualifiers;
+    private final InjectionManager injectionManager;
+    private final CdiComponentProvider cdiComponentProvider;
+
     /**
      * Create new factory instance for given type and bean manager.
      *
@@ -66,6 +70,8 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
                                      final boolean cdiManaged) {
 
         this.clazz = rawType;
+        this.injectionManager = injectionManager;
+        this.cdiComponentProvider = beanManager.getExtension(CdiComponentProvider.class);
         this.qualifiers = CdiUtil.getQualifiers(clazz.getAnnotations());
         this.referenceProvider = cdiManaged ? new InstanceManager<T>() {
 
@@ -91,7 +97,6 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
             public T getInstance(final Class<T> clazz) {
                 final CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
                 final T instance = produce(injectionTarget, creationalContext, injectionManager, clazz);
-                final CdiComponentProvider cdiComponentProvider = beanManager.getExtension(CdiComponentProvider.class);
                 final CdiComponentProvider.InjectionManagerInjectedCdiTarget hk2managedTarget =
                      cdiComponentProvider.new InjectionManagerInjectedCdiTarget(injectionTarget) {
                         @Override
@@ -99,7 +104,6 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
                             return injectionTarget.getInjectionPoints();
                         }
                     };
-                hk2managedTarget.setInjectionManager(injectionManager);
                 hk2managedTarget.inject(instance, creationalContext);
                 hk2managedTarget.postConstruct(instance);
                 return instance;
@@ -135,7 +139,8 @@ public abstract class AbstractCdiBeanSupplier<T> implements DisposableSupplier<T
 
     @SuppressWarnings(value = "unchecked")
     /* package */ T _provide() {
-        final T instance = referenceProvider.getInstance(clazz);
+        final T instance = cdiComponentProvider.withInjectionManager(injectionManager,
+                () -> referenceProvider.getInstance(clazz));
         if (instance != null) {
             return instance;
         }

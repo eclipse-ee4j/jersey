@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Type;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HttpMethod;
@@ -33,10 +36,17 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 
+import org.glassfish.jersey.internal.inject.InjectionManager;
+
 import org.junit.jupiter.api.Test;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import mockit.Injectable;
 
 /**
  * Test for {@link CdiComponentProvider}.
@@ -44,6 +54,57 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Jakub Podlesak
  */
 public class CdiComponentProviderTest {
+
+    @Test
+    public void testNestedInjectionManagers(@Injectable InjectionManager server, @Injectable InjectionManager client) {
+        CdiComponentProvider provider = new CdiComponentProvider();
+        assertSame(server, provider.withInjectionManager(server, () -> {
+            assertSame(server, provider.getEffectiveInjectionManager());
+            assertSame(client, provider.withInjectionManager(client, provider::getEffectiveInjectionManager));
+            return provider.getEffectiveInjectionManager();
+        }));
+        assertNull(provider.getEffectiveInjectionManager());
+    }
+
+    @Test
+    public void testInjectionManagerRestoredAfterFailure(@Injectable InjectionManager server,
+                                                       @Injectable InjectionManager client) {
+        CdiComponentProvider provider = new CdiComponentProvider();
+        IllegalStateException failure = new IllegalStateException("Initialization failed");
+        assertSame(failure, assertThrows(IllegalStateException.class, () -> provider.withInjectionManager(server, () -> {
+            assertSame(failure, assertThrows(IllegalStateException.class, () -> provider.withInjectionManager(client, () -> {
+                assertSame(client, provider.getEffectiveInjectionManager());
+                throw failure;
+            })));
+            assertSame(server, provider.getEffectiveInjectionManager());
+            throw failure;
+        })));
+        assertNull(provider.getEffectiveInjectionManager());
+    }
+
+    @Test
+    public void testInjectionManagerIsThreadLocal(@Injectable InjectionManager server, @Injectable InjectionManager client) {
+        CdiComponentProvider provider = new CdiComponentProvider();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            provider.withInjectionManager(server, () -> {
+                try {
+                    executor.submit(() -> {
+                        assertNull(provider.getEffectiveInjectionManager());
+                        assertSame(client, provider.withInjectionManager(client, provider::getEffectiveInjectionManager));
+                        assertNull(provider.getEffectiveInjectionManager());
+                    }).get(10, SECONDS);
+                } catch (Exception exception) {
+                    throw new AssertionError(exception);
+                }
+                assertSame(server, provider.getEffectiveInjectionManager());
+                return null;
+            });
+            assertNull(provider.getEffectiveInjectionManager());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
 
     public static class MyMessageBodyReader implements MessageBodyReader {
 
