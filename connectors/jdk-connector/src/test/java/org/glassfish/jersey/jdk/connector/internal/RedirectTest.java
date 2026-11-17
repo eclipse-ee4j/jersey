@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,13 +18,18 @@ package org.glassfish.jersey.jdk.connector.internal;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+
+import java.net.URI;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -133,6 +138,23 @@ public class RedirectTest extends JerseyTest {
         }
     }
 
+    @Test
+    public void testCredentialsNotForwardedToOtherHost() {
+        URI otherHost = UriBuilder.fromUri(getBaseUri()).host("127.0.0.1").path("redirecting/headers").build();
+        Response response = target("redirecting/toLocation").queryParam("location", otherHost)
+                .request().header(HttpHeaders.AUTHORIZATION, "Bearer secret").header(HttpHeaders.COOKIE, "session=secret").get();
+        assertEquals(200, response.getStatus());
+        assertEquals("authorization=null, cookie=null", response.readEntity(String.class));
+    }
+
+    @Test
+    public void testCredentialsForwardedToSameHost() {
+        Response response = target("redirecting/toLocation").queryParam("location", "redirecting/headers")
+                .request().header(HttpHeaders.AUTHORIZATION, "Bearer secret").header(HttpHeaders.COOKIE, "session=secret").get();
+        assertEquals(200, response.getStatus());
+        assertEquals("authorization=Bearer secret, cookie=session=secret", response.readEntity(String.class));
+    }
+
     @Path("/redirecting")
     public static class RedirectingResource {
 
@@ -208,6 +230,19 @@ public class RedirectTest extends JerseyTest {
         @GET
         public Response cycleNode3() {
             return Response.seeOther(UriBuilder.fromResource(RedirectingResource.class).path("cycle").build()).build();
+        }
+
+        @Path("toLocation")
+        @GET
+        public Response toLocation(@QueryParam("location") String location) {
+            return Response.seeOther(URI.create(location)).build();
+        }
+
+        @Path("headers")
+        @GET
+        public String headers(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+                              @HeaderParam(HttpHeaders.COOKIE) String cookie) {
+            return "authorization=" + authorization + ", cookie=" + cookie;
         }
 
         @Path("maxRedirect")
