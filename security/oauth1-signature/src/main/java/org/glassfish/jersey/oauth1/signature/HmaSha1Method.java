@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2025 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,7 @@
 package org.glassfish.jersey.oauth1.signature;
 
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Mac;
@@ -102,7 +103,8 @@ public final class HmaSha1Method implements OAuth1SignatureMethod {
     @Override
     public boolean verify(String elements, OAuth1Secrets secrets, String signature) {
         // with symmetric cryptography, simply sign again and compare
-        return sign(elements, secrets).equals(signature);
+        return signature != null
+                && MessageDigest.isEqual(sign(elements, secrets).getBytes(UTF_8), signature.getBytes(UTF_8));
     }
 }
 

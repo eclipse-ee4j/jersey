@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,6 +15,10 @@
  */
 
 package org.glassfish.jersey.oauth1.signature;
+
+import java.security.MessageDigest;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * An OAuth signature method that implements Plaintext.
@@ -62,7 +66,8 @@ public final class PlaintextMethod implements OAuth1SignatureMethod {
      * @param signature plaintext OAuth signature to be verified.
      */
     public boolean verify(String elements, OAuth1Secrets secrets, String signature) {
-        return sign(elements, secrets).equals(signature);
+        return signature != null
+                && MessageDigest.isEqual(sign(elements, secrets).getBytes(UTF_8), signature.getBytes(UTF_8));
     }
 }
 
