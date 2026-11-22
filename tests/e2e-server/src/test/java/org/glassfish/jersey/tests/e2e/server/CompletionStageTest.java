@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2023 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -76,6 +77,13 @@ public class CompletionStageTest extends JerseyTest {
     }
 
     @Test
+    public void testGetCompletedNull() {
+        Response response = target("cs/completedNull").request().get();
+
+        assertThat(response.getStatus(), is(204));
+    }
+
+    @Test
     public void testGetException400() {
         Response response = target("cs/exception400").request().get();
 
@@ -102,6 +110,20 @@ public class CompletionStageTest extends JerseyTest {
 
         assertThat(response.getStatus(), is(200));
         assertThat(response.readEntity(String.class), is(ENTITY));
+    }
+
+    @Test
+    public void testGetCompletedNullAsync() {
+        Response response = target("cs/completedNullAsync").request().get();
+
+        assertThat(response.getStatus(), is(204));
+    }
+
+    @Test
+    public void testGetCompletedNullAsyncResponse() {
+        Response response = target("cs/completedNullAsyncResponse").request().get();
+
+        assertThat(response.getStatus(), is(204));
     }
 
     @Test
@@ -195,6 +217,12 @@ public class CompletionStageTest extends JerseyTest {
         }
 
         @GET
+        @Path("/completedNull")
+        public CompletionStage<String> getCompletedNull() {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @GET
         @Path("/exception400")
         public CompletionStage<String> getException400() {
             CompletableFuture<String> cs = new CompletableFuture<>();
@@ -226,6 +254,22 @@ public class CompletionStageTest extends JerseyTest {
         public CompletionStage<String> getCompletedAsync() {
             CompletableFuture<String> cs = new CompletableFuture<>();
             delaySubmit(() -> cs.complete(ENTITY));
+            return cs;
+        }
+
+        @GET
+        @Path("/completedNullAsync")
+        public CompletionStage<String> getCompletedNullAsync() {
+            CompletableFuture<String> cs = new CompletableFuture<>();
+            delaySubmit(() -> cs.complete(null));
+            return cs;
+        }
+
+        @GET
+        @Path("/completedNullAsyncResponse")
+        public CompletionStage<Response> getCompletedNullAsyncResponse() {
+            CompletableFuture<Response> cs = new CompletableFuture<>();
+            delaySubmit(() -> cs.complete(null));
             return cs;
         }
 

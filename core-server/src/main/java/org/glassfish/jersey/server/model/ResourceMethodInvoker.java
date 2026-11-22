@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2025 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -428,6 +429,9 @@ public class ResourceMethodInvoker implements Endpoint, ResourceInfo {
                 } else {
                     processingContext.asyncContext().resume(((Throwable) exception));
                 }
+            } else if (entity == null) {
+                // Same rule as a null return and a completed stage of null, including a null Response.
+                processingContext.asyncContext().resume(Response.noContent().build());
             } else {
                 processingContext.asyncContext().resume(entity);
             }
